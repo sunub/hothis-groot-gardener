@@ -563,6 +563,12 @@ export interface ParallelTrackEntry {
   /** Screen text. Moves to src/lib/i18n in S1, so it is optional here. */
   text?: string;
   source_chunk: string;
+  /**
+   * Whether the excerpt behind the entry was compared with the original
+   * document. The screen may label only "checked" entries as measured
+   * (events.json meta.rules). Optional until every branch's data carries it.
+   */
+  source_check?: 'checked' | 'not_checked';
 }
 
 export interface ParallelTrack {

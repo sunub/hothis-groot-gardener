@@ -136,6 +136,7 @@ export const parallelTrackSchema = z.object({
         when: text.optional(),
         text: text.optional(),
         source_chunk: text,
+        source_check: z.enum(['checked', 'not_checked']).optional(),
       }),
     )
     .min(1),
