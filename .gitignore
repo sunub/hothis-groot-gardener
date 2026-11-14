@@ -32,6 +32,7 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+!.env_example
 
 # vercel
 .vercel
@@ -39,3 +40,17 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# python / RAG (minjung)
+info
+data/json_ko
+data/json/*
+!data/json/total_RAG.json
+__pycache__/
+result/
+.venv
+uv.lock
+
+# ChromaDB
+vector_db/**
+!vector_db/.gitkeep
