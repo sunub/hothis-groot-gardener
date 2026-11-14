@@ -1,5 +1,6 @@
 import type { AiCrisisOutput, Zone } from '@/lib/contract/types';
 import type { GenerationCandidate, GenerationInput } from '../generator';
+import { bannedWordsFor } from './guard';
 import type { EvidenceChunk } from './retrieval';
 
 /**
@@ -32,7 +33,7 @@ Rules:
 4. clues: one clue per symptom, with that symptom's symptom_id. Each clue text is one short sentence about that symptom only.
 5. options: exactly one option for each ACTION, with that action's action_id.
    - label: a short neutral instruction of at most 10 words saying what the astronaut does. It must not hint whether the action is right or wrong: do not use words such as best, correct, should, safe, recommended, proper, wrong or mistake.
-   - result_line: what the lettuce says right after that action, in the first person. It must match the verdict: appropriate means clearly better; partial means a little better but not fixed; inappropriate means worse or no better.
+   - result_line: what the lettuce says right after that action, in the first person: one full sentence of 8 to 20 words that says what changed for it. Every option gets its own line. It must match the verdict: appropriate means clearly better; partial means a little better but not fixed; inappropriate means worse or no better.
    - why: one sentence that restates the given reason in your own words. Add nothing that is not in the reason.
 6. Never mention a symptom, cause, event or number that is not given in this message. Background excerpts are only for accurate wording; do not take new symptoms or events from them.
 7. Write new wording. The example only shows the tone and length of a scene, a plant line and clues; do not copy its sentences.
@@ -128,6 +129,9 @@ export function buildUserPrompt({ input, candidate, excerpts, example }: PromptP
   for (const symptom of candidate.symptoms) {
     lines.push(`- ${symptom.symptom_id}: ${symptom.name}`);
   }
+  const banned = bannedWordsFor(candidate);
+  lines.push(`DO NOT USE these words in the scene, plant line, clues or result lines: ${banned.anywhere.join('; ')}.`);
+  lines.push(`ALSO DO NOT USE these words in the scene, plant line or clues: ${banned.describing.join('; ')}.`);
   lines.push(
     `Write ${candidate.clues_min} to ${Math.max(candidate.clues_min, Math.min(input.limits.clues_max, candidate.symptoms.length))} clues.`,
   );
