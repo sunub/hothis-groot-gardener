@@ -19,6 +19,7 @@ class Reranker:
         batch_size: int = 2,
         device: str | None = None,
         model=None,
+        prefer_korean: bool = True,
     ):
         if isinstance(candidate_count, bool) or not isinstance(candidate_count, int) or candidate_count < TOP_N:
             raise ValueError(f"candidate_count must be an integer >= {TOP_N}")
@@ -28,6 +29,9 @@ class Reranker:
         self.chunks = retriever.chunks  # evaluation.py uses this to validate relevant IDs.
         self.candidate_count = candidate_count
         self.batch_size = batch_size
+        # True: score the Korean translation when there is one (Korean queries).
+        # False: always score the English chunk (English queries).
+        self.prefer_korean = prefer_korean
         if model is None:
             try:
                 from sentence_transformers import CrossEncoder
@@ -44,7 +48,11 @@ class Reranker:
         if not candidates:
             return []
         pairs = [
-            (query, self.retriever.korean_texts.get(chunk["id"]) or chunk["text"])
+            (
+                query,
+                (self.prefer_korean and self.retriever.korean_texts.get(chunk["id"]))
+                or chunk["text"],
+            )
             for chunk in candidates
         ]
         scores = self.model.predict(
