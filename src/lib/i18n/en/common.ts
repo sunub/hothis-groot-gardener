@@ -30,11 +30,11 @@ export const common = {
     inappropriate: 'Inappropriate',
   },
   value_type: {
-    measured: 'Measured',
+    measured: 'Recorded',
     game_value: 'Game value',
   },
   value_type_help: {
-    measured: 'Copied from the cited source.',
+    measured: 'Taken from the cited source.',
     game_value: 'Set by the team for game balance. Not a NASA value.',
   },
   source: {
@@ -48,6 +48,7 @@ export const common = {
     not_diagnostic:
       'This tool does not diagnose plants or people, and it does not record any health data about people.',
   },
+  nav: { label: 'Main', home: 'Home', sources: 'Evidence and sources' },
   day_label: 'Day',
   cultivation_day_label: 'Cultivation day',
 } as const;
