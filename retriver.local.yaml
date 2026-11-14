@@ -1,4 +1,0 @@
-alpha: 0            # Keyword search only: no OpenAI API key needed for queries
-k: 60               # Reciprocal rank smoothing constant
-candidate_count: 20 # Results taken from each retriever before fusion
-bm25_ko_dir: data/json_ko # Korean text paired with Chroma chunk IDs (optional)

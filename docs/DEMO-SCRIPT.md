@@ -1,6 +1,6 @@
 # Demo script
 
-Demo mode uses a fixed random seed. If you do the care steps below in this order, the same crises occur on the same days every time. A test (`src/lib/game/mission-run.test.ts`) runs these exact steps from day 1 to the report.
+Demo mode uses a fixed random seed. If you do the care steps below in this order, the same crises occur on the same days every time. A test (`apps/web/src/lib/game/mission-run.test.ts`) runs these exact steps from day 1 to the report.
 
 All numbers below are game values.
 
