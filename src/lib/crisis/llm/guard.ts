@@ -43,6 +43,13 @@ export const LABEL_HINT = /\b(best|correct(ly)?|should|safe(st|ly)?|recommended|
  */
 export const SAFETY_CLAIM = /\b(edible|safe|safely|safety|ok to eat|okay to eat|can be eaten|approved|certified)\b/i;
 
+/**
+ * Settings and readings in the scene, the plant line or a clue. The status
+ * panel shows them, and the fan is also an option, so naming it hints at the
+ * answer ("the fan remains on a low setting" in a mold crisis).
+ */
+export const SETTING_WORDS = /\b(fans?|settings?|sensors?|readings?|percent)\b/i;
+
 /** Per crisis: words in the plant line that would name the cause. */
 export const CAUSE_WORDS: Record<string, RegExp> = {
   water_shortage: /\b(water(ing)?|thirst\w*|reservoir|drink\w*|dehydrat\w*)\b/i,
@@ -75,6 +82,16 @@ export function checkWording(output: AiCrisisOutput, candidate: GenerationCandid
       const hit = text.match(group.pattern);
       if (hit) issues.push(`${field}: "${hit[0]}" describes ${group.name}, which is not an allowed symptom at this stage.`);
     }
+  }
+
+  const seen: [string, string][] = [
+    ['scene', output.scene],
+    ['plant_line', output.plant_line],
+    ...output.clues.map((c, i): [string, string] => [`clues.${i}.text`, c.text]),
+  ];
+  for (const [field, text] of seen) {
+    const setting = text.match(SETTING_WORDS);
+    if (setting) issues.push(`${field}: "${setting[0]}" names a setting or reading, which hints at the answer.`);
   }
 
   output.options.forEach((option, i) => {

@@ -245,6 +245,15 @@ describe('checkWording', () => {
     expect(checkWording(out, stage2).filter((i) => i.includes('mold'))).toEqual([]);
   });
 
+  it('catches a scene that names the fan setting (seen in a real Gemma run)', () => {
+    const { input } = inputFor(dry);
+    const text = {
+      ...goodWaterText(),
+      scene: 'The lettuce plants are not showing expected growth. The wicks appear dry. The fan remains on a low setting.',
+    };
+    expect(checkWording(text, input.candidates[0]).join(' ')).toMatch(/fan/);
+  });
+
   it('catches a safety or edibility claim anywhere in the text', () => {
     const { input } = inputFor(dry);
     const text = goodWaterText();

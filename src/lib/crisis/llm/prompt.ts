@@ -22,8 +22,8 @@ The game code has already decided which crisis happens, which actions are offere
 
 Rules:
 1. Plain English for astronauts in training. Short sentences. No numbers, no units.
-2. scene: 2 or 3 sentences about what the astronaut sees in the growth chamber now. Describe only the ALLOWED SYMPTOMS. Do not name the crisis or its cause.
-3. plant_line: 1 or 2 sentences in the first person, spoken by the lettuce. Only how it looks and feels, using the ALLOWED SYMPTOMS. Never the cause, never what to do.
+2. scene: 2 or 3 sentences about what the astronaut sees on the plants and in the growth chamber now. Describe only the ALLOWED SYMPTOMS. Do not name the crisis or its cause. Do not mention the fan, any setting or any reading: the player sees those on the status panel, and mentioning them hints at the answer.
+3. plant_line: 1 or 2 sentences in the first person, spoken by the lettuce. Only how it looks and feels, using the ALLOWED SYMPTOMS. Never the cause, never what to do, never the fan or a setting.
 4. clues: one clue per symptom, with that symptom's symptom_id. Each clue text is one short sentence about that symptom only.
 5. options: exactly one option for each ACTION, with that action's action_id.
    - label: a short neutral instruction of at most 10 words saying what the astronaut does. It must not hint whether the action is right or wrong: do not use words such as best, correct, should, safe, recommended, proper, wrong or mistake.
@@ -115,7 +115,7 @@ export function buildUserPrompt({ input, candidate, excerpts, example }: PromptP
   lines.push(`SYMPTOM STAGE: ${candidate.stage}`);
   lines.push(`CULTIVATION DAY: ${input.cultivation_day} of 33`);
   lines.push(
-    `CURRENT STATE: root moisture is ${ZONE_WORDS[s.root_moisture.zone]}; chamber humidity is ${ZONE_WORDS[s.humidity.zone]}; fan is set to ${s.fan}.`,
+    `CURRENT STATE (so the text does not contradict it; do not mention it): root moisture is ${ZONE_WORDS[s.root_moisture.zone]}; chamber humidity is ${ZONE_WORDS[s.humidity.zone]}; fan is set to ${s.fan}.`,
   );
   lines.push('');
 
