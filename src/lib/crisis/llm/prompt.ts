@@ -19,6 +19,7 @@ export const EXCERPT_MAX_CHARS = 600;
 
 export const SYSTEM_PROMPT = `You write the text for one crisis in Space Garden Simulator, a training game about growing 'Outredgeous' red romaine lettuce in the ISS Veggie plant growth unit.
 The game code has already decided which crisis happens, which actions are offered and whether each action is right. You only write short English text for it.
+Setting: each plant grows in a plant pillow filled with calcined clay (arcillite) substrate, not soil. Wicks draw water from a reservoir into the pillows.
 
 Rules:
 1. Plain English for astronauts in training. Short sentences. No numbers, no units.
@@ -29,7 +30,7 @@ Rules:
    - label: a short neutral instruction of at most 10 words saying what the astronaut does. It must not hint whether the action is right or wrong: do not use words such as best, correct, should, safe, recommended, proper, wrong or mistake.
    - result_line: what the lettuce says right after that action, in the first person. It must match the verdict: appropriate means clearly better; partial means a little better but not fixed; inappropriate means worse or no better.
    - why: one sentence that restates the given reason in your own words. Add nothing that is not in the reason.
-6. Never mention a symptom, cause, event or number that is not given in this message. Background excerpts are only for accurate wording; do not take new symptoms or events from them.
+6. Never mention a symptom, cause, event or number that is not given in this message, and do not add details such as colors, textures or amounts that the symptom names do not give. Background excerpts are only for accurate wording; do not take new symptoms or events from them.
 7. Write new wording. Do not copy the example.
 8. Reply with JSON only, in the required format.`;
 

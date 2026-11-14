@@ -50,6 +50,9 @@ export const SAFETY_CLAIM = /\b(edible|safe|safely|safety|ok to eat|okay to eat|
  */
 export const SETTING_WORDS = /\b(fans?|settings?|sensors?|readings?|percent)\b/i;
 
+/** Wrong for Veggie: the plants grow in a calcined clay substrate (seen in a real Gemma run: "the soil around me"). */
+export const WRONG_SETTING_FACTS = /\b(soil|dirt|potting mix)\b/i;
+
 /** Per crisis: words in the plant line that would name the cause. */
 export const CAUSE_WORDS: Record<string, RegExp> = {
   water_shortage: /\b(water(ing)?|thirst\w*|reservoir|drink\w*|dehydrat\w*)\b/i,
@@ -109,6 +112,8 @@ export function checkWording(output: AiCrisisOutput, candidate: GenerationCandid
   for (const [field, text] of allText) {
     const claim = text.match(SAFETY_CLAIM);
     if (claim) issues.push(`${field}: "${claim[0]}" is a safety or edibility claim.`);
+    const wrong = text.match(WRONG_SETTING_FACTS);
+    if (wrong) issues.push(`${field}: "${wrong[0]}" is wrong for Veggie, where plants grow in a clay substrate.`);
   }
 
   const cause = CAUSE_WORDS[candidate.crisis_id];

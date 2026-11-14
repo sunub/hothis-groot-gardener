@@ -137,8 +137,11 @@ describe('readLlmConfig', () => {
       timeoutMs: 30_000,
       numCtx: 8192,
       think: false,
+      keepAlive: '30m',
     });
     expect(config.ragUrl).toBeUndefined();
+    expect(readLlmConfig({ LLM_MODEL: 'm', LLM_KEEP_ALIVE: 'omit' })!.keepAlive).toBeUndefined();
+    expect(readLlmConfig({ LLM_MODEL: 'm', LLM_KEEP_ALIVE: '-1' })!.keepAlive).toBe('-1');
   });
 
   it('reads every setting and trims trailing slashes', () => {
@@ -254,6 +257,12 @@ describe('checkWording', () => {
     expect(checkWording(text, input.candidates[0]).join(' ')).toMatch(/fan/);
   });
 
+  it('catches "soil" (seen in a real Gemma run; Veggie uses a clay substrate)', () => {
+    const { input } = inputFor(dry);
+    const text = { ...goodWaterText(), plant_line: 'The soil around me feels dry.' };
+    expect(checkWording(text, input.candidates[0]).join(' ')).toMatch(/soil/);
+  });
+
   it('catches a safety or edibility claim anywhere in the text', () => {
     const { input } = inputFor(dry);
     const text = goodWaterText();
@@ -281,6 +290,10 @@ describe('chatJson', () => {
     expect(out).toEqual({ ok: true });
     expect(calls[0].url).toBe('http://ollama.test/api/chat');
     expect(calls[0].body).toMatchObject({ model: 'gemma4:e4b', stream: false, think: false, format: { type: 'object' }, options: { num_ctx: 8192 } });
+    expect(calls[0].body).not.toHaveProperty('keep_alive');
+    const kept = fakeFetch({ modelReplies: [{ ok: true }] });
+    await chatJson({ ...baseConfig, keepAlive: '30m' }, [], {}, new AbortController().signal, kept.impl);
+    expect(kept.calls[0].body.keep_alive).toBe('30m');
   });
 
   it('calls an OpenAI-compatible server with response_format and a key', async () => {

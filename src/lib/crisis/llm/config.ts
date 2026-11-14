@@ -29,6 +29,12 @@ export interface LlmConfig {
   ragTimeoutMs: number;
   /** When set, every generation is appended to <dir>/generations.jsonl. */
   logDir?: string;
+  /**
+   * Ollama only: how long the model stays loaded after a request ("30m", "-1"
+   * for always). Ollama's own default is 5 minutes; reloading the model took
+   * about 27 s on the development laptop, close to the 30 s attempt limit.
+   */
+  keepAlive?: string;
 }
 
 type Env = Record<string, string | undefined>;
@@ -41,6 +47,7 @@ export const LLM_DEFAULTS = {
   numCtx: 8192,
   ragTopN: 4,
   ragTimeoutMs: 3_000,
+  keepAlive: '30m',
 };
 
 /** Read the settings. Returns null when LLM_MODEL is not set (generator off). */
@@ -77,6 +84,10 @@ export function readLlmConfig(env: Env = process.env): LlmConfig | null {
     ragTopN: numberIn(env.RAG_TOP_N, LLM_DEFAULTS.ragTopN, 1, 10, 'RAG_TOP_N'),
     ragTimeoutMs: positiveInt(env.RAG_TIMEOUT_MS, LLM_DEFAULTS.ragTimeoutMs, 'RAG_TIMEOUT_MS'),
     logDir: env.LLM_LOG_DIR?.trim() || undefined,
+    keepAlive:
+      env.LLM_KEEP_ALIVE?.trim().toLowerCase() === 'omit'
+        ? undefined
+        : env.LLM_KEEP_ALIVE?.trim() || LLM_DEFAULTS.keepAlive,
   };
 }
 

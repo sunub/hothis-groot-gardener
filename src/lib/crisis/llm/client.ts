@@ -31,6 +31,7 @@ export async function chatJson(
       options: { temperature: config.temperature, num_ctx: config.numCtx },
     };
     if (config.think !== undefined) body.think = config.think;
+    if (config.keepAlive !== undefined) body.keep_alive = config.keepAlive;
   } else {
     url = `${config.baseUrl}/chat/completions`;
     body = {
