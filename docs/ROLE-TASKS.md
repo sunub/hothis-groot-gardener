@@ -15,7 +15,7 @@ Space Garden Simulator · 2026-11-15 09:20 기준 · 기준 브랜치 `HwangSoon
 
 ## 0. 지금 브랜치에 들어 있는 것
 
-`HwangSoon96`은 `sunub`의 `b32cf60`(폴더 구조 정리)까지를 포함합니다. `sunub`는 그 전에 `HwangSoon96`의 통합 병합(`lkh`, `woojin-llm`, `woojin-rag-server`)을 받아들였습니다.
+`main`에는 `HwangSoon96`의 통합 병합(`lkh`, `woojin-llm`, `woojin-rag-server`)과 `sunub`의 폴더 구조 정리(`b32cf60`)가 들어가 있습니다(11/15 08:40). `HwangSoon96`은 그 위에 커밋 8개가 더 있습니다.
 
 | 폴더 | 내용 |
 |---|---|
@@ -24,7 +24,7 @@ Space Garden Simulator · 2026-11-15 09:20 기준 · 기준 브랜치 `HwangSoon
 | `data/content/` | 앱이 읽는 JSON (근거 목록, 사건 목록, 카드 글, 출처별 라이선스) |
 | `data/sources/`, `data/eval/`, `data/vector_db/` | 검색 조각, 평가 질문, 검색 DB |
 
-`sunub`의 `b32cf60` 뒤에 `HwangSoon96`에 더 들어 있는 것은 아래와 같습니다.
+`main`에 없고 `HwangSoon96`에만 있는 것은 아래와 같습니다.
 
 | 내용 | 파일 |
 |---|---|
@@ -51,7 +51,7 @@ cd services/rag && uv run --group server uvicorn rag_server:app --host 127.0.0.1
 - 사건 카드의 글 생성은 기본으로 꺼져 있습니다. 켜려면 `apps/web/.env.local`에 `LLM_EVENT_CARDS=on`을 더합니다(B7).
 - 검색 서버나 Python 테스트를 저장소에서 돌리면 `data/vector_db/`의 파일이 수정된 것으로 잡힙니다(B8).
 
-**`sunub`에 합칠 때** `README.md`와 `apps/web/src/app/api/event/route.ts`에서 충돌이 납니다. `route.ts`는 새 경로와 생성기 연결을 둘 다 남기면 되고, `README.md`는 새 구조를 쓰고 "Use of AI tools"의 데이터 파일 줄과 그림 줄만 `HwangSoon96` 것을 쓰면 됩니다.
+**`main`에 합칠 때** 충돌이 없습니다 (미리 합쳐 보고 확인함). 폴더 구조 정리와의 충돌(`README.md`, `apps/web/src/app/api/event/route.ts`)은 `HwangSoon96` 안에서 이미 풀었습니다.
 
 ## 1. 팀이 먼저 정할 것
 
