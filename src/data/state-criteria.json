@@ -1,0 +1,22 @@
+{
+  "meta": {
+    "description": "State criteria for the Space Garden Simulator. Zone boundaries for root moisture and chamber humidity on a 0-100 scale. All numbers are game values set by the team for game balance. They are not NASA limits.",
+    "ai_disclosure": "This file was prepared with the help of an AI coding assistant from the team's planning document. The team reviews the values.",
+    "value_type": "game_value"
+  },
+  "normal_mid": 55,
+  "zones": {
+    "root_moisture": {
+      "danger_low_below": 25,
+      "caution_low_below": 40,
+      "normal_max": 70,
+      "caution_high_max": 80
+    },
+    "humidity": {
+      "danger_low_below": 30,
+      "caution_low_below": 45,
+      "normal_max": 70,
+      "caution_high_max": 80
+    }
+  }
+}

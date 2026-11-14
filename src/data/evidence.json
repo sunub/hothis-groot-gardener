@@ -1,0 +1,232 @@
+{
+  "meta": {
+    "schema_version": 1,
+    "description": "Evidence list for the Space Garden Simulator: crises, symptoms and actions recorded in ISS Veggie plant growth tests, with the source sentence for each. Verdicts are assigned by the team from the cited record. Every delta is a game value set for game balance, not a NASA value.",
+    "ai_disclosure": "An AI coding assistant helped search the source documents and draft this file. Each quote was checked by script to be a verbatim substring of the cited source text. The team reviews verdicts and game values.",
+    "updated": "2026-11-15 (provisional: sources under verification)"
+  },
+  "crises": [
+    {
+      "crisis_id": "water_shortage",
+      "name": "Water shortage",
+      "summary": "In the VEG-01A and VEG-01B lettuce tests the plants had periods of low water early in growth.",
+      "record": {
+        "crop": "Red romaine lettuce 'Outredgeous'",
+        "experiment": "VEG-01A, VEG-01B",
+        "note": ""
+      },
+      "trigger": {
+        "any_of": [{ "metric": "root_moisture", "side": "low" }]
+      },
+      "symptoms": [
+        {
+          "symptom_id": "wilting",
+          "name": "Wilting leaves",
+          "stage": 1,
+          "value_type": "game_value",
+          "source": null
+        },
+        {
+          "symptom_id": "stressed_growth",
+          "name": "Stressed, slowed growth",
+          "stage": 2,
+          "value_type": "game_value",
+          "source": null
+        }
+      ],
+      "actions": [
+        {
+          "action_id": "inject_water_direct",
+          "name": "Add water directly to the plant pillows",
+          "verdict": "appropriate",
+          "reason": "Water added directly to the pillow reaches the roots without waiting for the reservoir.",
+          "delta": { "root_moisture": "to_mid", "plant_health": 5 },
+          "value_type": "game_value",
+          "source": null
+        },
+        {
+          "action_id": "refill_reservoir",
+          "name": "Refill the root mat reservoir",
+          "verdict": "partial",
+          "reason": "The reservoir supplies water slowly, so the roots recover only in part.",
+          "delta": { "root_moisture": "half_to_mid", "plant_health": 0 },
+          "value_type": "game_value",
+          "source": null
+        },
+        {
+          "action_id": "wait_for_schedule",
+          "name": "Wait for the next scheduled watering",
+          "verdict": "inappropriate",
+          "reason": "The roots keep drying until the next scheduled watering.",
+          "delta": { "root_moisture": -10, "plant_health": -10 },
+          "value_type": "game_value",
+          "source": null
+        },
+        {
+          "action_id": "fan_high",
+          "name": "Set the fan to high",
+          "verdict": "inappropriate",
+          "reason": "More air flow dries the plants faster when water is already short.",
+          "delta": { "root_moisture": -10, "plant_health": -10, "fan": "high" },
+          "value_type": "game_value",
+          "source": null
+        }
+      ],
+      "source": {
+        "title": "Khodadad et al. (2020), Microbiological and Nutritional Analysis of Lettuce Crops Grown on the International Space Station, Frontiers in Plant Science",
+        "url": "https://doi.org/10.3389/fpls.2020.00199",
+        "quote": "PROVISIONAL",
+        "license": "CC BY"
+      }
+    },
+    {
+      "crisis_id": "overwater_mold",
+      "name": "Excess water and stagnant air leading to mold",
+      "summary": "In the VEG-01C zinnia test, excess water and a lack of air flow were followed by fungal growth on the plants.",
+      "record": {
+        "crop": "Zinnia",
+        "experiment": "VEG-01C",
+        "note": "This record is from zinnia, not lettuce. It happened in the same Veggie hardware."
+      },
+      "trigger": {
+        "any_of": [
+          { "metric": "root_moisture", "side": "high" },
+          { "metric": "humidity", "side": "high" }
+        ],
+        "fan": "low"
+      },
+      "symptoms": [
+        {
+          "symptom_id": "guttation",
+          "name": "Water droplets at the leaf tips",
+          "stage": 1,
+          "value_type": "game_value",
+          "source": null
+        },
+        {
+          "symptom_id": "epinasty",
+          "name": "Leaves bending and curling downward",
+          "stage": 1,
+          "value_type": "game_value",
+          "source": null
+        },
+        {
+          "symptom_id": "necrosis",
+          "name": "Dead, brown tissue",
+          "stage": 2,
+          "value_type": "game_value",
+          "source": null
+        },
+        {
+          "symptom_id": "mold",
+          "name": "Fungal growth on leaves and stems",
+          "stage": 3,
+          "value_type": "game_value",
+          "source": null
+        }
+      ],
+      "actions": [
+        {
+          "action_id": "fan_high",
+          "name": "Set the fan to high",
+          "verdict": "appropriate",
+          "reason": "More air flow removes the moisture that builds up around the leaves.",
+          "delta": { "humidity": "to_mid", "root_moisture": "to_mid", "plant_health": 5, "fan": "high" },
+          "value_type": "game_value",
+          "source": null
+        },
+        {
+          "action_id": "remove_dead_tissue",
+          "name": "Cut away the dead tissue",
+          "verdict": "partial",
+          "reason": "Removing dead tissue leaves less material for fungus to grow on, but the air stays humid.",
+          "delta": { "humidity": "half_to_mid", "root_moisture": "half_to_mid", "plant_health": 0 },
+          "value_type": "game_value",
+          "source": null
+        },
+        {
+          "action_id": "sanitize_surfaces",
+          "name": "Clean the plant surfaces with sanitizing wipes",
+          "verdict": "partial",
+          "reason": "Cleaning removes what is on the surface, but the air stays humid.",
+          "delta": { "humidity": "half_to_mid", "root_moisture": "half_to_mid", "plant_health": 0 },
+          "value_type": "game_value",
+          "source": null
+        },
+        {
+          "action_id": "add_water",
+          "name": "Add more water",
+          "verdict": "inappropriate",
+          "reason": "More water on plants that already have too much makes the excess worse.",
+          "delta": { "root_moisture": 20, "plant_health": -10 },
+          "value_type": "game_value",
+          "source": null
+        }
+      ],
+      "source": {
+        "title": "NASA, Growing Plants in Space",
+        "url": "https://www.nasa.gov/exploration-research-and-technology/growing-plants-in-space/",
+        "quote": "PROVISIONAL"
+      }
+    }
+  ],
+  "harvest": {
+    "steps": [
+      {
+        "step_id": "harvest_sanitize",
+        "name": "Harvest and sanitize",
+        "description": "Harvest the leaves on cultivation day 33 and wipe them with produce sanitizing wipes.",
+        "value_type": "game_value",
+        "source": null
+      },
+      {
+        "step_id": "freeze_return",
+        "name": "Freeze and return samples",
+        "description": "Freeze part of the harvest and return it to Earth.",
+        "value_type": "game_value",
+        "source": null
+      },
+      {
+        "step_id": "ground_analysis",
+        "name": "Ground analysis report",
+        "description": "The returned samples are analyzed on the ground.",
+        "value_type": "game_value",
+        "source": null
+      }
+    ],
+    "microbial_range": {
+      "min": 2.14,
+      "max": 4.86,
+      "unit": "log10 CFU/g",
+      "description": "Total counts for bacteria and yeast/molds reported for flight and ground lettuce tissues.",
+      "value_type": "measured",
+      "source": {
+        "title": "Khodadad et al. (2020), Microbiological and Nutritional Analysis of Lettuce Crops Grown on the International Space Station, Frontiers in Plant Science",
+        "url": "https://doi.org/10.3389/fpls.2020.00199",
+        "quote": "PROVISIONAL",
+        "license": "CC BY"
+      }
+    },
+    "pathogen_screen": {
+      "organisms": ["E. coli", "Salmonella sp.", "S. aureus"],
+      "result": "Negative on leaf tissue",
+      "value_type": "measured",
+      "source": {
+        "title": "Khodadad et al. (2020), Microbiological and Nutritional Analysis of Lettuce Crops Grown on the International Space Station, Frontiers in Plant Science",
+        "url": "https://doi.org/10.3389/fpls.2020.00199",
+        "quote": "PROVISIONAL",
+        "license": "CC BY"
+      }
+    },
+    "standards_note": {
+      "text": "There are no standards for microbial levels in fresh produce grown in space.",
+      "source": {
+        "title": "Khodadad et al. (2020), Microbiological and Nutritional Analysis of Lettuce Crops Grown on the International Space Station, Frontiers in Plant Science",
+        "url": "https://doi.org/10.3389/fpls.2020.00199",
+        "quote": "PROVISIONAL",
+        "license": "CC BY"
+      }
+    }
+  },
+  "background": []
+}
