@@ -392,7 +392,11 @@ function boundText(lower: Bound, upper: Bound, t: Dict): string {
   const r = sourcesOf(t).rules;
   const lo = lower ? format(lower.inclusive ? r.bound_from : r.bound_above, { value: lower.value }) : null;
   const hi = upper ? format(upper.inclusive ? r.bound_upto : r.bound_below, { value: upper.value }) : null;
-  if (lo && hi) return format(lower?.inclusive ? r.bound_range : r.bound_between, { lower: lo, upper: hi });
+  if (lo && hi && lower?.inclusive) {
+    // "40 to 70", "25 to below 40": an inclusive upper end needs no extra word after "to".
+    return format(r.bound_range, { lower: lo, upper: upper?.inclusive ? upper.value : hi });
+  }
+  if (lo && hi) return format(r.bound_between, { lower: lo, upper: hi });
   return lo ?? hi ?? '';
 }
 

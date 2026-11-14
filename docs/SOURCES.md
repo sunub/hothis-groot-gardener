@@ -10,7 +10,7 @@ Sentences quoted from these documents are in `src/data/evidence.json`, each next
 |---|---|---|
 | Massa, Dufour and Smith (2014). *Veggie Hardware Validation Test Preliminary Results and Lessons Learned* (abstract). NASA Technical Reports Server 20150001374. https://ntrs.nasa.gov/citations/20150001374 | Water shortage crisis: record, symptoms, the corrective action | NTRS record: public use permitted |
 | NASA (2017). *On-Orbit Gardening Guides*. NASA Technical Reports Server 20170007815. https://ntrs.nasa.gov/citations/20170007815 | Fan settings (low, high) and what the high setting does; watering by observation | NTRS record: public use permitted |
-| Massa (2016). *Veggie: Space Vegetables for the International Space Station and Beyond*. NASA Technical Reports Server 20160004060. https://ntrs.nasa.gov/citations/20160004060 | Harvest frozen and returned to Earth for analysis | NTRS record: public use permitted |
+| Massa (2016). *Veggie: Space Vegetables for the International Space Station and Beyond*. NASA Technical Reports Server 20160004060. https://ntrs.nasa.gov/citations/20160004060 | Harvest frozen and returned to Earth for analysis; the crop of the VEG-01 test | NTRS record: public use permitted |
 | NASA. *Growing Plants in Space*. https://www.nasa.gov/exploration-research-and-technology/growing-plants-in-space/ | Excess water and mold crisis: record, the cleaning action | NASA web page |
 | NASA Open Science Data Repository, OSD-358 (study description). https://osdr.nasa.gov/bio/repo/data/studies/OSD-358 | Fungal growth observed on zinnia leaves and stems | NASA open data |
 | NASA Open Science Data Repository, OSD-177 (study description). https://osdr.nasa.gov/bio/repo/data/studies/OSD-177 | Rot disease on the zinnia plants | NASA open data |
@@ -24,7 +24,7 @@ The challenge's Resources tab links to the NASA Human Research Program pages. Th
 
 | Source | Used for | License |
 |---|---|---|
-| Khodadad, Hummerick, Spencer, Dixit, Richards, Romeyn, Smith, Wheeler and Massa (2020). *Microbiological and Nutritional Analysis of Lettuce Crops Grown on the International Space Station*. Frontiers in Plant Science 11:199. https://doi.org/10.3389/fpls.2020.00199 | Recorded range of bacterial counts on ISS-grown lettuce leaves (2.14 to 4.86 log10 CFU/g), pathogen screening results, absence of standards, harvest and freezing steps, the fan anomaly, excess moisture, manual watering | CC BY |
+| Khodadad, Hummerick, Spencer, Dixit, Richards, Romeyn, Smith, Wheeler and Massa (2020). *Microbiological and Nutritional Analysis of Lettuce Crops Grown on the International Space Station*. Frontiers in Plant Science 11:199. https://doi.org/10.3389/fpls.2020.00199 | Recorded range of bacterial counts on ISS-grown lettuce leaves (2.14 to 4.86 log10 CFU/g), pathogen screening results, absence of standards, harvest and freezing steps, the fan anomaly, excess moisture, manual watering, the name of the zinnia test (VEG-01C) | CC BY |
 
 No data files from these sources are included in the repository. The repository contains only short quoted sentences and the numbers named above.
 

@@ -274,7 +274,7 @@ export const report = {
       zones_caption: 'Zone boundaries for root moisture and chamber humidity',
       col_zone: 'Zone',
       bound_below: 'below {value}',
-      bound_upto: '{value}',
+      bound_upto: 'up to {value}',
       bound_from: '{value}',
       bound_above: 'above {value}',
       bound_range: '{lower} to {upper}',

@@ -38,7 +38,7 @@ The reader must do two tasks.
 | 11 | The −15 of ground control support | Ambiguous |
 | 12 | Difference between plant health 0 and the harvest grade "Failure" | Ambiguous |
 | 13 | Chamber humidity does not reach the danger zone with the fan on low alone | Wrong |
-| 14 | Mold stage 3 is not reached by the number of days alone | Wrong |
+| 14 | Stage 3 is almost never reached by the number of days alone | Wrong |
 | 15 | The format of the evidence list was extended | Wrong |
 | 16 | Verdicts and value types are written as English codes | Ambiguous |
 | 17 | Two to three clues and the number of symptoms | Wrong |
@@ -56,12 +56,12 @@ The reader must do two tasks.
 | 29 | The sanitizing wipes (Pro-San) at harvest are not in the source text | Wrong |
 | 30 | What the recorded range 2.14 to 4.86 refers to | Wrong |
 | 31 | The document used as evidence for the purpose | Uncertain |
-| 32 | The value type "recorded value" is shown on screen as "Recorded" | Ambiguous |
+| 32 | The value type that the planning document calls "measured" is shown on screen as "Recorded" | Ambiguous |
 | 33 | When "sanitize surfaces" is selected, the microbial value goes up | Wrong |
 | 34 | A format check of the crisis response was added to the shared type file | Ambiguous |
 | 35 | Option text and "no wording that shows the correct answer" | Ambiguous |
 | 36 | The microbial value cannot be "below the range" | Wrong |
-| 37 | The server checks the evidence list each time it sends a crisis | Ambiguous |
+| 37 | The server checks the evidence list before it sends a crisis | Ambiguous |
 
 ---
 
@@ -110,7 +110,7 @@ The reader must do two tasks.
 - **Type**: Ambiguous
 - **Planning document section**: "Game rules > Daily progress and daily care". Original (translated from the Korean planning document): "Daily care actions are limited to two a day (choose from watering amount, fan, and light). The watering amount is None 0, Normal +10, Much +20."
 - **What the problem is**: The document does not say if the same action can be done two times, or if "no watering" counts as one action.
-- **What was done**: The player can do up to two actions a day, of any type. The player can do the same action two times (for example, "Much" watering two times = +40). "No watering" is not an action, so it does not count. The screen shows only the "Normal" and "Much" buttons.
+- **What was done**: The player can do up to two actions a day, of any type. The player can do the same action two times (for example, "Heavy" watering two times = +40). "No watering" is not an action, so it does not count. The screen shows only the "Normal" and "Heavy" buttons.
 - **Why**: "Up to two times" was read literally. Two waterings are necessary for the player to cause an overwatering crisis on purpose.
 - **How to revert**: Add a check "one action of the same type per day" in `applyCare` in `src/lib/game/engine.ts`.
 - **What the team must decide**: Whether the same action is permitted two times a day.
@@ -153,7 +153,7 @@ The reader must do two tasks.
 - **Planning document section**: "Game rules > Effects by verdict". Original (translated from the Korean planning document): "Partial | Ends | Moves only half way toward normal, +30%p probability of the same crisis on the next day"
 - **What the problem is**: The document does not say if the crisis occurs with 30% on the next day when the condition for that crisis is not met (when the status is normal).
 - **What was done**: The game adds 30%p to the probability **only when** that crisis is a candidate on the next day (60% in the caution zone). If the status is normal, no crisis occurs. The added value applies only to the next day.
-- **Caution**: If two crises are candidates on the next day, only the crisis that ended as partial on the previous day stays as a candidate. The exception is when the other crisis is in the danger zone. Then the probability is already 100%. Without this rule, the added 30%p can cause a **different** crisis (a problem found in an independent review). The server reads the partial verdict of the previous day from the crisis history in the request and selects the same candidate. (`selectCandidates` and `recurrenceCrisisIdOf` in `src/lib/evidence/select.ts`)
+- **Caution**: If two crises are candidates on the next day, only the crisis that ended as partial on the previous day stays as a candidate. The exception is when the crisis of the previous day is in the caution zone and the other crisis is in the danger zone. Then the probability is already 100%. Without this rule, the added 30%p can cause a **different** crisis (a problem found in an independent review). The server reads the partial verdict of the previous day from the crisis history in the request and selects the same candidate. (`selectCandidates` and `recurrenceCrisisIdOf` in `src/lib/evidence/select.ts`)
 - **Why**: If a crisis occurs when the status is normal, the symptoms do not agree with the status values. The planning document requires that a crisis scene "does not contradict the current status values".
 - **How to revert**: In `crisisProbability` and `selectCandidates` in `src/lib/evidence/select.ts`, add the crisis that ended as partial on the previous day to the candidates, independent of the condition.
 - **What the team must decide**: Whether the crisis occurs again even when the status is normal.
@@ -211,19 +211,20 @@ The reader must do two tasks.
 
 - **Type**: Wrong
 - **Planning document section**: "Game rules > Daily progress and daily care". Original (translated from the Korean planning document): "Chamber humidity increases by 5 if the fan is on low", "Game rules > Microbial value of the harvest". Original: "Day with chamber humidity in danger (high) | +0.2 per day"
-- **What the problem is**: From the start value 55, six days with the fan on low give chamber humidity of 60, 65, 70, 75, 80 and 85. A value above 80 (danger) first occurs on the night of day 6. Crises occur only until the morning of day 6. So chamber humidity never causes a crisis that "always" occurs. The caution zone (30%) occurs only on the mornings of day 5 and day 6.
+- **What the problem is**: From the start value 55, six days with the fan on low give chamber humidity of 60, 65, 70, 75, 80 and 85. A value above 80 (danger) first occurs on the night of day 6. Crises occur only until the morning of day 6. So the overnight change with the fan on low alone does not make chamber humidity cause a crisis that "always" occurs. After the player selects an action in a crisis that increases chamber humidity ("Keep the settings and check again later", +5), chamber humidity can be above 80 on the morning of day 6. The caution zone (30%) occurs only on the mornings of day 5 and day 6.
 - **What was done**: The values were not changed. The overwatering and mold crisis is caused mainly by too much watering (root moisture).
 - **Why**: Balance values are for the team to set during tests.
 - **How to revert**: Not applicable. To change it, increase `NIGHT_DRIFT` (humidity +5 when the fan is on low) in `src/lib/game/rules.ts`.
 - **What the team must decide**: Whether to increase the humidity increase when the fan is on low.
 
-## 14. Mold stage 3 is not reached by the number of days alone
+## 14. Stage 3 is almost never reached by the number of days alone
 
 - **Type**: Wrong
 - **Planning document section**: "Game rules > Symptom progression". Original (translated from the Korean planning document): "For overwatering and mold, stage 1 on the first day (droplets at leaf tips, leaf curl), stage 2 on the second day (tissue necrosis), stage 3 from the third day (mold)"
 - **Note**: The symptom names of each stage were changed in entry 26. This entry is only about "the path to stage 3".
-- **What the problem is**: In the danger zone, a crisis always occurs. Any verdict that ends a crisis moves the status out of the danger zone. So the status never actually stays in the danger zone for three days.
-- **What was done**: The day-count rule is implemented without change. The rule from entry 10 (symptom stage +1 for each inappropriate selection) is added to it. So, if the player selects inappropriate two times in one crisis, stage 3 is reached. Immediately after that, ground control support ends the crisis.
+- **What the problem is**: In the danger zone, a crisis always occurs. Any verdict that ends a crisis moves the status out of the danger zone. So, with the fan on low, the status does not stay in the danger zone for three days.
+- **Exception**: Stage 3 is reached if the player keeps the fan on high and continues heavy watering. With the fan on high, the trigger of the overwatering and mold crisis does not hold, so no crisis occurs and root moisture stays in the danger zone (high) for three days. If the player then sets the fan to low, the crisis occurs on the next day at stage 3 from the start (found in the independent review: 12 times in 300,000 random missions).
+- **What was done**: The day-count rule is implemented without change. The rule from entry 10 (symptom stage +1 for each inappropriate selection) is added to it. So, if the player selects inappropriate two times in one crisis, stage 3 is reached. This is the usual path to stage 3. Immediately after that, ground control support ends the crisis.
 - **Why**: Stage 3 and the "+0.5" of the microbial value can actually occur without a change to the numbers in the planning document.
 - **How to revert**: `computeStage` in `src/lib/evidence/select.ts`.
 - **What the team must decide**: Whether to keep this path to stage 3.
@@ -345,7 +346,7 @@ The reader must do two tasks.
 - **What the problem is**: The downloaded material and the VEG-01 records on the NASA Technical Reports Server (NTRS) do not say anywhere that the lettuce "wilted" (searched for wilt, wilting, droop).
 - **What was done**: The symptoms were changed to words that are in the source text. (`src/data/evidence.json`)
   - Stage 1: "plants not growing well" (`poor_growth`), "pillow wicks are dry" (`dry_wicks`). Original: "After about a week and a half it was observed that plants were not growing well and that pillow wicks were dry."
-  - Stage 2: "stressed plants that recover slowly" (`stressed_plants`). Original: "Direct watering of the pillows led to a recovery in several of the stressed plants; a couple of which did not recover."
+  - Stage 2: "stressed plants" (`stressed_plants`). The source does not give the order of the symptoms. The team set the order of stage 1 and stage 2. Original: "Direct watering of the pillows led to a recovery in several of the stressed plants; a couple of which did not recover."
   - Source: the abstract of Massa, Dufour, Smith (2014), NTRS 20150001374.
 - **Why**: To not show a symptom without a confirmed source as if it were a NASA record.
 - **How to revert**: If a source text with "wilting" is found (for example, Massa et al. 2017, the VEG-01 validation paper), add it with the quoted sentence to `water_shortage.symptoms` in `src/data/evidence.json`.
@@ -355,7 +356,7 @@ The reader must do two tasks.
 
 - **Type**: Wrong
 - **Planning document section**: The same table. Original (translated from the Korean planning document): "In the VEG-01 lettuce grow-out, the reservoir did not send enough water up to the pillows | … | Inject water directly into the pillows"
-- **What the problem is**: The source text is "added water directly to the plant pillows". The word "inject" is not in it. Also, the abstract of this record calls the experiment only "VEG-01" (May to June 2014) and does not name the crop. That the crop was 'Outredgeous' red romaine lettuce is in a different NASA document (NTRS 20160004060). For the second grow-out (VEG-01B), there is only the sentence "there was a period of water shortage early on".
+- **What the problem is**: The source text is "added water directly to the plant pillows". The word "inject" is not in it. Also, the abstract of this record calls the experiment only "VEG-01" (May to June 2014) and does not name the crop. That the crop was 'Outredgeous' red romaine lettuce is in a different NASA document (NTRS 20160004060). For the second grow-out (VEG-01B), there is only this sentence: "the plants had some periods of low water early on" (Khodadad et al., 2020, about VEG-01A and VEG-01B).
 - **What was done**: The action is named "add water directly to the pillows" (`add_water_direct`). The record field of the crisis says VEG-01, and the source sentence for the crop name is attached in `note`. The three wrong actions (refill the reservoir, wait for the next watering schedule, set the fan to high) have source sentences attached, and `note` says that their verdicts were given by the team.
 - **How to revert**: `water_shortage` in `src/data/evidence.json`.
 - **What the team must decide**: Whether the verdicts of the three wrong actions (1 partial, 2 inappropriate) are correct.
@@ -380,7 +381,7 @@ The reader must do two tasks.
 - **Planning document section**: The same table. Original (translated from the Korean planning document): "Remove dead tissue, sanitize surfaces, set the fan to high". The example in "AI output format": `"action_id": "remove_dead_tissue"`
 - **What the problem is**:
   - "Remove dead tissue" is not in the checked material.
-  - "Sanitize surfaces" is not there. What is there is a sentence that the astronaut "carefully cleaned off the fungus".
+  - "Sanitize surfaces" is not there. What is there is a sentence that the astronaut "delicately cleaned off the fungus".
   - There is no record that the fan was actually set to high during the zinnia grow-out. What is there is a sentence in the growing procedure: "nominal setting is low, high setting will dry excess moisture".
 - **What was done**: The actions are these four. (`src/data/evidence.json`)
   - Appropriate: "set the fan to high" (`fan_high`). The source is the growing procedure. `note` says that no record of the actual change was found.
@@ -426,7 +427,7 @@ The reader must do two tasks.
 - **How to revert**: `background` in the same file.
 - **What the team must decide**: To state this claim in the presentation only at the strength of a "recommendation".
 
-## 32. The value type "recorded value" is shown on screen as "Recorded"
+## 32. The value type that the planning document calls "measured" is shown on screen as "Recorded"
 
 - **Type**: Ambiguous
 - **Planning document section**: "Data processing > Contents of one list item". Original (translated from the Korean planning document): "Value type | Whether it is a recorded value or a game value"
@@ -459,7 +460,7 @@ The reader must do two tasks.
 
 - **Type**: Ambiguous
 - **Planning document section**: "AI output format". Original (translated from the Korean planning document): "options.label | Option text shown on screen | No wording that shows the correct answer", "scene | 2 to 3 sentences about what is seen in the grow chamber | Must not contradict the current status values"
-- **What the problem is**: A person must read the text to judge these two constraints. Code cannot check them. Also, if the crisis name ("Mold from overwatering and stagnant air") is shown before the selection, it shows the answer.
+- **What the problem is**: A person must read the text to judge these two constraints. Code cannot check them. Also, if the crisis name ("Excess water and stagnant air leading to mold") is shown before the selection, it shows the answer.
 - **What was done**:
   - The scene text of the pre-made crises gives only the symptoms seen on the plants. It does not give measured values or causes. So it does not contradict any status value.
   - The screen hides the crisis name before the selection and shows it on the result screen.
@@ -476,14 +477,15 @@ The reader must do two tasks.
 - **How to revert**: `MICROBIAL` in `src/lib/game/rules.ts`.
 - **What the team must decide**: Whether to adjust the values so that "below the range" can occur.
 
-## 37. The server checks the evidence list each time it sends a crisis
+## 37. The server checks the evidence list before it sends a crisis
 
 - **Type**: Ambiguous
 - **Planning document section**: "What the backend does > Task list". Original (translated from the Korean planning document): "Load and check the evidence list | Reads the list JSON and checks for duplicate IDs, at least one appropriate action per crisis, and no missing sources | Required"
 - **What the problem is**: The document does not say when the check occurs, or what happens when the check fails.
 - **What was done**: The check occurs in two places.
   1. Test (`src/lib/evidence/check.test.ts`): passes only if the evidence list in the repository has no errors.
-  2. Server (`src/lib/crisis/pipeline.ts`): checks the list before it sends a crisis (once after the server starts). If there is an error, it does not send a crisis and sends a 500 response. The screen shows a "Try again" button.
-- **Why**: So that evidence that did not pass the check does not go to the screen.
+  2. Server (`src/lib/crisis/pipeline.ts`): checks the list before it sends a crisis (once after the server starts). If there is an error, it does not send a crisis and sends a 500 response. The screen shows a "Retry" button.
+- **Why**: So that no crisis is sent from evidence that did not pass the check.
+- **Caution**: The "Evidence and sources" screen shows the list as it is. It does not run the check, so the tests prevent errors in the list.
 - **How to revert**: `assertEvidenceChecked` in `src/lib/crisis/pipeline.ts`.
 - **What the team must decide**: None.
