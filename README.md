@@ -46,10 +46,10 @@ No environment variables, database or account are needed.
 
 Every number on screen carries one of two labels.
 
-- **Measured**: copied from a cited source, with the source sentence shown next to it.
+- **Recorded**: taken from a cited source, with the source sentence shown next to it.
 - **Game value**: set by the team so that the game is balanced. NASA sources say which action is right, but not how much the plant state changes per day, so all state changes are game values.
 
-The ground analysis report never says that the harvest is safe or can be eaten. The measured range it shows is a range that was observed, not a safety limit.
+The ground analysis report never says that the harvest is safe or can be eaten. The recorded range it shows is a range that was observed, not a safety limit.
 
 ## Structure
 
@@ -84,7 +84,7 @@ The planning document gives the model one job: write the crisis scene, the plant
 
 - **In the product:** no language model is called. Crisis text comes from `src/data/fallback-crises.json`.
 - **In development:** the team used an AI coding assistant (Claude Code by Anthropic) to write and test the code in this branch, to search the downloaded NASA source documents and draft the evidence list, to draft the English text of the pre-made crises, and to draft the documents in `docs/`. The team defined the idea, the rules and the scope in its planning document.
-- **Data files:** `src/data/*.json` each carry an `ai_disclosure` field that says how AI tools were used for that file. Every quote in the evidence list was checked by script to be a verbatim sentence of the cited source.
+- **Data files:** `src/data/*.json` each carry an `ai_disclosure` field that says how AI tools were used for that file. Every quote in the evidence list was compared by a script with the text of the downloaded source document and is a verbatim part of it. The script and the downloaded documents are not part of this repository.
 - No AI-generated images, video or audio are used. The plant drawing is an inline SVG written as code.
 
 ## Sources and licenses

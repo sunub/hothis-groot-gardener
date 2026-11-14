@@ -4,11 +4,11 @@ Everything this project uses that the team did not make: NASA data and documents
 
 ## 1. NASA data and documents
 
-Sentences quoted from these documents are in `src/data/evidence.json`, each next to the claim it supports. Every quote was checked by script to be a verbatim part of the source text.
+Sentences quoted from these documents are in `src/data/evidence.json`, each next to the claim it supports. Every quote was compared by a script with the text of the downloaded source document and is a verbatim part of it. The script and the downloaded documents are not part of this repository.
 
 | Source | Used for | License or usage statement |
 |---|---|---|
-| Massa, Dufour and Smith (2015). *Veggie Hardware Validation Test Preliminary Results and Lessons Learned* (abstract). NASA Technical Reports Server 20150001374. https://ntrs.nasa.gov/citations/20150001374 | Water shortage crisis: record, symptoms, the corrective action | NTRS record: public use permitted |
+| Massa, Dufour and Smith (2014). *Veggie Hardware Validation Test Preliminary Results and Lessons Learned* (abstract). NASA Technical Reports Server 20150001374. https://ntrs.nasa.gov/citations/20150001374 | Water shortage crisis: record, symptoms, the corrective action | NTRS record: public use permitted |
 | NASA (2017). *On-Orbit Gardening Guides*. NASA Technical Reports Server 20170007815. https://ntrs.nasa.gov/citations/20170007815 | Fan settings (low, high) and what the high setting does; watering by observation | NTRS record: public use permitted |
 | Massa (2016). *Veggie: Space Vegetables for the International Space Station and Beyond*. NASA Technical Reports Server 20160004060. https://ntrs.nasa.gov/citations/20160004060 | Harvest frozen and returned to Earth for analysis | NTRS record: public use permitted |
 | NASA. *Growing Plants in Space*. https://www.nasa.gov/exploration-research-and-technology/growing-plants-in-space/ | Excess water and mold crisis: record, the cleaning action | NASA web page |
