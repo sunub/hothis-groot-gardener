@@ -1,6 +1,6 @@
 # 역할별 작업 전달
 
-Space Garden Simulator · 2026-11-15 08:10 기준 · 기준 브랜치 `HwangSoon96` (커밋 `9c46c59`)
+Space Garden Simulator · 2026-11-15 09:00 기준 · 기준 브랜치 `HwangSoon96` (커밋 `063a76c`)
 
 이 문서는 통합 브랜치의 지금 상태와, 세 역할이 이어서 할 일을 적은 것입니다. 역할의 경계는 `docs/TIMELINE-EVENTS-PLAN.md` 7절의 폴더 구분을 따릅니다.
 
@@ -27,7 +27,7 @@ Space Garden Simulator · 2026-11-15 08:10 기준 · 기준 브랜치 `HwangSoon
 
 **확인함**
 
-- 타입 검사, 린트, 테스트 531개, 빌드, Python 테스트 3개 통과.
+- 타입 검사, 린트, 테스트 557개, 빌드, Python 테스트 3개 통과.
 - 사건 카드 API를 넣기 전의 같은 통합본으로 시연 임무를 1일째부터 보고서까지 브라우저에서 진행했습니다. 위기 3번의 글을 모두 언어 모델이 썼고(`origin: generated`), 수치는 `docs/DEMO-SCRIPT.md`와 같았고, 화면 오류는 없었습니다.
 - `POST /api/event`에 정상 요청 2종과 잘못된 요청 5종을 보내 200과 400을 확인했습니다.
 
@@ -179,6 +179,9 @@ uv run --group server uvicorn rag_server:app --host 127.0.0.1 --port 8000   # �
 | 사건별 검색 평가 질문 12개 | `data/evaluation.events.json` |
 | NASA 공개 문서에서 뽑은 조각 26개 | `data/public_sources_RAG.json` |
 | 사건 카드 API, 사건용 출력 형식과 검증, 미리 만든 카드 글 5개 | `src/app/api/event/`, `src/lib/event-cards/`, `src/data/event-cards.json` |
+| 사건의 근거 조각 목록 보완 (아래 B2) | `src/data/events.json`의 `source_chunks`, `data/evaluation.events.json` |
+| 사건 카드 글 생성기 연결 (아래 B7) | `src/lib/event-cards/llm-generator.ts`, `llm-prompt.ts` |
+| 병합 뒤 달라진 사실에 맞게 README와 출처 문서를 고침 | `README.md`, `docs/SOURCES.md` |
 
 ### B1. 검색 DB에 공개 조각을 넣고 다시 만들기 (임베딩 키가 필요)
 
@@ -187,18 +190,26 @@ uv run --group server uvicorn rag_server:app --host 127.0.0.1 --port 8000   # �
 - `data/json/total_RAG.json`에 합치려면 새 출처 10종을 `src/data/source-licenses.json`에 더해야 합니다. 그 파일의 테스트는 문장 인용을 CC BY 4.0에만 허용하므로, NASA 문서의 사용 조건 표기를 허용 목록에 넣을지 정해야 합니다.
 - 새 조각에는 한국어 번역이 없습니다. 키워드 검색은 영어로만 찾습니다.
 
-### B2. 사건의 근거 조각 목록 보완
+### B2. 사건의 근거 조각 목록 보완 (끝남)
 
-키워드 검색으로 평가한 결과입니다(영어 질문, 한국어 번역 없음, 벡터 검색 없음): 사건별 질문 8개 Recall@5 0.500, 앱이 실제로 보내는 위기 질문 4개 0.750, 합계 0.583.
+조각 본문을 읽고, 그 사건의 절차나 관찰이나 이상 현상을 직접 적은 조각만 남겼습니다.
 
-| 사건 | 제안 |
+| 사건 | 바뀐 것 |
 |---|---|
-| `overwater_mold` | `veggie-03a-fan-restart` 추가. 앱의 질문에서 2위로 나오는데 목록에 없음 |
-| `wick_opening` | `veggie-seed-wicks-thinning`, `VEG-03J-04` 추가 |
+| `overwater_mold` | `veggie-03a-fan-restart` 추가. `veggie-cultivar-airflow` 삭제(일반적인 장비 설명) |
 | `thinning` | `veggie-seed-wicks-thinning` 추가 |
-| `harvest_procedure` | `veggie-sequential-harvest-methods`, `veggie-03a-sample-handling`, `veg01-harvest-b` 추가 |
-| `fan_off_after_restart` | `veg01-light-hardware`를 `veggie-cultivar-airflow`로 바꾸거나 배경용으로만 둠 |
-| `water_shortage` | `veg01-harvest-a` 추가(선택) |
+| `harvest_procedure` | `veggie-sequential-harvest-methods`, `veggie-03a-sample-handling` 추가. `veg01-harvest-b`는 넣지 않음(먹는 수확물의 소독) |
+| `fan_off_after_restart` | `veg01-light-hardware` 삭제(이상 현상이 적혀 있지 않음) |
+| `water_shortage`, `wick_opening`, `pillow_no_flow`, `mild_tip_burn` | 그대로 |
+
+키워드 검색으로 평가한 값입니다(영어 질문, 한국어 번역 없음, 벡터 검색 없음, 질문 12개).
+
+| | Recall@5 | MRR@5 |
+|---|---|---|
+| 보완 전 | 0.583 | 0.878 |
+| 보완 후 | 0.597 | 0.794 |
+
+달라진 것은 정답 표시입니다. 검색 자체는 같습니다.
 
 ### B3. 실험 기록을 공개 원문이 뒷받침하는 문장으로 바꾸기
 
@@ -236,7 +247,14 @@ D1에서 "상태 줄을 기본으로"로 정하면, 구간이 바뀌는 날과 �
 - **검사 규칙이 두 곳에 있습니다.** `llm/guard.ts`의 길이 상한, 정답 노출 표현, 안전 표현 목록과 `schemas.ts`·`validate.ts`·`claims.ts`의 것이 따로 있습니다. 지금은 `schemas.ts`의 상한이 `guard.ts`의 값 이상이라 충돌하지 않습니다. 한곳에서 가져오게 합치는 것을 권합니다.
 - **지시문에 들어가는 조각의 라이선스.** 검색 결과가 600자까지 그대로 지시문에 들어갑니다. 물 부족 위기의 질문에서는 상위 4개가 모두 "사실만 쓸 출처"의 조각입니다 (확인함). 모델이 그 문장을 화면 글에 옮기면 문제가 화면까지 갑니다. `source-licenses.json`의 `use`로 걸러 내거나, D3의 결정에 맞춥니다.
 - **모델은 위기를 고르지 않습니다.** 코드가 후보를 정하고 모델은 장면과 선택지의 글만 씁니다. 판정과 수치는 근거 목록에서 옵니다.
-- **사건 카드 생성기.** 붙일 자리는 `src/lib/event-cards/generator.ts`의 `EventCardGenerator`입니다. 입력은 `buildEventCardGenerationInput`이 만들고, 출력은 `eventCardOutputSchema`(사건 번호, 장면, 식물의 말, 선택지마다 번호·문구·선택 뒤의 말·이유)입니다. `src/app/api/event/route.ts`에서 `createEventCard`에 넘기면 됩니다. 검증에 두 번 실패하면 미리 만든 글이 나옵니다.
+- **사건 카드 생성기 (연결함).** `LLM_MODEL`이 설정돼 있으면 `POST /api/event`가 글을 생성합니다(`src/lib/event-cards/llm-generator.ts`). 위기 쪽의 모델 호출 코드와 설정을 그대로 쓰고, 그쪽 파일은 고치지 않았습니다.
+  - 모델이 쓰는 것: 장면, 식물의 말, 선택지 문구, 선택 뒤 식물의 말.
+  - 모델이 쓰지 않는 것: 이유 설명(`why`). 미리 만든 글에서 가져옵니다. 모델에는 판정과 사건 이름과 날짜를 주지 않으므로, 이유를 쓰게 하면 원인을 지어내기 때문입니다.
+  - 근거 검색 결과는 지시문에 넣지 않습니다.
+  - 사건 기록에 없는 증상(시듦, 곰팡이, 변색 등)이 글에 나오면 거절합니다. 두 번 실패하면 미리 만든 글이 나옵니다.
+  - **실제 모델로 돌린 결과 (확인함)**: 카드 5장을 3번씩, 15번 모두 생성됐고 한 번에 15~27초(중앙값 17초)가 걸렸습니다.
+  - **문제 두 가지**: ① 미리 만든 글을 거의 그대로 베낀 경우가 많습니다. 솎기 카드는 세 번 모두 미리 만든 글과 같았습니다 ② 근거 없는 관찰을 덧붙인 장면이 15번 중 2번 있었습니다("싹 끝이 배지 위로 보인다", "배지가 축축해 보인다. 재배실 습도는 정상이다"). 이런 문장을 걸러 내는 검사는 없습니다.
+  - **정할 것**: 지금은 위기와 같은 스위치(`LLM_MODEL`)로 켜집니다. 사건 카드는 얻는 것이 적고 기다리는 시간이 늘어나므로, 따로 켜고 끄게 할지 정해야 합니다. 화면이 아직 이 API를 부르지 않아 지금 보이는 영향은 없습니다.
 - **날짜별 기록 문장.** D1의 조사 수치를 참고하세요. 변화가 있는 날만 골라 한 번에 부르는 방식이 구간 하나에 10~15초였습니다.
 - **한국어 생성 글에는 내용 검사가 없습니다.** 금지 표현 목록이 영어뿐입니다.
 
