@@ -18,7 +18,7 @@ Sentences quoted from these documents are in `data/content/evidence.json`, each 
 | NASA Human Research Program (2025). *Evidence Report: Risk of Adverse Cognitive or Behavioral Changes and Psychiatric Disorders Leading to In-Mission Health and Performance and Long-Term Health Effects*. https://humanresearchroadmap.nasa.gov/evidence/reports/HRP-ER-BMED-HFBP-20250210.pdf | Background: failing crops and crew well-being | Public release by NASA, February 10, 2025 |
 | Landon et al. (2025). *Behavioral Health Benefits of the ISS Pick-and-Eat Crop Growth System* (poster abstract). NASA Technical Reports Server 20250000411. https://ntrs.nasa.gov/citations/20250000411 | Background: working with plants as a behavioral health countermeasure | NTRS record: public use permitted |
 
-One more NASA document is quoted in the search excerpts (`data/public_sources_RAG.json`) and cited in `docs/IMPLEMENTATION-NOTES.en.md` (entry 29), but is not in the evidence list: Massa, Hummerick, Spencer and Smith (2015). *Veggie ISS Validation Test Results and Produce Consumption*. NASA Technical Reports Server 20150021302. https://ntrs.nasa.gov/citations/20150021302 (NTRS record: public use permitted).
+One more NASA document is quoted in the search excerpts (`data/sources/public_sources_RAG.json`) and cited in `docs/IMPLEMENTATION-NOTES.en.md` (entry 29), but is not in the evidence list: Massa, Hummerick, Spencer and Smith (2015). *Veggie ISS Validation Test Results and Produce Consumption*. NASA Technical Reports Server 20150021302. https://ntrs.nasa.gov/citations/20150021302 (NTRS record: public use permitted).
 
 The challenge's Resources tab links to the NASA Human Research Program pages. The evidence report above is reached from those pages (hazards and risks pages, then the evidence report list).
 
@@ -32,7 +32,7 @@ The evidence list and the screens contain only short quoted sentences from the s
 
 ### Search excerpts (optional evidence search)
 
-The evidence search (`retriver.py`, `rag_server.py`) reads excerpts cut from six papers. The excerpts are in `data/json/total_RAG.json` (81 excerpts) and in the search database `vector_db/`, which holds the same text with its embeddings. The license of each source is recorded in `src/data/source-licenses.json`, from the publisher record of each DOI.
+The evidence search (`services/rag/retriver.py`, `services/rag/rag_server.py`) reads excerpts cut from six papers. The excerpts are in `data/sources/total_RAG.json` (81 excerpts) and in the search database `data/vector_db/`, which holds the same text with its embeddings. The license of each source is recorded in `data/content/source-licenses.json`, from the publisher record of each DOI.
 
 | Source | Excerpts | License in the publisher record |
 |---|---|---|
@@ -45,9 +45,9 @@ The evidence search (`retriver.py`, `rag_server.py`) reads excerpts cut from six
 
 Five of the six sources do not allow free reuse of their text. Whether these excerpts stay in the public repository is an open team decision (`docs/ROLE-TASKS.md`, D3). The evidence list and the screen text do not quote these five sources. When the search server is on, retrieved excerpts are put into the prompt of the language model that writes crisis text.
 
-`data/public_sources_RAG.json` holds 26 excerpts copied word for word from the NASA documents in section 1. They are prepared for the search database and are not in it yet.
+`data/sources/public_sources_RAG.json` holds 26 excerpts copied word for word from the NASA documents in section 1. They are prepared for the search database and are not in it yet.
 
-`data/evaluation.example.json` and `data/evaluation.events.json` are search evaluation questions written by the team.
+`data/eval/evaluation.example.json` and `data/eval/evaluation.events.json` are search evaluation questions written by the team.
 
 ## 3. What is not from a source
 
@@ -75,7 +75,7 @@ All state values and their changes (zones, overnight change, watering amounts, c
 | PyYAML, FastAPI (Python, optional search) | 6.x, 0.x | Retriever settings, search server | MIT |
 | sentence-transformers (Python, optional reranker) | 5.x | Reranking model runner | License not checked here: the package was not installed when this table was written |
 
-The images in `public/sprites`, `public/bg` and `public/icons` came with the design work. The screens label the plant and chamber images "AI-generated art". Which tool made the images, and its terms, are not recorded in this repository yet.
+The images in `apps/web/public/sprites`, `apps/web/public/bg` and `apps/web/public/icons` came with the design work. The screens label the plant and chamber images "AI-generated art". Which tool made the images, and its terms, are not recorded in this repository yet.
 
 The project was started from the `create-next-app` template (MIT). The random number generator in `apps/web/src/lib/game/rng.ts` is written for this project. It follows the published mulberry32 algorithm.
 
@@ -103,4 +103,4 @@ No code was copied from any of these.
 
 ## 6. AI tools
 
-See the "Use of AI tools" section of the README. The models used by the optional evidence search (embedding model, reranker) are described in `MODEL_SELECT.md`.
+See the "Use of AI tools" section of the README. The models used by the optional evidence search (embedding model, reranker) are described in `services/rag/MODEL_SELECT.md`.

@@ -117,6 +117,7 @@ The planning document gives the model one job: write the crisis scene, the plant
 - `apps/web/src/server/ai/crisis/pipeline.ts`: generate, validate, retry once, then fall back to a pre-made crisis.
 - `apps/web/src/app/api/crisis/route.ts`: the one place where a generator is passed in. It connects `apps/web/src/server/ai/crisis/llm/` when `LLM_MODEL` is set.
 - `apps/web/src/server/ai/crisis/llm/`: settings, prompt, model client (Ollama or OpenAI-compatible), evidence search client and wording checks.
+- `apps/web/src/server/ai/event-cards/`: event cards for timeline events behind `POST /api/event`. Their text is pre-made by default. With a model configured and `LLM_EVENT_CARDS=on`, the model writes the scene, the plant's line and the option text; the explanations, verdicts and effects still come from the data files.
 
 ## Use of AI tools
 
