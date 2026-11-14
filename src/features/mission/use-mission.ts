@@ -1,6 +1,15 @@
 'use client';
 
+import { useEffect, useMemo, useSyncExternalStore } from 'react';
 import type { CareOp, MissionMode, MissionState } from '@/lib/contract/types';
+import { useLocale } from '@/lib/i18n';
+import {
+  ensureCrisisRequest,
+  getServerSnapshot,
+  getSnapshot,
+  missionActions,
+  subscribe,
+} from './mission-store';
 
 /**
  * React access to the mission. The mission state lives in one store that is
@@ -36,6 +45,26 @@ export interface UseMission {
   actions: MissionActions;
 }
 
+/**
+ * Mission state and actions for a screen. Must be used inside LocaleProvider:
+ * the crisis request is written in the current screen language.
+ */
 export function useMission(): UseMission {
-  throw new Error('not implemented');
+  const snapshot = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
+  const { locale } = useLocale();
+
+  // Covers a reload in crisis_pending and a language change; the store skips duplicates.
+  useEffect(() => {
+    ensureCrisisRequest(locale);
+  }, [locale, snapshot.mission]);
+
+  return useMemo(
+    () => ({
+      ready: snapshot.ready,
+      mission: snapshot.mission,
+      crisisStatus: snapshot.crisisStatus,
+      actions: missionActions,
+    }),
+    [snapshot],
+  );
 }

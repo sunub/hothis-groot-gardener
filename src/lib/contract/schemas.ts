@@ -3,6 +3,7 @@ import type {
   ActionDelta,
   AiCrisisOutput,
   CrisisRequest,
+  CrisisResponse,
   EvidenceList,
   PlantState,
   SourceRef,
@@ -10,7 +11,7 @@ import type {
 
 /**
  * Runtime schemas for the shapes in types.ts that cross a trust boundary:
- * AI output, API requests and the evidence list file.
+ * AI output, API requests and responses, and the evidence list file.
  * Each schema is checked against its type with `satisfies`.
  */
 
@@ -95,7 +96,7 @@ export const crisisRequestSchema = z.strictObject({
     .nullable(),
 }) satisfies z.ZodType<CrisisRequest>;
 
-// --- Evidence list file ------------------------------------------------------
+// --- Shared pieces of the evidence list ---------------------------------------
 
 export const sourceRefSchema = z.strictObject({
   title: text,
@@ -113,6 +114,43 @@ export const actionDeltaSchema = z.strictObject({
   plant_health: z.number().optional(),
   fan: fanLevelSchema.optional(),
 }) satisfies z.ZodType<ActionDelta>;
+
+// --- Crisis API response -----------------------------------------------------
+
+/** The screen checks the API response with this before the game logic uses it. */
+export const crisisResponseSchema = z.strictObject({
+  crisis_id: text,
+  name: text,
+  stage: z.number().int().min(1),
+  attempt: z.number().int().min(1),
+  scene: text,
+  plant_line: text,
+  clues: z
+    .array(z.strictObject({ symptom_id: text, text }))
+    .min(1)
+    .max(AI_CLUES_MAX),
+  options: z
+    .array(
+      z.strictObject({
+        action_id: text,
+        label: text,
+        result_line: text,
+        why: text,
+        verdict: verdictSchema,
+        reason: text,
+        delta: actionDeltaSchema,
+        value_type: valueTypeSchema,
+        source: sourceRefSchema.nullable(),
+      }),
+    )
+    .min(AI_OPTIONS_MIN)
+    .max(AI_OPTIONS_MAX),
+  record_note: z.string(),
+  crisis_source: sourceRefSchema,
+  origin: z.enum(['fallback', 'generated']),
+}) satisfies z.ZodType<CrisisResponse>;
+
+// --- Evidence list file ------------------------------------------------------
 
 const harvestStepIdSchema = z.enum(['harvest_sanitize', 'freeze_return', 'ground_analysis']);
 

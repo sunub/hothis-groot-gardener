@@ -175,15 +175,16 @@ export const MICROBIAL = {
 /** Crisis whose record feeds the mold-related microbial rules. */
 export const MOLD_CRISIS_ID = 'overwater_mold';
 /** Action that counts as "surface sanitizing during a crisis". */
-export const SANITIZE_ACTION_ID = 'sanitize_surfaces';
+export const SANITIZE_ACTION_ID = 'clean_plant_surfaces';
 /** Symptom stage that counts as "progressed to the mold stage". */
 export const MOLD_STAGE = 3;
 
 // --- Demo mode ---------------------------------------------------------------
 
 /**
- * Fixed seed for demo mode. With the scripted care path in
- * docs/DEMO-SCRIPT.md both crises occur on fixed days.
- * The value is chosen by the seed search in the mission run-through test.
+ * Fixed seed for demo mode. With this seed the crisis rolls on game days 3
+ * and 5 succeed in a caution zone (both rolls are below 0.3), so the care
+ * steps in docs/DEMO-SCRIPT.md show both crises on fixed days.
+ * The mission run-through test checks this.
  */
-export const DEMO_SEED = 0;
+export const DEMO_SEED = 2042;
