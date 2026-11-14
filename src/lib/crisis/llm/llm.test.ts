@@ -9,8 +9,8 @@ import { createCrisis } from '../pipeline';
 import { validateAiOutput } from '../validate';
 import { chatJson, parseJsonText } from './client';
 import { readLlmConfig, type LlmConfig } from './config';
-import { createLlmGenerator, GenerationRejectedError, shuffle } from './generator';
-import { checkWording } from './guard';
+import { createLlmGenerator, GenerationRejectedError, shuffle, styleExample } from './generator';
+import { checkStructure, checkWording } from './guard';
 import { buildOutputSchema, buildUserPrompt } from './prompt';
 import { buildRetrievalQuery } from './retrieval';
 
@@ -53,6 +53,7 @@ const baseConfig: LlmConfig = {
   think: false,
   ragTopN: 4,
   ragTimeoutMs: 1_000,
+  repairs: 0,
 };
 
 /** A good water_shortage stage 1 text, as a model would return it. */
@@ -202,11 +203,15 @@ describe('prompt and output schema', () => {
       input,
       candidate,
       excerpts: [{ id: 'x', subsection: 'Growth stall', text: 'Plants were stunted.', source_url: 'u', source_location: 'p', source_license: null }],
-      example: getFallbackCrisis('water_shortage', 1, 'en', [])!,
+      example: styleExample(candidate),
     });
     for (const s of candidate.symptoms) expect(prompt).toContain(`${s.symptom_id}: ${s.name}`);
     for (const a of candidate.actions) expect(prompt).toContain(`${a.action_id}: ${a.name} | verdict: ${a.verdict}`);
     expect(prompt).toContain('STYLE EXAMPLE');
+    // Option text is left out of the example: the model copied it word for word.
+    const premade = getFallbackCrisis('water_shortage', 1, 'en', [])!;
+    expect(prompt).toContain(premade.scene);
+    for (const option of premade.options) expect(prompt).not.toContain(option.result_line);
     expect(prompt).toContain('[1] Growth stall: Plants were stunted.');
     expect(prompt).toContain('root moisture is far too low');
   });
@@ -261,6 +266,23 @@ describe('checkWording', () => {
     const { input } = inputFor(dry);
     const text = { ...goodWaterText(), plant_line: 'The soil around me feels dry.' };
     expect(checkWording(text, input.candidates[0]).join(' ')).toMatch(/soil/);
+  });
+
+  it('catches water behaving as under gravity (seen in a real Gemma run)', () => {
+    const { input } = inputFor(wet);
+    const out = { ...getFallbackCrisis('overwater_mold', 1, 'en', [])!, scene: 'Excess moisture is pooling around the base of the plants. Drops sit on the leaves.' };
+    const line = { ...out, scene: getFallbackCrisis('overwater_mold', 1, 'en', [])!.scene, plant_line: 'My leaves are dripping.' };
+    expect(checkWording(out, input.candidates[0]).join(' ')).toMatch(/pooling.*microgravity/);
+    expect(checkWording(line, input.candidates[0]).join(' ')).toMatch(/dripping/);
+  });
+
+  it('catches structure problems so the model can fix them', () => {
+    const { input } = inputFor(dry);
+    const text = goodWaterText();
+    text.options = [text.options[1], text.options[1], text.options[2]];
+    const issues = checkStructure(text, input.candidates[0]).join(' ');
+    expect(issues).toMatch(/refill_reservoir.*more than once/);
+    expect(issues).toMatch(/appropriate action \(add_water_direct\)/);
   });
 
   it('catches a safety or edibility claim anywhere in the text', () => {
@@ -355,6 +377,36 @@ describe('createLlmGenerator', () => {
     const { impl } = fakeFetch({ modelReplies: [bad] });
     const generator = createLlmGenerator(baseConfig, { fetchImpl: impl });
     await expect(generator(inputFor(dry).input, new AbortController().signal)).rejects.toBeInstanceOf(GenerationRejectedError);
+  });
+});
+
+describe('rewrite within an attempt', () => {
+  const limp = { ...goodWaterText(), scene: 'The plants are not growing well. The wicks look dry and limp.' };
+
+  it('sends the broken rules back and uses the rewrite', async () => {
+    const { impl, calls } = fakeFetch({ modelReplies: [limp, goodWaterText()] });
+    const generator = createLlmGenerator({ ...baseConfig, repairs: 1 }, { fetchImpl: impl, random: inOrder });
+    const out = (await generator(inputFor(dry).input, new AbortController().signal)) as AiCrisisOutput;
+    expect(out.scene).toBe(goodWaterText().scene);
+    const chats = calls.filter((c) => c.url.endsWith('/api/chat'));
+    expect(chats).toHaveLength(2);
+    const second = chats[1].body.messages as { role: string; content: string }[];
+    expect(second.map((m) => m.role)).toEqual(['system', 'user', 'assistant', 'user']);
+    expect(second[2].content).toContain('dry and limp');
+    expect(second[3].content).toMatch(/broke these rules[\s\S]*limp/);
+  });
+
+  it('still throws when the rewrite breaks a rule too', async () => {
+    const { impl, calls } = fakeFetch({ modelReplies: [limp, limp] });
+    const generator = createLlmGenerator({ ...baseConfig, repairs: 1 }, { fetchImpl: impl });
+    await expect(generator(inputFor(dry).input, new AbortController().signal)).rejects.toBeInstanceOf(GenerationRejectedError);
+    expect(calls.filter((c) => c.url.endsWith('/api/chat'))).toHaveLength(2);
+  });
+
+  it('reads LLM_REPAIRS and defaults to one rewrite', () => {
+    expect(readLlmConfig({ LLM_MODEL: 'm' })!.repairs).toBe(1);
+    expect(readLlmConfig({ LLM_MODEL: 'm', LLM_REPAIRS: '0' })!.repairs).toBe(0);
+    expect(() => readLlmConfig({ LLM_MODEL: 'm', LLM_REPAIRS: '-1' })).toThrow(/LLM_REPAIRS/);
   });
 });
 

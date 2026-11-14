@@ -50,6 +50,12 @@ export const SAFETY_CLAIM = /\b(edible|safe|safely|safety|ok to eat|okay to eat|
  */
 export const SETTING_WORDS = /\b(fans?|settings?|sensors?|readings?|percent)\b/i;
 
+/**
+ * Wrong in microgravity: water does not drip or pool on the ISS (seen in a
+ * real Gemma run: "pooling around the base", "my leaves are dripping").
+ */
+export const GRAVITY_WATER = /\b(drip(s|ped|ping|py)?|pool(s|ed|ing)?|puddl\w*|run(s|ning)? down|trickl\w* down)\b/i;
+
 /** Wrong for Veggie: the plants grow in a calcined clay substrate (seen in a real Gemma run: "the soil around me"). */
 export const WRONG_SETTING_FACTS = /\b(soil|dirt|potting mix)\b/i;
 
@@ -85,6 +91,8 @@ export function checkWording(output: AiCrisisOutput, candidate: GenerationCandid
       const hit = text.match(group.pattern);
       if (hit) issues.push(`${field}: "${hit[0]}" describes ${group.name}, which is not an allowed symptom at this stage.`);
     }
+    const gravity = text.match(GRAVITY_WATER);
+    if (gravity) issues.push(`${field}: "${gravity[0]}" cannot happen in microgravity; water clings to surfaces.`);
   }
 
   const seen: [string, string][] = [
@@ -132,5 +140,29 @@ export function checkWording(output: AiCrisisOutput, candidate: GenerationCandid
     tooLong(`options.${i}.why`, o.why, MAX_LENGTH.why);
   });
 
+  return issues;
+}
+
+/**
+ * Structure problems that validateAiOutput would also reject, checked here so
+ * the model can fix them in a rewrite instead of losing the attempt.
+ */
+export function checkStructure(output: AiCrisisOutput, candidate: GenerationCandidate): string[] {
+  const issues: string[] = [];
+  const symptomIds = output.clues.map((c) => c.symptom_id);
+  for (const id of new Set(symptomIds)) {
+    if (symptomIds.filter((s) => s === id).length > 1) issues.push(`clues: symptom_id "${id}" is used more than once.`);
+  }
+  const actionIds = output.options.map((o) => o.action_id);
+  for (const id of new Set(actionIds)) {
+    if (actionIds.filter((a) => a === id).length > 1) issues.push(`options: action_id "${id}" is used more than once.`);
+  }
+  const appropriate = candidate.actions.filter((a) => a.verdict === 'appropriate').map((a) => a.action_id);
+  if (!actionIds.some((id) => appropriate.includes(id))) {
+    issues.push(`options: include the appropriate action (${appropriate.join(', ')}).`);
+  }
+  if (output.clues.length < candidate.clues_min) {
+    issues.push(`clues: write at least ${candidate.clues_min}.`);
+  }
   return issues;
 }
