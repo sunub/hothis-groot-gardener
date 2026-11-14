@@ -13,7 +13,7 @@ import { CarePanel } from './care-panel';
 import { CrisisPanel, toCrisisView } from './crisis-panel';
 import { CrisisPendingPanel } from './crisis-pending-panel';
 import { CrisisResultPanel } from './crisis-result-panel';
-import { MissionTimeline } from './mission-timeline';
+import { CultivationTimeline } from './cultivation-timeline';
 import { NightPanel } from './night-panel';
 import { PhaseChangedContext } from './panel-heading';
 import { PlantCharacter } from './plant-character';
@@ -59,7 +59,7 @@ function GrowRoom({
   return (
     <div className="space-y-4 sm:space-y-6">
       <h1 className="sr-only">{t.mission.screen.title}</h1>
-      <MissionTimeline mission={mission} />
+      <CultivationTimeline mission={mission} />
       <div className="grid gap-4 sm:gap-6 lg:grid-cols-[minmax(0,1fr)_24rem]">
         <section
           aria-live="polite"

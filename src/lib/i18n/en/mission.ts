@@ -64,6 +64,14 @@ export const mission = {
     done: 'Done',
     crisis: 'Crisis',
     day_aria: 'Day {day}, cultivation day {cultivation_day}, {stage}',
+    // Cultivation day map (CultivationTimeline)
+    map_title: 'Cultivation timeline',
+    map_hint: 'One cell is one cultivation day, from 0 to {last}',
+    legend_stop: 'Game day stop',
+    legend_today: 'Today',
+    legend_done: 'Done',
+    legend_window: 'Crisis window',
+    legend_crisis: 'Crisis happened',
   },
   status: {
     title: 'Plant status',
