@@ -8,7 +8,8 @@
       "Crisis events point to evidence.json with crisis_ref. Their trigger, symptoms, actions and numbers stay in evidence.json; this file adds only the timeline window and DB chunks.",
       "Night drift still applies once per game day (milestones). Cultivation days between milestones only check events, so the current balance does not change.",
       "Every value marked draft needs a team answer before the engine uses it.",
-      "parallel_tracks are dated records from real experiments, shown beside the player's run as measured records. They never change verdicts or numbers."
+      "parallel_tracks are dated records from real experiments, shown beside the player's run as measured records. They never change verdicts or numbers.",
+      "source_check on a parallel_tracks entry says whether the excerpt behind it was compared with the original document. Entries marked not_checked rest on excerpts the team could not compare (the article is not in the repository's source files); do not label them as measured on screen until they are checked. Licenses per source are in src/data/source-licenses.json."
     ],
     "milestones": [
       {
@@ -418,22 +419,26 @@
         {
           "day": 0,
           "text": "Pillow A could not be hydrated and was swapped with a spare pillow.",
-          "source_chunk": "veg01-no-flow-a"
+          "source_chunk": "veg01-no-flow-a",
+          "source_check": "not_checked"
         },
         {
           "day": 7,
           "text": "Pillow B never germinated; the other pillows were thinned to one seedling each.",
-          "source_chunk": "veg01-early-a"
+          "source_chunk": "veg01-early-a",
+          "source_check": "not_checked"
         },
         {
           "day": 14,
           "text": "Three of five plants were stunted; the crew added water directly to the pillows. One recovered and two died.",
-          "source_chunk": "veg01-stall-a"
+          "source_chunk": "veg01-stall-a",
+          "source_check": "not_checked"
         },
         {
           "day": 33,
           "text": "Harvest planned for day 28 was moved to day 33 because of the low-water growth.",
-          "source_chunk": "veg01-harvest-a"
+          "source_chunk": "veg01-harvest-a",
+          "source_check": "not_checked"
         }
       ]
     },
@@ -443,17 +448,20 @@
         {
           "day": 15,
           "text": "Plant growth appeared to stop.",
-          "source_chunk": "veg01-stall-b"
+          "source_chunk": "veg01-stall-b",
+          "source_check": "not_checked"
         },
         {
           "day": 16,
           "text": "Pillows and reservoir were watered; after that, water was added directly to the pillows at every scheduled watering.",
-          "source_chunk": "veg01-stall-b"
+          "source_chunk": "veg01-stall-b",
+          "source_check": "not_checked"
         },
         {
           "day": 33,
           "text": "The plants recovered and were harvested.",
-          "source_chunk": "veg01-stall-b"
+          "source_chunk": "veg01-stall-b",
+          "source_check": "not_checked"
         }
       ]
     },
@@ -464,7 +472,8 @@
           "day": null,
           "when": "early growth",
           "text": "The fan read 'low' after a power cycle but was off; seedlings had excess moisture.",
-          "source_chunk": "veggie-03a-fan-restart"
+          "source_chunk": "veggie-03a-fan-restart",
+          "source_check": "checked"
         }
       ]
     },
@@ -474,23 +483,27 @@
         {
           "day": 3,
           "text": "Astronauts spread the wicks apart with forceps to help seedlings emerge.",
-          "source_chunk": "VEG-03J-05"
+          "source_chunk": "VEG-03J-05",
+          "source_check": "not_checked"
         },
         {
           "day": 7,
           "text": "Seedlings were thinned so each pillow kept one viable seedling.",
-          "source_chunk": "VEG-03J-06"
+          "source_chunk": "VEG-03J-06",
+          "source_check": "not_checked"
         },
         {
           "day": null,
           "when": "after germination",
           "text": "Some plants showed mild tip burn, a sign of rapid growth.",
-          "source_chunk": "VEG-03J-11"
+          "source_chunk": "VEG-03J-11",
+          "source_check": "not_checked"
         },
         {
           "day": 29,
           "text": "Plants were harvested; tissue was wrapped, bagged and frozen at -80 °C until return.",
-          "source_chunk": "VEG-03J-08"
+          "source_chunk": "VEG-03J-08",
+          "source_check": "not_checked"
         }
       ]
     }

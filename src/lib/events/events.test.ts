@@ -69,7 +69,14 @@ const Event = z.discriminatedUnion('kind', [
 const Track = z.object({
   experiment: z.string().min(1),
   entries: z.array(
-    z.object({ day: z.number().int().min(0).max(33).nullable(), when: z.string().optional(), text: z.string().min(1), source_chunk: z.string() }),
+    z.object({
+      day: z.number().int().min(0).max(33).nullable(),
+      when: z.string().optional(),
+      text: z.string().min(1),
+      source_chunk: z.string(),
+      // Whether the excerpt behind the entry was compared with the original document.
+      source_check: z.enum(['checked', 'not_checked']),
+    }),
   ).min(1),
 });
 
