@@ -473,7 +473,13 @@
           "when": "early growth",
           "text": "The fan read 'low' after a power cycle but was off; seedlings had excess moisture.",
           "source_chunk": "veggie-03a-fan-restart",
-          "source_check": "checked"
+          "source_check": "checked",
+          "verified_source": {
+            "title": "Khodadad et al. 2020, Frontiers in Plant Science 11:199",
+            "url": "https://doi.org/10.3389/fpls.2020.00199",
+            "quote": "Additionally, germinating seedlings in the VEG-03A test had excess moisture in the early period of growth, likely due to a fan malfunction, when compared to the VEG-01A and VEG-01B plants. It was during this experiment that our team identified a consistent anomaly with the Veggie hardware – specifically that when power is cycled to the hardware, upon restarting the fan will read “low” but it will actually be off.",
+            "license": "CC BY 4.0"
+          }
         }
       ]
     },

@@ -76,6 +76,15 @@ const Track = z.object({
       source_chunk: z.string(),
       // Whether the excerpt behind the entry was compared with the original document.
       source_check: z.enum(['checked', 'not_checked']),
+      // The saved, quotable source that states every claim in `text`, with the exact sentences.
+      verified_source: z
+        .strictObject({
+          title: z.string().min(1),
+          url: z.url(),
+          quote: z.string().min(1),
+          license: z.string().min(1),
+        })
+        .optional(),
     }),
   ).min(1),
 });
@@ -117,6 +126,14 @@ describe('events.json (draft)', () => {
       for (const entry of track.entries) {
         expect(chunkIds.has(entry.source_chunk), `${track.experiment}: ${entry.source_chunk}`).toBe(true);
         expect(entry.day !== null || Boolean(entry.when), `${track.experiment}: ${entry.text}`).toBe(true);
+      }
+    }
+  });
+
+  it('marks a parallel-track entry as checked only when it names a verified source', () => {
+    for (const track of list.parallel_tracks) {
+      for (const entry of track.entries) {
+        expect(entry.source_check === 'checked', `${track.experiment}: ${entry.text}`).toBe(entry.verified_source !== undefined);
       }
     }
   });
