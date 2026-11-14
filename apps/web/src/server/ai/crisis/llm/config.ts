@@ -35,6 +35,8 @@ export interface LlmConfig {
    * about 27 s on the development laptop, close to the 30 s attempt limit.
    */
   keepAlive?: string;
+  /** Rewrites asked for within one attempt when a reply breaks a rule (0 turns it off). */
+  repairs: number;
 }
 
 type Env = Record<string, string | undefined>;
@@ -43,11 +45,12 @@ export const LLM_DEFAULTS = {
   provider: 'ollama' as LlmProvider,
   ollamaBaseUrl: 'http://127.0.0.1:11434',
   timeoutMs: 30_000,
-  temperature: 0.4,
+  temperature: 0.7,
   numCtx: 8192,
   ragTopN: 4,
   ragTimeoutMs: 3_000,
   keepAlive: '30m',
+  repairs: 1,
 };
 
 /** Read the settings. Returns null when LLM_MODEL is not set (generator off). */
@@ -84,6 +87,7 @@ export function readLlmConfig(env: Env = process.env): LlmConfig | null {
     ragTopN: numberIn(env.RAG_TOP_N, LLM_DEFAULTS.ragTopN, 1, 10, 'RAG_TOP_N'),
     ragTimeoutMs: positiveInt(env.RAG_TIMEOUT_MS, LLM_DEFAULTS.ragTimeoutMs, 'RAG_TIMEOUT_MS'),
     logDir: env.LLM_LOG_DIR?.trim() || undefined,
+    repairs: nonNegativeInt(env.LLM_REPAIRS, LLM_DEFAULTS.repairs, 'LLM_REPAIRS'),
     keepAlive:
       env.LLM_KEEP_ALIVE?.trim().toLowerCase() === 'omit'
         ? undefined
@@ -100,6 +104,15 @@ function positiveInt(raw: string | undefined, fallback: number, name: string): n
   const value = Number(raw);
   if (!Number.isInteger(value) || value <= 0) {
     throw new Error(`${name} must be a positive integer, got "${raw}".`);
+  }
+  return value;
+}
+
+function nonNegativeInt(raw: string | undefined, fallback: number, name: string): number {
+  if (raw === undefined || raw.trim() === '') return fallback;
+  const value = Number(raw);
+  if (!Number.isInteger(value) || value < 0) {
+    throw new Error(`${name} must be 0 or a positive integer, got "${raw}".`);
   }
   return value;
 }
