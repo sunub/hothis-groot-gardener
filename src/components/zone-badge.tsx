@@ -12,12 +12,26 @@ const zoneTone: Record<Zone, Tone> = {
   danger_high: 'danger',
 };
 
+/** Symbol shown with every zone so the zone is not told by color alone. */
+export const ZONE_SYMBOL: Record<Zone, string> = {
+  danger_low: '✕',
+  caution_low: '△',
+  normal: '✓',
+  caution_high: '△',
+  danger_high: '✕',
+};
+
 export function zoneToneOf(zone: Zone): Tone {
   return zoneTone[zone];
 }
 
-/** Zone as a labelled badge. The label carries the meaning; color only supports it. */
+/** Zone as a labelled badge: symbol, then words. Color only supports them. */
 export function ZoneBadge({ zone }: { zone: Zone }) {
   const t = useDictionary();
-  return <Badge tone={zoneTone[zone]}>{t.common.zone[zone]}</Badge>;
+  return (
+    <Badge tone={zoneTone[zone]}>
+      <span aria-hidden>{ZONE_SYMBOL[zone]}</span>
+      {t.common.zone[zone]}
+    </Badge>
+  );
 }

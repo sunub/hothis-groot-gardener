@@ -23,22 +23,22 @@ export function MicrobialValue({ result, harvest }: { result: MicrobialResult; h
     <div className="space-y-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <p className="text-sm text-ink-muted">{m.value_label}</p>
+          <p className="text-body text-ink-muted">{m.value_label}</p>
           <p className="mt-1 flex flex-wrap items-baseline gap-x-2">
-            <span className="font-mono text-4xl font-semibold tracking-tight text-game tabular-nums sm:text-5xl">
+            <span className="font-data text-display font-semibold tracking-tight text-game tabular-nums sm:text-5xl">
               {value}
             </span>
-            <span className="text-sm text-ink-muted">{unit}</span>
+            <span className="text-body text-ink-muted">{unit}</span>
           </p>
         </div>
         <div className="flex flex-col items-start gap-1 sm:items-end">
-          <span className="text-xs text-ink-muted">{m.result_label}</span>
-          <span className="rounded-lg border border-ink-muted/50 bg-surface-2 px-3 py-1.5 text-base font-semibold">
+          <span className="text-caption text-ink-muted">{m.result_label}</span>
+          <span className="pixel-frame-flat pixel-tone-line-hi bg-surface-2 m-1 px-3 py-1.5 text-body font-semibold">
             {t.report.classification[result.classification]}
           </span>
         </div>
       </div>
-      <p className="flex flex-wrap items-center gap-2 rounded-lg border border-game/40 bg-game/5 px-3 py-2 text-sm">
+      <p className="flex flex-wrap items-center gap-2 pixel-dashed bg-surface px-3 py-2 text-body">
         <ValueTypeTag type="game_value" />
         <span>{m.calculated_note}</span>
       </p>
@@ -59,7 +59,7 @@ export function MicrobialValue({ result, harvest }: { result: MicrobialResult; h
           {/* Marker label above the track, anchored so it stays inside at the ends. */}
           <div
             aria-hidden
-            className="absolute top-0 font-mono text-xs font-semibold whitespace-nowrap text-game"
+            className="absolute top-0 font-data text-data-sm font-semibold whitespace-nowrap text-game"
             style={{
               left: `${scale.markerPct}%`,
               transform:
@@ -72,7 +72,7 @@ export function MicrobialValue({ result, harvest }: { result: MicrobialResult; h
           >
             {value}
           </div>
-          <div aria-hidden className="relative h-3 rounded-full border border-line bg-surface-2">
+          <div aria-hidden className="relative h-3 border border-line bg-surface-2">
             <div
               className="absolute inset-y-0 border-x-2 border-measured bg-measured/25"
               style={{ left: `${scale.bandStartPct}%`, width: `${scale.bandEndPct - scale.bandStartPct}%` }}
@@ -84,15 +84,15 @@ export function MicrobialValue({ result, harvest }: { result: MicrobialResult; h
               <span className="absolute -top-1 left-1/2 size-2.5 -translate-x-1/2 rotate-45 bg-game" />
             </div>
           </div>
-          <div aria-hidden className="absolute inset-x-0 bottom-0 flex justify-between font-mono text-xs text-ink-muted">
+          <div aria-hidden className="absolute inset-x-0 bottom-0 flex justify-between font-data text-data-sm text-ink-muted">
             <span>{fixed2(scale.min)}</span>
             <span>{fixed2(scale.max)}</span>
           </div>
         </div>
         <figcaption>
-          <ul className="grid gap-2 text-sm">
+          <ul className="grid gap-2 text-body">
             <li className="flex flex-wrap items-center gap-2">
-              <span aria-hidden className="h-3 w-6 shrink-0 rounded-sm border-x-2 border-measured bg-measured/25" />
+              <span aria-hidden className="h-3 w-6 shrink-0 border-x-2 border-measured bg-measured/25" />
               <span>{format(m.legend_range, { min: fixed2(range.min), max: fixed2(range.max), unit })}</span>
               <ValueTypeTag type={range.value_type} />
             </li>
@@ -104,7 +104,7 @@ export function MicrobialValue({ result, harvest }: { result: MicrobialResult; h
               <ValueTypeTag type="game_value" />
             </li>
             <li className="flex flex-wrap items-center gap-2 text-ink-muted">
-              <span aria-hidden className="h-3 w-6 shrink-0 rounded-sm border border-line bg-surface-2" />
+              <span aria-hidden className="h-3 w-6 shrink-0 border border-line bg-surface-2" />
               <span>{format(m.legend_scale, { min: fixed2(scale.min), max: fixed2(scale.max) })}</span>
               <ValueTypeTag type="game_value" />
             </li>
@@ -112,14 +112,14 @@ export function MicrobialValue({ result, harvest }: { result: MicrobialResult; h
         </figcaption>
       </figure>
 
-      <div className="space-y-2 rounded-lg border border-caution/50 bg-caution/5 p-4">
+      <div className="space-y-2 bg-surface-2 pixel-bar pixel-tone-caution p-4">
         <p className="font-semibold">{m.not_safe}</p>
-        <p className="text-sm text-ink">{harvest.standards_note.text}</p>
+        <p className="text-body text-ink">{harvest.standards_note.text}</p>
       </div>
 
       <div className="space-y-2">
         <SubHeading>{m.range_about}</SubHeading>
-        <p className="text-sm leading-relaxed text-ink-muted">{range.description}</p>
+        <p className="text-body leading-relaxed text-ink-muted">{range.description}</p>
       </div>
 
       <div className="space-y-3">
@@ -146,7 +146,7 @@ export function MicrobialValue({ result, harvest }: { result: MicrobialResult; h
 function SourceBlock({ label, children }: { label: string; children: ReactNode }) {
   return (
     <div className="space-y-1.5">
-      <p className="text-xs font-medium text-ink">{label}</p>
+      <p className="text-caption font-medium text-ink">{label}</p>
       {children}
     </div>
   );
@@ -161,11 +161,11 @@ export function PathogenScreen({ harvest }: { harvest: HarvestEvidence }) {
     <div className="space-y-4">
       <dl className="grid gap-4 sm:grid-cols-2">
         <div>
-          <dt className="text-xs font-semibold tracking-wide text-ink-muted uppercase">{p.organisms}</dt>
+          <dt className="text-caption font-semibold tracking-wide text-ink-muted uppercase">{p.organisms}</dt>
           <dd className="mt-2">
             <ul className="flex flex-wrap gap-2">
               {screen.organisms.map((o) => (
-                <li key={o} className="rounded-md border border-line bg-surface-2 px-2 py-1 text-sm italic">
+                <li key={o} className="bg-surface-2 px-2 py-1 text-body italic">
                   {o}
                 </li>
               ))}
@@ -173,14 +173,14 @@ export function PathogenScreen({ harvest }: { harvest: HarvestEvidence }) {
           </dd>
         </div>
         <div>
-          <dt className="text-xs font-semibold tracking-wide text-ink-muted uppercase">{p.result}</dt>
-          <dd className="mt-2 flex flex-wrap items-center gap-2 text-base font-semibold">
+          <dt className="text-caption font-semibold tracking-wide text-ink-muted uppercase">{p.result}</dt>
+          <dd className="mt-2 flex flex-wrap items-center gap-2 text-body font-semibold">
             {screen.result}
             <ValueTypeTag type={screen.value_type} />
           </dd>
         </div>
       </dl>
-      <p className="text-sm text-ink-muted">{p.note}</p>
+      <p className="text-body text-ink-muted">{p.note}</p>
       <SourceCitation source={screen.source} />
     </div>
   );
@@ -195,11 +195,11 @@ export function FactorTableView({ result, unit }: { result: MicrobialResult; uni
 
   return (
     <div className="space-y-3">
-      <p className="text-sm text-ink-muted">{f.intro}</p>
+      <p className="text-body text-ink-muted">{f.intro}</p>
       <TableRegion label={caption}>
-        <table className="w-full min-w-[34rem] text-sm">
+        <table className="w-full min-w-[34rem] text-body">
           <caption className="sr-only">{caption}</caption>
-          <thead className="border-b border-line">
+          <thead className="border-b-4 border-surface-2">
             <tr>
               <th scope="col" className={th}>
                 {f.col_condition}
@@ -215,7 +215,7 @@ export function FactorTableView({ result, unit }: { result: MicrobialResult; uni
               </th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-line">
+          <tbody className="divide-y-4 divide-surface">
             {table.rows.map((row) => (
               <tr key={row.key} className={row.muted ? 'text-ink-muted' : ''}>
                 <th scope="row" className={`${td} text-left font-normal ${row.muted ? '' : 'text-ink'}`}>
@@ -223,25 +223,25 @@ export function FactorTableView({ result, unit }: { result: MicrobialResult; uni
                   {row.muted ? <span className="sr-only"> ({f.no_effect})</span> : null}
                 </th>
                 <td className={`${td} whitespace-nowrap`}>{factorRuleText(row.rule, t)}</td>
-                <td className={`${td} text-right font-mono tabular-nums`}>{row.count}</td>
-                <td className={`${td} text-right font-mono tabular-nums ${row.muted ? '' : 'font-semibold'}`}>
+                <td className={`${td} text-right font-data text-data tabular-nums`}>{row.count}</td>
+                <td className={`${td} text-right font-data text-data tabular-nums ${row.muted ? '' : 'font-semibold'}`}>
                   {row.key === 'baseline' ? fixed2(row.change) : signed(row.change, 2)}
                 </td>
               </tr>
             ))}
           </tbody>
-          <tfoot className="border-t-2 border-line">
+          <tfoot className="border-t-4 border-line">
             <tr>
               <th scope="row" colSpan={3} className={`${td} text-left`}>
                 {f.sum}
               </th>
-              <td className={`${td} text-right font-mono tabular-nums`}>{fixed2(table.sum)}</td>
+              <td className={`${td} text-right font-data text-data tabular-nums`}>{fixed2(table.sum)}</td>
             </tr>
             <tr>
               <th scope="row" colSpan={3} className={`${td} text-left`}>
                 {f.value}
               </th>
-              <td className={`${td} text-right font-mono font-semibold text-game tabular-nums`}>
+              <td className={`${td} text-right font-data text-data font-semibold text-game tabular-nums`}>
                 {fixed2(table.value)}
               </td>
             </tr>
@@ -249,7 +249,7 @@ export function FactorTableView({ result, unit }: { result: MicrobialResult; uni
         </table>
       </TableRegion>
       {table.limited ? (
-        <p className="rounded-lg border border-line bg-surface-2 px-3 py-2 text-sm">
+        <p className="bg-surface-2 px-3 py-2 text-body">
           {format(f.limited, {
             sum: fixed2(table.sum),
             min: fixed2(MICROBIAL.min),

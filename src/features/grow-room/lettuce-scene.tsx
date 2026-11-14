@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import { cn } from '@/lib/utils/cn';
 import { spriteUrl } from './lettuce-sprite';
 
 /**
@@ -19,19 +20,19 @@ export function LettuceScene({
 }) {
   const url = spriteUrl(sprite);
   return (
-    <div className={`relative aspect-[16/9] w-full overflow-hidden rounded-lg border border-line ${className}`}>
-      <Image src="/bg/bay.png" alt="" fill sizes="(min-width: 1024px) 24rem, 100vw" className="pixel object-cover" priority />
+    <div className={cn('relative m-1 aspect-[1672/941] overflow-hidden pixel-frame-flat pixel-tone-line', className)}>
+      <Image src="/bg/bay-teal.jpg" alt="" fill sizes="(min-width: 1024px) 24rem, 100vw" className="pixel object-cover" priority />
       <div className="absolute top-[23.38%] left-[8.37%] h-[60.79%] w-[39.47%]">
         {/* Dark shadow under the pouch */}
         <div className="absolute top-[96.15%] left-1/2 h-[7%] w-[70%] -translate-x-1/2 -translate-y-1/2 rounded-[50%] bg-[radial-gradient(closest-side,rgba(20,6,30,0.55),rgba(20,6,30,0))]" />
         <div key={sprite} className="sprite-pop absolute inset-0">
           <Image src={url} alt={label} fill sizes="(min-width: 1024px) 10rem, 40vw" className="pixel" />
-          {/* Pink LED light, masked to the sprite's shape */}
+          {/* Teal grow light, masked to the sprite's shape (matches the recolored bay art) */}
           <div
             aria-hidden
             className="pointer-events-none absolute inset-0 mix-blend-soft-light"
             style={{
-              background: 'linear-gradient(180deg, rgba(240,90,230,0.55), rgba(200,80,220,0.15) 70%, transparent)',
+              background: 'linear-gradient(180deg, rgb(79 209 192 / 0.45), rgb(79 209 192 / 0.12) 70%, transparent)',
               WebkitMaskImage: `url(${url})`,
               maskImage: `url(${url})`,
               WebkitMaskSize: '100% 100%',
@@ -40,7 +41,7 @@ export function LettuceScene({
           />
         </div>
       </div>
-      <span className="absolute right-1 bottom-1 rounded bg-bg/85 px-1.5 py-0.5 text-[10px] tracking-wide text-ink-muted">
+      <span className="absolute right-2 bottom-1.5 bg-bg px-2 font-data text-data-sm text-ink-muted">
         {artNote}
       </span>
     </div>

@@ -25,7 +25,7 @@ export function PlantStatusPanel({ mission }: { mission: MissionState }) {
         <ZoneGauge metric="root_moisture" value={plant.root_moisture} />
         <ZoneGauge metric="humidity" value={plant.humidity} />
       </div>
-      <dl className="mt-5 grid grid-cols-2 gap-x-4 gap-y-3 border-t border-line pt-4 text-sm">
+      <dl className="mt-5 grid grid-cols-2 gap-x-4 gap-y-3 border-t-4 border-surface-2 pt-4 text-body">
         <div>
           <dt className="text-ink-muted">{s.fan}</dt>
           <dd className="font-medium">{t.common.fan_level[plant.fan]}</dd>

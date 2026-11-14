@@ -1,6 +1,7 @@
 'use client';
 
 import { Card } from '@/components/ui/card';
+import { SpeechBubble } from '@/components/ui/speech-bubble';
 import type { MissionState } from '@/lib/contract/types';
 import { format, useDictionary, type Dictionary } from '@/lib/i18n';
 import { HEALTH_MAX, METRICS, growthStageOf, zoneOf } from '@/lib/game/rules';
@@ -51,13 +52,11 @@ export function PlantCharacter({ mission }: { mission: MissionState }) {
           max: HEALTH_MAX,
         })}
       />
-      <figure className="relative min-w-0 rounded-xl border border-line bg-surface-2 px-4 py-3">
-        <span
-          aria-hidden
-          className="absolute -top-[7px] left-10 size-3 rotate-45 border-t border-l border-line bg-surface-2"
-        />
+      <figure className="pt-2">
         <figcaption className="sr-only">{t.mission.character.label}</figcaption>
-        <blockquote className="text-sm leading-relaxed text-ink">{line}</blockquote>
+        <SpeechBubble tail="top">
+          <blockquote>{line}</blockquote>
+        </SpeechBubble>
       </figure>
     </Card>
   );

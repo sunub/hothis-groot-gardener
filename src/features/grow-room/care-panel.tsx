@@ -36,9 +36,9 @@ export function CarePanel({ mission, actions }: { mission: MissionState; actions
     <div className="space-y-6">
       <div className="space-y-2">
         <PanelHeading>{c.title}</PanelHeading>
-        <p className="text-sm text-ink-muted">{format(c.intro, { ops: MAX_CARE_OPS_PER_DAY })}</p>
+        <p className="text-body text-ink-muted">{format(c.intro, { ops: MAX_CARE_OPS_PER_DAY })}</p>
         {mission.game_day === 1 ? (
-          <p className="rounded-lg border border-line bg-surface-2 px-3 py-2 text-sm">{c.sowing_day}</p>
+          <p className="bg-surface-2 px-3 py-2 text-body">{c.sowing_day}</p>
         ) : null}
       </div>
 
@@ -46,7 +46,7 @@ export function CarePanel({ mission, actions }: { mission: MissionState; actions
 
       <section aria-labelledby="care-water" className="space-y-3">
         <div className="flex items-center justify-between gap-2">
-          <h3 id="care-water" className="text-sm font-semibold">
+          <h3 id="care-water" className="text-body font-semibold">
             {c.water_title}
           </h3>
           <ValueTypeTag type="game_value" />
@@ -57,22 +57,22 @@ export function CarePanel({ mission, actions }: { mission: MissionState; actions
               key={level}
               onClick={() => apply({ kind: 'water', level })}
               disabled={noOps || isNoOpCare(plant, { kind: 'water', level })}
-              className="flex-col !items-start !gap-0 py-3 text-left"
+              className="min-h-14 flex-col !items-start !gap-0 py-2 text-left"
             >
-              <span className="text-base">{c[`water_${level}`]}</span>
-              <span className="text-xs text-ink-muted">
+              <span className="text-control">{c[`water_${level}`]}</span>
+              <span className="text-caption text-ink-muted">
                 {format(c.water_amount, { amount: WATER_AMOUNT[level] })}
               </span>
             </Button>
           ))}
         </div>
         {isNoOpCare(plant, { kind: 'water', level: 'normal' }) ? (
-          <p className="text-xs text-ink-muted">{c.water_full}</p>
+          <p className="text-caption text-ink-muted">{c.water_full}</p>
         ) : null}
       </section>
 
       <section aria-labelledby="care-fan" className="space-y-3">
-        <h3 id="care-fan" className="text-sm font-semibold">
+        <h3 id="care-fan" className="text-body font-semibold">
           {c.fan_title}
         </h3>
         <div className="grid grid-cols-2 gap-2">
@@ -84,10 +84,11 @@ export function CarePanel({ mission, actions }: { mission: MissionState; actions
                 aria-pressed={current}
                 onClick={() => apply({ kind: 'fan', level })}
                 disabled={noOps || current}
-                className={`flex-col !items-start !gap-0 py-3 text-left ${current ? '!border-accent !opacity-100' : ''}`}
+                variant="toggle"
+                className="min-h-14 flex-col !items-start !gap-0 py-2 text-left disabled:aria-pressed:text-accent-ink"
               >
-                <span className="text-base">{t.common.fan_level[level]}</span>
-                <span className="text-xs text-ink-muted">
+                <span className="text-control">{t.common.fan_level[level]}</span>
+                <span className={current ? 'text-caption' : 'text-caption text-ink-muted'}>
                   {current ? c.fan_current : format(c.fan_set, { level: t.common.fan_level[level] })}
                 </span>
               </Button>
@@ -97,7 +98,7 @@ export function CarePanel({ mission, actions }: { mission: MissionState; actions
       </section>
 
       <section aria-labelledby="care-light" className="space-y-3">
-        <h3 id="care-light" className="text-sm font-semibold">
+        <h3 id="care-light" className="text-body font-semibold">
           {c.light_title}
         </h3>
         <div className="grid gap-3 sm:grid-cols-2">
@@ -108,19 +109,19 @@ export function CarePanel({ mission, actions }: { mission: MissionState; actions
           <Button onClick={() => apply(lightOp)} disabled={noOps || isNoOpCare(plant, lightOp)}>
             {c.light_apply}
           </Button>
-          <span className="text-xs text-ink-muted">{c.light_one_op}</span>
+          <span className="text-caption text-ink-muted">{c.light_one_op}</span>
         </div>
-        <p className="text-xs text-ink-muted">{c.light_note}</p>
+        <p className="text-caption text-ink-muted">{c.light_note}</p>
       </section>
 
       <section aria-labelledby="care-done" className="space-y-2">
-        <h3 id="care-done" className="text-sm font-semibold">
+        <h3 id="care-done" className="text-body font-semibold">
           {c.done_title}
         </h3>
         {done.length === 0 ? (
-          <p className="text-sm text-ink-muted">{c.done_none}</p>
+          <p className="text-body text-ink-muted">{c.done_none}</p>
         ) : (
-          <ol className="list-decimal space-y-1 pl-5 text-sm">
+          <ol className="list-decimal space-y-1 pl-5 text-body">
             {done.map((op, i) => (
               <li key={i}>{describeOp(op, t)}</li>
             ))}
@@ -130,8 +131,8 @@ export function CarePanel({ mission, actions }: { mission: MissionState; actions
 
       <NightForecast plant={plant} />
 
-      <div className="flex flex-col gap-2 border-t border-line pt-5 sm:flex-row sm:items-center sm:justify-between">
-        {noOps ? <p className="text-sm text-ink-muted">{c.ops_none}</p> : <span />}
+      <div className="flex flex-col gap-2 border-t-4 border-surface-2 pt-5 sm:flex-row sm:items-center sm:justify-between">
+        {noOps ? <p className="text-body text-ink-muted">{c.ops_none}</p> : <span />}
         <Button variant="primary" onClick={actions.endDay} className="w-full px-6 sm:w-auto">
           {c.end_day}
         </Button>
@@ -159,16 +160,16 @@ function describeOp(op: CareOp, t: ReturnType<typeof useDictionary>): string {
 function OpsMeter({ left }: { left: number }) {
   const t = useDictionary();
   return (
-    <div className="flex items-center gap-3 rounded-lg border border-line bg-surface-2 px-3 py-2">
+    <div className="flex items-center gap-3 bg-surface-2 px-3 py-2">
       <span aria-hidden className="flex gap-1">
         {Array.from({ length: MAX_CARE_OPS_PER_DAY }, (_, i) => (
           <span
             key={i}
-            className={`size-2.5 rounded-full ${i < left ? 'bg-accent' : 'border border-line bg-transparent'}`}
+            className={`size-4 ${i < left ? 'bg-accent' : 'bg-transparent shadow-[inset_0_0_0_2px_var(--color-accent)]'}`}
           />
         ))}
       </span>
-      <span className="text-sm">
+      <span className="text-body">
         {format(t.mission.care.ops_left, { left, max: MAX_CARE_OPS_PER_DAY })}
       </span>
     </div>
@@ -191,12 +192,12 @@ function LightPicker({
   const name = useId();
   return (
     <fieldset disabled={disabled} className="min-w-0 disabled:opacity-40">
-      <legend className="mb-1.5 text-xs text-ink-muted">{legend}</legend>
-      <div className="grid grid-cols-3 gap-1 rounded-lg border border-line bg-surface-2 p-1">
+      <legend className="mb-1.5 text-caption text-ink-muted">{legend}</legend>
+      <div className="grid grid-cols-3 gap-1 bg-surface-2 p-1">
         {LIGHT_LEVELS.map((level) => (
           <label
             key={level}
-            className="flex min-h-11 cursor-pointer items-center justify-center rounded-md text-sm text-ink-muted transition has-[:checked]:bg-surface has-[:checked]:text-ink has-[:checked]:shadow-[inset_0_0_0_1px_var(--color-accent)] has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-accent"
+            className="flex min-h-11 cursor-pointer items-center justify-center text-body text-ink-muted transition has-[:checked]:bg-accent has-[:checked]:font-bold has-[:checked]:text-accent-ink has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-accent"
           >
             <input
               type="radio"

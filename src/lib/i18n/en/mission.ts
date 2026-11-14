@@ -64,6 +64,14 @@ export const mission = {
     done: 'Done',
     crisis: 'Crisis',
     day_aria: 'Day {day}, cultivation day {cultivation_day}, {stage}',
+    // Cultivation day map (CultivationTimeline)
+    map_title: 'Cultivation timeline',
+    map_hint: 'One cell is one cultivation day, from 0 to {last}',
+    legend_stop: 'Game day stop',
+    legend_today: 'Today',
+    legend_done: 'Done',
+    legend_window: 'Crisis window',
+    legend_crisis: 'Crisis happened',
   },
   status: {
     title: 'Plant status',
@@ -146,7 +154,10 @@ export const mission = {
     clues_title: 'Clues',
     record_title: 'About this record',
     options_title: 'What do you do?',
-    options_hint: 'Choose one action. The verdict and its source appear after you choose.',
+    options_hint: 'Pick one action, then confirm it. The verdict and its source appear after you confirm.',
+    selected: '✓ Selected',
+    confirm: 'Confirm action ▸',
+    confirm_hint: 'The result stays hidden until you confirm. Wrong choices make the plant worse and you will be asked again.',
   },
   result: {
     title: 'Result',

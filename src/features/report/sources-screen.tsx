@@ -3,6 +3,7 @@
 import type { ReactNode } from 'react';
 import { SourceCitation } from '@/components/source-citation';
 import { Badge } from '@/components/ui/badge';
+import { buttonVariants } from '@/components/ui/button';
 import { ValueTypeTag } from '@/components/value-type-tag';
 import { ZoneBadge } from '@/components/zone-badge';
 import type { EvidenceAction, EvidenceCrisis, Metric, ValueType } from '@/lib/contract/types';
@@ -71,14 +72,14 @@ export function SourcesScreen() {
       </PageHeader>
 
       <nav aria-label={s.contents_label} className="print:hidden">
-        <ol className="flex flex-wrap gap-2 text-sm">
+        <ol className="flex flex-wrap gap-2 text-body">
           {contents.map((c, i) => (
             <li key={c.id}>
               <a
                 href={`#${c.id}`}
-                className="inline-flex min-h-11 items-center gap-2 rounded-lg border border-line bg-surface px-3 text-ink-muted hover:border-ink-muted hover:text-ink"
+                className={buttonVariants({ variant: 'secondary', size: 'sm' })}
               >
-                <span aria-hidden className="font-mono text-xs">
+                <span aria-hidden className="font-data text-data-sm">
                   {i + 1}
                 </span>
                 {c.title}
@@ -89,21 +90,21 @@ export function SourcesScreen() {
       </nav>
 
       <Section id="how" title={s.how_title}>
-        <p className="mb-4 text-sm text-ink-muted">{s.how_intro}</p>
+        <p className="mb-4 text-body text-ink-muted">{s.how_intro}</p>
         <dl className="grid gap-3 sm:grid-cols-2">
           {VALUE_TYPES.map((type) => (
-            <div key={type} className="rounded-lg border border-line bg-surface-2/50 p-4">
+            <div key={type} className="bg-surface-2 p-4">
               <dt>
                 <ValueTypeTag type={type} />
               </dt>
-              <dd className="mt-2 text-sm">{t.common.value_type_help[type]}</dd>
+              <dd className="mt-2 text-body">{t.common.value_type_help[type]}</dd>
             </div>
           ))}
         </dl>
       </Section>
 
       <section id="crises" aria-labelledby="crises-title" className="scroll-mt-6 space-y-4">
-        <h2 id="crises-title" className="text-xl font-semibold tracking-tight">
+        <h2 id="crises-title" className="text-heading font-semibold tracking-tight">
           {s.crises_title}
         </h2>
         {evidence.crises.map((crisis) => (
@@ -115,12 +116,12 @@ export function SourcesScreen() {
 
       <Section id="background" title={s.background_title} tags={evidence.background.length > 0 ? ['measured'] : []}>
         {evidence.background.length === 0 ? (
-          <p className="text-sm text-ink-muted">{s.background_empty}</p>
+          <p className="text-body text-ink-muted">{s.background_empty}</p>
         ) : (
           <ul className="space-y-4">
             {evidence.background.map((claim) => (
               <li key={claim.claim_id} className="space-y-2">
-                <p className="text-sm font-medium">{claim.claim}</p>
+                <p className="text-body font-medium">{claim.claim}</p>
                 <SourceCitation source={claim.source} />
               </li>
             ))}
@@ -131,7 +132,7 @@ export function SourcesScreen() {
       <GameRules />
 
       <Section id="meta" title={s.meta_title}>
-        <div className="space-y-4 text-sm">
+        <div className="space-y-4 text-body">
           <p className="leading-relaxed">{evidence.meta.description}</p>
           <p className="text-ink-muted">
             {format(s.meta_updated, { updated: evidence.meta.updated, version: evidence.meta.schema_version })}
@@ -184,18 +185,18 @@ function CrisisEvidence({ crisis }: { crisis: EvidenceCrisis }) {
   const caption = format(s.actions_caption, { name: crisis.name });
 
   return (
-    <article aria-labelledby={headingId} className="space-y-6 rounded-xl border border-line bg-surface p-4 sm:p-6">
+    <article aria-labelledby={headingId} className="space-y-6 m-1 pixel-frame pixel-tone-line bg-surface p-4 sm:p-6">
       <header className="space-y-2">
-        <h3 id={headingId} className="text-lg font-semibold">
+        <h3 id={headingId} className="text-heading font-semibold">
           {crisis.name}
         </h3>
-        <p className="text-sm leading-relaxed">{crisis.summary}</p>
+        <p className="text-body leading-relaxed">{crisis.summary}</p>
       </header>
 
       <div className="grid gap-6 md:grid-cols-2">
         <div className="space-y-2">
           <SubHeading level={4}>{s.record_title}</SubHeading>
-          <dl className="grid gap-1 text-sm">
+          <dl className="grid gap-1 text-body">
             <div className="flex flex-wrap gap-x-2">
               <dt className="text-ink-muted">{s.crop}</dt>
               <dd>{crisis.record.crop}</dd>
@@ -206,7 +207,7 @@ function CrisisEvidence({ crisis }: { crisis: EvidenceCrisis }) {
             </div>
           </dl>
           {crisis.record.note ? (
-            <p className="rounded-lg border border-caution/40 bg-caution/5 px-3 py-2 text-sm">{crisis.record.note}</p>
+            <p className="bg-surface-2 pixel-bar pixel-tone-caution px-3 py-2 text-body">{crisis.record.note}</p>
           ) : null}
         </div>
         <div className="space-y-2">
@@ -214,8 +215,8 @@ function CrisisEvidence({ crisis }: { crisis: EvidenceCrisis }) {
             <SubHeading level={4}>{s.trigger_title}</SubHeading>
             <ValueTypeTag type="game_value" />
           </div>
-          <p className="text-sm">{triggerText(crisis, t)}</p>
-          <p className="text-xs text-ink-muted">{s.trigger_note}</p>
+          <p className="text-body">{triggerText(crisis, t)}</p>
+          <p className="text-caption text-ink-muted">{s.trigger_note}</p>
         </div>
       </div>
 
@@ -229,13 +230,13 @@ function CrisisEvidence({ crisis }: { crisis: EvidenceCrisis }) {
         <ol className="space-y-3">
           {stages.map((stage) => (
             <li key={stage} className="grid gap-2 sm:grid-cols-[6rem_minmax(0,1fr)]">
-              <p className="text-sm font-semibold">{format(s.symptom_stage, { stage })}</p>
+              <p className="text-body font-semibold">{format(s.symptom_stage, { stage })}</p>
               <ul className="space-y-3">
                 {crisis.symptoms
                   .filter((x) => x.stage === stage)
                   .map((symptom) => (
-                    <li key={symptom.symptom_id} className="space-y-1.5 border-l-2 border-line pl-3">
-                      <p className="flex flex-wrap items-center gap-2 text-sm">
+                    <li key={symptom.symptom_id} className="space-y-1.5 border-l-4 border-line pl-3">
+                      <p className="flex flex-wrap items-center gap-2 text-body">
                         {symptom.name}
                         <ValueTypeTag type={symptom.value_type} />
                       </p>
@@ -251,9 +252,9 @@ function CrisisEvidence({ crisis }: { crisis: EvidenceCrisis }) {
       <div className="space-y-3">
         <SubHeading level={4}>{s.actions_title}</SubHeading>
         <TableRegion label={caption}>
-          <table className="w-full min-w-[56rem] text-sm">
+          <table className="w-full min-w-[56rem] text-body">
             <caption className="sr-only">{caption}</caption>
-            <thead className="border-b border-line">
+            <thead className="border-b-4 border-surface-2">
               <tr>
                 <th scope="col" className={th}>{s.col_action}</th>
                 <th scope="col" className={th}>{s.col_verdict}</th>
@@ -263,7 +264,7 @@ function CrisisEvidence({ crisis }: { crisis: EvidenceCrisis }) {
                 <th scope="col" className={`${th} w-72`}>{s.col_source}</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-line">
+            <tbody className="divide-y-4 divide-surface">
               {crisis.actions.map((action) => (
                 <ActionRow key={action.action_id} action={action} />
               ))}
@@ -322,7 +323,7 @@ function HarvestEvidenceSection() {
               <li key={step.step_id} className="grid gap-3 sm:grid-cols-[2rem_minmax(0,1fr)]">
                 <span
                   aria-hidden
-                  className="flex size-8 items-center justify-center rounded-full border border-line font-mono text-sm text-ink-muted"
+                  className="flex size-8 items-center justify-center bg-surface-2 font-data text-data text-ink-muted"
                 >
                   {i + 1}
                 </span>
@@ -331,7 +332,7 @@ function HarvestEvidenceSection() {
                     {step.name}
                     <ValueTypeTag type={step.value_type} />
                   </p>
-                  <p className="text-sm text-ink-muted">{step.description}</p>
+                  <p className="text-body text-ink-muted">{step.description}</p>
                   <SourceCitation source={step.source} />
                 </div>
               </li>
@@ -340,31 +341,31 @@ function HarvestEvidenceSection() {
         </div>
 
         <EvidenceItem title={s.range_title} type={h.microbial_range.value_type}>
-          <p className="font-mono text-base font-semibold tabular-nums">
+          <p className="font-data text-data-sm font-semibold tabular-nums">
             {format(s.range_value, {
               min: fixed2(h.microbial_range.min),
               max: fixed2(h.microbial_range.max),
               unit: h.microbial_range.unit,
             })}
           </p>
-          <p className="text-sm text-ink-muted">{h.microbial_range.description}</p>
+          <p className="text-body text-ink-muted">{h.microbial_range.description}</p>
           <SourceCitation source={h.microbial_range.source} />
         </EvidenceItem>
 
         <EvidenceItem title={s.pathogen_title} type={h.pathogen_screen.value_type}>
           <ul className="flex flex-wrap gap-2">
             {h.pathogen_screen.organisms.map((o) => (
-              <li key={o} className="rounded-md border border-line bg-surface-2 px-2 py-1 text-sm italic">
+              <li key={o} className="bg-surface-2 px-2 py-1 text-body italic">
                 {o}
               </li>
             ))}
           </ul>
-          <p className="text-sm font-semibold">{h.pathogen_screen.result}</p>
+          <p className="text-body font-semibold">{h.pathogen_screen.result}</p>
           <SourceCitation source={h.pathogen_screen.source} />
         </EvidenceItem>
 
         <EvidenceItem title={s.standards_title}>
-          <p className="text-sm">{h.standards_note.text}</p>
+          <p className="text-body">{h.standards_note.text}</p>
           <SourceCitation source={h.standards_note.source} />
         </EvidenceItem>
       </div>
@@ -402,7 +403,7 @@ function boundText(lower: Bound, upper: Bound, t: Dict): string {
 
 function RuleBlock({ title, children }: { title: string; children: ReactNode }) {
   return (
-    <div className="min-w-0 space-y-3 rounded-lg border border-line bg-surface-2/40 p-4">
+    <div className="min-w-0 space-y-3 bg-surface-2 p-4">
       <h3 className="font-semibold">{title}</h3>
       {children}
     </div>
@@ -411,7 +412,7 @@ function RuleBlock({ title, children }: { title: string; children: ReactNode }) 
 
 function RuleList({ items }: { items: string[] }) {
   return (
-    <ul className="list-disc space-y-1 pl-5 text-sm">
+    <ul className="list-disc space-y-1 pl-5 text-body">
       {items.map((item) => (
         <li key={item}>{item}</li>
       ))}
@@ -434,13 +435,13 @@ function GameRules() {
 
   return (
     <Section id="rules" title={s.rules_title} tags={['game_value']}>
-      <p className="mb-4 text-sm text-ink-muted">{s.rules_intro}</p>
+      <p className="mb-4 text-body text-ink-muted">{s.rules_intro}</p>
       <div className="grid gap-4 lg:grid-cols-2">
         <RuleBlock title={r.length_title}>
           <TableRegion label={r.length_caption}>
-            <table className="w-full min-w-[22rem] text-sm">
+            <table className="w-full min-w-[22rem] text-body">
               <caption className="sr-only">{r.length_caption}</caption>
-              <thead className="border-b border-line">
+              <thead className="border-b-4 border-surface-2">
                 <tr>
                   <th scope="col" className={th}>{r.col_game_day}</th>
                   <th scope="col" className={th}>{r.col_cultivation_day}</th>
@@ -448,13 +449,13 @@ function GameRules() {
                   <th scope="col" className={th}>{r.col_crisis}</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-line">
+              <tbody className="divide-y-4 divide-surface">
                 {CULTIVATION_DAYS.slice(0, GAME_DAYS).map((cd, i) => {
                   const day = i + 1;
                   return (
                     <tr key={day}>
-                      <th scope="row" className={`${td} text-left font-mono font-normal`}>{day}</th>
-                      <td className={`${td} font-mono`}>{cd}</td>
+                      <th scope="row" className={`${td} text-left font-data text-data font-normal`}>{day}</th>
+                      <td className={`${td} font-data text-data`}>{cd}</td>
                       <td className={td}>{t.common.growth_stage[GROWTH_STAGES[i]]}</td>
                       <td className={td}>{day >= FIRST_CRISIS_DAY && day <= LAST_CRISIS_DAY ? r.yes : r.no}</td>
                     </tr>
@@ -466,19 +467,19 @@ function GameRules() {
         </RuleBlock>
 
         <RuleBlock title={r.start_title}>
-          <table className="w-full text-sm">
+          <table className="w-full text-body">
             <caption className="sr-only">{r.start_caption}</caption>
-            <thead className="border-b border-line">
+            <thead className="border-b-4 border-surface-2">
               <tr>
                 <th scope="col" className={th}>{r.col_item}</th>
                 <th scope="col" className={th}>{r.col_value}</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-line">
+            <tbody className="divide-y-4 divide-surface">
               {(['plant_health', 'root_moisture', 'humidity'] as const).map((k) => (
                 <tr key={k}>
                   <th scope="row" className={`${td} text-left font-normal`}>{t.common.metric[k]}</th>
-                  <td className={`${td} font-mono`}>{INITIAL_PLANT_STATE[k]}</td>
+                  <td className={`${td} font-data text-data`}>{INITIAL_PLANT_STATE[k]}</td>
                 </tr>
               ))}
               <tr>
@@ -487,27 +488,27 @@ function GameRules() {
               </tr>
             </tbody>
           </table>
-          <p className="text-xs text-ink-muted">{format(r.scale_note, { min: METRIC_MIN, max: METRIC_MAX })}</p>
+          <p className="text-caption text-ink-muted">{format(r.scale_note, { min: METRIC_MIN, max: METRIC_MAX })}</p>
         </RuleBlock>
 
         <RuleBlock title={r.zones_title}>
           <TableRegion label={r.zones_caption}>
-            <table className="w-full min-w-[22rem] text-sm">
+            <table className="w-full min-w-[22rem] text-body">
               <caption className="sr-only">{r.zones_caption}</caption>
-              <thead className="border-b border-line">
+              <thead className="border-b-4 border-surface-2">
                 <tr>
                   <th scope="col" className={th}>{r.col_zone}</th>
                   {metricHeads}
                 </tr>
               </thead>
-              <tbody className="divide-y divide-line">
+              <tbody className="divide-y-4 divide-surface">
                 {zoneRows[0].map((row, i) => (
                   <tr key={row.zone}>
                     <th scope="row" className={`${td} text-left font-normal`}>
                       <ZoneBadge zone={row.zone} />
                     </th>
                     {zoneRows.map((rows, j) => (
-                      <td key={j} className={`${td} font-mono whitespace-nowrap`}>
+                      <td key={j} className={`${td} font-data text-data whitespace-nowrap`}>
                         {boundText(rows[i].lower, rows[i].upper, t)}
                       </td>
                     ))}
@@ -516,24 +517,24 @@ function GameRules() {
               </tbody>
             </table>
           </TableRegion>
-          <p className="text-xs text-ink-muted">{format(r.mid_note, { mid: NORMAL_MID })}</p>
+          <p className="text-caption text-ink-muted">{format(r.mid_note, { mid: NORMAL_MID })}</p>
         </RuleBlock>
 
         <RuleBlock title={r.night_title}>
-          <table className="w-full text-sm">
+          <table className="w-full text-body">
             <caption className="sr-only">{r.night_caption}</caption>
-            <thead className="border-b border-line">
+            <thead className="border-b-4 border-surface-2">
               <tr>
                 <th scope="col" className={th}>{r.col_fan}</th>
                 {metricHeads}
               </tr>
             </thead>
-            <tbody className="divide-y divide-line">
+            <tbody className="divide-y-4 divide-surface">
               {(['low', 'high'] as const).map((fan) => (
                 <tr key={fan}>
                   <th scope="row" className={`${td} text-left font-normal`}>{t.common.fan_level[fan]}</th>
                   {METRICS.map((m) => (
-                    <td key={m} className={`${td} font-mono`}>{signed(NIGHT_DRIFT[fan][m])}</td>
+                    <td key={m} className={`${td} font-data text-data`}>{signed(NIGHT_DRIFT[fan][m])}</td>
                   ))}
                 </tr>
               ))}
@@ -565,21 +566,21 @@ function GameRules() {
         </RuleBlock>
 
         <RuleBlock title={r.verdict_title}>
-          <table className="w-full text-sm">
+          <table className="w-full text-body">
             <caption className="sr-only">{r.verdict_caption}</caption>
-            <thead className="border-b border-line">
+            <thead className="border-b-4 border-surface-2">
               <tr>
                 <th scope="col" className={th}>{s.col_verdict}</th>
                 <th scope="col" className={th}>{t.common.metric.plant_health}</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-line">
+            <tbody className="divide-y-4 divide-surface">
               {(['appropriate', 'partial', 'inappropriate'] as const).map((v) => (
                 <tr key={v}>
                   <th scope="row" className={`${td} text-left font-normal`}>
                     <VerdictBadge verdict={v} />
                   </th>
-                  <td className={`${td} font-mono`}>{signed(VERDICT_HEALTH_DEFAULT[v])}</td>
+                  <td className={`${td} font-data text-data`}>{signed(VERDICT_HEALTH_DEFAULT[v])}</td>
                 </tr>
               ))}
             </tbody>
@@ -608,21 +609,21 @@ function GameRules() {
         </RuleBlock>
 
         <RuleBlock title={r.grade_title}>
-          <table className="w-full text-sm">
+          <table className="w-full text-body">
             <caption className="sr-only">{format(r.grade_caption, { day: GAME_DAYS })}</caption>
-            <thead className="border-b border-line">
+            <thead className="border-b-4 border-surface-2">
               <tr>
                 <th scope="col" className={th}>{r.col_grade}</th>
                 <th scope="col" className={th}>{r.col_health}</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-line">
+            <tbody className="divide-y-4 divide-surface">
               {gradeBands().map((band) => (
                 <tr key={band.grade}>
                   <th scope="row" className={`${td} text-left font-normal`}>
                     <Badge>{t.report.grade[band.grade]}</Badge>
                   </th>
-                  <td className={`${td} font-mono`}>
+                  <td className={`${td} font-data text-data`}>
                     {band.min !== null && band.max !== null
                       ? format(t.report.grade_band.range, { min: band.min, max: band.max })
                       : band.min !== null
@@ -633,26 +634,26 @@ function GameRules() {
               ))}
             </tbody>
           </table>
-          <p className="text-xs text-ink-muted">{r.grade_note}</p>
+          <p className="text-caption text-ink-muted">{r.grade_note}</p>
         </RuleBlock>
 
         <RuleBlock title={r.microbial_title}>
           <TableRegion label={format(r.microbial_caption, { unit })}>
-            <table className="w-full min-w-[22rem] text-sm">
+            <table className="w-full min-w-[22rem] text-body">
               <caption className="sr-only">{format(r.microbial_caption, { unit })}</caption>
-              <thead className="border-b border-line">
+              <thead className="border-b-4 border-surface-2">
                 <tr>
                   <th scope="col" className={th}>{t.report.report.factors.col_condition}</th>
                   <th scope="col" className={th}>{t.report.report.factors.col_rule}</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-line">
+              <tbody className="divide-y-4 divide-surface">
                 {FACTOR_KEYS.map((key) => (
                   <tr key={key}>
                     <th scope="row" className={`${td} text-left font-normal`}>
                       {format(t.report.factor[key], { stage: MOLD_STAGE })}
                     </th>
-                    <td className={`${td} font-mono whitespace-nowrap`}>{factorRuleText(factorRule(key), t)}</td>
+                    <td className={`${td} font-data text-data whitespace-nowrap`}>{factorRuleText(factorRule(key), t)}</td>
                   </tr>
                 ))}
               </tbody>
