@@ -108,6 +108,32 @@ describe('POST /api/event', () => {
       vi.resetModules();
     }
 
+    const MODEL_ENV = { LLM_MODEL: 'test-model', LLM_PROVIDER: 'ollama', LLM_BASE_URL: 'http://ollama.test' };
+
+    async function expectPremadeWithoutFetch(env: Record<string, string>) {
+      const fetchSpy = vi.fn();
+      try {
+        const routePost = await loadRoute(env, fetchSpy as unknown as typeof fetch);
+        const res = await routePost(post(JSON.stringify(body())));
+        expect(res.status).toBe(200);
+        expect(eventCardResponseSchema.parse(await res.json()).origin).toBe('fallback');
+        expect(fetchSpy).not.toHaveBeenCalled();
+      } finally {
+        cleanUp();
+      }
+    }
+
+    it.each([
+      ['unset', { LLM_EVENT_CARDS: '' }],
+      ['off', { LLM_EVENT_CARDS: 'off' }],
+    ])('uses the pre-made text with a model configured but LLM_EVENT_CARDS %s', async (_, env) => {
+      await expectPremadeWithoutFetch({ ...MODEL_ENV, ...env });
+    });
+
+    it('uses the pre-made text without LLM_MODEL even when LLM_EVENT_CARDS is on', async () => {
+      await expectPremadeWithoutFetch({ LLM_MODEL: '', LLM_EVENT_CARDS: 'on' });
+    });
+
     it('uses the pre-made text without LLM_MODEL', async () => {
       const fetchSpy = vi.fn();
       try {
@@ -121,7 +147,7 @@ describe('POST /api/event', () => {
       }
     });
 
-    it('serves generated text when LLM_MODEL is set', async () => {
+    it('serves generated text when LLM_MODEL is set and LLM_EVENT_CARDS is on', async () => {
       const reply = {
         scene: 'Tiny shoots push up under the wicks. No leaves show above them yet.',
         plant_line: "I'm pressing up, but something is in my way.",
@@ -138,7 +164,7 @@ describe('POST /api/event', () => {
       }) as typeof fetch;
       try {
         const routePost = await loadRoute(
-          { LLM_MODEL: 'test-model', LLM_PROVIDER: 'ollama', LLM_BASE_URL: 'http://ollama.test' },
+          { ...MODEL_ENV, LLM_EVENT_CARDS: ' On ' },
           fakeFetch,
         );
         const res = await routePost(post(JSON.stringify(body())));

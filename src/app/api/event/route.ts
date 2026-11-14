@@ -4,13 +4,16 @@ import { readLlmConfig } from '@/lib/crisis/llm';
 import { createEventCard, InvalidEventRequestError, type EventCardGenerator } from '@/lib/event-cards';
 // Imported from its file, not the index: it pulls in server-only code that the index must not carry.
 import { createEventCardLlmGenerator } from '@/lib/event-cards/llm-generator';
+import { eventCardGenerationEnabled } from '@/lib/event-cards/generation-switch';
 
 /**
- * The text generator for event cards, connected the same way as the crisis
- * route: on when LLM_MODEL is set (see .env.example). Without it every card
- * uses the pre-made text, as before.
+ * The text generator for event cards. It needs both a configured model
+ * (LLM_MODEL, as in the crisis route) and LLM_EVENT_CARDS switched on.
+ * Off by default: for event cards the generated text adds little over the
+ * pre-made text and makes the player wait a long time for each card.
+ * Otherwise every card uses the pre-made text and no model is called.
  */
-const llmConfig = readLlmConfig();
+const llmConfig = eventCardGenerationEnabled(process.env.LLM_EVENT_CARDS) ? readLlmConfig() : undefined;
 const generator: EventCardGenerator | undefined = llmConfig ? createEventCardLlmGenerator(llmConfig) : undefined;
 const timeoutMs = llmConfig?.timeoutMs;
 
