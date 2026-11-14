@@ -436,3 +436,240 @@ export interface ReportMetrics {
   danger_nights: number;
   danger_nights_by_metric: Record<Metric, number>;
 }
+
+// ---------------------------------------------------------------------------
+// Cultivation timeline and events (src/data/events.json)
+// Plan: docs/TIMELINE-EVENTS-PLAN.md. Decisions: docs/TIMELINE-ENGINE-NOTES.md.
+// The engine does not use these shapes yet (stage S1/A1). MissionState is unchanged.
+// ---------------------------------------------------------------------------
+
+/** How the player answers an event: a care operation or a procedure (plan, section 4). */
+export type ResponseOp =
+  | 'water_normal'
+  | 'water_heavy'
+  | 'fan_high'
+  | 'fan_low'
+  | 'open_wicks'
+  | 'thin_to_one'
+  | 'replace_pillow'
+  | 'check_fan_running'
+  | 'keep_observing'
+  | 'do_nothing';
+
+/**
+ * A lasting condition set by an event, such as "water_blocked". The ids are
+ * defined by the event list, so this is a plain string.
+ */
+export type EventFlag = string;
+
+/** First and last cultivation day (0-33, inclusive) on which an event can occur. */
+export interface EventWindow {
+  from: number;
+  to: number;
+}
+
+/** State a conditional event needs. Every given part must hold. An empty condition always holds. */
+export interface EventCondition {
+  fan?: FanLevel;
+  /** Plant health must be at least this. */
+  min_health?: number;
+  /** Each listed metric must be in one of the listed zones. */
+  zones?: { metric: Metric; in: Zone[] }[];
+}
+
+/** What one event action changes. All numbers are game values. */
+export interface EventEffect {
+  /** Added to the metric. */
+  root_moisture?: number;
+  humidity?: number;
+  plant_health?: number;
+  /** The action leaves the fan at this setting. */
+  fan?: FanLevel;
+  /** Flags this action removes. */
+  clear_flags?: EventFlag[];
+}
+
+export interface EventAction {
+  action_id: string;
+  op: ResponseOp;
+  verdict: Verdict;
+  effect: EventEffect;
+  value_type: 'game_value';
+}
+
+/** What a flag does while it is set. */
+export interface FlagEffect {
+  /** Added to the overnight change of each metric. */
+  night_drift?: Partial<Record<Metric, number>>;
+  /** Watering adds nothing to root moisture. */
+  blocks_watering?: boolean;
+}
+
+interface TimelineEventBase {
+  event_id: string;
+  window: EventWindow;
+  /** What was actually recorded, in the words of the cited chunks. */
+  summary: string;
+  /** Chunk ids in data/json/total_RAG.json. */
+  source_chunks: string[];
+}
+
+/** An existing crisis placed on the timeline. Trigger, actions and numbers stay in evidence.json. */
+export interface CrisisTimelineEvent extends TimelineEventBase {
+  kind: 'crisis';
+  crisis_ref: string;
+}
+
+/** Occurs on `window.from`, always. */
+export interface ScheduledTimelineEvent extends TimelineEventBase {
+  kind: 'scheduled';
+  actions: EventAction[];
+  /** Set when the event only links an existing mission phase to chunks. Such an event shows no card. */
+  maps_to_phase?: MissionPhase;
+  /** Screen text. Moves to src/lib/i18n in S1, so it is optional here. */
+  name?: string;
+  scene_hint?: string;
+}
+
+/** May occur inside its window when its condition holds. */
+export interface ConditionalTimelineEvent extends TimelineEventBase {
+  kind: 'conditional';
+  condition: EventCondition;
+  /** Chance that the event is planned for a mission (notes, entry T2). */
+  probability: number;
+  actions: EventAction[];
+  /** Flags set the moment the event occurs. */
+  on_occur?: { set_flags: EventFlag[] };
+  /** Effects of the flags this event sets, by flag id. */
+  flag_effects?: Record<EventFlag, FlagEffect>;
+  /** Crises that become more likely while the flags are set. For display and checks only. */
+  chains_to?: string[];
+  name?: string;
+  scene_hint?: string;
+}
+
+export type TimelineEvent =
+  | CrisisTimelineEvent
+  | ScheduledTimelineEvent
+  | ConditionalTimelineEvent;
+
+/** One dated line from a real experiment, shown beside the player's run. Never changes a number. */
+export interface ParallelTrackEntry {
+  /** Stable id for the screen text. Optional until the data file carries it. */
+  entry_id?: string;
+  /** Cultivation day, or null when the source gives no day (then `when` says roughly when). */
+  day: number | null;
+  when?: string;
+  /** Screen text. Moves to src/lib/i18n in S1, so it is optional here. */
+  text?: string;
+  source_chunk: string;
+  /**
+   * Whether the excerpt behind the entry was compared with the original
+   * document. The screen may label only "checked" entries as measured
+   * (events.json meta.rules). Optional until every branch's data carries it.
+   */
+  source_check?: 'checked' | 'not_checked';
+}
+
+export interface ParallelTrack {
+  experiment: string;
+  entries: ParallelTrackEntry[];
+}
+
+export interface EventList {
+  meta: { schema_version: 1 };
+  events: TimelineEvent[];
+  parallel_tracks: ParallelTrack[];
+}
+
+/**
+ * Where one conditional event sits in one mission. Fixed from the mission
+ * seed when the mission starts, so it does not depend on what the player does.
+ */
+export interface PlannedEvent {
+  event_id: string;
+  /** False: the event does not occur in this mission. */
+  planned: boolean;
+  /** Earliest cultivation day on which it can occur. Meaningful only when `planned`. */
+  earliest_day: number;
+}
+
+/** An event that is shown and waits for the player's response. Time does not move while it is set. */
+export interface PendingEvent {
+  event_id: string;
+  kind: 'scheduled' | 'conditional';
+  cultivation_day: number;
+  /** Actions offered, in the order shown. */
+  offered_action_ids: string[];
+}
+
+/** Sign shown at the end of a log line. */
+export type LogTone = 'positive' | 'negative' | 'mixed' | 'neutral';
+
+/** An event occurred. Written when the event appears; `response` is filled when the player answers. */
+export interface EventLogEntry {
+  type: 'event';
+  cultivation_day: number;
+  event_id: string;
+  kind: 'scheduled' | 'conditional';
+  flags_set: EventFlag[];
+  /** null while the event waits for a response. */
+  response: {
+    action_id: string;
+    op: ResponseOp;
+    verdict: Verdict;
+    effect: EventEffect;
+    before: PlantState;
+    after: PlantState;
+    flags_cleared: EventFlag[];
+  } | null;
+  tone: LogTone;
+}
+
+/** A line from a real experiment that falls on this cultivation day. */
+export interface TrackLogEntry {
+  type: 'track';
+  cultivation_day: number;
+  experiment: string;
+  /** `entry_id` of the entry, or "<experiment>#<index>" when the entry has none. */
+  entry_key: string;
+  source_chunk: string;
+  tone: 'neutral';
+}
+
+/** A game day was reached: the pause card, daily care and the crisis roll happen here. */
+export interface MilestoneLogEntry {
+  type: 'milestone';
+  cultivation_day: number;
+  game_day: number;
+  tone: 'neutral';
+}
+
+export type TimelineLogEntry = EventLogEntry | TrackLogEntry | MilestoneLogEntry;
+
+export type TimelineStatus =
+  /** Cultivation days are passing between two game days. */
+  | 'running'
+  /** An event card is shown. Time is stopped until the player responds. */
+  | 'event'
+  /** A game day was reached. The existing day flow (MissionPhase) takes over. */
+  | 'milestone';
+
+/**
+ * Timeline part of a mission. It will be stored next to the existing mission
+ * fields when the engine starts to use it (A3/A4, saved shape version 2).
+ */
+export interface TimelineState {
+  /** 0-33. Day 0 is before sowing. */
+  cultivation_day: number;
+  status: TimelineStatus;
+  /** Flags set now, in the order they were set. */
+  flags: EventFlag[];
+  /** One entry per conditional event of the list. */
+  event_plan: PlannedEvent[];
+  /** Events that have occurred. An event occurs at most once per mission. */
+  occurred_event_ids: string[];
+  pending_event: PendingEvent | null;
+  /** Oldest first. */
+  log: TimelineLogEntry[];
+}
