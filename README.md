@@ -66,9 +66,10 @@ src/
     i18n/               All screen text
   data/                 evidence.json, state-criteria.json, fallback-crises.json
 docs/
-  IMPLEMENTATION-NOTES.md   Where the build differs from the planning document, and why (Korean)
-  SOURCES.md                Data, documents, open-source software and references, with licenses
-  DEMO-SCRIPT.md            Care steps that show both crises in demo mode
+  IMPLEMENTATION-NOTES.en.md  Where the build differs from the planning document, and why
+  IMPLEMENTATION-NOTES.md     The same notes in Korean (original)
+  SOURCES.md                  Data, documents, open-source software and references, with licenses
+  DEMO-SCRIPT.md              Care steps that show both crises in demo mode
 ```
 
 ### Where the language model plugs in
