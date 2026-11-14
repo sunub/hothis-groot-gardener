@@ -53,7 +53,7 @@ The reader must do two tasks.
 | 26 | The overwatering and mold symptoms and their order are not in usable source text | Wrong |
 | 27 | The overwatering and mold actions "remove dead tissue" and "sanitize surfaces" are not in the source text | Wrong |
 | 28 | No record was found that "a fan on high causes water shortage" | Uncertain |
-| 29 | The sanitizing wipes (Pro-San) at harvest are not in the source text | Wrong |
+| 29 | The sanitizing wipes (Pro-San) at harvest are a procedure for produce that is eaten | Ambiguous |
 | 30 | What the recorded range 2.14 to 4.86 refers to | Wrong |
 | 31 | The document used as evidence for the purpose | Uncertain |
 | 32 | The value type that the planning document calls "measured" is shown on screen as "Recorded" | Ambiguous |
@@ -409,15 +409,16 @@ The reader must do two tasks.
 - **How to revert**: Not applicable.
 - **What the team must decide**: To not call this connection a "real case" in the presentation.
 
-## 29. The sanitizing wipes (Pro-San) at harvest are not in the source text
+## 29. The sanitizing wipes (Pro-San) at harvest are a procedure for produce that is eaten
 
-- **Type**: Wrong
+- **Type**: Ambiguous
+- **Correction (Nov 15)**: This entry first said that the wipes are "not in the source text" (type: Wrong). A source was then found on the NASA Technical Reports Server (NTRS), and the entry was corrected. The first search (wipe, sanitiz, Pro-San, citric) did not find this document.
 - **Planning document section**: "Post-harvest microbial evaluation > Steps". Original (translated from the Korean planning document): "⑥ Harvest and sanitizing | On day 33, harvest the leaves and wipe them with sanitizing wipes (Pro-San)"
-- **What the problem is**: The checked material has no sentence that the harvested leaves were wiped with sanitizing wipes (searched for wipe, sanitiz, Pro-San, citric. 0 results in NTRS). The source text says "harvested after 33 days of growth using sanitized scissors to remove the leaves" (harvest with sanitized scissors).
-- **What was done**: The harvest choice was changed to "harvest with sanitized scissors / harvest without sanitizing the scissors". The microbial value rule "sanitized at harvest −0.3" applies when the player selects sanitized scissors (game value).
-- **Why**: With the procedure that is in the source text (sanitized scissors), the rule of the planning document (sanitizing at harvest −0.3) can be used without change.
-- **How to revert**: If source text for the wipes is found, change `harvest.steps[0]` in `src/data/evidence.json` and the harvest button text in `src/lib/i18n/en/report.ts`.
-- **What the team must decide**: To confirm the address of the "NASA NTRS presentation" that the planning document links.
+- **What the problem is**: The wiping procedure is recorded. The source is the NASA presentation "Veggie ISS Validation Test Results and Produce Consumption" (Massa et al. 2015, NTRS 20150021302). Source text: "Produce shall be wiped at harvest according to produce-specific procedure.", "Crew was approved to consume produce with precautionary wiping." But the same document says that the harvest of the second crop was divided: "½ the produce harvested for consumption, ½ for science". The wiping procedure is for the produce that is eaten. The ground analysis report of the game is about the sample that is frozen and returned. No record was found that this sample was wiped. The procedure that was confirmed for the frozen sample is "harvested after 33 days of growth using sanitized scissors to remove the leaves" (Khodadad et al. 2020).
+- **What was done**: The harvest choice stays "harvest with sanitized scissors / harvest without sanitizing the scissors". The microbial value rule "sanitized at harvest −0.3" applies when the player selects sanitized scissors (game value). The record of the wipes is not in the evidence list.
+- **Why**: The report compares the value of the frozen sample. The procedure that was confirmed for that sample is sanitized scissors. If the wipes become the harvest choice, the screen says that wiped leaves were analyzed, and there is no record of that.
+- **How to revert**: To add the wipes, add the quoted sentences and the source to `harvest.steps` in `src/data/evidence.json` and change the harvest step text in `src/lib/i18n/en/report.ts`. Say on screen that the procedure is for produce that is eaten.
+- **What the team must decide**: Whether to add the choice "wipe the produce that will be eaten" to the harvest step. Whether the "NASA NTRS presentation" that the planning document links is NTRS 20150021302.
 
 ## 30. What the recorded range 2.14 to 4.86 refers to
 

@@ -18,6 +18,8 @@ Sentences quoted from these documents are in `src/data/evidence.json`, each next
 | NASA Human Research Program (2025). *Evidence Report: Risk of Adverse Cognitive or Behavioral Changes and Psychiatric Disorders Leading to In-Mission Health and Performance and Long-Term Health Effects*. https://humanresearchroadmap.nasa.gov/evidence/reports/HRP-ER-BMED-HFBP-20250210.pdf | Background: failing crops and crew well-being | Public release by NASA, February 10, 2025 |
 | Landon et al. (2025). *Behavioral Health Benefits of the ISS Pick-and-Eat Crop Growth System* (poster abstract). NASA Technical Reports Server 20250000411. https://ntrs.nasa.gov/citations/20250000411 | Background: working with plants as a behavioral health countermeasure | NTRS record: public use permitted |
 
+One more NASA document is cited in `docs/IMPLEMENTATION-NOTES.en.md` (entry 29) but is not used in the data files: Massa, Hummerick, Spencer and Smith (2015). *Veggie ISS Validation Test Results and Produce Consumption*. NASA Technical Reports Server 20150021302. https://ntrs.nasa.gov/citations/20150021302 (NTRS record: public use permitted).
+
 The challenge's Resources tab links to the NASA Human Research Program pages. The evidence report above is reached from those pages (hazards and risks pages, then the evidence report list).
 
 ## 2. Other documents
