@@ -30,7 +30,10 @@ def tokenize(text: str) -> list[str]:
 
 def load_korean_texts(directory: Path) -> dict[str, str]:
     if not directory.is_dir():
-        raise ValueError(f"Korean BM25 directory does not exist: {directory}")
+        # The Korean translations only help Korean queries. Without them the
+        # retriever still searches the English chunks.
+        print(f"Note: Korean BM25 directory not found, using English text only: {directory}")
+        return {}
     texts = {}
     for path in sorted(directory.glob("*.json")):
         data = json.loads(path.read_text(encoding="utf-8"))
