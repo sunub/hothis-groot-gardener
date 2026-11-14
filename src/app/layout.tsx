@@ -1,7 +1,11 @@
 import type { Metadata } from 'next';
+import { DotGothic16, Pixelify_Sans } from 'next/font/google';
 import type { ReactNode } from 'react';
 import { LocaleProvider } from '@/lib/i18n';
 import './globals.css';
+
+const pixelify = Pixelify_Sans({ subsets: ['latin'], variable: '--font-pixelify' });
+const dot = DotGothic16({ subsets: ['latin'], weight: '400', variable: '--font-dot' });
 
 export const metadata: Metadata = {
   title: 'Space Garden Simulator',
@@ -11,7 +15,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" className="h-full antialiased">
+    <html lang="en" className={`${pixelify.variable} ${dot.variable} h-full antialiased`}>
       <body className="flex min-h-full flex-col">
         <LocaleProvider>{children}</LocaleProvider>
       </body>

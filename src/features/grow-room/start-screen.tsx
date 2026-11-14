@@ -9,6 +9,7 @@ import { ROUTES, routeForPhase } from '@/features/mission/routes';
 import { useMission } from '@/features/mission/use-mission';
 import type { MissionMode, MissionState } from '@/lib/contract/types';
 import { format, useDictionary } from '@/lib/i18n';
+import { LettuceScene } from './lettuce-scene';
 import { CULTIVATION_DAYS, GAME_DAYS, MAX_CARE_OPS_PER_DAY, cultivationDayOf } from '@/lib/game/rules';
 
 const FINISHED = new Set<MissionState['phase']>(['report', 'failed']);
@@ -33,13 +34,16 @@ export function StartScreen() {
 
   return (
     <div className="mx-auto max-w-4xl space-y-10 py-4 sm:py-8">
-      <header className="space-y-4">
-        <p className="text-xs font-semibold tracking-[0.2em] text-accent uppercase">{s.eyebrow}</p>
-        <h1 className="text-3xl font-semibold tracking-tight text-balance sm:text-4xl">{s.title}</h1>
-        <div className="max-w-2xl space-y-2 text-base leading-relaxed text-ink-muted">
-          <p>{format(s.intro, { days: GAME_DAYS })}</p>
-          <p>{s.intro_second}</p>
+      <header className="grid items-center gap-6 md:grid-cols-[minmax(0,1fr)_20rem]">
+        <div className="space-y-4">
+          <p className="text-xs font-semibold tracking-[0.2em] text-accent uppercase">{s.eyebrow}</p>
+          <h1 className="text-3xl font-semibold tracking-tight text-balance sm:text-4xl">{s.title}</h1>
+          <div className="max-w-2xl space-y-2 text-base leading-relaxed text-ink-muted">
+            <p>{format(s.intro, { days: GAME_DAYS })}</p>
+            <p>{s.intro_second}</p>
+          </div>
         </div>
+        <LettuceScene sprite="S0_sprout" label="" artNote={t.mission.character.art_note} />
       </header>
 
       <section aria-labelledby="start-steps" className="space-y-4">

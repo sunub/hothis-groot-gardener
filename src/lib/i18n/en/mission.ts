@@ -79,6 +79,7 @@ export const mission = {
   character: {
     label: 'The plant',
     svg_label: 'Lettuce drawing. Growth stage: {stage}. Plant health {health} of {max}.',
+    art_note: 'AI-generated art',
     feeling: {
       root_moisture: {
         danger_low: 'My roots are very dry.',

@@ -5,7 +5,8 @@ import type { MissionState } from '@/lib/contract/types';
 import { format, useDictionary, type Dictionary } from '@/lib/i18n';
 import { HEALTH_MAX, METRICS, growthStageOf, zoneOf } from '@/lib/game/rules';
 import { chosenOption, lastAttempt, todayRecord } from './derive';
-import { LettuceDrawing } from './lettuce-drawing';
+import { LettuceScene } from './lettuce-scene';
+import { spriteFor } from './lettuce-sprite';
 
 /**
  * What the plant says. In care and night phases it describes only how it
@@ -33,29 +34,27 @@ function plantLine(mission: MissionState, t: Dictionary): string {
   }
 }
 
-/** The lettuce drawing and its speech bubble. */
+/** The lettuce in the grow bay and its speech bubble. */
 export function PlantCharacter({ mission }: { mission: MissionState }) {
   const t = useDictionary();
   const stage = growthStageOf(mission.game_day);
   const line = plantLine(mission, t);
 
   return (
-    <Card aria-label={t.mission.character.label} className="flex items-center gap-4">
-      <div className="size-28 shrink-0 sm:size-32">
-        <LettuceDrawing
-          stage={stage}
-          health={mission.plant.plant_health}
-          label={format(t.mission.character.svg_label, {
-            stage: t.common.growth_stage[stage],
-            health: mission.plant.plant_health,
-            max: HEALTH_MAX,
-          })}
-        />
-      </div>
-      <figure className="relative min-w-0 flex-1 rounded-xl border border-line bg-surface-2 px-4 py-3">
+    <Card aria-label={t.mission.character.label} className="space-y-3">
+      <LettuceScene
+        sprite={spriteFor(mission)}
+        artNote={t.mission.character.art_note}
+        label={format(t.mission.character.svg_label, {
+          stage: t.common.growth_stage[stage],
+          health: mission.plant.plant_health,
+          max: HEALTH_MAX,
+        })}
+      />
+      <figure className="relative min-w-0 rounded-xl border border-line bg-surface-2 px-4 py-3">
         <span
           aria-hidden
-          className="absolute top-1/2 -left-[7px] size-3 -translate-y-1/2 rotate-45 border-b border-l border-line bg-surface-2"
+          className="absolute -top-[7px] left-10 size-3 rotate-45 border-t border-l border-line bg-surface-2"
         />
         <figcaption className="sr-only">{t.mission.character.label}</figcaption>
         <blockquote className="text-sm leading-relaxed text-ink">{line}</blockquote>

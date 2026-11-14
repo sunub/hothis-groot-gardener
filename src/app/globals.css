@@ -1,26 +1,30 @@
 @import "tailwindcss";
 
 /*
- * Design tokens. One dark "grow chamber console" theme.
+ * Design tokens. Dark navy "grow chamber console" theme with teal panels,
+ * palette from the euna demo branch.
  * Zone colors always appear together with a text label, never as color alone.
  */
 @theme {
-  --color-bg: #0b1016;
-  --color-surface: #121a23;
-  --color-surface-2: #1a2531;
-  --color-line: #2a3847;
-  --color-ink: #e6edf3;
-  --color-ink-muted: #9fb0c0;
-  --color-accent: #3ecf8e;
-  --color-accent-ink: #062b1b;
-  --color-normal: #3ecf8e;
-  --color-caution: #f5b83d;
-  --color-danger: #f2666b;
-  --color-measured: #6cb6ff;
-  --color-game: #b9a1f5;
+  --color-bg: #06121b;
+  --color-surface: #0b1d2b;
+  --color-surface-2: #10293b;
+  --color-line: #1f8f88;
+  --color-ink: #eaf7f6;
+  --color-ink-muted: #9fc3c8;
+  --color-accent: #3fe3d2;
+  --color-accent-ink: #06121b;
+  --color-normal: #4fd97a;
+  --color-caution: #f6c544;
+  --color-danger: #ef4a57;
+  --color-measured: #7fb2ff;
+  --color-game: #c9a8f5;
+  --color-led: #e14fd9;
   --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", "Apple SD Gothic Neo",
     "Noto Sans KR", sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --font-pixel: var(--font-dot), ui-monospace, monospace;
+  --font-title: var(--font-pixelify), var(--font-dot), ui-monospace, monospace;
 }
 
 html {
@@ -31,6 +35,35 @@ body {
   background: var(--color-bg);
   color: var(--color-ink);
   font-family: var(--font-sans);
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-title);
+  letter-spacing: 0.02em;
+}
+
+/* Sprites and backgrounds are pixel art. */
+.pixel {
+  image-rendering: pixelated;
+}
+
+@keyframes sprite-pop {
+  0% {
+    transform: scale(0.6);
+    opacity: 0;
+  }
+  70% {
+    transform: scale(1.08);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+.sprite-pop {
+  animation: sprite-pop 320ms steps(5) both;
 }
 
 :focus-visible {
