@@ -146,6 +146,7 @@ export const mission = {
     record_title: 'About this record',
     options_title: 'What do you do?',
     options_hint: 'Choose one action. The verdict and its source appear after you choose.',
+    ai_written: 'An AI model wrote this scene and the option text. Verdicts, changes and sources come from the evidence list.',
   },
   result: {
     title: 'Result',
