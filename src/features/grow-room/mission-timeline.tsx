@@ -12,8 +12,8 @@ export function MissionTimeline({ mission }: { mission: MissionState }) {
   const today = mission.game_day;
 
   return (
-    <section aria-label={tl.label} className="rounded-xl border border-line bg-surface p-3 sm:p-4">
-      <p className="mb-3 text-sm text-ink-muted">
+    <section aria-label={tl.label} className="m-1 pixel-frame pixel-tone-line bg-surface p-3 sm:p-4">
+      <p className="mb-3 text-body text-ink-muted">
         {format(tl.summary, {
           day: today,
           days: GAME_DAYS,
@@ -33,7 +33,7 @@ export function MissionTimeline({ mission }: { mission: MissionState }) {
             <li
               key={day}
               aria-current={isToday ? 'step' : undefined}
-              className={`flex min-h-16 flex-col justify-between rounded-lg border px-1 py-1.5 text-center md:px-2 md:text-left ${
+              className={`flex min-h-16 flex-col justify-between border px-1 py-1.5 text-center md:px-2 md:text-left ${
                 isToday
                   ? 'border-accent bg-accent/10'
                   : isDone
@@ -51,26 +51,26 @@ export function MissionTimeline({ mission }: { mission: MissionState }) {
                   .join(', ')}
               </span>
               <span aria-hidden className="block">
-                <span className="block text-xs font-semibold sm:text-sm">
+                <span className="block text-caption font-semibold sm:text-body">
                   <span className="md:hidden">{format(tl.day_short, { day })}</span>
                   <span className="hidden md:inline">
                     {t.common.day_label} {day}
                   </span>
                 </span>
-                <span className="block font-mono text-[0.625rem] text-ink-muted md:font-sans md:text-xs">
+                <span className="block font-data text-[0.625rem] text-ink-muted md:font-sans md:text-caption">
                   <span className="md:hidden">{format(tl.cultivation_short, { day: cult })}</span>
                   <span className="hidden md:inline">{format(tl.cultivation_mid, { day: cult })}</span>
                 </span>
-                <span className="mt-0.5 hidden truncate text-xs text-ink-muted lg:block">{stage}</span>
+                <span className="mt-0.5 hidden truncate text-caption text-ink-muted lg:block">{stage}</span>
               </span>
               <span aria-hidden className="mt-1 flex flex-wrap justify-center gap-1 md:justify-start">
                 {isToday ? (
-                  <span className="rounded bg-accent px-1 text-[0.625rem] font-semibold text-accent-ink">
+                  <span className="bg-accent px-1 text-[0.625rem] font-semibold text-accent-ink">
                     {tl.today}
                   </span>
                 ) : null}
                 {hadCrisis ? (
-                  <span className="rounded border border-caution/50 px-1 text-[0.625rem] font-semibold text-caution">
+                  <span className="border-2 border-caution px-1 text-[0.625rem] font-semibold text-caution">
                     {tl.crisis}
                   </span>
                 ) : null}

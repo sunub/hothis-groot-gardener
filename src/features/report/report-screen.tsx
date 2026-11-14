@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { StateHistoryChart } from '@/components/state-history-chart';
-import { Button } from '@/components/ui/button';
+import { Button, buttonVariants } from '@/components/ui/button';
 import { ValueTypeTag } from '@/components/value-type-tag';
 import { PhaseGate } from '@/features/mission/phase-gate';
 import { ROUTES } from '@/features/mission/routes';
@@ -72,14 +72,14 @@ function Report({ mission, actions }: { mission: MissionState; actions: MissionA
       {harvest ? <SummaryStrip mission={mission} harvest={harvest} /> : <FailureStatement mission={mission} />}
 
       <nav aria-label={t.report.report.contents_label} className="print:hidden">
-        <ol className="flex flex-wrap gap-2 text-sm">
+        <ol className="flex flex-wrap gap-2 text-body">
           {order.map((id, i) => (
             <li key={id}>
               <a
                 href={`#${id}`}
-                className="inline-flex min-h-11 items-center gap-2 rounded-lg border border-line bg-surface px-3 text-ink-muted hover:border-ink-muted hover:text-ink"
+                className={buttonVariants({ variant: 'secondary', size: 'sm' })}
               >
-                <span aria-hidden className="font-mono text-xs">
+                <span aria-hidden className="font-data text-data-sm">
                   {i + 1}
                 </span>
                 {titles[id]}
@@ -126,12 +126,12 @@ function SummaryStrip({ mission, harvest }: { mission: MissionState; harvest: Ha
   const s = t.report.report.summary;
   const summary = missionSummary(mission);
   const cell = 'min-w-0 space-y-1.5 p-4';
-  const label = 'text-xs font-semibold tracking-wide text-ink-muted uppercase';
+  const label = 'text-caption font-semibold tracking-wide text-ink-muted uppercase';
 
   return (
-    <section aria-labelledby="summary-title" className="rounded-xl border border-line bg-surface">
-      <div className="flex items-center justify-between gap-2 border-b border-line px-4 py-3">
-        <h2 id="summary-title" className="text-sm font-semibold">
+    <section aria-labelledby="summary-title" className="m-1 pixel-frame pixel-tone-line bg-surface">
+      <div className="flex items-center justify-between gap-2 border-b-4 border-surface-2 px-4 py-3">
+        <h2 id="summary-title" className="text-body font-semibold">
           {s.title}
         </h2>
         <ValueTypeTag type="game_value" />
@@ -140,24 +140,24 @@ function SummaryStrip({ mission, harvest }: { mission: MissionState; harvest: Ha
         <div className={`${cell} col-span-2 sm:col-span-1`}>
           <dt className={label}>{s.grade}</dt>
           <dd className="flex flex-wrap items-center gap-2">
-            <span className="text-xl font-semibold">{t.report.grade[harvest.grade]}</span>
+            <span className="text-heading font-semibold">{t.report.grade[harvest.grade]}</span>
             <GradeBadge grade={harvest.grade} />
           </dd>
-          <dd className="text-sm text-ink-muted">{format(s.health, { health: harvest.final_health })}</dd>
+          <dd className="text-body text-ink-muted">{format(s.health, { health: harvest.final_health })}</dd>
         </div>
         <div className={cell}>
           <dt className={label}>{s.mode}</dt>
-          <dd className="text-sm">
+          <dd className="text-body">
             {format(s.mode_value, { mode: t.report.mode[mission.mode], seed: mission.seed })}
           </dd>
         </div>
         <div className={cell}>
           <dt className={label}>{s.crises}</dt>
-          <dd className="font-mono text-xl font-semibold tabular-nums">{summary.crises}</dd>
+          <dd className="font-data text-data-lg font-semibold tabular-nums">{summary.crises}</dd>
         </div>
         <div className={cell}>
           <dt className={label}>{s.choices}</dt>
-          <dd className="font-mono text-xl font-semibold tabular-nums">{summary.choices}</dd>
+          <dd className="font-data text-data-lg font-semibold tabular-nums">{summary.choices}</dd>
         </div>
       </dl>
     </section>
@@ -170,21 +170,21 @@ function FailureStatement({ mission }: { mission: MissionState }) {
   const summary = failureSummary(mission);
   const s = t.report.report.summary;
   return (
-    <section aria-labelledby="failure-title" className="space-y-4 rounded-xl border border-danger/50 bg-danger/5 p-4 sm:p-6">
+    <section aria-labelledby="failure-title" className="space-y-4 m-1 pixel-frame pixel-tone-danger bg-surface p-4 sm:p-6">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <h2 id="failure-title" className="text-lg font-semibold">
+        <h2 id="failure-title" className="text-heading font-semibold">
           {summary
             ? format(f.statement, { day: summary.gameDay, cultivation_day: summary.cultivationDay, min: HEALTH_MIN })
             : f.cause_unknown}
         </h2>
         <ValueTypeTag type="game_value" />
       </div>
-      <p className="text-sm text-ink-muted">{f.no_harvest}</p>
+      <p className="text-body text-ink-muted">{f.no_harvest}</p>
       {summary ? <FailureCauseView summary={summary} /> : null}
-      <p className="text-sm text-ink-muted">
+      <p className="text-body text-ink-muted">
         {format(s.mode_value, { mode: t.report.mode[mission.mode], seed: mission.seed })}
       </p>
-      <p className="text-sm text-ink-muted">{f.review}</p>
+      <p className="text-body text-ink-muted">{f.review}</p>
     </section>
   );
 }
@@ -195,7 +195,7 @@ function FailureCauseView({ summary }: { summary: FailureSummary }) {
   const cause = summary.cause;
   return (
     <div className="space-y-2">
-      <h3 className="text-sm font-semibold tracking-wide text-ink-muted uppercase">{f.cause_title}</h3>
+      <h3 className="text-body font-semibold tracking-wide text-ink-muted uppercase">{f.cause_title}</h3>
       {cause.kind === 'crisis' ? (
         <>
           <p className="flex flex-wrap items-center gap-2">
@@ -210,7 +210,7 @@ function FailureCauseView({ summary }: { summary: FailureSummary }) {
               })}
             </span>
           </p>
-          {cause.groundSupport ? <p className="text-sm">{f.cause_ground_support}</p> : null}
+          {cause.groundSupport ? <p className="text-body">{f.cause_ground_support}</p> : null}
         </>
       ) : cause.kind === 'night' ? (
         <>
@@ -224,7 +224,7 @@ function FailureCauseView({ summary }: { summary: FailureSummary }) {
             })}
           </p>
           {cause.earlierCrisis ? (
-            <p className="text-sm text-ink-muted">
+            <p className="text-body text-ink-muted">
               {format(f.cause_night_crisis, {
                 name: cause.earlierCrisis.name,
                 outcome: outcomeText(cause.earlierCrisis.outcome, t),
@@ -260,8 +260,8 @@ function FooterActions({ actions }: { actions: MissionActions }) {
   };
 
   return (
-    <section aria-labelledby="report-actions" className="space-y-4 rounded-xl border border-line bg-surface p-4 sm:p-6 print:hidden">
-      <h2 id="report-actions" className="text-lg font-semibold">
+    <section aria-labelledby="report-actions" className="space-y-4 m-1 pixel-frame pixel-tone-line bg-surface p-4 sm:p-6 print:hidden">
+      <h2 id="report-actions" className="text-heading font-semibold">
         {a.title}
       </h2>
       {confirming ? (
@@ -271,12 +271,12 @@ function FooterActions({ actions }: { actions: MissionActions }) {
           onKeyDown={(e) => {
             if (e.key === 'Escape') setConfirming(false);
           }}
-          className="rounded-xl border border-caution/50 bg-caution/5 p-4"
+          className="m-1 pixel-frame pixel-tone-caution bg-surface p-4"
         >
           <h3 id="confirm-reset" ref={headingRef} tabIndex={-1} className="font-semibold focus:outline-none">
             {a.confirm_title}
           </h3>
-          <p className="mt-2 text-sm text-ink-muted">{a.confirm_body}</p>
+          <p className="mt-2 text-body text-ink-muted">{a.confirm_body}</p>
           <div className="mt-4 flex flex-col gap-3 sm:flex-row">
             <Button variant="primary" onClick={restart}>
               {a.confirm_yes}
@@ -291,7 +291,7 @@ function FooterActions({ actions }: { actions: MissionActions }) {
           </Button>
           <Link
             href={ROUTES.sources}
-            className="inline-flex min-h-11 items-center justify-center rounded-lg border border-line bg-surface-2 px-6 py-2 text-sm font-medium text-ink hover:border-ink-muted"
+            className={buttonVariants({ variant: 'secondary' })}
           >
             {a.sources}
           </Link>

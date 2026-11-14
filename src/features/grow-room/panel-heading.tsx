@@ -16,7 +16,7 @@ export function PanelHeading({ children }: { children: ReactNode }) {
     if (phaseChanged && document.activeElement === document.body) ref.current?.focus();
   }, [phaseChanged]);
   return (
-    <h2 ref={ref} tabIndex={-1} className="text-xl font-semibold tracking-tight focus:outline-none sm:text-2xl">
+    <h2 ref={ref} tabIndex={-1} className="text-heading font-semibold tracking-tight focus:outline-none sm:text-heading">
       {children}
     </h2>
   );

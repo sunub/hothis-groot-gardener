@@ -37,16 +37,16 @@ export function PageHeader({
   return (
     <header className="space-y-3">
       {eyebrow ? (
-        <p className="text-xs font-semibold tracking-[0.2em] text-accent uppercase">{eyebrow}</p>
+        <p className="text-caption font-semibold tracking-[0.2em] text-accent uppercase">{eyebrow}</p>
       ) : null}
       <h1
         ref={headingRef}
         tabIndex={headingRef ? -1 : undefined}
-        className="text-2xl font-semibold tracking-tight text-balance focus:outline-none sm:text-3xl"
+        className="text-heading font-semibold tracking-tight text-balance focus:outline-none sm:text-display"
       >
         {title}
       </h1>
-      {children ? <div className="max-w-3xl space-y-2 text-base leading-relaxed text-ink-muted">{children}</div> : null}
+      {children ? <div className="max-w-3xl space-y-2 text-body leading-relaxed text-ink-muted">{children}</div> : null}
     </header>
   );
 }
@@ -81,10 +81,10 @@ export function Section({
     <section
       id={id}
       aria-labelledby={`${id}-title`}
-      className={`scroll-mt-6 rounded-xl border border-line bg-surface p-4 break-inside-avoid-page sm:p-6 ${className}`}
+      className={`scroll-mt-6 m-1 pixel-frame pixel-tone-line bg-surface p-4 break-inside-avoid-page sm:p-6 ${className}`}
     >
       <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
-        <h2 id={`${id}-title`} className="text-lg font-semibold tracking-tight sm:text-xl">
+        <h2 id={`${id}-title`} className="text-heading font-semibold tracking-tight sm:text-heading">
           {title}
         </h2>
         {tags.length > 0 ? (
@@ -104,7 +104,7 @@ export function Section({
 export function SubHeading({ children, id, level = 3 }: { children: ReactNode; id?: string; level?: 3 | 4 }) {
   const Tag = level === 4 ? 'h4' : 'h3';
   return (
-    <Tag id={id} className="text-sm font-semibold tracking-wide text-ink-muted uppercase">
+    <Tag id={id} className="text-body font-semibold tracking-wide text-ink-muted uppercase">
       {children}
     </Tag>
   );
@@ -117,14 +117,14 @@ export function TableRegion({ label, children }: { label: string; children: Reac
       role="region"
       aria-label={label}
       tabIndex={0}
-      className="-mx-1 overflow-x-auto rounded-lg px-1 focus-visible:outline-2"
+      className="-mx-1 overflow-x-auto px-1 focus-visible:outline-2"
     >
       {children}
     </div>
   );
 }
 
-export const th = 'px-3 py-2 text-left text-xs font-semibold tracking-wide text-ink-muted uppercase';
+export const th = 'px-3 py-2 text-left text-caption font-semibold tracking-wide text-ink-muted uppercase';
 export const td = 'px-3 py-2 align-top';
 
 /** Plant health, the two zoned metrics and the fan, as a definition list. */
@@ -133,16 +133,16 @@ export function PlantStateList({ state, compact = false }: { state: PlantState; 
   const m = t.common.metric;
   const item = compact ? 'flex flex-wrap items-center gap-x-2 gap-y-1' : 'flex flex-wrap items-center justify-between gap-2 py-2';
   return (
-    <dl className={compact ? 'grid gap-1.5 text-sm' : 'divide-y divide-line text-sm'}>
+    <dl className={compact ? 'grid gap-1.5 text-body' : 'divide-y-4 divide-surface text-body'}>
       <div className={item}>
         <dt className="text-ink-muted">{m.plant_health}</dt>
-        <dd className="font-mono font-semibold tabular-nums">{state.plant_health}</dd>
+        <dd className="font-data text-data font-semibold tabular-nums">{state.plant_health}</dd>
       </div>
       {(['root_moisture', 'humidity'] as const).map((metric) => (
         <div key={metric} className={item}>
           <dt className="text-ink-muted">{m[metric]}</dt>
           <dd className="flex items-center gap-2">
-            <span className="font-mono tabular-nums">{state[metric]}</span>
+            <span className="font-data text-data tabular-nums">{state[metric]}</span>
             <ZoneBadge zone={zoneOf(metric, state[metric])} />
           </dd>
         </div>
@@ -181,14 +181,14 @@ export function careText(op: CareOp, t: ReturnType<typeof useDictionary>): strin
 /** One harvest step from the evidence list: name, description, value type and source. */
 export function StepEvidence({ step }: { step: HarvestStepEvidence | undefined }) {
   const t = useDictionary();
-  if (!step) return <p className="text-sm text-ink-muted">{t.report.harvest.step_missing}</p>;
+  if (!step) return <p className="text-body text-ink-muted">{t.report.harvest.step_missing}</p>;
   return (
     <div className="space-y-3">
       <div className="flex flex-wrap items-center gap-2">
         <h3 className="font-semibold">{step.name}</h3>
         <ValueTypeTag type={step.value_type} />
       </div>
-      <p className="text-sm leading-relaxed text-ink-muted">{step.description}</p>
+      <p className="text-body leading-relaxed text-ink-muted">{step.description}</p>
       <SourceCitation source={step.source} />
     </div>
   );

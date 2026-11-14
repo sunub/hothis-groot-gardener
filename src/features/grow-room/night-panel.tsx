@@ -22,27 +22,27 @@ export function NightPanel({ mission, actions }: { mission: MissionState; action
     <div className="space-y-6">
       <div className="space-y-2">
         <PanelHeading>{format(n.title, { day: mission.game_day })}</PanelHeading>
-        <p className="text-sm text-ink-muted">{n.intro}</p>
+        <p className="text-body text-ink-muted">{n.intro}</p>
       </div>
 
       {night ? (
         <section aria-labelledby="night-changes" className="space-y-4">
           <div className="flex items-center justify-between gap-2">
-            <h3 id="night-changes" className="text-sm font-semibold">
+            <h3 id="night-changes" className="text-body font-semibold">
               {n.changes_title}
             </h3>
             <ValueTypeTag type="game_value" />
           </div>
           <dl className="grid gap-3 sm:grid-cols-2">
             {METRICS.map((metric) => (
-              <div key={metric} className="rounded-lg border border-line bg-surface-2 p-3">
-                <dt className="text-sm text-ink-muted">{t.common.metric[metric]}</dt>
+              <div key={metric} className="bg-surface-2 p-3">
+                <dt className="text-body text-ink-muted">{t.common.metric[metric]}</dt>
                 <dd className="mt-1 space-y-2">
-                  <span className="block font-mono text-2xl font-semibold tabular-nums">
+                  <span className="block font-data text-data-lg font-semibold tabular-nums">
                     {format(n.metric_row, { change: signed(night.drift[metric]) })}
                   </span>
-                  <span className="flex flex-wrap items-center gap-2 text-sm">
-                    <span className="font-mono tabular-nums">{format(n.now, { value: night.end[metric] })}</span>
+                  <span className="flex flex-wrap items-center gap-2 text-body">
+                    <span className="font-data text-data tabular-nums">{format(n.now, { value: night.end[metric] })}</span>
                     <ZoneBadge zone={night.zones[metric]} />
                   </span>
                 </dd>
@@ -50,12 +50,12 @@ export function NightPanel({ mission, actions }: { mission: MissionState; action
             ))}
           </dl>
 
-          <div className="rounded-lg border border-line bg-surface-2 p-3">
+          <div className="bg-surface-2 p-3">
             <div className="flex flex-wrap items-baseline justify-between gap-2">
-              <h3 className="text-sm text-ink-muted">{n.health_title}</h3>
-              <span className="font-mono text-2xl font-semibold tabular-nums">{signed(night.health_change)}</span>
+              <h3 className="text-body text-ink-muted">{n.health_title}</h3>
+              <span className="font-data text-data-lg font-semibold tabular-nums">{signed(night.health_change)}</span>
             </div>
-            <ul className="mt-2 space-y-1 text-sm">
+            <ul className="mt-2 space-y-1 text-body">
               {nightHealthReasons(night.zones).map((reason) => (
                 <li key={reason.kind === 'all_normal' ? reason.kind : reason.metric}>
                   {reason.kind === 'all_normal'
@@ -67,14 +67,14 @@ export function NightPanel({ mission, actions }: { mission: MissionState; action
                 </li>
               ))}
             </ul>
-            <p className="mt-2 text-xs text-ink-muted">
+            <p className="mt-2 text-caption text-ink-muted">
               {format(n.health_now, { value: night.end.plant_health })}
             </p>
           </div>
         </section>
       ) : null}
 
-      <div className="border-t border-line pt-5">
+      <div className="border-t-4 border-surface-2 pt-5">
         <Button variant="primary" onClick={actions.nextDay} className="w-full px-6 sm:w-auto">
           {toHarvest ? n.to_harvest : format(n.next_day, { day: nextDay })}
         </Button>

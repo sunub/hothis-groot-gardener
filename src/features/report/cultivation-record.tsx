@@ -15,7 +15,7 @@ export function CultivationRecord({ rows }: { rows: readonly DayRow[] }) {
   const r = t.report.record;
   return (
     <div className="space-y-3">
-      <p className="text-sm text-ink-muted">{r.intro}</p>
+      <p className="text-body text-ink-muted">{r.intro}</p>
       <ol className="space-y-3">
         {rows.map((row) => (
           <li key={row.gameDay}>
@@ -30,7 +30,7 @@ export function CultivationRecord({ rows }: { rows: readonly DayRow[] }) {
 function Block({ title, children }: { title: string; children: ReactNode }) {
   return (
     <div className="min-w-0 space-y-2">
-      <h4 className="text-xs font-semibold tracking-wide text-ink-muted uppercase">{title}</h4>
+      <h4 className="text-caption font-semibold tracking-wide text-ink-muted uppercase">{title}</h4>
       {children}
     </div>
   );
@@ -44,8 +44,8 @@ function DayEntry({ row }: { row: DayRow }) {
   return (
     <article
       aria-labelledby={`day-${row.gameDay}`}
-      className={`rounded-lg border bg-surface-2/40 p-4 break-inside-avoid ${
-        row.failedHere ? 'border-danger/60' : 'border-line'
+      className={`m-1 pixel-frame bg-surface p-4 break-inside-avoid ${
+        row.failedHere ? 'pixel-tone-danger' : 'pixel-tone-line'
       }`}
     >
       <header className="mb-3 flex flex-wrap items-center justify-between gap-2">
@@ -65,16 +65,16 @@ function DayEntry({ row }: { row: DayRow }) {
 
         {row.crisis ? (
           <Block title={r.crisis}>
-            <p className="text-sm font-medium">
+            <p className="text-body font-medium">
               {format(r.crisis_name, { name: row.crisis.name, stage: row.crisis.maxStage })}
             </p>
-            <ol className="space-y-2 text-sm">
+            <ol className="space-y-2 text-body">
               {row.crisis.choices.map((c) => (
-                <li key={c.attempt} className="space-y-1 border-l-2 border-line pl-3">
+                <li key={c.attempt} className="space-y-1 border-l-4 border-line pl-3">
                   <p>{format(r.choice, { attempt: c.attempt, stage: c.stage, label: c.label })}</p>
                   <p className="flex flex-wrap items-center gap-2 text-ink-muted">
                     <VerdictBadge verdict={c.verdict} />
-                    <span className="font-mono tabular-nums">
+                    <span className="font-data text-data tabular-nums">
                       {format(r.choice_health, { before: c.healthBefore, after: c.healthAfter })}
                     </span>
                     {c.groundSupport ? <Badge>{r.choice_ground_support}</Badge> : null}
@@ -82,32 +82,32 @@ function DayEntry({ row }: { row: DayRow }) {
                 </li>
               ))}
             </ol>
-            <p className="text-sm">
+            <p className="text-body">
               {format(r.outcome, { outcome: outcomeText(row.crisis.outcome, t) })}
             </p>
           </Block>
         ) : (
           <Block title={r.care}>
             {row.care.length > 0 ? (
-              <ul className="list-disc space-y-1 pl-5 text-sm">
+              <ul className="list-disc space-y-1 pl-5 text-body">
                 {row.care.map((op, i) => (
                   <li key={i}>{careText(op, t)}</li>
                 ))}
               </ul>
             ) : (
-              <p className="text-sm text-ink-muted">{t.report.care.none}</p>
+              <p className="text-body text-ink-muted">{t.report.care.none}</p>
             )}
           </Block>
         )}
 
         <Block title={r.night}>
           {row.night ? (
-            <dl className="grid gap-1.5 text-sm">
+            <dl className="grid gap-1.5 text-body">
               {METRICS.map((metric) => (
                 <div key={metric} className="flex flex-wrap items-center gap-x-2 gap-y-1">
                   <dt className="text-ink-muted">{t.common.metric[metric]}</dt>
                   <dd className="flex items-center gap-2">
-                    <span className="font-mono tabular-nums">
+                    <span className="font-data text-data tabular-nums">
                       {format(r.night_drift, { change: signed(row.night?.drift[metric] ?? 0) })}
                     </span>
                     {row.night ? <ZoneBadge zone={row.night.zones[metric]} /> : null}
@@ -116,13 +116,13 @@ function DayEntry({ row }: { row: DayRow }) {
               ))}
               <div className="flex flex-wrap items-center gap-x-2">
                 <dt className="sr-only">{t.common.metric.plant_health}</dt>
-                <dd className="font-mono tabular-nums">
+                <dd className="font-data text-data tabular-nums">
                   {format(r.night_health, { change: signed(row.night.health_change) })}
                 </dd>
               </div>
             </dl>
           ) : (
-            <p className="text-sm text-ink-muted">
+            <p className="text-body text-ink-muted">
               {isHarvestDay ? r.no_night_harvest : r.no_night_failed}
             </p>
           )}
@@ -133,7 +133,7 @@ function DayEntry({ row }: { row: DayRow }) {
       {row.crisis && row.care.length > 0 ? (
         <div className="mt-3">
           <Block title={r.care}>
-            <ul className="list-disc space-y-1 pl-5 text-sm">
+            <ul className="list-disc space-y-1 pl-5 text-body">
               {row.care.map((op, i) => (
                 <li key={i}>{careText(op, t)}</li>
               ))}
@@ -142,7 +142,7 @@ function DayEntry({ row }: { row: DayRow }) {
         </div>
       ) : null}
 
-      <p className="mt-3 border-t border-line pt-3 font-mono text-sm tabular-nums">
+      <p className="mt-3 border-t-4 border-surface-2 pt-3 font-data text-data-sm tabular-nums">
         {format(r.day_health, {
           before: row.morning.plant_health,
           after: row.end.plant_health,

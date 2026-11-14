@@ -1,6 +1,9 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
+import { Callout } from '@/components/ui/callout';
+import { PixelIcon } from '@/components/ui/pixel-icon';
+import { Skeleton } from '@/components/ui/skeleton';
 import type { CrisisFetchStatus, MissionActions } from '@/features/mission/use-mission';
 import { useDictionary } from '@/lib/i18n';
 import { PanelHeading } from './panel-heading';
@@ -19,9 +22,9 @@ export function CrisisPendingPanel({
     return (
       <div className="space-y-4">
         <PanelHeading>{p.error_title}</PanelHeading>
-        <p role="alert" className="rounded-lg border border-danger/40 bg-danger/10 px-3 py-2 text-sm">
+        <Callout role="alert" tone="danger" icon={<PixelIcon name="fail" />}>
           {p.error_body}
-        </p>
+        </Callout>
         <Button variant="primary" onClick={actions.retryCrisis} className="px-6">
           {p.retry}
         </Button>
@@ -32,13 +35,14 @@ export function CrisisPendingPanel({
   return (
     <div className="space-y-4" aria-busy="true">
       <PanelHeading>{p.title}</PanelHeading>
-      <p className="text-sm text-ink-muted">{p.body}</p>
+      <p className="text-body text-ink-muted">{p.body}</p>
       <div aria-hidden className="space-y-3 pt-2">
-        <div className="h-4 w-3/4 animate-pulse rounded bg-surface-2 motion-reduce:animate-none" />
-        <div className="h-4 w-1/2 animate-pulse rounded bg-surface-2 motion-reduce:animate-none" />
+        <Skeleton className="w-full" />
+        <Skeleton className="w-4/5" />
+        <Skeleton className="w-3/5" />
         <div className="grid gap-2 pt-2 sm:grid-cols-2">
-          <div className="h-14 animate-pulse rounded-lg bg-surface-2 motion-reduce:animate-none" />
-          <div className="h-14 animate-pulse rounded-lg bg-surface-2 motion-reduce:animate-none" />
+          <Skeleton className="h-14" />
+          <Skeleton className="h-14" />
         </div>
       </div>
     </div>

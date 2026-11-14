@@ -17,29 +17,29 @@ export function NightForecast({ plant }: { plant: PlantState }) {
   const healthChange = clampHealth(plant.plant_health + rawChange) - plant.plant_health;
 
   return (
-    <section aria-labelledby="forecast-title" className="rounded-xl border border-dashed border-line bg-surface-2/50 p-4">
+    <section aria-labelledby="forecast-title" className="bg-surface-2 p-4">
       <div className="mb-2 flex items-center justify-between gap-2">
-        <h3 id="forecast-title" className="text-sm font-semibold">
+        <h3 id="forecast-title" className="text-body font-semibold">
           {f.title}
         </h3>
         <ValueTypeTag type="game_value" />
       </div>
-      <p className="mb-3 text-xs text-ink-muted">
+      <p className="mb-3 text-caption text-ink-muted">
         {format(f.intro, { fan: t.common.fan_level[plant.fan] })}
       </p>
-      <dl className="space-y-2 text-sm">
+      <dl className="space-y-2 text-body">
         {rows.map((row) => (
           <div key={row.metric} className="flex flex-wrap items-center justify-between gap-2">
             <dt className="text-ink-muted">{t.common.metric[row.metric]}</dt>
             <dd className="flex items-center gap-2">
-              <span className="font-mono tabular-nums">{format(f.change, { from: row.from, to: row.to })}</span>
+              <span className="font-data text-data tabular-nums">{format(f.change, { from: row.from, to: row.to })}</span>
               <ZoneBadge zone={row.zone} />
             </dd>
           </div>
         ))}
-        <div className="flex flex-wrap items-center justify-between gap-2 border-t border-line pt-2">
+        <div className="flex flex-wrap items-center justify-between gap-2 border-t-4 border-surface-2 pt-2">
           <dt className="text-ink-muted">{f.health}</dt>
-          <dd className="font-mono tabular-nums">{signed(healthChange)}</dd>
+          <dd className="font-data text-data tabular-nums">{signed(healthChange)}</dd>
         </div>
       </dl>
     </section>

@@ -7,24 +7,24 @@ import { useDictionary } from '@/lib/i18n';
 export function SourceCitation({ source }: { source: SourceRef | null }) {
   const t = useDictionary();
   if (!source) {
-    return <p className="text-xs text-ink-muted">{t.common.source.none}</p>;
+    return <p className="text-caption text-ink-muted">{t.common.source.none}</p>;
   }
   return (
-    <figure className="space-y-1 text-xs text-ink-muted">
-      <blockquote className="border-l-2 border-measured/60 pl-3 text-ink italic">
-        “{source.quote}”
-      </blockquote>
-      <figcaption>
-        {t.common.source.label}:{' '}
+    <figure className="space-y-2 text-caption text-ink-muted">
+      <blockquote className="border-l-4 border-line pl-3 text-body text-ink-muted">“{source.quote}”</blockquote>
+      <figcaption className="space-y-1">
+        <span className="block text-ink">
+          {t.common.source.label}: {source.title}
+          {source.license ? ` (${source.license})` : null}
+        </span>
         <a
           href={source.url}
           target="_blank"
           rel="noreferrer"
-          className="underline decoration-line underline-offset-2 hover:text-ink"
+          className="block font-data text-data-sm break-all text-measured underline-offset-4 hover:underline"
         >
-          {source.title}
+          {source.url.replace(/^https?:\/\//, '')}
         </a>
-        {source.license ? ` (${source.license})` : null}
         {source.note ? <span className="block">{source.note}</span> : null}
       </figcaption>
     </figure>

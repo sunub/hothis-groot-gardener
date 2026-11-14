@@ -1,37 +1,41 @@
 'use client';
 
+import { Meter } from '@/components/ui/meter';
 import { ZoneBadge } from '@/components/zone-badge';
 import type { Metric, Zone } from '@/lib/contract/types';
 import { format, useDictionary } from '@/lib/i18n';
 import { HEALTH_MAX, HEALTH_MIN, METRIC_MAX, METRIC_MIN, ZONE_BOUNDS, zoneOf } from '@/lib/game/rules';
 
-const segmentClass: Record<Zone, string> = {
-  danger_low: 'bg-danger/35',
-  caution_low: 'bg-caution/35',
-  normal: 'bg-normal/35',
-  caution_high: 'bg-caution/35',
-  danger_high: 'bg-danger/35',
+/** Fill of each zone block. Danger zones are darker and hatched, so the zones differ in lightness, not only hue. */
+const zoneFill: Record<Zone, string> = {
+  danger_low: 'bg-danger-fill',
+  caution_low: 'bg-caution',
+  normal: 'bg-normal',
+  caution_high: 'bg-caution',
+  danger_high: 'bg-danger-fill',
 };
+
+const ZONES: readonly Zone[] = ['danger_low', 'caution_low', 'normal', 'caution_high', 'danger_high'];
 
 function percent(value: number): number {
   return ((value - METRIC_MIN) / (METRIC_MAX - METRIC_MIN)) * 100;
 }
 
-/** The five zones of one metric as a horizontal band, with a marker at the current value. */
+/** The five zones of one metric as a segmented band, with an arrow at the current value. */
 export function ZoneGauge({ metric, value }: { metric: Metric; value: number }) {
   const t = useDictionary();
   const b = ZONE_BOUNDS[metric];
   const zone = zoneOf(metric, value);
   const edges = [METRIC_MIN, b.danger_low_below, b.caution_low_below, b.normal_max, b.caution_high_max, METRIC_MAX];
-  const zones: Zone[] = ['danger_low', 'caution_low', 'normal', 'caution_high', 'danger_high'];
   const label = t.common.metric[metric];
+  const left = `${Math.min(100, Math.max(0, percent(value)))}%`;
 
   return (
-    <div className="space-y-2">
-      <div className="flex items-center justify-between gap-2">
-        <span className="text-sm text-ink-muted">{label}</span>
+    <div className="space-y-1">
+      <div className="flex flex-wrap items-baseline justify-between gap-2">
+        <span className="text-body font-semibold">{label}</span>
         <span className="flex items-center gap-2">
-          <span className="font-mono text-lg font-semibold tabular-nums">{value}</span>
+          <span className="font-data text-data-lg tabular-nums">{value}</span>
           <ZoneBadge zone={zone} />
         </span>
       </div>
@@ -42,23 +46,25 @@ export function ZoneGauge({ metric, value }: { metric: Metric; value: number }) 
         aria-valuemax={METRIC_MAX}
         aria-valuenow={value}
         aria-valuetext={format(t.mission.status.gauge_value, { value, zone: t.common.zone[zone] })}
-        className="relative pt-2"
+        className="relative pt-4"
       >
-        <div className="flex h-2.5 gap-0.5 overflow-hidden rounded-full">
-          {zones.map((z, i) => (
+        <span
+          aria-hidden
+          className="absolute top-0 size-0 -translate-x-1/2 border-x-[7px] border-t-[11px] border-x-transparent border-t-ink transition-[left] duration-500 motion-reduce:transition-none"
+          style={{ left }}
+        />
+        <div className="m-1 flex h-5 pixel-frame-flat pixel-tone-line">
+          {ZONES.map((z, i) => (
             <div
               key={z}
-              className={`${segmentClass[z]} ${z === zone ? 'brightness-150' : ''}`}
+              className={zoneFill[z]}
               style={{ width: `${percent(edges[i + 1]) - percent(edges[i])}%` }}
-            />
+            >
+              <div className={`h-full ${z.startsWith('danger') ? 'pixel-hatch' : 'pixel-segments'}`} />
+            </div>
           ))}
         </div>
-        <div
-          aria-hidden
-          className="absolute top-0 h-[1.125rem] w-1 -translate-x-1/2 rounded-full bg-ink shadow-[0_0_0_2px_var(--color-surface)] transition-[left] duration-500 motion-reduce:transition-none"
-          style={{ left: `${Math.min(100, Math.max(0, percent(value)))}%` }}
-        />
-        <div aria-hidden className="relative mt-1 h-4 font-mono text-[0.625rem] text-ink-muted">
+        <div aria-hidden className="relative mt-1 h-5 font-data text-data-sm text-ink-muted">
           {edges.slice(1, -1).map((edge) => (
             <span key={edge} className="absolute -translate-x-1/2" style={{ left: `${percent(edge)}%` }}>
               {edge}
@@ -70,31 +76,19 @@ export function ZoneGauge({ metric, value }: { metric: Metric; value: number }) 
   );
 }
 
-/** Plant health as a 0-100 bar. */
+/** Plant health as a segmented 0-100 bar. */
 export function HealthBar({ value }: { value: number }) {
   const t = useDictionary();
   const label = t.common.metric.plant_health;
   return (
-    <div className="space-y-2">
-      <div className="flex items-center justify-between gap-2">
-        <span className="text-sm text-ink-muted">{label}</span>
-        <span className="font-mono text-lg font-semibold tabular-nums">
+    <div className="space-y-1">
+      <div className="flex items-baseline justify-between gap-2">
+        <span className="text-body font-semibold">{label}</span>
+        <span className="font-data text-data-lg tabular-nums">
           {format(t.mission.status.health_scale, { value, max: HEALTH_MAX })}
         </span>
       </div>
-      <div
-        role="meter"
-        aria-label={label}
-        aria-valuemin={HEALTH_MIN}
-        aria-valuemax={HEALTH_MAX}
-        aria-valuenow={value}
-        className="h-2.5 overflow-hidden rounded-full bg-surface-2"
-      >
-        <div
-          className="h-full rounded-full bg-game transition-[width] duration-500 motion-reduce:transition-none"
-          style={{ width: `${((value - HEALTH_MIN) / (HEALTH_MAX - HEALTH_MIN)) * 100}%` }}
-        />
-      </div>
+      <Meter aria-label={label} value={value} min={HEALTH_MIN} max={HEALTH_MAX} tone="health" />
     </div>
   );
 }
