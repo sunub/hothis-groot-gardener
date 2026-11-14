@@ -2,17 +2,17 @@
   "meta": {
     "schema_version": 1,
     "description": "Evidence list for the Space Garden Simulator: crises, symptoms and actions taken from records of ISS Veggie plant growth tests, with the source sentence for each. Verdicts are assigned by the team from the cited record. Every delta is a game value set for game balance, not a NASA value. value_type \"measured\" marks a statement or number taken from the cited source.",
-    "ai_disclosure": "An AI coding assistant was used to search the downloaded source documents and to draft this file. Every quote was checked by script to be a verbatim part of the text of the cited source. The team reviews the verdicts and the game values.",
+    "ai_disclosure": "An AI coding assistant was used to search the downloaded source documents and to draft this file. Every quote was compared by a script with the text of the downloaded source document and is a verbatim part of it. The script and the downloaded documents are not part of this repository. The team reviews the verdicts and the game values.",
     "updated": "2026-11-15"
   },
   "crises": [
     {
       "crisis_id": "water_shortage",
       "name": "Water shortage",
-      "summary": "In the first Veggie lettuce test (VEG-01A), after about a week and a half the plants were not growing well and the pillow wicks were dry. The reservoir was not supplying enough water to the plant pillows.",
+      "summary": "In the Veggie hardware validation test (VEG-01, 2014), after about a week and a half the plants were not growing well and the pillow wicks were dry. This indicated that the reservoir was not supplying enough water to the plant pillows.",
       "record": {
         "crop": "Red romaine lettuce 'Outredgeous'",
-        "experiment": "VEG-01A",
+        "experiment": "VEG-01",
         "note": ""
       },
       "trigger": {
@@ -30,7 +30,7 @@
           "stage": 1,
           "value_type": "measured",
           "source": {
-            "title": "Massa, Dufour and Smith (2015). Veggie Hardware Validation Test Preliminary Results and Lessons Learned (abstract). NASA Technical Reports Server 20150001374",
+            "title": "Massa, Dufour and Smith (2014). Veggie Hardware Validation Test Preliminary Results and Lessons Learned (abstract). NASA Technical Reports Server 20150001374",
             "url": "https://ntrs.nasa.gov/citations/20150001374",
             "quote": "After about a week and a half it was observed that plants were not growing well and that pillow wicks were dry.",
             "license": "NASA Technical Reports Server record: public use permitted"
@@ -42,7 +42,7 @@
           "stage": 1,
           "value_type": "measured",
           "source": {
-            "title": "Massa, Dufour and Smith (2015). Veggie Hardware Validation Test Preliminary Results and Lessons Learned (abstract). NASA Technical Reports Server 20150001374",
+            "title": "Massa, Dufour and Smith (2014). Veggie Hardware Validation Test Preliminary Results and Lessons Learned (abstract). NASA Technical Reports Server 20150001374",
             "url": "https://ntrs.nasa.gov/citations/20150001374",
             "quote": "After about a week and a half it was observed that plants were not growing well and that pillow wicks were dry.",
             "license": "NASA Technical Reports Server record: public use permitted"
@@ -50,14 +50,15 @@
         },
         {
           "symptom_id": "stressed_plants",
-          "name": "Stressed plants that are slow to recover",
+          "name": "Stressed plants",
           "stage": 2,
           "value_type": "measured",
           "source": {
-            "title": "Massa, Dufour and Smith (2015). Veggie Hardware Validation Test Preliminary Results and Lessons Learned (abstract). NASA Technical Reports Server 20150001374",
+            "title": "Massa, Dufour and Smith (2014). Veggie Hardware Validation Test Preliminary Results and Lessons Learned (abstract). NASA Technical Reports Server 20150001374",
             "url": "https://ntrs.nasa.gov/citations/20150001374",
             "quote": "Direct watering of the pillows led to a recovery in several of the stressed plants; a couple of which did not recover.",
-            "license": "NASA Technical Reports Server record: public use permitted"
+            "license": "NASA Technical Reports Server record: public use permitted",
+            "note": "The source does not order the symptoms. The order of stages 1 and 2 is set by the team."
           }
         }
       ],
@@ -73,7 +74,7 @@
           },
           "value_type": "game_value",
           "source": {
-            "title": "Massa, Dufour and Smith (2015). Veggie Hardware Validation Test Preliminary Results and Lessons Learned (abstract). NASA Technical Reports Server 20150001374",
+            "title": "Massa, Dufour and Smith (2014). Veggie Hardware Validation Test Preliminary Results and Lessons Learned (abstract). NASA Technical Reports Server 20150001374",
             "url": "https://ntrs.nasa.gov/citations/20150001374",
             "quote": "Direct watering of the pillows led to a recovery in several of the stressed plants; a couple of which did not recover.",
             "license": "NASA Technical Reports Server record: public use permitted"
@@ -90,7 +91,7 @@
           },
           "value_type": "game_value",
           "source": {
-            "title": "Massa, Dufour and Smith (2015). Veggie Hardware Validation Test Preliminary Results and Lessons Learned (abstract). NASA Technical Reports Server 20150001374",
+            "title": "Massa, Dufour and Smith (2014). Veggie Hardware Validation Test Preliminary Results and Lessons Learned (abstract). NASA Technical Reports Server 20150001374",
             "url": "https://ntrs.nasa.gov/citations/20150001374",
             "quote": "This indicated that the reservoir was not supplying sufficient water to the pillows via wicking, and so the team reverted to an operational fix which added water directly to the plant pillows.",
             "license": "NASA Technical Reports Server record: public use permitted",
@@ -136,20 +137,21 @@
         }
       ],
       "source": {
-        "title": "Massa, Dufour and Smith (2015). Veggie Hardware Validation Test Preliminary Results and Lessons Learned (abstract). NASA Technical Reports Server 20150001374",
+        "title": "Massa, Dufour and Smith (2014). Veggie Hardware Validation Test Preliminary Results and Lessons Learned (abstract). NASA Technical Reports Server 20150001374",
         "url": "https://ntrs.nasa.gov/citations/20150001374",
         "quote": "This indicated that the reservoir was not supplying sufficient water to the pillows via wicking, and so the team reverted to an operational fix which added water directly to the plant pillows.",
-        "license": "NASA Technical Reports Server record: public use permitted"
+        "license": "NASA Technical Reports Server record: public use permitted",
+        "note": "The abstract does not name the crop. NASA Technical Reports Server 20160004060 names it: \"The Veggie technology validation test, VEG-01, was initiated with the first test crop of ‘Outredgeous’ red romaine lettuce.\""
       }
     },
     {
       "crisis_id": "overwater_mold",
       "name": "Excess water and stagnant air leading to mold",
-      "summary": "In the Veggie zinnia test (VEG-01C) the plants got overwatered and there was a lack of air flow. A fungus started growing on the plants, and some died.",
+      "summary": "In Veggie, the zinnias got a little overwatered and there was a lack of air flow. A fungus started growing on the plants, and some died.",
       "record": {
         "crop": "Zinnia",
         "experiment": "VEG-01C",
-        "note": "This record is from zinnia, not lettuce. It happened in the same Veggie hardware."
+        "note": "This record is from zinnia, not lettuce. It happened in the same Veggie hardware. One symptom, droplets of moisture on the leaves, comes from a general statement about poor air circulation, not from the zinnia test."
       },
       "trigger": {
         "any_of": [
@@ -292,7 +294,8 @@
       "source": {
         "title": "NASA. Growing Plants in Space",
         "url": "https://www.nasa.gov/exploration-research-and-technology/growing-plants-in-space/",
-        "quote": "Once, the zinnias in Veggie got a little overwatered, and there was a lack of air flow. A fungus started growing on the plants, and some died."
+        "quote": "Once, the zinnias in Veggie got a little overwatered, and there was a lack of air flow. A fungus started growing on the plants, and some died.",
+        "note": "The page does not name the test. Khodadad et al. (2020) names it: \"VEG-01 showed evidence of insufficient and excess (in case of zinnia, VEG-01C) water in the root zone\""
       }
     }
   ],
@@ -325,7 +328,7 @@
       {
         "step_id": "ground_analysis",
         "name": "Ground analysis",
-        "description": "The returned samples are kept frozen and analyzed on the ground at Kennedy Space Center.",
+        "description": "After return to Kennedy Space Center the samples were kept in a −80 °C freezer until analysis.",
         "value_type": "measured",
         "source": {
           "title": "Khodadad et al. (2020). Microbiological and Nutritional Analysis of Lettuce Crops Grown on the International Space Station. Frontiers in Plant Science 11:199",

@@ -180,3 +180,30 @@ describe('a mission that fails (planning document: 식물 건강과 수확)', ()
     expect(() => harvestCrop(m, { sanitize: true })).toThrow();
   });
 });
+
+describe('recurrence after a partial verdict, across the game logic and the crisis API', () => {
+  it('brings back the same crisis, not the other one that is also a candidate', async () => {
+    // Seed 6: the day-6 roll is 0.54, above 30% and below the 60% of a recurring crisis.
+    let m = createMission({ mission_id: 'recurrence', mode: 'standard', seed: 6 });
+    m = careDay(m, [{ kind: 'water', level: 'normal' }]);
+    m = careDay(m, [{ kind: 'water', level: 'normal' }]);
+    m = careDay(m, [{ kind: 'water', level: 'normal' }]);
+    m = careDay(m, []);
+    // Day 5: humidity is in the high caution zone with the fan on low.
+    expect(m.game_day).toBe(5);
+    expect(m.phase).toBe('crisis_pending');
+    m = await crisisDay(m, ['wait_and_observe', 'clean_plant_surfaces']);
+    expect(m.days[4].crisis).toMatchObject({ crisis_id: 'overwater_mold', outcome: 'partial' });
+
+    // Day 6: root moisture is low and humidity is high, so both crises hold their trigger.
+    expect(m.game_day).toBe(6);
+    expect(m.plant.root_moisture).toBeLessThan(40);
+    expect(m.plant.humidity).toBeGreaterThan(70);
+    const roll = m.days[5].roll!;
+    expect(roll.roll).toBeGreaterThan(CRISIS_PROBABILITY.caution);
+    expect(roll).toMatchObject({ candidates: ['overwater_mold'], occurred: true });
+    expect(roll.probability).toBeCloseTo(0.6);
+    m = await presentCrisis(m);
+    expect(m.active_crisis!.crisis_id).toBe('overwater_mold');
+  });
+});

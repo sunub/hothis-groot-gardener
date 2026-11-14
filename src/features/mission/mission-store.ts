@@ -14,7 +14,13 @@ import {
   nextDay,
   receiveCrisis,
 } from '@/lib/game/engine';
-import { clearMission, loadMission, saveMission, type MissionStorage } from '@/lib/game/storage';
+import {
+  clearMission,
+  loadMission,
+  MISSION_STORAGE_KEY,
+  saveMission,
+  type MissionStorage,
+} from '@/lib/game/storage';
 import type { CrisisFetchStatus, MissionActions } from './use-mission';
 
 /**
@@ -62,6 +68,38 @@ function ensureLoaded(): void {
   loaded = true;
   const storage = browserStorage();
   snapshot = { ready: true, mission: storage ? loadMission(storage) : null, crisisStatus: 'idle' };
+  // Another tab changed the saved mission: follow it, so that an older screen
+  // in this tab cannot overwrite newer progress.
+  window.addEventListener('storage', (event) => {
+    if (event.key !== null && event.key !== MISSION_STORAGE_KEY) return;
+    const current = browserStorage();
+    cancelRequest();
+    markScreenChange(snapshot.mission, current ? loadMission(current) : null);
+    setSnapshot({ ready: true, mission: current ? loadMission(current) : null, crisisStatus: 'idle' });
+  });
+}
+
+/**
+ * A second click of a double click lands on whatever the next screen puts
+ * under the pointer. Actions are ignored for this long after the screen changes.
+ */
+const CLICK_GUARD_MS = 600;
+let screenChangedAt = 0;
+
+/** The screen a mission state shows: one per phase, day and crisis presentation. */
+function screenKeyOf(mission: MissionState | null): string {
+  if (!mission) return 'none';
+  return `${mission.mission_id}:${mission.game_day}:${mission.phase}:${mission.active_crisis?.attempt ?? 0}`;
+}
+
+function markScreenChange(before: MissionState | null, after: MissionState | null): void {
+  if (screenKeyOf(before) !== screenKeyOf(after)) screenChangedAt = Date.now();
+}
+
+function isGuarded(name: string): boolean {
+  if (Date.now() - screenChangedAt >= CLICK_GUARD_MS) return false;
+  console.warn(`${name}: ignored, the screen has just changed`);
+  return true;
 }
 
 function emit(): void {
@@ -87,6 +125,7 @@ function requestKeyOf(mission: MissionState | null): string | null {
 }
 
 function commit(mission: MissionState | null): void {
+  markScreenChange(snapshot.mission, mission);
   persist(mission);
   setSnapshot({ ready: true, mission, crisisStatus: 'idle' });
   requestCrisisIfDue();
@@ -173,6 +212,7 @@ export function getServerSnapshot(): MissionSnapshot {
 
 function act(name: string, transition: (mission: MissionState) => MissionState): void {
   ensureLoaded();
+  if (isGuarded(name)) return;
   const mission = snapshot.mission;
   if (!mission) {
     console.warn(`${name}: there is no mission`);
@@ -197,6 +237,7 @@ function randomSeed(): number {
 const actions: MissionActions = {
   start(mode) {
     ensureLoaded();
+    if (isGuarded('start')) return;
     cancelRequest();
     commit(createMission({ mission_id: crypto.randomUUID(), mode, seed: randomSeed() }));
   },

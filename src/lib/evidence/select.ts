@@ -1,4 +1,5 @@
 import type {
+  CrisisHistoryEntry,
   EvidenceAction,
   EvidenceCrisis,
   EvidenceList,
@@ -6,7 +7,14 @@ import type {
   Metric,
   PlantState,
 } from '@/lib/contract/types';
-import { CRISIS_PROBABILITY, isCaution, isDanger, sideOf, zoneOf } from '@/lib/game/rules';
+import {
+  CRISIS_PROBABILITY,
+  CULTIVATION_DAYS,
+  isCaution,
+  isDanger,
+  sideOf,
+  zoneOf,
+} from '@/lib/game/rules';
 
 /**
  * Pure helpers that read the evidence list. The game logic (browser) and the
@@ -36,14 +44,43 @@ export function severityOf(crisis: EvidenceCrisis, state: PlantState): Severity 
 /**
  * Crises whose trigger holds for the state.
  * Order: danger before caution, then evidence list order.
+ *
+ * `recurrenceCrisisId` is the crisis that ended with a partial verdict
+ * yesterday, if any. When that crisis is a candidate and no other candidate is
+ * more severe, it is the only candidate: its higher probability must not
+ * bring up a different crisis.
  */
-export function selectCandidates(evidence: EvidenceList, state: PlantState): CrisisCandidate[] {
+export function selectCandidates(
+  evidence: EvidenceList,
+  state: PlantState,
+  recurrenceCrisisId: string | null = null,
+): CrisisCandidate[] {
   const candidates: CrisisCandidate[] = [];
   for (const crisis of evidence.crises) {
     const severity = severityOf(crisis, state);
     if (severity) candidates.push({ crisis, severity });
   }
-  return candidates.sort((a, b) => rank(a.severity) - rank(b.severity));
+  candidates.sort((a, b) => rank(a.severity) - rank(b.severity));
+  const recurring = candidates.find((c) => c.crisis.crisis_id === recurrenceCrisisId);
+  if (recurring && rank(recurring.severity) <= rank(candidates[0].severity)) return [recurring];
+  return candidates;
+}
+
+/**
+ * The crisis that ended with a partial verdict on the game day before
+ * `cultivationDay`, read from the crisis history. The crisis API uses it to
+ * choose the same candidates as the game logic.
+ */
+export function recurrenceCrisisIdOf(
+  history: readonly CrisisHistoryEntry[],
+  cultivationDay: number,
+): string | null {
+  const index = CULTIVATION_DAYS.indexOf(cultivationDay);
+  const last = history[history.length - 1];
+  if (index < 1 || !last) return null;
+  return last.outcome === 'partial' && last.cultivation_day === CULTIVATION_DAYS[index - 1]
+    ? last.crisis_id
+    : null;
 }
 
 function rank(severity: Severity): number {

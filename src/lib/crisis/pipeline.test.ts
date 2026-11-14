@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import type { AiCrisisOutput, CrisisRequest, PlantState } from '@/lib/contract/types';
+import type { AiCrisisOutput, CrisisRequest, EvidenceList, PlantState } from '@/lib/contract/types';
+import { evidence } from '@/lib/evidence';
 import { INITIAL_PLANT_STATE } from '@/lib/game/rules';
 import { getFallbackCrisis } from './fallback';
 import type { CrisisGenerator, GenerationInput } from './generator';
@@ -210,5 +211,15 @@ describe('createCrisis without a generator', () => {
     await expect(
       createCrisis({ ...dry, active: { crisis_id: 'nope', attempt: 2, chosen_action_ids: [] } }),
     ).rejects.toBeInstanceOf(NoCandidateError);
+  });
+});
+
+describe('createCrisis and the evidence list check (planning document: 근거 목록 불러오기와 점검)', () => {
+  it('serves no crisis from an evidence list that fails its check', async () => {
+    const broken: EvidenceList = structuredClone(evidence);
+    broken.crises[0].source.quote = 'PROVISIONAL';
+    await expect(
+      createCrisis(request({ root_moisture: 20 }), { evidence: broken }),
+    ).rejects.toThrow(/evidence list failed its check/);
   });
 });

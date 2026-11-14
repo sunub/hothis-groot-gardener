@@ -109,7 +109,7 @@ export function StateHistoryChart({ days, current }: { days: readonly DayRecord[
         <LineChart
           responsive
           data={points}
-          margin={{ top: 8, right: 12, bottom: 4, left: -16 }}
+          margin={{ top: 8, right: 12, bottom: 4, left: -8 }}
           style={{ width: '100%', height: 220 }}
         >
           <CartesianGrid stroke="var(--color-line)" strokeOpacity={0.6} vertical={false} />

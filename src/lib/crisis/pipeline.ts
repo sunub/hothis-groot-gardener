@@ -5,7 +5,13 @@ import type {
   EvidenceList,
 } from '@/lib/contract/types';
 import { evidence as shippedEvidence } from '@/lib/evidence';
-import { computeStage, findCrisis, selectCandidates } from '@/lib/evidence/select';
+import { checkEvidenceList } from '@/lib/evidence/check';
+import {
+  computeStage,
+  findCrisis,
+  recurrenceCrisisIdOf,
+  selectCandidates,
+} from '@/lib/evidence/select';
 import { attachEvidence } from './attach';
 import { effectiveExclusions, getFallbackCrisis, pickFallbackCandidate } from './fallback';
 import {
@@ -66,6 +72,7 @@ export async function createCrisis(
   deps: CreateCrisisDeps = {},
 ): Promise<CrisisResponse> {
   const list = deps.evidence ?? shippedEvidence;
+  assertEvidenceChecked(list);
   const crises = candidateCrises(request, list);
   const inappropriateCount = request.active?.chosen_action_ids.length ?? 0;
   const candidates: StagedCandidate[] = crises.map((crisis) => ({
@@ -130,6 +137,28 @@ export async function createCrisis(
   });
 }
 
+/** Lists that passed the evidence check. Each list is checked once per server process. */
+const checkedLists = new WeakSet<EvidenceList>();
+
+/**
+ * Check the evidence list before any crisis is served from it (duplicate ids,
+ * an appropriate action per crisis, no missing source). A list with errors is
+ * a bug in the data file, so the request fails instead of showing unchecked evidence.
+ */
+function assertEvidenceChecked(list: EvidenceList): void {
+  if (checkedLists.has(list)) return;
+  const result = checkEvidenceList(list);
+  const errors = result.issues.filter((issue) => issue.level === 'error');
+  if (errors.length > 0) {
+    const detail = errors
+      .slice(0, 5)
+      .map((issue) => `${issue.path}: ${issue.message}`)
+      .join(' ');
+    throw new Error(`The evidence list failed its check. ${detail}`);
+  }
+  checkedLists.add(list);
+}
+
 function candidateCrises(request: CrisisRequest, list: EvidenceList): EvidenceCrisis[] {
   if (request.active) {
     // The crisis is already in progress, so its trigger is not checked again.
@@ -139,7 +168,9 @@ function candidateCrises(request: CrisisRequest, list: EvidenceList): EvidenceCr
     }
     return [crisis];
   }
-  const crises = selectCandidates(list, request.state).map((c) => c.crisis);
+  // Same candidates as the game logic: a crisis that ended as partial yesterday comes first.
+  const recurrenceId = recurrenceCrisisIdOf(request.history, request.cultivation_day);
+  const crises = selectCandidates(list, request.state, recurrenceId).map((c) => c.crisis);
   if (crises.length === 0) throw new NoCandidateError();
   return crises;
 }

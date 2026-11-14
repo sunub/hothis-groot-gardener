@@ -1,7 +1,14 @@
 import { describe, expect, it } from 'vitest';
 import type { PlantState } from '@/lib/contract/types';
 import { INITIAL_PLANT_STATE, zoneOf } from '@/lib/game/rules';
-import { computeStage, crisisProbability, evidence, findCrisis, selectCandidates } from './index';
+import {
+  computeStage,
+  crisisProbability,
+  evidence,
+  findCrisis,
+  recurrenceCrisisIdOf,
+  selectCandidates,
+} from './index';
 
 function state(patch: Partial<PlantState>): PlantState {
   return { ...INITIAL_PLANT_STATE, ...patch };
@@ -92,6 +99,46 @@ describe('crisis probability (planning document: 위기 발생, 판정별 효과
     expect(crisisProbability(selectCandidates(evidence, INITIAL_PLANT_STATE), 'water_shortage')).toBe(
       0,
     );
+  });
+});
+
+describe('recurrence after a partial verdict (planning document: 다음 날 같은 위기 확률 +30%p)', () => {
+  // Root moisture low and humidity high: both crises are caution-level candidates.
+  const both = state({ root_moisture: 35, humidity: 75 });
+
+  it('raises the chance of the same crisis only, never of the other crisis', () => {
+    const candidates = selectCandidates(evidence, both, 'overwater_mold');
+    expect(candidates.map((c) => c.crisis.crisis_id)).toEqual(['overwater_mold']);
+    expect(crisisProbability(candidates, 'overwater_mold')).toBeCloseTo(0.6);
+  });
+
+  it('keeps a more severe candidate first and in the list', () => {
+    const candidates = selectCandidates(
+      evidence,
+      state({ root_moisture: 20, humidity: 75 }),
+      'overwater_mold',
+    );
+    expect(candidates.map((c) => [c.crisis.crisis_id, c.severity])).toEqual([
+      ['water_shortage', 'danger'],
+      ['overwater_mold', 'caution'],
+    ]);
+  });
+
+  it('changes nothing when the recurring crisis is not a candidate', () => {
+    expect(selectCandidates(evidence, state({ root_moisture: 35 }), 'overwater_mold')).toEqual(
+      selectCandidates(evidence, state({ root_moisture: 35 })),
+    );
+  });
+
+  it('reads the recurring crisis from the history of the day before only', () => {
+    const partial = { crisis_id: 'overwater_mold', choices: [], outcome: 'partial' as const };
+    expect(recurrenceCrisisIdOf([{ ...partial, cultivation_day: 22 }], 28)).toBe('overwater_mold');
+    expect(recurrenceCrisisIdOf([{ ...partial, cultivation_day: 17 }], 28)).toBeNull();
+    expect(
+      recurrenceCrisisIdOf([{ ...partial, cultivation_day: 22, outcome: 'resolved' }], 28),
+    ).toBeNull();
+    expect(recurrenceCrisisIdOf([], 28)).toBeNull();
+    expect(recurrenceCrisisIdOf([{ ...partial, cultivation_day: 22 }], 1)).toBeNull();
   });
 });
 

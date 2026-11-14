@@ -2,6 +2,7 @@
 
 import { useId, useState } from 'react';
 import { Button } from '@/components/ui/button';
+import { ValueTypeTag } from '@/components/value-type-tag';
 import type { CareOp, FanLevel, LightLevel, MissionState } from '@/lib/contract/types';
 import type { MissionActions } from '@/features/mission/use-mission';
 import { format, useDictionary } from '@/lib/i18n';
@@ -44,9 +45,12 @@ export function CarePanel({ mission, actions }: { mission: MissionState; actions
       <OpsMeter left={opsLeft} />
 
       <section aria-labelledby="care-water" className="space-y-3">
-        <h3 id="care-water" className="text-sm font-semibold">
-          {c.water_title}
-        </h3>
+        <div className="flex items-center justify-between gap-2">
+          <h3 id="care-water" className="text-sm font-semibold">
+            {c.water_title}
+          </h3>
+          <ValueTypeTag type="game_value" />
+        </div>
         <div className="grid grid-cols-2 gap-2">
           {WATER_LEVELS.map((level) => (
             <Button

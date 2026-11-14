@@ -317,9 +317,9 @@ export function nextDay(state: MissionState, evidence: EvidenceList): MissionSta
 
   // Always draw once, so the same seed gives the same number on each day (note 6).
   const draw = nextRandom(state.rng_state);
-  const candidates = selectCandidates(evidence, state.plant);
   const recurrenceId =
     state.recurrence && state.recurrence.game_day === gameDay ? state.recurrence.crisis_id : null;
+  const candidates = selectCandidates(evidence, state.plant, recurrenceId);
   const probability = crisisProbability(candidates, recurrenceId);
   const occurred = candidates.length > 0 && draw.value < probability;
   const ids = candidates.map((c) => c.crisis.crisis_id);
