@@ -80,21 +80,32 @@ The ground analysis report never says that the harvest is safe or can be eaten. 
 
 ```
 src/
-  app/                  Routes: / (start), /mission, /harvest, /report, /sources, /api/crisis
+  app/                  Routes: / (start), /mission, /harvest, /report, /sources, /api/crisis, /api/event
   features/             Screen code by feature: mission (store), grow-room, report
   components/           Shared UI pieces
   lib/
     contract/           Shared type file and runtime schemas (the agreement between modules)
     game/               Game rules and logic as pure TypeScript, with tests
     evidence/           Evidence list loading, checks and selection
-    crisis/             Crisis pipeline behind the API: candidates, validation, fallback
+    crisis/             Crisis pipeline behind the API: candidates, validation, fallback; llm/ holds the model connection
+    events/             Timeline event list: schema and event judgement (the game engine does not use it yet)
+    event-cards/        Event card pipeline behind /api/event: validation and pre-made text
     i18n/               All screen text
-  data/                 evidence.json, state-criteria.json, fallback-crises.json
+  data/                 evidence.json, state-criteria.json, fallback-crises.json, events.json (draft),
+                        event-cards.json (draft), source-licenses.json
+  styles/               Design tokens and pixel UI utilities
 docs/
   IMPLEMENTATION-NOTES.en.md  Where the build differs from the planning document, and why
   IMPLEMENTATION-NOTES.md     The same notes in Korean (original)
   SOURCES.md                  Data, documents, open-source software and references, with licenses
   DEMO-SCRIPT.md              Care steps that show both crises in demo mode
+  DESIGN.md                   Pixel UI design system (Korean)
+  TIMELINE-EVENTS-PLAN.md     Plan for the cultivation timeline and events (Korean)
+  TIMELINE-ENGINE-NOTES.md    Decisions made for the timeline types and event judgement (Korean)
+  ROLE-TASKS.md               Open tasks per role and the event card API contract (Korean)
+data/                   Search excerpts and evaluation questions (see docs/SOURCES.md for their licenses)
+vector_db/              Search database built from data/json/total_RAG.json
+*.py, pyproject.toml    Optional evidence search: retriever, reranker, search server, evaluation
 ```
 
 ### Where the language model plugs in
@@ -111,8 +122,8 @@ The planning document gives the model one job: write the crisis scene, the plant
 
 - **In the product:** when `LLM_MODEL` is set, a language model (Gemma 4 E4B by Google, run locally through Ollama during development) writes the crisis scene, the plant's lines, the clues and the option text. The crisis screen states this whenever the text is generated. Verdicts, state changes and sources never come from the model. Without `LLM_MODEL` no model is called and crisis text comes from `src/data/fallback-crises.json`. The optional evidence search uses keyword search over excerpts from published papers; no AI model is involved in that search by default.
 - **In development:** the team used an AI coding assistant (Claude Code by Anthropic) to write and test the code in this branch, to search the downloaded NASA source documents and draft the evidence list, to draft the English text of the pre-made crises, to draft the documents in `docs/`, and to write the language model connection in `src/lib/crisis/llm/`. The team defined the idea, the rules and the scope in its planning document.
-- **Data files:** `src/data/*.json` each carry an `ai_disclosure` field that says how AI tools were used for that file. Every quote in the evidence list was compared by a script with the text of the downloaded source document and is a verbatim part of it. The script and the downloaded documents are not part of this repository.
-- No AI-generated images, video or audio are used. The plant drawing is an inline SVG written as code.
+- **Data files:** the files in `src/data/` carry an `ai_disclosure` field that says how AI tools were used for that file, except `events.json`, which has none yet. `data/evaluation.events.json` and `data/public_sources_RAG.json` are plain lists and cannot carry the field: the questions in the first were drafted with an AI coding assistant, and the excerpts in the second were cut from the source documents by a script written with one. Every quote in the evidence list was compared by a script with the text of the downloaded source document and is a verbatim part of it. The script and the downloaded documents are not part of this repository.
+- The plant and chamber images in `public/sprites` and `public/bg` are AI-generated, and the screens label them "AI-generated art". No AI-generated video or audio is used.
 
 ## Sources and licenses
 
