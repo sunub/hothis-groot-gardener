@@ -1,0 +1,498 @@
+{
+  "meta": {
+    "schema_version": 1,
+    "status": "draft",
+    "description": "Events that can happen on the cultivation timeline (day 0-33). Each event is written from chunks in vector_db (data/json/total_RAG.json). The engine does not read this file yet.",
+    "rules": [
+      "Verdicts, probabilities and numeric effects are game values set by the team, not measurements. The chunks only say what happened.",
+      "Crisis events point to evidence.json with crisis_ref. Their trigger, symptoms, actions and numbers stay in evidence.json; this file adds only the timeline window and DB chunks.",
+      "Night drift still applies once per game day (milestones). Cultivation days between milestones only check events, so the current balance does not change.",
+      "Every value marked draft needs a team answer before the engine uses it.",
+      "parallel_tracks are dated records from real experiments, shown beside the player's run as measured records. They never change verdicts or numbers."
+    ],
+    "milestones": [
+      {
+        "game_day": 1,
+        "cultivation_day": 1
+      },
+      {
+        "game_day": 2,
+        "cultivation_day": 6
+      },
+      {
+        "game_day": 3,
+        "cultivation_day": 12
+      },
+      {
+        "game_day": 4,
+        "cultivation_day": 17
+      },
+      {
+        "game_day": 5,
+        "cultivation_day": 22
+      },
+      {
+        "game_day": 6,
+        "cultivation_day": 28
+      },
+      {
+        "game_day": 7,
+        "cultivation_day": 33
+      }
+    ],
+    "response_ops": {
+      "care": [
+        "water_normal",
+        "water_heavy",
+        "fan_high",
+        "fan_low"
+      ],
+      "procedure": [
+        "open_wicks",
+        "thin_to_one",
+        "replace_pillow",
+        "check_fan_running",
+        "keep_observing",
+        "do_nothing"
+      ]
+    }
+  },
+  "events": [
+    {
+      "event_id": "water_shortage",
+      "kind": "crisis",
+      "crisis_ref": "water_shortage",
+      "window": {
+        "from": 6,
+        "to": 28
+      },
+      "summary": "VEG-01A and VEG-01B lettuce stopped growing around day 14-15; the reservoir was not giving the pillows enough water, and the crew added water directly to the pillows.",
+      "source_chunks": [
+        "veg01-stall-a",
+        "veg01-stall-b",
+        "veggie-manual-watering"
+      ],
+      "open_questions": [
+        "evidence.json cites Massa, Dufour, Smith (2014) for this crisis. veg01-stall-a/b (opag-2017-0003) give the day numbers and the recovery outcome; should they replace or join that source?"
+      ]
+    },
+    {
+      "event_id": "overwater_mold",
+      "kind": "crisis",
+      "crisis_ref": "overwater_mold",
+      "window": {
+        "from": 6,
+        "to": 28
+      },
+      "summary": "Poor air circulation leaves droplets on leaves, a micro environment favorable for microbes. In VEG-03A the fan read 'low' after a power cycle but was off, and early seedlings had excess moisture.",
+      "source_chunks": [
+        "veggie-leaf-moisture",
+        "veggie-cultivar-airflow",
+        "veggie-fan-restart-moisture"
+      ],
+      "open_questions": [
+        "The DB has no chunk for the zinnia mold record (VEG-01C) that evidence.json uses for the symptom stages. Keep the zinnia sources, or rewrite the crisis around the fan and droplet chunks?"
+      ]
+    },
+    {
+      "event_id": "wick_opening",
+      "kind": "scheduled",
+      "window": {
+        "from": 3,
+        "to": 3
+      },
+      "name": "Open the germination wicks",
+      "summary": "Three days after initiation, astronauts used forceps to spread the wicks apart so seedlings could emerge.",
+      "scene_hint": "Small shoots press against the wicks of each pillow.",
+      "actions": [
+        {
+          "action_id": "open_wicks",
+          "op": "open_wicks",
+          "verdict": "appropriate",
+          "effect": {
+            "plant_health": 0
+          },
+          "value_type": "game_value"
+        },
+        {
+          "action_id": "water_heavy_instead",
+          "op": "water_heavy",
+          "verdict": "inappropriate",
+          "effect": {
+            "root_moisture": 20,
+            "plant_health": -3
+          },
+          "value_type": "game_value"
+        },
+        {
+          "action_id": "do_nothing",
+          "op": "do_nothing",
+          "verdict": "partial",
+          "effect": {
+            "plant_health": -3
+          },
+          "value_type": "game_value"
+        }
+      ],
+      "draft": [
+        "All verdicts and effects. The sources record the procedure only, not what happens when it is skipped."
+      ],
+      "source_chunks": [
+        "veg01-wick-thinning",
+        "VEG-03J-05"
+      ]
+    },
+    {
+      "event_id": "thinning",
+      "kind": "scheduled",
+      "window": {
+        "from": 7,
+        "to": 7
+      },
+      "name": "Thin to one plant per pillow",
+      "summary": "On day 7, seedlings were thinned so each pillow kept one plant. In VEG-01A one pillow never germinated and was left out of thinning.",
+      "scene_hint": "Two seedlings share one pillow.",
+      "actions": [
+        {
+          "action_id": "thin_to_one",
+          "op": "thin_to_one",
+          "verdict": "appropriate",
+          "effect": {
+            "plant_health": 2
+          },
+          "value_type": "game_value"
+        },
+        {
+          "action_id": "keep_both",
+          "op": "do_nothing",
+          "verdict": "partial",
+          "effect": {
+            "plant_health": -3
+          },
+          "value_type": "game_value"
+        },
+        {
+          "action_id": "water_heavy_instead",
+          "op": "water_heavy",
+          "verdict": "inappropriate",
+          "effect": {
+            "root_moisture": 20,
+            "plant_health": -3
+          },
+          "value_type": "game_value"
+        }
+      ],
+      "draft": [
+        "All verdicts and effects. No source measures the effect of skipping thinning."
+      ],
+      "source_chunks": [
+        "veggie-day7-thinning",
+        "veg01-wick-thinning",
+        "VEG-03J-06",
+        "veg01-early-a"
+      ]
+    },
+    {
+      "event_id": "harvest_procedure",
+      "kind": "scheduled",
+      "window": {
+        "from": 33,
+        "to": 33
+      },
+      "name": "Harvest and freeze the samples",
+      "summary": "VEG-01A and B were harvested after 33 days with sanitized scissors. Research samples were wrapped in sterile foil, bagged and frozen at -80 °C until return.",
+      "maps_to_phase": "harvest",
+      "actions": [],
+      "draft": [
+        "No new rules. This event only links the existing harvest and freeze phases to DB chunks for the text."
+      ],
+      "source_chunks": [
+        "veggie-single-harvest",
+        "VEG-03J-08",
+        "veggie-harvest-method"
+      ]
+    },
+    {
+      "event_id": "pillow_no_flow",
+      "kind": "conditional",
+      "window": {
+        "from": 1,
+        "to": 1
+      },
+      "condition": {},
+      "probability": 0.15,
+      "name": "Water does not enter a pillow",
+      "summary": "At initiation of VEG-01A, pillow A could not be hydrated, thought to be a blocked quick disconnect or internal tube, and was swapped. In VEG-01B the same pillow failed again; ground analysis later found the internal fill tube clogged.",
+      "scene_hint": "Water is added, but one pillow stays dry and light.",
+      "on_occur": {
+        "set_flags": [
+          "water_blocked"
+        ],
+        "note": "While water_blocked is set, water care ops add nothing to root moisture, so the night drift can lead to water_shortage."
+      },
+      "actions": [
+        {
+          "action_id": "replace_pillow",
+          "op": "replace_pillow",
+          "verdict": "appropriate",
+          "effect": {
+            "clear_flags": [
+              "water_blocked"
+            ]
+          },
+          "value_type": "game_value"
+        },
+        {
+          "action_id": "water_heavy_again",
+          "op": "water_heavy",
+          "verdict": "inappropriate",
+          "effect": {
+            "plant_health": -5
+          },
+          "value_type": "game_value"
+        },
+        {
+          "action_id": "do_nothing",
+          "op": "do_nothing",
+          "verdict": "inappropriate",
+          "effect": {
+            "plant_health": -5
+          },
+          "value_type": "game_value"
+        }
+      ],
+      "chains_to": [
+        "water_shortage"
+      ],
+      "draft": [
+        "probability, verdicts and effects",
+        "Whether water_blocked should also clear by itself after some days."
+      ],
+      "source_chunks": [
+        "veg01-no-flow-a",
+        "veg01-no-flow-b",
+        "veg01-setup"
+      ]
+    },
+    {
+      "event_id": "fan_off_after_restart",
+      "kind": "conditional",
+      "window": {
+        "from": 2,
+        "to": 17
+      },
+      "condition": {
+        "fan": "low"
+      },
+      "probability": 0.2,
+      "name": "The fan reads low but is off",
+      "summary": "In VEG-03A, after power was cycled to Veggie, the fan read 'low' but was actually off. Seedlings had excess moisture early in growth; the same anomaly had caused excess moisture in an earlier zinnia test.",
+      "scene_hint": "The panel shows fan LOW, but the leaves do not move and droplets stay on them.",
+      "on_occur": {
+        "set_flags": [
+          "fan_actually_off"
+        ],
+        "note": "While fan_actually_off is set, night drift adds extra humidity, so overwater_mold becomes likely."
+      },
+      "actions": [
+        {
+          "action_id": "check_fan_running",
+          "op": "check_fan_running",
+          "verdict": "appropriate",
+          "effect": {
+            "clear_flags": [
+              "fan_actually_off"
+            ]
+          },
+          "value_type": "game_value"
+        },
+        {
+          "action_id": "fan_high",
+          "op": "fan_high",
+          "verdict": "partial",
+          "effect": {
+            "fan": "high"
+          },
+          "value_type": "game_value"
+        },
+        {
+          "action_id": "keep_observing",
+          "op": "keep_observing",
+          "verdict": "inappropriate",
+          "effect": {
+            "plant_health": -5
+          },
+          "value_type": "game_value"
+        }
+      ],
+      "flag_effects": {
+        "fan_actually_off": {
+          "night_drift": {
+            "humidity": 5
+          }
+        }
+      },
+      "chains_to": [
+        "overwater_mold"
+      ],
+      "draft": [
+        "probability, verdicts, effects and the extra night drift (+5 humidity)",
+        "Whether fan_high should clear the flag (the source does not say restarting at a new setting fixes it)."
+      ],
+      "source_chunks": [
+        "veggie-03a-fan-restart",
+        "veggie-fan-restart-moisture",
+        "veg01-light-hardware"
+      ]
+    },
+    {
+      "event_id": "mild_tip_burn",
+      "kind": "conditional",
+      "window": {
+        "from": 6,
+        "to": 22
+      },
+      "condition": {
+        "min_health": 70,
+        "zones": [
+          {
+            "metric": "root_moisture",
+            "in": [
+              "normal"
+            ]
+          },
+          {
+            "metric": "humidity",
+            "in": [
+              "normal"
+            ]
+          }
+        ]
+      },
+      "probability": 0.25,
+      "name": "Leaf tips look slightly burnt",
+      "summary": "In VEG-03J, some plants showed mild tip burn after germination, which the authors describe as indicative of rapid growth.",
+      "scene_hint": "The edges of a few young leaves look slightly brown.",
+      "actions": [
+        {
+          "action_id": "keep_observing",
+          "op": "keep_observing",
+          "verdict": "appropriate",
+          "effect": {
+            "plant_health": 0
+          },
+          "value_type": "game_value"
+        },
+        {
+          "action_id": "water_heavy",
+          "op": "water_heavy",
+          "verdict": "inappropriate",
+          "effect": {
+            "root_moisture": 20
+          },
+          "value_type": "game_value"
+        },
+        {
+          "action_id": "fan_high",
+          "op": "fan_high",
+          "verdict": "partial",
+          "effect": {
+            "fan": "high"
+          },
+          "value_type": "game_value"
+        }
+      ],
+      "draft": [
+        "probability, verdicts and effects",
+        "This event teaches that a visible change is not always a crisis; confirm the team wants a no-harm event."
+      ],
+      "source_chunks": [
+        "VEG-03J-11"
+      ]
+    }
+  ],
+  "parallel_tracks": [
+    {
+      "experiment": "VEG-01A",
+      "entries": [
+        {
+          "day": 0,
+          "text": "Pillow A could not be hydrated and was swapped with a spare pillow.",
+          "source_chunk": "veg01-no-flow-a"
+        },
+        {
+          "day": 7,
+          "text": "Pillow B never germinated; the other pillows were thinned to one seedling each.",
+          "source_chunk": "veg01-early-a"
+        },
+        {
+          "day": 14,
+          "text": "Three of five plants were stunted; the crew added water directly to the pillows. One recovered and two died.",
+          "source_chunk": "veg01-stall-a"
+        },
+        {
+          "day": 33,
+          "text": "Harvest planned for day 28 was moved to day 33 because of the low-water growth.",
+          "source_chunk": "veg01-harvest-a"
+        }
+      ]
+    },
+    {
+      "experiment": "VEG-01B",
+      "entries": [
+        {
+          "day": 15,
+          "text": "Plant growth appeared to stop.",
+          "source_chunk": "veg01-stall-b"
+        },
+        {
+          "day": 16,
+          "text": "Pillows and reservoir were watered; after that, water was added directly to the pillows at every scheduled watering.",
+          "source_chunk": "veg01-stall-b"
+        },
+        {
+          "day": 33,
+          "text": "The plants recovered and were harvested.",
+          "source_chunk": "veg01-stall-b"
+        }
+      ]
+    },
+    {
+      "experiment": "VEG-03A",
+      "entries": [
+        {
+          "day": null,
+          "when": "early growth",
+          "text": "The fan read 'low' after a power cycle but was off; seedlings had excess moisture.",
+          "source_chunk": "veggie-03a-fan-restart"
+        }
+      ]
+    },
+    {
+      "experiment": "VEG-03J",
+      "entries": [
+        {
+          "day": 3,
+          "text": "Astronauts spread the wicks apart with forceps to help seedlings emerge.",
+          "source_chunk": "VEG-03J-05"
+        },
+        {
+          "day": 7,
+          "text": "Seedlings were thinned so each pillow kept one viable seedling.",
+          "source_chunk": "VEG-03J-06"
+        },
+        {
+          "day": null,
+          "when": "after germination",
+          "text": "Some plants showed mild tip burn, a sign of rapid growth.",
+          "source_chunk": "VEG-03J-11"
+        },
+        {
+          "day": 29,
+          "text": "Plants were harvested; tissue was wrapped, bagged and frozen at -80 °C until return.",
+          "source_chunk": "VEG-03J-08"
+        }
+      ]
+    }
+  ]
+}
