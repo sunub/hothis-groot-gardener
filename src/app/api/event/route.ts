@@ -1,14 +1,25 @@
 import { eventCardRequestSchema, REQUEST_BODY_MAX_BYTES } from '@/lib/contract/schemas';
 import type { ApiError } from '@/lib/contract/types';
-import { createEventCard, InvalidEventRequestError } from '@/lib/event-cards';
+import { readLlmConfig } from '@/lib/crisis/llm';
+import { createEventCard, InvalidEventRequestError, type EventCardGenerator } from '@/lib/event-cards';
+// Imported from its file, not the index: it pulls in server-only code that the index must not carry.
+import { createEventCardLlmGenerator } from '@/lib/event-cards/llm-generator';
+
+/**
+ * The text generator for event cards, connected the same way as the crisis
+ * route: on when LLM_MODEL is set (see .env.example). Without it every card
+ * uses the pre-made text, as before.
+ */
+const llmConfig = readLlmConfig();
+const generator: EventCardGenerator | undefined = llmConfig ? createEventCardLlmGenerator(llmConfig) : undefined;
+const timeoutMs = llmConfig?.timeoutMs;
 
 // Responses carry the hidden verdicts, so no layer may store them.
 const NO_STORE = { 'Cache-Control': 'no-store' } as const;
 
 /**
  * POST /api/event: return the card for a scheduled or conditional timeline
- * event. No generator is connected, so every card uses the pre-made text.
- * 200 EventCardResponse, 400 bad_request, 500 internal.
+ * event. 200 EventCardResponse, 400 bad_request, 500 internal.
  */
 export async function POST(request: Request): Promise<Response> {
   let raw: string | null;
@@ -38,7 +49,7 @@ export async function POST(request: Request): Promise<Response> {
   }
 
   try {
-    const card = await createEventCard(parsed.data);
+    const card = await createEventCard(parsed.data, { generator, timeoutMs });
     return Response.json(card, { status: 200, headers: NO_STORE });
   } catch (error) {
     if (error instanceof InvalidEventRequestError) {

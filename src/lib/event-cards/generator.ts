@@ -60,7 +60,8 @@ export interface EventCardGenerationInput {
  * Produces raw event card text. The result is untrusted and is checked by
  * `validateEventCardOutput` before use. The function must stop work when
  * `signal` aborts (the pipeline gives up after its timeout either way).
- * None is wired yet, so every card uses the pre-made text.
+ * The route passes the generator in llm-generator.ts when a model is configured
+ * (LLM_MODEL). Without one, every card uses the pre-made text.
  */
 export type EventCardGenerator = (
   input: EventCardGenerationInput,
