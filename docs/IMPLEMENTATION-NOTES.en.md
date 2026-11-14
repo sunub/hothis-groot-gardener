@@ -62,6 +62,7 @@ The reader must do two tasks.
 | 35 | Option text and "no wording that shows the correct answer" | Ambiguous |
 | 36 | The microbial value cannot be "below the range" | Wrong |
 | 37 | The server checks the evidence list before it sends a crisis | Ambiguous |
+| 38 | Items in the planning document that were not built | Uncertain |
 
 ---
 
@@ -256,6 +257,7 @@ The reader must do two tasks.
 - **What was done**: The data contains codes. The text shown on screen comes from the text files.
   - Verdict: `appropriate` (appropriate), `partial` (partial), `inappropriate` (inappropriate)
   - Value type: `measured` (recorded value), `game_value` (game value)
+- **Why**: With the data file separate from the screen language, only the text files change when a language is added.
 - **How to revert**: `Verdict` and `ValueType` in `src/lib/contract/types.ts`, and `src/data/evidence.json`.
 - **What the team must decide**: None.
 
@@ -304,6 +306,7 @@ The reader must do two tasks.
   3. The "mold crisis" is `overwater_mold` in the evidence list. "Sanitize surfaces" is the action `clean_plant_surfaces` (wipe the plant surfaces) of that crisis (entry 27). "Sanitize at harvest" is to harvest with sanitized scissors (entry 29).
   4. The calculated value is rounded to two decimal places, then limited to 1.5 to 6.0. The two ends of the recorded range (2.14, 4.86) are "in the range".
 - **Files changed**: `MICROBIAL` in `src/lib/game/rules.ts`, and `computeMicrobial` in `src/lib/game/engine.ts`.
+- **Why**: The numbers in the table stay as they are. Only the details that the table does not give were decided, in the simplest way. The night check counts days by the same rule as plant health and the symptom stage.
 - **How to revert**: The two files above.
 - **What the team must decide**: None (adjust after tests).
 
@@ -327,6 +330,7 @@ The reader must do two tasks.
   - `validateAiOutput` in `src/lib/crisis/validate.ts`: does the four checks of the planning document (format, IDs are in the list, at least one appropriate option, no duplicate actions). The pre-made crises must also pass the same checks.
   - `src/lib/crisis/pipeline.ts`: generate → validate → if it fails, try one more time → if it fails again, use a pre-made crisis. If there is no generator, it sends a pre-made crisis immediately.
   - `src/lib/crisis/attach.ts`: uses the action ID to find the verdict, the change and the source in the evidence list, and attaches them.
+- **Why**: The planning document already defines the AI output format, the validation and the failure handling. With those parts built first, the AI is connected by adding one generator function.
 - **How to revert**: Not applicable.
 - **What the team must decide**: The language model, the instructions, and the time limit for the response.
 
@@ -336,6 +340,7 @@ The reader must do two tasks.
 - **Planning document section**: "Modules and division of work > ① Evidence material". Original (translated from the Korean planning document): "Makes the normal, caution and danger criteria for the plant and environment status."
 - **What the problem is**: The document does not say in which file the status criteria are kept.
 - **What was done**: The zone limits are in `src/data/state-criteria.json` (marked as game values). The other rule values (overnight change, watering amounts, probabilities, health changes, microbial values) are constants in `src/lib/game/rules.ts`.
+- **Why**: The zone boundaries are the data that the planning document calls "status criteria", so they are in a data file. Only the game logic uses the other numbers, so they are constants in the code.
 - **How to revert**: Not applicable.
 - **What the team must decide**: None.
 
@@ -358,6 +363,7 @@ The reader must do two tasks.
 - **Planning document section**: The same table. Original (translated from the Korean planning document): "In the VEG-01 lettuce grow-out, the reservoir did not send enough water up to the pillows | … | Inject water directly into the pillows"
 - **What the problem is**: The source text is "added water directly to the plant pillows". The word "inject" is not in it. Also, the abstract of this record calls the experiment only "VEG-01" (May to June 2014) and does not name the crop. That the crop was 'Outredgeous' red romaine lettuce is in a different NASA document (NTRS 20160004060). For the second grow-out (VEG-01B), there is only this sentence: "the plants had some periods of low water early on" (Khodadad et al., 2020, about VEG-01A and VEG-01B).
 - **What was done**: The action is named "add water directly to the pillows" (`add_water_direct`). The record field of the crisis says VEG-01, and the source sentence for the crop name is attached in `note`. The three wrong actions (refill the reservoir, wait for the next watering schedule, set the fan to high) have source sentences attached, and `note` says that their verdicts were given by the team.
+- **Why**: The words in the evidence list must not say more than the source text. Judges must be able to follow the source and check it.
 - **How to revert**: `water_shortage` in `src/data/evidence.json`.
 - **What the team must decide**: Whether the verdicts of the three wrong actions (1 partial, 2 inappropriate) are correct.
 
@@ -372,6 +378,7 @@ The reader must do two tasks.
   - Stage 3: "rot of leaves and stems" (`rot`). Original: "became afflicted with a foliar, stem, and root rot disease"
   - `note` says that the order of stage 2 and stage 3 was set by the team.
 - **Caution**: The "mold stage (stage 3)" of the planning document is now the "rot" stage. The "+0.5" of the microbial value stays on stage 3. The related row in the report says "rot stage (stage 3)".
+- **Why**: A symptom that was not found in a source text cannot be shown as a record. The abstract with the non-commercial condition was not used as data in a public repository.
 - **How to revert**: `overwater_mold.symptoms` in `src/data/evidence.json`, and the related text in `src/data/fallback-crises.json`.
 - **What the team must decide**: Whether to accept these three stages. Whether to check the body text of Schuerger et al. 2021 and restore the symptoms of the planning document.
 
@@ -388,6 +395,7 @@ The reader must do two tasks.
   - Partial: "wipe the plant surfaces" (`clean_plant_surfaces`). The source is a NASA article.
   - Inappropriate: "give more water" (`add_water`), "keep the settings and check again later" (`wait_and_observe`).
   - `remove_dead_tissue` and `sanitize_surfaces` were removed. The microbial value rule "sanitize surfaces during a crisis" is attached to `clean_plant_surfaces` (`SANITIZE_ACTION_ID` in `src/lib/game/rules.ts`).
+- **Why**: An action that is not in a source text cannot be shown as a recorded action. Four options are necessary so that three stay after one inappropriate option is removed.
 - **How to revert**: If source text is found, add the action to `src/data/evidence.json` and add the option text to `src/data/fallback-crises.json`.
 - **What the team must decide**: Whether the four actions and their verdicts are correct.
 
@@ -396,7 +404,8 @@ The reader must do two tasks.
 - **Type**: Uncertain
 - **Planning document section**: The table in "Crisis candidates". Original (translated from the Korean planning document): "If the fan stays on high, the plants become too dry and water shortage occurs". The paragraph below it. Original: "Real cases where a fix for one side causes the other side are used as wrong options."
 - **What the problem is**: The checked material has no record that water shortage came after the zinnia was dried (medium confidence. The body text of Schuerger et al. 2021 and Massa et al. 2017 were not opened).
-- **What was done**: The game rule stays (when the fan is on high, root moisture −15 each night). The screens and the evidence list do not call this a "real case".
+- **What was done**: The game rule stays (when the fan is on high, root moisture −15 each night; `NIGHT_DRIFT` in `src/lib/game/rules.ts`). The screens and the evidence list do not call this a "real case".
+- **Why**: The rule itself is a game value, so it can stay. Only the words "real case" have no source.
 - **How to revert**: Not applicable.
 - **What the team must decide**: To not call this connection a "real case" in the presentation.
 
@@ -406,6 +415,7 @@ The reader must do two tasks.
 - **Planning document section**: "Post-harvest microbial evaluation > Steps". Original (translated from the Korean planning document): "⑥ Harvest and sanitizing | On day 33, harvest the leaves and wipe them with sanitizing wipes (Pro-San)"
 - **What the problem is**: The checked material has no sentence that the harvested leaves were wiped with sanitizing wipes (searched for wipe, sanitiz, Pro-San, citric. 0 results in NTRS). The source text says "harvested after 33 days of growth using sanitized scissors to remove the leaves" (harvest with sanitized scissors).
 - **What was done**: The harvest choice was changed to "harvest with sanitized scissors / harvest without sanitizing the scissors". The microbial value rule "sanitized at harvest −0.3" applies when the player selects sanitized scissors (game value).
+- **Why**: With the procedure that is in the source text (sanitized scissors), the rule of the planning document (sanitizing at harvest −0.3) can be used without change.
 - **How to revert**: If source text for the wipes is found, change `harvest.steps[0]` in `src/data/evidence.json` and the harvest button text in `src/lib/i18n/en/report.ts`.
 - **What the team must decide**: To confirm the address of the "NASA NTRS presentation" that the planning document links.
 
@@ -415,6 +425,7 @@ The reader must do two tasks.
 - **Planning document section**: "Post-harvest microbial evaluation > What the report shows". Original (translated from the Korean planning document): "Recorded range of bacteria and fungi in ISS and ground red romaine lettuce: 2.14 to 4.86 log10 CFU/g"
 - **What the problem is**: The abstract of the paper (Khodadad et al. 2020) calls this range "total counts for bacteria and yeast/molds". But in the body text, 2.14 and 4.86 are the lowest and highest of **four mean bacterial counts on leaves of lettuce grown on the ISS** (3.53, 4.86, 2.89, 2.14). The fungal counts are given separately as 2.3 to 4.3. The leaf values of the ground control are not given as numbers in the body text.
 - **What was done**: The description on the report screen says "the lowest and highest of four mean bacterial counts on leaves of lettuce grown on the ISS". The quoted sentence is from the body text. (`harvest.microbial_range` in `src/data/evidence.json`)
+- **Why**: A value shown as recorded must also agree with the source text about what it is a count of.
 - **How to revert**: `description` in the same file.
 - **What the team must decide**: To not use the wording "ISS and ground" and "bacteria and fungi" in the presentation material either.
 
@@ -424,6 +435,7 @@ The reader must do two tasks.
 - **Planning document section**: Evidence item 2 in "Purpose". Original (translated from the Korean planning document): "A NASA science white paper says that diseased or stressed plants can cause stress and anxiety in the crew ([link: NASA white paper])"
 - **What the problem is**: The terms of use of that white paper were not confirmed, and the file contains the authors' contact details. Also, no material was found that **measured** the effect of diseased plants on crew mood.
 - **What was done**: The white paper is not used as evidence on screen. A sentence with the same meaning is quoted from the NASA Human Research Program evidence report (2025), and `note` says "a recommendation to consider, not a measured effect". (`background` in `src/data/evidence.json`)
+- **Why**: A document with unconfirmed usage terms was not quoted in a public repository. A sentence with the same meaning is in a NASA report that is released to the public.
 - **How to revert**: `background` in the same file.
 - **What the team must decide**: To state this claim in the presentation only at the strength of a "recommendation".
 
@@ -433,6 +445,7 @@ The reader must do two tasks.
 - **Planning document section**: "Data processing > Contents of one list item". Original (translated from the Korean planning document): "Value type | Whether it is a recorded value or a game value"
 - **What the problem is**: The evidence list also has records that are not numbers (symptoms, procedures). The label "Measured" does not fit these.
 - **What was done**: The data code stays `measured`. Only the text on screen is "Recorded" (taken from a source document). (`src/lib/i18n/en/common.ts`)
+- **Why**: The label must be correct for all the things it is attached to (numbers, symptoms, procedures).
 - **How to revert**: `value_type.measured` in the same file.
 - **What the team must decide**: None.
 
@@ -465,6 +478,7 @@ The reader must do two tasks.
   - The scene text of the pre-made crises gives only the symptoms seen on the plants. It does not give measured values or causes. So it does not contradict any status value.
   - The screen hides the crisis name before the selection and shows it on the result screen.
   - The option order is different in each pre-made crisis.
+- **Why**: Constraints that code cannot check are kept by the rules for writing the text and by the order of the screen.
 - **How to revert**: `src/data/fallback-crises.json`, and the crisis panel in `src/features/grow-room/`.
 - **What the team must decide**: After AI is connected, who checks these two constraints and how.
 
@@ -474,6 +488,7 @@ The reader must do two tasks.
 - **Planning document section**: "Game rules > Microbial value of the harvest". Original (translated from the Korean planning document): "Base value | 3.0 log10 CFU/g", "Sanitized at harvest | −0.3", "The report shows only "below the range / in the range / above the range" against the recorded range (2.14 to 4.86)"
 - **What the problem is**: The only rules that decrease the value are "sanitize at harvest −0.3" and "sanitize surfaces during a crisis −0.2 (maximum −0.6)". Sanitize surfaces is a partial verdict, so the same selection also adds +0.3 (entry 33). So the lowest value is 3.0 − 0.3 = 2.70, and it cannot be lower than the lower end of the range, 2.14. "Below the range" never shows on screen.
 - **What was done**: All three displays are implemented. The values were not changed.
+- **Why**: Balance values are for the team to set during tests. The screen must be able to show all three cases.
 - **How to revert**: `MICROBIAL` in `src/lib/game/rules.ts`.
 - **What the team must decide**: Whether to adjust the values so that "below the range" can occur.
 
@@ -489,3 +504,19 @@ The reader must do two tasks.
 - **Caution**: The "Evidence and sources" screen shows the list as it is. It does not run the check, so the tests prevent errors in the list.
 - **How to revert**: `assertEvidenceChecked` in `src/lib/crisis/pipeline.ts`.
 - **What the team must decide**: None.
+
+## 38. Items in the planning document that were not built
+
+- **Type**: Uncertain
+- **Planning document section**: The figure in "Service flow". Original (translated from the Korean planning document): "① Start cultivation (red romaine lettuce · set the mission length)". "Items to review before confirmation". Original: "Decide whether the player writes one line of reason after the selection (used in the record and the report)". "What the backend does > Task list". Original: "Keep a generation log | … | Optional", "Quote check script | … | Optional". "Crisis candidates". Original: "③ Ethylene build-up (optional)". "Technology stack". Original: "Quality test | Repeated generation script"
+- **What the problem is**: Some items are in the planning document but are not in this build. The reasons are different for each item.
+- **What was done**: These six items were not built.
+  1. **Setting the mission length.** The game rules fix the mission at seven days ("The mission is seven days"), so there is no setting screen. On the start screen the player selects only a standard mission or a demo mission. (`GAME_DAYS` in `src/lib/game/rules.ts`)
+  2. **One line of reason after the selection.** The planning document did not decide this item, so it was not added.
+  3. **Generation log.** This is a log of the input given to the AI and the output received. The AI connection is not built, so there is nothing to log.
+  4. **Quote check script.** A script outside the repository checked that each quoted sentence is in the source text. The downloaded source texts are not in the repository, so the script is not in it.
+  5. **Ethylene build-up crisis.** This is the third crisis, which the planning document marks as optional. The planning document says that its source is a record of wheat and needs confirmation.
+  6. **Prompt and repeated generation script.** These are AI planning tasks and belong to the AI connection.
+- **Why**: Only two kinds of items were left out: items that the planning document itself marks as optional or not decided, and items that have meaning only with the AI connection.
+- **How to revert**: Not applicable. To add them: item 1 goes in `src/lib/game/rules.ts` and the start screen, item 2 in `CrisisAttemptRecord` in `src/lib/contract/types.ts` and the result screen, item 5 in `src/data/evidence.json` and `src/data/fallback-crises.json`.
+- **What the team must decide**: Whether to add any of these before submission.

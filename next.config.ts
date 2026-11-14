@@ -2,7 +2,7 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   /* config options here */
-  // Keeps `next dev` from writing an AGENTS.md file into the project.
+  // `next dev` does not add generated files to the project root.
   agentRules: false,
   cacheComponents: true,
   partialPrefetching: true,

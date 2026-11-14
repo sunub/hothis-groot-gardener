@@ -11,6 +11,8 @@ All numbers below are game values.
 
 ## Steps
 
+Wait a moment after each screen change before you select the next button. The app ignores a click in the first 0.6 seconds after the screen changes, so that a double click does not press a button on the next screen.
+
 | Game day | Cultivation day | What you see in the morning | What you do | What it shows |
 |---|---|---|---|---|
 | 1 | 1 | Health 70, root moisture 55, humidity 55, fan low | Do no care. End the day. | Sowing day. Overnight change: root moisture −10, humidity +5. |

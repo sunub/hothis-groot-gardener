@@ -46,22 +46,29 @@ All state values and their changes (zones, overnight change, watering amounts, c
 | ESLint, eslint-config-next | 9.39.5, 16.4.6 | Linting | MIT |
 | @types/node, @types/react, @types/react-dom | 22.x, 19.x | Type definitions | MIT |
 
-The project was started from the `create-next-app` template (MIT). The random number generator in `src/lib/game/rng.ts` is an implementation of the public-domain mulberry32 algorithm.
+The project was started from the `create-next-app` template (MIT). The random number generator in `src/lib/game/rng.ts` is written for this project. It follows the published mulberry32 algorithm.
 
 ## 5. References for structure and style
 
-These were read for structure and conventions. No code was copied from them.
+No code was copied from any of these.
+
+**Documents opened during the build**
 
 | Reference | What was taken from it |
 |---|---|
 | Next.js documentation shipped with the package (`node_modules/next/dist/docs/`): project structure, route handlers, server and client components, "Building interactive apps" | Folder layout: routes in `app/` compose feature components from `features/`, shared primitives in `components/ui/`; the API as a route handler; client components only where interaction is needed |
-| React documentation: `useSyncExternalStore`, "Extracting State Logic into a Reducer" | One external store for the mission; state changes as pure functions kept apart from the UI |
-| Redux Style Guide | State as plain serializable data; pure state transitions; one source of truth |
-| Google TypeScript Style Guide | Naming, named exports, no `any`, comments that explain why |
-| Zod documentation | Parse at trust boundaries (API request, AI output, data file); types checked against schemas |
-| Recharts documentation and type definitions | Line chart composition |
-| WCAG 2.2 | Text labels next to every color signal, focus visibility, target size |
-| ASD-STE100 (Simplified Technical English) principles | Writing style of `docs/IMPLEMENTATION-NOTES.md`: short sentences, one term per thing |
+| Recharts README and type definitions shipped with the package | Line chart composition |
+
+**Conventions followed (the documents themselves were not opened during the build)**
+
+| Convention | Where it shows in the code |
+|---|---|
+| React: one external store read with `useSyncExternalStore`; state logic as pure functions | `src/features/mission/`, `src/lib/game/engine.ts` |
+| Redux style: state as plain serializable data, pure state transitions, one source of truth | `MissionState` in `src/lib/contract/types.ts`, `src/lib/game/engine.ts` |
+| Google TypeScript style: naming, named exports, no `any`, comments that explain why | All TypeScript files |
+| Zod: parse at trust boundaries (API request and response, AI output, data file) | `src/lib/contract/schemas.ts` |
+| WCAG: a text label next to every color signal, visible focus, target size | Screens |
+| Simplified Technical English (ASD-STE100) principles: short sentences, one term per thing | `docs/IMPLEMENTATION-NOTES.md` and its English version |
 
 ## 6. AI tools
 
