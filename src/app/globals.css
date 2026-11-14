@@ -1,30 +1,134 @@
 @import "tailwindcss";
 
 /*
- * Design tokens. Dark navy "grow chamber console" theme with teal panels,
- * palette from the euna demo branch.
- * Zone colors always appear together with a text label, never as color alone.
+ * Design tokens (Pixel UI v2). Dark slate "grow chamber console" with a mint accent.
+ * No pink or magenta anywhere in the UI; the crimson lettuce sprites are the only warm hue.
+ * Zone colors always appear together with a text label and an icon or hatch, never as color alone.
+ * Spec and rationale: docs/DESIGN.md.
  */
 @theme {
-  --color-bg: #06121b;
-  --color-surface: #0b1d2b;
-  --color-surface-2: #10293b;
-  --color-line: #1f8f88;
-  --color-ink: #eaf7f6;
-  --color-ink-muted: #9fc3c8;
-  --color-accent: #3fe3d2;
-  --color-accent-ink: #06121b;
-  --color-normal: #4fd97a;
-  --color-caution: #f6c544;
-  --color-danger: #ef4a57;
-  --color-measured: #7fb2ff;
-  --color-game: #c9a8f5;
-  --color-led: #e14fd9;
+  /* surfaces and lines */
+  --color-bg: #0a1016;
+  --color-surface: #131d26;
+  --color-surface-2: #1a2733;
+  --color-surface-3: #0f1820;
+  --color-line: #34495a;
+  --color-line-hi: #5a7a8e;
+  /* text */
+  --color-ink: #eaf1f3;
+  --color-ink-muted: #a9b9c0;
+  --color-ink-faint: #7f919a;
+  /* accent (primary action, selection, focus) */
+  --color-accent: #6fc3b2;
+  --color-accent-ink: #0a1016;
+  --color-accent-hi: #a5e3c8;
+  --color-accent-lo: #3e8d7e;
+  /* zones and verdicts */
+  --color-normal: #7bc68f;
+  --color-caution: #e3b95b;
+  --color-danger: #e5806a;
+  --color-danger-fill: #c8654f;
+  /* value type: recorded (measured) vs game value */
+  --color-measured: #6baed6;
+  --color-game: #a9b9c0;
+  /* state items */
+  --color-health: #7bc68f;
+  --color-water: #6baed6;
+  --color-humidity: #9c8fd6;
+  --color-lamp: #e3b95b;
+  --color-micro: #d49a6a;
+  /* grow light shown in the bay art (teal after recolor) */
+  --color-led: #4fd1c0;
   --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", "Apple SD Gothic Neo",
     "Noto Sans KR", sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   --font-pixel: var(--font-dot), ui-monospace, monospace;
   --font-title: var(--font-pixelify), var(--font-dot), ui-monospace, monospace;
+  --font-data: var(--font-vt323), ui-monospace, monospace;
+}
+
+/*
+ * Pixel frame utilities. Corners are notched with four 4px offset shadows instead of border-radius.
+ * Shadows draw outside the box, so leave 4px of outer room (e.g. `m-1` or gap-4 or more).
+ * Frame color: set --pf (defaults to --color-line), or use a pixel-frame-* modifier.
+ */
+@utility pixel-frame {
+  background-color: var(--color-surface);
+  box-shadow:
+    0 -4px 0 0 var(--pf, var(--color-line)),
+    0 4px 0 0 var(--pf, var(--color-line)),
+    -4px 0 0 0 var(--pf, var(--color-line)),
+    4px 0 0 0 var(--pf, var(--color-line)),
+    inset 0 -4px 0 0 var(--color-surface-3);
+}
+
+@utility pixel-frame-flat {
+  box-shadow:
+    0 -4px 0 0 var(--pf, var(--color-line)),
+    0 4px 0 0 var(--pf, var(--color-line)),
+    -4px 0 0 0 var(--pf, var(--color-line)),
+    4px 0 0 0 var(--pf, var(--color-line));
+}
+
+@utility pixel-frame-accent {
+  --pf: var(--color-accent);
+}
+@utility pixel-frame-normal {
+  --pf: var(--color-normal);
+}
+@utility pixel-frame-caution {
+  --pf: var(--color-caution);
+}
+@utility pixel-frame-danger {
+  --pf: var(--color-danger);
+}
+@utility pixel-frame-measured {
+  --pf: var(--color-measured);
+}
+
+/* Raised primary button: light line on top, dark line below, near-black outline. */
+@utility pixel-raised {
+  background-color: var(--color-accent);
+  color: var(--color-accent-ink);
+  box-shadow:
+    0 -4px 0 0 var(--color-bg),
+    0 4px 0 0 var(--color-bg),
+    -4px 0 0 0 var(--color-bg),
+    4px 0 0 0 var(--color-bg),
+    inset 0 -4px 0 0 var(--color-accent-lo),
+    inset 0 4px 0 0 var(--color-accent-hi);
+}
+
+/* Speech bubble for the plant NPC only: light fill, dark frame. */
+@utility pixel-bubble {
+  background-color: var(--color-ink);
+  color: var(--color-bg);
+  box-shadow:
+    0 -4px 0 0 var(--color-bg),
+    0 4px 0 0 var(--color-bg),
+    -4px 0 0 0 var(--color-bg),
+    4px 0 0 0 var(--color-bg);
+}
+
+/* Game-value badge: dashed frame. Recorded values use a filled badge instead. */
+@utility pixel-dashed {
+  border: 4px dashed var(--color-line-hi);
+}
+
+/* Gauge helpers: cut a filled bar into 8px blocks, and hatch the danger zones. */
+@utility pixel-segments {
+  background-image: repeating-linear-gradient(
+    90deg,
+    transparent 0 6px,
+    var(--color-surface) 6px 8px
+  );
+}
+@utility pixel-hatch {
+  background-image: repeating-linear-gradient(
+    45deg,
+    rgb(10 16 22 / 0.45) 0 4px,
+    transparent 4px 8px
+  );
 }
 
 html {
