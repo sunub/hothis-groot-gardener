@@ -276,6 +276,38 @@ describe('checkWording', () => {
     expect(checkWording(line, input.candidates[0]).join(' ')).toMatch(/dripping/);
   });
 
+  it('catches what the third logged run let through: "lack turgidity" and "dehydration" in the scene', () => {
+    const { input } = inputFor(dry);
+    const text = {
+      ...goodWaterText(),
+      scene: 'The overall appearance of the unit suggests the plants are struggling with dehydration.',
+      clues: [
+        { symptom_id: 'poor_growth', text: 'Plant growth has significantly slowed down.' },
+        { symptom_id: 'dry_wicks', text: 'The plants appear distressed and lack turgidity.' },
+      ],
+    };
+    const issues = checkWording(text, input.candidates[0]).join(' ');
+    expect(issues).toMatch(/turgidity.*wilting/);
+    expect(issues).toMatch(/scene: "dehydration" names the cause/);
+  });
+
+  it('catches short and repeated result lines (third logged run: "I feel worse." twice)', () => {
+    const { input } = inputFor(dry);
+    const text = goodWaterText();
+    text.options[2] = { ...text.options[2], result_line: 'I feel worse.' };
+    text.options[3] = { ...text.options[3], result_line: 'I feel worse.' };
+    expect(checkWording(text, input.candidates[0]).join(' ')).toMatch(/too short/);
+    expect(checkStructure(text, input.candidates[0]).join(' ')).toMatch(/two result_line texts are the same/);
+  });
+
+  it('lists the banned words for this stage in the prompt', () => {
+    const { input } = inputFor(dry);
+    const prompt = buildUserPrompt({ input, candidate: input.candidates[0], excerpts: [] });
+    expect(prompt).toMatch(/DO NOT USE these words in the scene, plant line, clues or result lines:[^\n]*wilting[^\n]*turgidity/);
+    expect(prompt).toMatch(/ALSO DO NOT USE these words in the scene, plant line or clues:[^\n]*dehydrated/);
+    expect(prompt).not.toMatch(/result lines:[^\n]*dehydrated/);
+  });
+
   it('catches structure problems so the model can fix them', () => {
     const { input } = inputFor(dry);
     const text = goodWaterText();
