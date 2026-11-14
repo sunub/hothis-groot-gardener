@@ -51,6 +51,3 @@ result/
 .venv
 uv.lock
 
-# ChromaDB
-vector_db/**
-!vector_db/.gitkeep

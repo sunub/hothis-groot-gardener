@@ -7,6 +7,7 @@ import math
 import os
 from pathlib import Path
 import re
+import sys
 
 import chromadb
 from dotenv import load_dotenv
@@ -30,7 +31,9 @@ def tokenize(text: str) -> list[str]:
 
 def load_korean_texts(directory: Path) -> dict[str, str]:
     if not directory.is_dir():
-        raise ValueError(f"Korean BM25 directory does not exist: {directory}")
+        # data/json_ko is git-ignored, so a fresh clone has no Korean texts. BM25 then uses English only.
+        print(f"Warning: Korean BM25 directory not found, using English text only: {directory}", file=sys.stderr)
+        return {}
     texts = {}
     for path in sorted(directory.glob("*.json")):
         data = json.loads(path.read_text(encoding="utf-8"))

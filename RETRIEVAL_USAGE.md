@@ -75,3 +75,23 @@ uv run python evaluation.py --dataset data/evaluation.example.json data/다른_�
 ```
 
 평가할 때마다 `result/weighted_rrf_날짜시간.json` 또는 `result/rerank_날짜시간.json`에 보고서를 새로 저장합니다. 저장 위치를 바꾸려면 `--output-dir 경로`를 추가합니다. Reranker 평가의 후보 수와 배치 크기는 각각 `--rerank-candidates`, `--rerank-batch-size`로 조절할 수 있습니다.
+
+## 4. LLM 추천 붙이기 (`rag_llm.py`)
+
+검색한 근거 chunk 5개를 LLM에 넘겨 다음 행동을 추천받습니다. LLM은 주어진 chunk만 근거로 쓰고, 추천마다 근거 chunk ID를 적습니다. 검색되지 않은 ID를 적으면 결과에서 빼고 `dropped_chunk_ids`에 남깁니다. 키는 검색과 같은 `.env`의 `API_KEY`를 씁니다.
+
+```bash
+uv run python rag_llm.py "현재 상태: 재배 12일차, 뿌리 수분 30(부족), 재배실 습도 55, 팬 약. 다음 관리 행동을 추천해 주세요."
+```
+
+Reranker를 거친 근거를 쓰려면 `--rerank`를 붙입니다 (`uv sync --group rerank` 필요). 모델은 `--model` 또는 환경변수 `LLM_MODEL`로 바꿉니다. 기본값은 `gpt-4.1-mini`입니다.
+
+출력 JSON: `summary`, `recommendations`(행동, 이유, 근거 chunk ID), `insufficient_evidence`, `missing`, `dropped_chunk_ids`, `evidence`(검색된 chunk 5개의 ID, 순위, 출처).
+
+API 키 없이 실제 `vector_db`로 동작을 확인하는 테스트:
+
+```bash
+uv run python -m unittest test_rag_llm
+```
+
+`data/json_ko/`가 없으면(저장소에는 올리지 않음) BM25는 경고를 내고 영어 원문만 색인합니다.
