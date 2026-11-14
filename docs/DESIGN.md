@@ -1,6 +1,6 @@
 # 픽셀 UI 디자인 시스템 (v2)
 
-화면 담당이 쓰는 디자인 규칙입니다. 토큰은 `src/app/globals.css`의 `@theme`에, 픽셀 프레임은 같은 파일의 `@utility`에 있습니다. 기획서의 내용을 바꾸는 문서가 아니며, 기획의 원본은 팀 기획서입니다.
+화면 담당이 쓰는 디자인 규칙입니다. 토큰은 `apps/web/src/app/globals.css`의 `@theme`에, 픽셀 프레임은 같은 파일의 `@utility`에 있습니다. 기획서의 내용을 바꾸는 문서가 아니며, 기획의 원본은 팀 기획서입니다.
 
 - 시안 'SG-DS v2 · Pixel UI'(12개 보드, 일부는 눌러 볼 수 있음): https://claude.ai/artifact/UMnoCswcpKLmxoCBPFiDVf
 - 보드:
@@ -16,17 +16,17 @@
 
 | 위치 | 내용 |
 | --- | --- |
-| `src/styles/tokens.css` | `@theme` 토큰: 색, 서체, 글자 크기(`text-caption`, `text-body`, `text-control`, `text-heading`, `text-display`, `text-data-sm`~`text-data-xl`), 움직임. `--radius-*`를 초기화해 `rounded-*` 클래스가 생기지 않습니다 |
-| `src/styles/utilities.css` | `pixel-*` 유틸리티: 프레임(`pixel-frame`, `-flat`, `-thin`), 프레임 색(`pixel-tone-*`), `pixel-raised`, `pixel-pressed`, `pixel-bubble`, `pixel-dashed`, `pixel-bar`, `pixel-segments`, `pixel-hatch`, `pixel-art` |
-| `src/styles/base.css` | 요소 기본값(바탕, 본문 서체, 포커스 표시, 움직임 줄이기) |
-| `src/app/globals.css` | 위 세 파일을 순서대로 불러옵니다 |
-| `src/lib/utils/cn.ts` | `clsx` + `tailwind-merge`. 이 프로젝트의 글자 크기 토큰과 `pixel-*` 그룹을 알도록 설정했습니다 |
-| `src/components/ui/` | 화면에 무관한 기본 부품: `button`, `badge`, `card`(`Card`, `CardHeader`, `CardTitle`, `CardDescription`, `Well`), `callout`, `speech-bubble`, `meter`, `choice-button`, `stepper`, `disclosure`, `skeleton`, `pixel-icon` |
-| `src/components/` | 게임 용어를 아는 부품: `value-type-tag`, `zone-badge`, `verdict-banner`, `source-citation` |
-| `/design-system` | 모든 부품을 한 화면에서 보는 개발용 페이지(`src/features/design-system/catalog.tsx`). 검색 엔진에 노출하지 않습니다 |
+| `apps/web/src/styles/tokens.css` | `@theme` 토큰: 색, 서체, 글자 크기(`text-caption`, `text-body`, `text-control`, `text-heading`, `text-display`, `text-data-sm`~`text-data-xl`), 움직임. `--radius-*`를 초기화해 `rounded-*` 클래스가 생기지 않습니다 |
+| `apps/web/src/styles/utilities.css` | `pixel-*` 유틸리티: 프레임(`pixel-frame`, `-flat`, `-thin`), 프레임 색(`pixel-tone-*`), `pixel-raised`, `pixel-pressed`, `pixel-bubble`, `pixel-dashed`, `pixel-bar`, `pixel-segments`, `pixel-hatch`, `pixel-art` |
+| `apps/web/src/styles/base.css` | 요소 기본값(바탕, 본문 서체, 포커스 표시, 움직임 줄이기) |
+| `apps/web/src/app/globals.css` | 위 세 파일을 순서대로 불러옵니다 |
+| `apps/web/src/lib/utils/cn.ts` | `clsx` + `tailwind-merge`. 이 프로젝트의 글자 크기 토큰과 `pixel-*` 그룹을 알도록 설정했습니다 |
+| `apps/web/src/components/ui/` | 화면에 무관한 기본 부품: `button`, `badge`, `card`(`Card`, `CardHeader`, `CardTitle`, `CardDescription`, `Well`), `callout`, `speech-bubble`, `meter`, `choice-button`, `stepper`, `disclosure`, `skeleton`, `pixel-icon` |
+| `apps/web/src/components/` | 게임 용어를 아는 부품: `value-type-tag`, `zone-badge`, `verdict-banner`, `source-citation` |
+| `/design-system` | 모든 부품을 한 화면에서 보는 개발용 페이지(`apps/web/src/features/design-system/catalog.tsx`). 검색 엔진에 노출하지 않습니다 |
 
 쓰는 규칙:
-- 새 화면은 `src/components/ui`의 부품을 먼저 씁니다. `pixel-*` 클래스를 직접 쓰는 것은 부품이 없을 때만입니다.
+- 새 화면은 `apps/web/src/components/ui`의 부품을 먼저 씁니다. `pixel-*` 클래스를 직접 쓰는 것은 부품이 없을 때만입니다.
 - 클래스를 합칠 때는 `cn()`을 씁니다. 부품은 `className`을 받아 마지막에 합칩니다.
 - 링크를 단추처럼 보이게 할 때는 `buttonVariants({ variant })`를 `Link`의 `className`에 넣습니다.
 - 프레임이 있는 부품은 바깥 여백 `m-1`을 스스로 가집니다. 여러 개를 쌓을 때는 `space-y-*` 대신 `flex flex-col gap-*`이나 `grid gap-*`을 씁니다. `space-y-*`의 여백은 `m-1`에 덮여 프레임이 서로 붙습니다.
@@ -190,7 +190,7 @@
 
 ## 기획서에서 온 규칙
 
-1. 화면과 제출물은 영어입니다. 문구는 `src/lib/i18n/`에 모읍니다.
+1. 화면과 제출물은 영어입니다. 문구는 `apps/web/src/lib/i18n/`에 모읍니다.
 2. 판정은 색에만 의존하지 않습니다(색 + 아이콘 + 글자).
 3. 모든 수치와 판정 옆에 실측 또는 게임 값 배지를 붙입니다.
 4. 판정은 고르기 전까지 숨기고, 출처는 접을 수 있게 합니다.
@@ -199,7 +199,7 @@
 
 ## 다음 단계
 
-- `src/features/grow-room/mission-screen.tsx`의 단계 패널 테두리는 아직 1px 선입니다. 시간축 작업이 커밋되지 않은 파일이라 이번에 손대지 않았습니다. `Card`로 바꾸면 됩니다.
+- `apps/web/src/features/grow-room/mission-screen.tsx`의 단계 패널 테두리는 아직 1px 선입니다. 시간축 작업이 커밋되지 않은 파일이라 이번에 손대지 않았습니다. `Card`로 바꾸면 됩니다.
 
 1. ~~배경 교체~~ 끝남: 재배실 장면이 `/bg/bay-teal.jpg`를 쓰고, 작물 위 조명색도 청록으로 바꿨습니다. `bay.png`, `wall.png`는 이제 코드에서 쓰지 않습니다(지워도 됨, 각 약 1.8MB).
 2. ~~작은 컴포넌트~~ 끝남: "코드 구조" 표의 부품으로 옮겼습니다.
@@ -214,5 +214,5 @@
 - HUD의 "Menu" 단추가 무엇을 여는지 시안에 없습니다. 지금 머리글의 링크(Home, Sources)를 담는 자리로 볼지 정해야 합니다.
 - 시안 6번의 수확 단추는 고르기 전부터 미생물 변화량(−0.3, ±0)을 보여 줍니다. 판정이 있는 위기가 아니어서 규칙 4에는 걸리지 않지만, 의도한 것인지 확인이 필요합니다.
 - 시안의 색 이름(`bg-0`, `text`, `ok`, `warn`, `bad`, `rec`, `light`)은 이 문서의 토큰(`bg`, `ink`, `normal`, `caution`, `danger`, `measured`, `lamp`)과 같은 색입니다. 코드에서는 이 문서의 이름을 씁니다.
-- 시안 4번의 출처 제목과 주소 중 NTRS 20150001374 외에는 자리표시입니다. 실제 값은 `src/data/evidence.json`을 따릅니다.
+- 시안 4번의 출처 제목과 주소 중 NTRS 20150001374 외에는 자리표시입니다. 실제 값은 `data/content/evidence.json`을 따릅니다.
 - 시안의 보고서 숫자(미생물 3.20, 건강 77 등)는 화면 확인용 샘플입니다.

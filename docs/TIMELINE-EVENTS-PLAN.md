@@ -2,11 +2,11 @@
 
 Space Garden Simulator · 2026-11-15 · 초안
 
-'80억 분의 1'(https://1in8b.life/ko/)의 방식을 참고해, 이 게임에 두 가지를 더하려고 합니다. 하나는 재배일이 흐르는 시간축이고, 다른 하나는 그 흐름 속에서 조건이 맞을 때 나는 사건입니다. 이 문서는 지금 기획을 무너뜨리지 않고 넓히는 방향만 다룹니다. 다음 순서로 정리했습니다. 무엇을 그대로 두고 무엇을 더하는지, `vector_db`의 자료로 어떤 사건을 만들 수 있는지, 그리고 세 역할(시뮬레이션 둘, 화면 하나)이 어떻게 나눠 동시에 진행할지입니다.
+'80억 분의 1'(https://1in8b.life/ko/)의 방식을 참고해, 이 게임에 두 가지를 더하려고 합니다. 하나는 재배일이 흐르는 시간축이고, 다른 하나는 그 흐름 속에서 조건이 맞을 때 나는 사건입니다. 이 문서는 지금 기획을 무너뜨리지 않고 넓히는 방향만 다룹니다. 다음 순서로 정리했습니다. 무엇을 그대로 두고 무엇을 더하는지, `data/vector_db`의 자료로 어떤 사건을 만들 수 있는지, 그리고 세 역할(시뮬레이션 둘, 화면 하나)이 어떻게 나눠 동시에 진행할지입니다.
 
 ## 1. 기본 원칙
 
-1. **판정과 수치는 지금처럼 근거 목록이 정합니다.** 조치의 판정, 수치 변화, 사건이 날 확률은 `src/data/evidence.json`과 `src/data/events.json`에 고정합니다. 화면에는 "게임 값"으로 표시합니다.
+1. **판정과 수치는 지금처럼 근거 목록이 정합니다.** 조치의 판정, 수치 변화, 사건이 날 확률은 `data/content/evidence.json`과 `data/content/events.json`에 고정합니다. 화면에는 "게임 값"으로 표시합니다.
 2. **DB(RAG)는 사건을 고르고 글을 쓰는 데에만 씁니다.** 장면 설명, 단서, 식물의 말, 판정 뒤 해설이 여기에 해당합니다. DB 자료로 판정을 내리지 않습니다.
 3. **지금의 수치 균형을 유지합니다.** 밤사이 변화는 지금처럼 게임 날마다 한 번 적용합니다. 게임 날 사이의 재배일에는 사건 판정만 합니다. 그래서 결정 목록 13번과 14번의 수치, 엔진 테스트의 기대값이 그대로 유지됩니다.
 4. **원문에 없는 일은 지어내지 않습니다.** 원문이 수치나 기준을 주지 않는 곳은 팀이 정한 게임 값으로 두고, 그렇다고 화면에 밝힙니다.
@@ -108,7 +108,7 @@ Space Garden Simulator · 2026-11-15 · 초안
 
 ## 3. 현재 DB 분석
 
-`vector_db`에는 `plant_research` 컬렉션 하나가 있고, chunk는 81개입니다. 원본은 `data/json/total_RAG.json`입니다.
+`data/vector_db`에는 `plant_research` 컬렉션 하나가 있고, chunk는 81개입니다. 원본은 `data/sources/total_RAG.json`입니다.
 
 | 출처 | 수 | 성격 | 게임에서 쓸 수 있는 정도 |
 |---|---|---|---|
@@ -137,7 +137,7 @@ ISS 기록 55개는 재배일에 맞춰 일어난 일로 적혀 있습니다. �
 2. **곰팡이 위기의 근거가 DB에 없습니다.** 지금의 과습·곰팡이 위기는 백일홍(VEG-01C) 기록에 기대는데, 그 chunk가 DB에 없습니다. 대신 팬 고장과 잎 물방울 chunk가 있어서 원인 쪽 근거는 오히려 단단해집니다.
 3. **DB의 수치를 판정 기준으로 쓰면 안 됩니다.** 여러 chunk의 메모가 이를 막고 있습니다. 예를 들어 "이 표의 값에서 조절 조치를 시작할 기준을 정할 수는 없다", "회복을 보장하지 않는다"고 적혀 있습니다.
 4. **물 부족 위기와 같은 사건입니다.** `veg01-stall-a/b`는 지금 물 부족 위기의 근거(Massa 2014)와 같은 VEG-01 사건입니다. 두 근거를 합칠지, 하나로 바꿀지 정해야 합니다.
-5. **검색 품질.** 한국어 번역 폴더 `data/json_ko`가 저장소에 없습니다. 지금은 검색 방식 가운데 단어 일치 검색(BM25)이 영어 원문만 찾으므로, 한국어 질문의 검색 품질이 떨어집니다.
+5. **검색 품질.** 한국어 번역 폴더 `data/sources/json_ko`가 저장소에 없습니다. 지금은 검색 방식 가운데 단어 일치 검색(BM25)이 영어 원문만 찾으므로, 한국어 질문의 검색 품질이 떨어집니다.
 
 ## 4. 제안하는 구조
 
@@ -179,11 +179,11 @@ ISS 기록 55개는 재배일에 맞춰 일어난 일로 적혀 있습니다. �
 | 장면 설명, 단서, 식물의 말, 판정 뒤 해설 | LLM과 그 사건의 `source_chunks` |
 | 자유 질문 ("지금 뭘 해야 해?") | `rag_llm.py`의 검색 전체. 나중에 더할 기능 |
 
-사건마다 쓸 chunk를 미리 골라 파일로 내보냅니다(예: `src/data/event-chunks.json`). 그러면 Next.js 앱이 Python을 실행하지 않아도 됩니다. 앱의 위기 API는 이 파일의 chunk 본문을 LLM에 넘기기만 하면 됩니다. 모델 호출이 아직 없는 `src/lib/crisis/generator.ts` 자리가 여기에 해당합니다. 출력은 지금의 검증(`src/lib/crisis/validate.ts`)을 그대로 통과해야 합니다.
+사건마다 쓸 chunk를 미리 골라 파일로 내보냅니다(예: `data/content/event-chunks.json`). 그러면 Next.js 앱이 Python을 실행하지 않아도 됩니다. 앱의 위기 API는 이 파일의 chunk 본문을 LLM에 넘기기만 하면 됩니다. 모델 호출이 아직 없는 `apps/web/src/server/ai/crisis/generator.ts` 자리가 여기에 해당합니다. 출력은 지금의 검증(`apps/web/src/server/ai/crisis/validate.ts`)을 그대로 통과해야 합니다.
 
-## 5. 사건 목록 초안 (`src/data/events.json`)
+## 5. 사건 목록 초안 (`data/content/events.json`)
 
-엔진은 아직 이 파일을 읽지 않습니다. 판정, 확률, 수치 변화는 모두 초안이고 팀이 정해야 합니다. `src/lib/events/events.test.ts`는 다음을 검사합니다.
+엔진은 아직 이 파일을 읽지 않습니다. 판정, 확률, 수치 변화는 모두 초안이고 팀이 정해야 합니다. `apps/web/src/lib/events/events.test.ts`는 다음을 검사합니다.
 - 파일 형식
 - chunk ID가 DB에 있는지
 - 위기 참조가 `evidence.json`에 있는지
@@ -241,22 +241,22 @@ DB chunk에서 날짜가 적힌 기록만 골랐습니다. 화면에는 "실측(
 | | 역할 A: 시뮬레이션 엔진 | 역할 B: 데이터와 생성 | 역할 C: 화면과 콘텐츠 |
 |---|---|---|---|
 | 한 줄 요약 | 시간이 흐르고 사건이 나며 상태가 바뀌는 규칙 | 근거 데이터, RAG, 위기 API, LLM 생성 글 | 보이는 모든 것, 화면 글, 그림 |
-| 맡는 폴더 | `src/lib/game/**`, `src/lib/events/**`(스키마, 읽기, 사건 판정), `src/lib/evidence/select.ts`, `src/features/mission/**`(임무 상태 저장소, 단계 이동) | `src/data/*.json`, `src/lib/evidence/check.ts`, `src/lib/crisis/**`, `src/app/api/**`, Python RAG(`retriver.py`, `reranker.py`, `rag_llm.py`, `build_vector_db.py`, `evaluation.py`), `vector_db/`, `data/json/` | `src/features/**`(`mission` 제외), `src/components/**`, `src/app/**`의 페이지, `public/**`, `src/lib/i18n/**`, `docs/DEMO-SCRIPT.md` |
+| 맡는 폴더 | `apps/web/src/lib/game/**`, `apps/web/src/lib/events/**`(스키마, 읽기, 사건 판정), `apps/web/src/lib/evidence/select.ts`, `apps/web/src/features/mission/**`(임무 상태 저장소, 단계 이동) | `data/content/*.json`, `apps/web/src/lib/evidence/check.ts`, `apps/web/src/server/ai/crisis/**`, `apps/web/src/app/api/**`, Python RAG(`retriver.py`, `reranker.py`, `rag_llm.py`, `build_vector_db.py`, `evaluation.py`), `data/vector_db/`, `data/json/` | `apps/web/src/features/**`(`mission` 제외), `apps/web/src/components/**`, `apps/web/src/app/**`의 페이지, `public/**`, `apps/web/src/lib/i18n/**`, `docs/DEMO-SCRIPT.md` |
 | 테스트 | 엔진, 사건, 저장, 시나리오 | 근거 목록 점검, 위기 파이프라인, 사건 목록 점검, RAG | 화면 테스트 |
 
-`src/features/mission/**`는 화면 폴더 안에 있지만 임무 상태를 저장하고 엔진을 부르는 코드라 A가 맡습니다.
+`apps/web/src/features/mission/**`는 화면 폴더 안에 있지만 임무 상태를 저장하고 엔진을 부르는 코드라 A가 맡습니다.
 
 ### 7.2 함께 쓰는 계약 파일
 
 | 파일 | 작성 | 검토 | 바꾸는 방법 |
 |---|---|---|---|
-| `src/lib/contract/types.ts` (공용 타입) | A | B, C | A가 PR을 열고 두 역할이 승인한 뒤 병합. 예시 데이터도 같은 PR에서 고침 |
-| `src/lib/contract/schemas.ts` (API·AI 출력 검증) | B | A | 타입이 바뀌면 B가 같은 PR이나 바로 다음 PR에서 맞춤 |
-| `src/lib/contract/fixtures.ts` (예시 상태 데이터, 새 파일) | A | C | C는 이 데이터로 엔진 없이 화면을 만듦 |
-| `src/data/events.json` | B (내용: 수치, `source_chunks`, 실험 기록) | A (형식이 스키마와 맞는지) | 형식은 A의 `src/lib/events/schema.ts`가 정함. 수치는 S2 팀 결정이 있어야 바꿈 |
-| `src/data/event-chunks.json` (새 파일) | B | A, C | 형식은 S1에서 정함 |
+| `apps/web/src/lib/contract/types.ts` (공용 타입) | A | B, C | A가 PR을 열고 두 역할이 승인한 뒤 병합. 예시 데이터도 같은 PR에서 고침 |
+| `apps/web/src/lib/contract/schemas.ts` (API·AI 출력 검증) | B | A | 타입이 바뀌면 B가 같은 PR이나 바로 다음 PR에서 맞춤 |
+| `apps/web/src/lib/contract/fixtures.ts` (예시 상태 데이터, 새 파일) | A | C | C는 이 데이터로 엔진 없이 화면을 만듦 |
+| `data/content/events.json` | B (내용: 수치, `source_chunks`, 실험 기록) | A (형식이 스키마와 맞는지) | 형식은 A의 `apps/web/src/lib/events/schema.ts`가 정함. 수치는 S2 팀 결정이 있어야 바꿈 |
+| `data/content/event-chunks.json` (새 파일) | B | A, C | 형식은 S1에서 정함 |
 
-**글은 사전 파일로 옮깁니다.** 이 프로젝트는 화면 글을 모두 `src/lib/i18n`의 사전에 둡니다. `events.json`의 `name`, `scene_hint`, `parallel_tracks[].text`는 `src/lib/i18n/en/events.ts`(C 담당)로 옮기고, `events.json`에는 `event_id`와 출처 참조만 남깁니다.
+**글은 사전 파일로 옮깁니다.** 이 프로젝트는 화면 글을 모두 `apps/web/src/lib/i18n`의 사전에 둡니다. `events.json`의 `name`, `scene_hint`, `parallel_tracks[].text`는 `apps/web/src/lib/i18n/en/events.ts`(C 담당)로 옮기고, `events.json`에는 `event_id`와 출처 참조만 남깁니다.
 
 ### 7.3 작업 묶음
 
@@ -266,7 +266,7 @@ DB chunk에서 날짜가 적힌 기록만 골랐습니다. 화면에는 "실측(
 
 | 묶음 | 내용 | 산출물 | 완료 기준 |
 |---|---|---|---|
-| S1 계약 고정 | 시간축 타입(재배일, 표시, 사건 기록, 대기 중인 사건, 대응 조작), 사건 목록 스키마, `event-chunks.json` 형식, 화면별 예시 상태(시간 흐름 중, 사건 카드, 접힌 카드, 멈춤 카드, 기록 목록). 사건 글을 `i18n/en/events.ts`로 옮김 | `types.ts`, `fixtures.ts`, `src/lib/events/schema.ts`, `events.ts` | 세 역할 승인. 기존 테스트 통과 |
+| S1 계약 고정 | 시간축 타입(재배일, 표시, 사건 기록, 대기 중인 사건, 대응 조작), 사건 목록 스키마, `event-chunks.json` 형식, 화면별 예시 상태(시간 흐름 중, 사건 카드, 접힌 카드, 멈춤 카드, 기록 목록). 사건 글을 `i18n/en/events.ts`로 옮김 | `types.ts`, `fixtures.ts`, `apps/web/src/lib/events/schema.ts`, `events.ts` | 세 역할 승인. 기존 테스트 통과 |
 | S2 수치 결정 | `events.json` 초안 값(판정, 확률, 효과, 습도 +5)과 결정 목록 3, 4, 5, 8, 13, 14번의 답 | 결정 기록 | 문서에 기록 |
 
 **역할 A: 시뮬레이션 엔진**
@@ -285,9 +285,9 @@ DB chunk에서 날짜가 적힌 기록만 골랐습니다. 화면에는 "실측(
 |---|---|---|---|
 | B1 출처 확인 | 라이선스 빈칸 56개 확인(VEG-03J 먼저), `parallel_tracks` 원문 대조, 화면에 보여도 되는 문장인지 표시 | 없음 | 모든 chunk에 라이선스 값 |
 | B2 사건별 검색 확인 | 사건마다 검색 질문을 만들어 상위 결과를 `source_chunks`와 비교하고 보완. 사건별 평가셋(`relevant_ids`)과 Recall@5 | 없음 | 평가 보고서 |
-| B3 DB 보강 | 빠진 근거(백일홍 곰팡이 VEG-01C, Massa 2014, 날짜가 있는 기록) 추가, `data/json_ko` 저장소 포함 여부 결정, DB 다시 생성 | 없음 (B1 결과를 반영) | chunk 추가 후 B2 평가 유지 |
-| B4 근거 묶음 내보내기 | 사건별 chunk 본문·출처·라이선스를 `src/data/event-chunks.json`으로 내보내는 스크립트와 점검 테스트 | S1(형식), B2 | 모든 사건에 chunk가 하나 이상 |
-| B5 생성 글 연결 | `src/lib/crisis/generator.ts`에 프롬프트와 모델 호출을 넣고, `event-chunks.json`을 근거로 지금의 AI 출력 형식을 만듦 | B4 | 지금의 검증(`validate.ts`)을 통과. 실패하면 대비용으로 넘어감 |
+| B3 DB 보강 | 빠진 근거(백일홍 곰팡이 VEG-01C, Massa 2014, 날짜가 있는 기록) 추가, `data/sources/json_ko` 저장소 포함 여부 결정, DB 다시 생성 | 없음 (B1 결과를 반영) | chunk 추가 후 B2 평가 유지 |
+| B4 근거 묶음 내보내기 | 사건별 chunk 본문·출처·라이선스를 `data/content/event-chunks.json`으로 내보내는 스크립트와 점검 테스트 | S1(형식), B2 | 모든 사건에 chunk가 하나 이상 |
+| B5 생성 글 연결 | `apps/web/src/server/ai/crisis/generator.ts`에 프롬프트와 모델 호출을 넣고, `event-chunks.json`을 근거로 지금의 AI 출력 형식을 만듦 | B4 | 지금의 검증(`validate.ts`)을 통과. 실패하면 대비용으로 넘어감 |
 | B6 수치 반영 | S2 결정을 `events.json`에 반영하고 초안 표시(`draft`)를 정리 | S2 | 사건 목록 점검 테스트 통과 |
 
 **역할 C: 화면과 콘텐츠**
@@ -323,10 +323,10 @@ DB chunk에서 날짜가 적힌 기록만 골랐습니다. 화면에는 "실측(
 
 | 역할 A에게 | 역할 B에게 | 역할 C에게 |
 |---|---|---|
-| 이 문서의 4~6절, `src/data/events.json` | `src/data/events.json`, 이 문서의 3절(DB 분석)과 5절 | 이 문서의 2절(플레이에서 확인한 카드 구조와 화면 구성) |
-| 결정 목록 (3, 4, 5, 8, 13, 14번)과 S2 결정 기록 | 라이선스가 빈 chunk 목록, `data/json/total_RAG.json`, `vector_db/` | S1의 `fixtures.ts`(예시 상태 데이터) |
-| 엔진 코드(`src/lib/game/engine.ts`)와 테스트, 시나리오 테스트 | `rag_llm.py`, `RETRIEVAL_USAGE.md`, `data/evaluation.example.json` | 스프라이트 고르기 코드(`lettuce-sprite.ts`), 배치 규격, 테마 색(`globals.css`) |
-| 임무 상태 저장소(`src/features/mission/`) | AI 출력 스키마(`schemas.ts`), `validate.ts`의 금지 표현 규칙, `generator.ts` | 사건별 `scene_hint`, 필요한 그림 상태, B1의 원문 대조 결과 |
+| 이 문서의 4~6절, `data/content/events.json` | `data/content/events.json`, 이 문서의 3절(DB 분석)과 5절 | 이 문서의 2절(플레이에서 확인한 카드 구조와 화면 구성) |
+| 결정 목록 (3, 4, 5, 8, 13, 14번)과 S2 결정 기록 | 라이선스가 빈 chunk 목록, `data/sources/total_RAG.json`, `data/vector_db/` | S1의 `fixtures.ts`(예시 상태 데이터) |
+| 엔진 코드(`apps/web/src/lib/game/engine.ts`)와 테스트, 시나리오 테스트 | `rag_llm.py`, `RETRIEVAL_USAGE.md`, `data/eval/evaluation.example.json` | 스프라이트 고르기 코드(`lettuce-sprite.ts`), 배치 규격, 테마 색(`globals.css`) |
+| 임무 상태 저장소(`apps/web/src/features/mission/`) | AI 출력 스키마(`schemas.ts`), `validate.ts`의 금지 표현 규칙, `generator.ts` | 사건별 `scene_hint`, 필요한 그림 상태, B1의 원문 대조 결과 |
 
 ## 8. 순서와 동시 진행
 
@@ -352,11 +352,11 @@ DB chunk에서 날짜가 적힌 기록만 골랐습니다. 화면에는 "실측(
 
 | 파일 | 내용 |
 |---|---|
-| `src/data/events.json` | 사건 목록 초안 |
-| `src/lib/events/events.test.ts` | 사건 목록 점검 |
-| `src/data/evidence.json` | 위기, 증상, 조치, 판정, 수치 변화 (기존) |
-| `data/json/total_RAG.json`, `vector_db/` | RAG chunk 81개와 Chroma DB |
+| `data/content/events.json` | 사건 목록 초안 |
+| `apps/web/src/lib/events/events.test.ts` | 사건 목록 점검 |
+| `data/content/evidence.json` | 위기, 증상, 조치, 판정, 수치 변화 (기존) |
+| `data/sources/total_RAG.json`, `data/vector_db/` | RAG chunk 81개와 Chroma DB |
 | `retriver.py`, `reranker.py` | 검색과 재정렬 |
 | `rag_llm.py`, `test_rag_llm.py` | 검색 결과에 LLM을 붙인 행동 추천 |
 | `RETRIEVAL_USAGE.md` | 검색, 재정렬, 평가, LLM 실행 방법 |
-| `src/features/grow-room/lettuce-sprite.ts`, `lettuce-scene.tsx` | 상추 스프라이트 고르기와 배치 |
+| `apps/web/src/features/grow-room/lettuce-sprite.ts`, `lettuce-scene.tsx` | 상추 스프라이트 고르기와 배치 |
