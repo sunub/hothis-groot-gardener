@@ -1,0 +1,206 @@
+{
+  "meta": {
+    "description": "Pre-made crises in the AI output format, one per crisis and symptom stage. Used when no generator is connected or when generated output fails validation twice. Each entry must meet the same validation rules as generated output.",
+    "ai_disclosure": "Text in this file was drafted with an AI writing assistant and reviewed by the team; verdicts, deltas and sources are not in this file, they come from the evidence list."
+  },
+  "crises": [
+    {
+      "stage": 1,
+      "locale": "en",
+      "output": {
+        "crisis_id": "water_shortage",
+        "scene": "The lettuce plants look small and have barely grown since the last check. The wicks at the base of their pillows look pale and dry.",
+        "plant_line": "I'm not growing the way I should. Even the wicks under me feel dry.",
+        "clues": [
+          { "symptom_id": "poor_growth", "text": "The plants are small and growing slowly." },
+          { "symptom_id": "dry_wicks", "text": "The pillow wicks look dry." }
+        ],
+        "options": [
+          {
+            "action_id": "refill_reservoir",
+            "label": "Refill the reservoir under the pillows",
+            "result_line": "A little is getting through, but slowly. I'm only a bit better.",
+            "why": "The reservoir does not supply enough water to the pillows through the wicks, so the roots recover only in part."
+          },
+          {
+            "action_id": "add_water_direct",
+            "label": "Add water directly to the plant pillows",
+            "result_line": "That reached my roots right away. I feel stronger already.",
+            "why": "Water added straight to the pillows reaches the roots without depending on the reservoir."
+          },
+          {
+            "action_id": "fan_high",
+            "label": "Switch the fan setting up to high",
+            "result_line": "The moving air is drying me out even more. I feel worse.",
+            "why": "The high fan setting dries moisture, which makes a water shortage worse."
+          },
+          {
+            "action_id": "wait_for_schedule",
+            "label": "Wait for the next scheduled watering",
+            "result_line": "Nothing has changed down at my roots. I feel weaker than before.",
+            "why": "Waiting for the schedule lets the roots keep drying."
+          }
+        ]
+      }
+    },
+    {
+      "stage": 2,
+      "locale": "en",
+      "output": {
+        "crisis_id": "water_shortage",
+        "scene": "The lettuce plants still look small, and several of them look stressed and dull. The pillow wicks at their base are dry. The plants look tired across the whole unit.",
+        "plant_line": "I feel worn out and I'm hardly growing. Some of the plants next to me look even worse.",
+        "clues": [
+          { "symptom_id": "stressed_plants", "text": "Several plants look stressed and dull." },
+          { "symptom_id": "poor_growth", "text": "The plants have barely grown." },
+          { "symptom_id": "dry_wicks", "text": "The pillow wicks are dry." }
+        ],
+        "options": [
+          {
+            "action_id": "wait_for_schedule",
+            "label": "Wait for the next scheduled watering",
+            "result_line": "Still nothing at my roots. I feel weaker than before.",
+            "why": "Waiting for the schedule lets the roots keep drying."
+          },
+          {
+            "action_id": "fan_high",
+            "label": "Switch the fan setting up to high",
+            "result_line": "The air is pulling even more out of me. I feel much worse.",
+            "why": "The high fan setting dries moisture, which makes a water shortage worse."
+          },
+          {
+            "action_id": "add_water_direct",
+            "label": "Add water directly to the plant pillows",
+            "result_line": "I can feel it at my roots already. I'm starting to recover.",
+            "why": "Water added straight to the pillows reaches the roots without depending on the reservoir."
+          },
+          {
+            "action_id": "refill_reservoir",
+            "label": "Refill the reservoir under the pillows",
+            "result_line": "A trickle is getting through. I'm a bit better, not fully.",
+            "why": "The reservoir does not supply enough water to the pillows through the wicks, so the roots recover only in part."
+          }
+        ]
+      }
+    },
+    {
+      "stage": 1,
+      "locale": "en",
+      "output": {
+        "crisis_id": "overwater_mold",
+        "scene": "Small droplets of moisture sit on the surfaces of the lettuce leaves and do not dry off. The plants and the pillows around them look damp.",
+        "plant_line": "My leaves stay wet, and the drops on them never seem to go away. Everything around me feels damp.",
+        "clues": [
+          { "symptom_id": "leaf_droplets", "text": "Droplets of moisture stay on the leaf surfaces." },
+          { "symptom_id": "excess_moisture", "text": "The plants and pillows look damp all over." }
+        ],
+        "options": [
+          {
+            "action_id": "add_water",
+            "label": "Give the plant pillows more water",
+            "result_line": "That made it worse. I feel soaked through.",
+            "why": "The plants already have too much water, so more water makes the excess worse."
+          },
+          {
+            "action_id": "fan_high",
+            "label": "Switch the fan setting up to high",
+            "result_line": "I can breathe again. My leaves are drying off.",
+            "why": "The high fan setting dries the excess moisture around the plants."
+          },
+          {
+            "action_id": "clean_plant_surfaces",
+            "label": "Wipe down the surfaces of the plants",
+            "result_line": "My leaves feel cleaner, but everything around me is still damp.",
+            "why": "Cleaning removes what is on the plants, but the excess moisture and still air remain."
+          },
+          {
+            "action_id": "wait_and_observe",
+            "label": "Keep the settings and check again later",
+            "result_line": "Nothing changed. I still feel damp and heavy all over.",
+            "why": "Without more air flow the moisture stays around the plants."
+          }
+        ]
+      }
+    },
+    {
+      "stage": 2,
+      "locale": "en",
+      "output": {
+        "crisis_id": "overwater_mold",
+        "scene": "A fine, white, fuzzy growth has appeared on some leaves and stems. Droplets still sit on the leaf surfaces, and the plants look damp.",
+        "plant_line": "Something fuzzy is growing on my leaves and stems. And my leaves still won't dry.",
+        "clues": [
+          { "symptom_id": "fungal_growth", "text": "A white, fuzzy growth covers parts of the leaves and stems." },
+          { "symptom_id": "leaf_droplets", "text": "Droplets stay on the leaf surfaces." },
+          { "symptom_id": "excess_moisture", "text": "The plants look damp all over." }
+        ],
+        "options": [
+          {
+            "action_id": "wait_and_observe",
+            "label": "Keep the settings and check again later",
+            "result_line": "It's no better. The fuzzy patches are still on me.",
+            "why": "Without more air flow the moisture stays around the plants."
+          },
+          {
+            "action_id": "add_water",
+            "label": "Give the plant pillows more water",
+            "result_line": "That's worse. I'm soaked through and feel heavier.",
+            "why": "The plants already have too much water, so more water makes the excess worse."
+          },
+          {
+            "action_id": "clean_plant_surfaces",
+            "label": "Wipe down the surfaces of the plants",
+            "result_line": "My surface feels cleaner, but I'm still damp.",
+            "why": "Cleaning removes what is on the plants, but the excess moisture and still air remain."
+          },
+          {
+            "action_id": "fan_high",
+            "label": "Switch the fan setting up to high",
+            "result_line": "That feels much better. My leaves are drying off.",
+            "why": "The high fan setting dries the excess moisture around the plants."
+          }
+        ]
+      }
+    },
+    {
+      "stage": 3,
+      "locale": "en",
+      "output": {
+        "crisis_id": "overwater_mold",
+        "scene": "Some leaves and stems look soft and rotten. Fuzzy growth covers parts of the plants, and the leaves stay damp.",
+        "plant_line": "Parts of my stems and leaves have gone soft. The fuzzy patches are still on me.",
+        "clues": [
+          { "symptom_id": "rot", "text": "Some leaves and stems are soft and rotten." },
+          { "symptom_id": "fungal_growth", "text": "Fuzzy growth covers parts of the plants." },
+          { "symptom_id": "leaf_droplets", "text": "Droplets stay on the leaf surfaces." }
+        ],
+        "options": [
+          {
+            "action_id": "clean_plant_surfaces",
+            "label": "Wipe down the surfaces of the plants",
+            "result_line": "Some of the fuzz is wiped off, but I still feel damp.",
+            "why": "Cleaning removes what is on the plants, but the excess moisture and still air remain."
+          },
+          {
+            "action_id": "fan_high",
+            "label": "Switch the fan setting up to high",
+            "result_line": "Fresh air at last. My leaves are drying.",
+            "why": "The high fan setting dries the excess moisture around the plants."
+          },
+          {
+            "action_id": "wait_and_observe",
+            "label": "Keep the settings and check again later",
+            "result_line": "Nothing changed, and the soft spots feel worse.",
+            "why": "Without more air flow the moisture stays around the plants."
+          },
+          {
+            "action_id": "add_water",
+            "label": "Give the plant pillows more water",
+            "result_line": "Now I'm soaked through, and I feel worse than before.",
+            "why": "The plants already have too much water, so more water makes the excess worse."
+          }
+        ]
+      }
+    }
+  ]
+}

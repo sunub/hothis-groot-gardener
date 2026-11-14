@@ -1,0 +1,147 @@
+/*
+ * Pixel utilities: SG-DS v2 · Pixel UI.
+ *
+ * Frames notch their corners with four 4px offset shadows instead of border-radius.
+ * The shadows draw outside the box, so leave 4px of outer room (`m-1`, or a gap of 4 or more).
+ *
+ * Frame color comes from --pf. Set it with a pixel-tone-* utility, or leave it for --color-line.
+ * Prefer the components in src/components/ui over using these classes directly.
+ */
+
+/* Panel frame: 4px notched frame and a 4px darker line along the inside bottom.
+ * It sets no fill, so pair it with a bg-* class (bg-surface for panels, bg-surface-2 for buttons). */
+@utility pixel-frame {
+  box-shadow:
+    0 -4px 0 0 var(--pf, var(--color-line)),
+    0 4px 0 0 var(--pf, var(--color-line)),
+    -4px 0 0 0 var(--pf, var(--color-line)),
+    4px 0 0 0 var(--pf, var(--color-line)),
+    inset 0 -4px 0 0 var(--color-surface-3);
+}
+
+/* Frame without the inner bottom line and without a fill: chips, selected outlines. */
+@utility pixel-frame-flat {
+  box-shadow:
+    0 -4px 0 0 var(--pf, var(--color-line)),
+    0 4px 0 0 var(--pf, var(--color-line)),
+    -4px 0 0 0 var(--pf, var(--color-line)),
+    4px 0 0 0 var(--pf, var(--color-line));
+}
+
+/* Thin 2px frame for dense grids (timeline cells, HUD pips) where 4px room does not fit. */
+@utility pixel-frame-thin {
+  box-shadow:
+    0 -2px 0 0 var(--pf, var(--color-line)),
+    0 2px 0 0 var(--pf, var(--color-line)),
+    -2px 0 0 0 var(--pf, var(--color-line)),
+    2px 0 0 0 var(--pf, var(--color-line));
+}
+
+/* Frame tones. Combine with any frame above. */
+@utility pixel-tone-line {
+  --pf: var(--color-line);
+}
+@utility pixel-tone-line-hi {
+  --pf: var(--color-line-hi);
+}
+@utility pixel-tone-accent {
+  --pf: var(--color-accent);
+}
+@utility pixel-tone-normal {
+  --pf: var(--color-normal);
+}
+@utility pixel-tone-caution {
+  --pf: var(--color-caution);
+}
+@utility pixel-tone-danger {
+  --pf: var(--color-danger);
+}
+@utility pixel-tone-measured {
+  --pf: var(--color-measured);
+}
+@utility pixel-tone-dark {
+  --pf: var(--color-bg);
+}
+
+/* Kept for code written against DESIGN.md v2 (pixel-frame-accent etc.). Same as pixel-tone-*. */
+@utility pixel-frame-accent {
+  --pf: var(--color-accent);
+}
+@utility pixel-frame-normal {
+  --pf: var(--color-normal);
+}
+@utility pixel-frame-caution {
+  --pf: var(--color-caution);
+}
+@utility pixel-frame-danger {
+  --pf: var(--color-danger);
+}
+@utility pixel-frame-measured {
+  --pf: var(--color-measured);
+}
+
+/* Raised primary button: light line on top, dark line below, near-black outline. */
+@utility pixel-raised {
+  background-color: var(--color-accent);
+  color: var(--color-accent-ink);
+  box-shadow:
+    0 -4px 0 0 var(--color-bg),
+    0 4px 0 0 var(--color-bg),
+    -4px 0 0 0 var(--color-bg),
+    4px 0 0 0 var(--color-bg),
+    inset 0 -4px 0 0 var(--color-accent-lo),
+    inset 0 4px 0 0 var(--color-accent-hi);
+}
+
+/* Pressed primary button: the dark line moves to the top. */
+@utility pixel-pressed {
+  box-shadow:
+    0 -4px 0 0 var(--color-bg),
+    0 4px 0 0 var(--color-bg),
+    -4px 0 0 0 var(--color-bg),
+    4px 0 0 0 var(--color-bg),
+    inset 0 4px 0 0 var(--color-accent-lo);
+}
+
+/* Speech bubble for the plant NPC only: light fill, dark frame. */
+@utility pixel-bubble {
+  background-color: var(--color-ink);
+  color: var(--color-bg);
+  box-shadow:
+    0 -4px 0 0 var(--color-bg),
+    0 4px 0 0 var(--color-bg),
+    -4px 0 0 0 var(--color-bg),
+    4px 0 0 0 var(--color-bg);
+}
+
+/* Game-value badge: dashed frame. Recorded values use a filled badge instead. */
+@utility pixel-dashed {
+  border: 4px dashed var(--color-line-hi);
+}
+
+/* Callout: 4px bar on the inside left edge, in the --pf color. */
+@utility pixel-bar {
+  box-shadow: inset 4px 0 0 0 var(--pf, var(--color-caution));
+}
+
+/* Gauge helpers: cut a filled bar into 8px blocks, and hatch the danger zones.
+ * Both set background-image, so put them on different elements. */
+@utility pixel-segments {
+  background-image: repeating-linear-gradient(
+    90deg,
+    transparent 0 6px,
+    var(--color-surface) 6px 8px
+  );
+}
+@utility pixel-hatch {
+  background-image: repeating-linear-gradient(
+    45deg,
+    rgb(10 16 22 / 0.45) 0 4px,
+    transparent 4px 8px
+  );
+}
+
+/* Pixel art images: no smoothing. Use integer scales only. */
+@utility pixel-art {
+  image-rendering: pixelated;
+}

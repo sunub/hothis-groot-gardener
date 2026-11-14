@@ -1,0 +1,134 @@
+{
+  "meta": {
+    "description": "Pre-made text for event cards, one entry per card event in events.json (scheduled events with actions, and conditional events). Used when no generator is connected or when generated text fails validation twice. Each entry must meet the same validation rules as generated text, with every action of its event offered.",
+    "status": "draft",
+    "ai_disclosure": "Text in this file was drafted with an AI writing assistant and awaits team review; verdicts, effects and sources are not in this file, they come from events.json."
+  },
+  "cards": [
+    {
+      "event_id": "wick_opening",
+      "scene": "Small shoots press against the wicks of each pillow. Nothing green has come out above them yet.",
+      "plant_line": "I'm pushing up, but I can't get out. It feels tight above me.",
+      "options": [
+        {
+          "action_id": "open_wicks",
+          "label": "Spread the wicks apart with forceps",
+          "result_line": "There's room above me now. I can push up into the light.",
+          "why": "The recorded procedure is to spread the wicks apart with forceps so seedlings can emerge."
+        },
+        {
+          "action_id": "water_heavy_instead",
+          "label": "Give the pillows a heavy watering",
+          "result_line": "My roots are soaked, and I still can't get out.",
+          "why": "The recorded procedure for this day is to spread the wicks; in the game, heavy watering only adds root moisture and costs health, both game values."
+        },
+        {
+          "action_id": "do_nothing",
+          "label": "Leave the pillows as they are",
+          "result_line": "I'm still pressed under the wick. I feel a little weaker.",
+          "why": "The wicks stay where they are and the shoots stay under them; the sources record only the procedure, so this health loss is a game value."
+        }
+      ]
+    },
+    {
+      "event_id": "thinning",
+      "scene": "Two seedlings share one pillow. Their leaves overlap and lean against each other.",
+      "plant_line": "There's another seedling right next to me in my pillow. It feels crowded down here.",
+      "options": [
+        {
+          "action_id": "thin_to_one",
+          "label": "Thin the pillow to one seedling",
+          "result_line": "I have the pillow to myself now. I can spread out.",
+          "why": "The recorded procedure is to thin the seedlings so each pillow keeps one plant; the small health gain is a game value."
+        },
+        {
+          "action_id": "keep_both",
+          "label": "Leave both seedlings in the pillow",
+          "result_line": "We're still crowding each other. I feel a little weaker.",
+          "why": "Both seedlings keep sharing one pillow; no source measures the effect of skipping thinning, so this health loss is a game value."
+        },
+        {
+          "action_id": "water_heavy_instead",
+          "label": "Give the pillow a heavy watering",
+          "result_line": "My roots are soaked, and it's still crowded here.",
+          "why": "Watering does not thin the seedlings, so the pillow stays crowded; the extra water and the health loss are game values."
+        }
+      ]
+    },
+    {
+      "event_id": "pillow_no_flow",
+      "scene": "Water is added, but one pillow stays dry and light. It looks the same as before the water went in.",
+      "plant_line": "I'm still thirsty. My roots feel dry.",
+      "options": [
+        {
+          "action_id": "replace_pillow",
+          "label": "Swap the pillow for a spare one",
+          "result_line": "This pillow feels damp under my roots.",
+          "why": "In VEG-01A, a pillow that could not be hydrated was swapped; in the game, the swap ends the water problem in that pillow."
+        },
+        {
+          "action_id": "water_heavy_again",
+          "label": "Add more water to that pillow",
+          "result_line": "The water still isn't reaching me. I'm getting weaker.",
+          "why": "The pillow could not be hydrated, so in the game more water does not reach the roots; the health loss is a game value."
+        },
+        {
+          "action_id": "do_nothing",
+          "label": "Leave the pillow as it is",
+          "result_line": "Nothing is reaching my roots. I'm getting weaker.",
+          "why": "The pillow stays dry and the roots get no water; the health loss is a game value."
+        }
+      ]
+    },
+    {
+      "event_id": "fan_off_after_restart",
+      "scene": "The panel shows fan LOW, but the leaves do not move. Droplets stay on them.",
+      "plant_line": "My leaves are wet and heavy. The air around me feels still.",
+      "options": [
+        {
+          "action_id": "check_fan_running",
+          "label": "Check whether the fan is turning",
+          "result_line": "Air is moving over my leaves again.",
+          "why": "In VEG-03A, the fan read 'low' after a power cycle but was off; in the game, checking the fan ends that problem."
+        },
+        {
+          "action_id": "fan_high",
+          "label": "Switch the fan setting up to high",
+          "result_line": "The panel changed, but my leaves still feel damp.",
+          "why": "A new setting changes the panel, but no source says it fixes a fan that reads 'low' while off; this partial result is a game value."
+        },
+        {
+          "action_id": "keep_observing",
+          "label": "Keep watching the plants for now",
+          "result_line": "The droplets are still on me. I'm getting weaker.",
+          "why": "Watching does not change the fan, so the leaves stay wet; the health loss is a game value."
+        }
+      ]
+    },
+    {
+      "event_id": "mild_tip_burn",
+      "scene": "The edges of a few young leaves look slightly brown. The rest of the leaves look green.",
+      "plant_line": "A few of my leaf edges look a little brown. Otherwise I feel fine.",
+      "options": [
+        {
+          "action_id": "keep_observing",
+          "label": "Keep watching the leaves for now",
+          "result_line": "I'm still growing, and nothing else has changed.",
+          "why": "In VEG-03J, the authors described mild tip burn after germination as indicative of rapid growth, so the game treats watching as enough."
+        },
+        {
+          "action_id": "water_heavy",
+          "label": "Give the plants a heavy watering",
+          "result_line": "My roots are sitting in extra water now.",
+          "why": "The authors linked this tip burn to rapid growth; in the game, heavy watering only adds root moisture, which is a game value."
+        },
+        {
+          "action_id": "fan_high",
+          "label": "Switch the fan setting up to high",
+          "result_line": "The fan setting is high now. My leaf edges look the same.",
+          "why": "The authors linked this tip burn to rapid growth; in the game, a higher fan setting is only a partial response, which is a game value."
+        }
+      ]
+    }
+  ]
+}

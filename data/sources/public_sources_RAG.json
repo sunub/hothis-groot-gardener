@@ -1,0 +1,340 @@
+[
+  {
+    "id": "ntrs20150001374-dry-wicks-direct-watering",
+    "text": "VEG-01 Veggie Hardware Validation Test (2014)\nDry Pillow Wicks and Direct Watering of the Plant Pillows\n\nAfter about a week and a half it was observed that plants were not growing well and that pillow wicks were dry. This indicated that the reservoir was not supplying sufficient water to the pillows via wicking, and so the team reverted to an operational fix which added water directly to the plant pillows. Direct watering of the pillows led to a recovery in several of the stressed plants; a couple of which did not recover.",
+    "metadata": {
+      "source_id": "ntrs20150001374",
+      "section": "VEG-01 Veggie Hardware Validation Test (2014)",
+      "subsection": "Dry Pillow Wicks and Direct Watering of the Plant Pillows",
+      "source_url": "https://ntrs.nasa.gov/citations/20150001374",
+      "source_location": "Abstract (NTRS record abstract field)",
+      "source_file": "ntrs_20150001374.json",
+      "source_license": "NTRS record: public use permitted"
+    }
+  },
+  {
+    "id": "ntrs20150001374-pillow-priming",
+    "text": "VEG-01 Veggie Hardware Validation Test (2014)\nPriming the Plant Pillows and Germination\n\nWater insertion or priming the first plant pillow was unsuccessful as an issue prevented water movement through the quick disconnect. All subsequent pillows were successfully primed, and the initial pillow was replaced with a backup pillow and successfully primed. Six pillows were primed, but only five pillows had plants which germinated.",
+    "metadata": {
+      "source_id": "ntrs20150001374",
+      "section": "VEG-01 Veggie Hardware Validation Test (2014)",
+      "subsection": "Priming the Plant Pillows and Germination",
+      "source_url": "https://ntrs.nasa.gov/citations/20150001374",
+      "source_location": "Abstract (NTRS record abstract field)",
+      "source_file": "ntrs_20150001374.json",
+      "source_license": "NTRS record: public use permitted"
+    }
+  },
+  {
+    "id": "ntrs20150001374-imaging-frequency",
+    "text": "VEG-01 Veggie Hardware Validation Test (2014)\nPlant Imaging Frequency and Monitoring Plant Growth\n\nImages of the plants were downlinked weekly, and videos of installation and harvest were recorded. This imaging frequency was not sufficient to monitor and respond to changes in plant growth.",
+    "metadata": {
+      "source_id": "ntrs20150001374",
+      "section": "VEG-01 Veggie Hardware Validation Test (2014)",
+      "subsection": "Plant Imaging Frequency and Monitoring Plant Growth",
+      "source_url": "https://ntrs.nasa.gov/citations/20150001374",
+      "source_location": "Abstract (NTRS record abstract field)",
+      "source_file": "ntrs_20150001374.json",
+      "source_license": "NTRS record: public use permitted"
+    }
+  },
+  {
+    "id": "ntrs20170007815-leafy-greens-inspect-fan",
+    "text": "NASA On-Orbit Gardening Guides\nLeafy Greens Care Guide: Inspecting Plants and Fan Speed\n\nLeafy greens care guide for the on-orbit gardener:\nThis care guide is intended for use after plant thinning. If you have any questions please notify POIC.\nInspect the plants for growth.\nPlants showing no signs of growth over a 3 day period are likely stressed from either too much or too little water.\nCheck pillows and plants for standing water or water protruding from wick onto plant surface(s).\nIncrease or decrease fan speed at crew discretion (nominal setting is low, high setting will dry excess moisture)",
+    "metadata": {
+      "source_id": "ntrs20170007815",
+      "section": "NASA On-Orbit Gardening Guides",
+      "subsection": "Leafy Greens Care Guide: Inspecting Plants and Fan Speed",
+      "source_url": "https://ntrs.nasa.gov/citations/20170007815",
+      "source_location": "PDF page 2, Leafy greens care guide, steps 5-6",
+      "source_file": "ntrs_20170007815.pdf",
+      "source_license": "NTRS record: public use permitted"
+    }
+  },
+  {
+    "id": "ntrs20170007815-leafy-greens-watering",
+    "text": "NASA On-Orbit Gardening Guides\nLeafy Greens Care Guide: Watering by Observation and Reporting\n\nWater plants per the size/water guide below\nPrevious Veg-01 experiments found that watering every other day for medium to large to plants was effective\nAdjust water quantities and frequency based on your observations\nWater leaking out pillows indicates saturation and can induce flood stress response if prolonged\nWet wick indicates water present in plant pillow\nReport any fan speed changes and water quantities to the ground\nWater quantities are needed for parallel ground control test",
+    "metadata": {
+      "source_id": "ntrs20170007815",
+      "section": "NASA On-Orbit Gardening Guides",
+      "subsection": "Leafy Greens Care Guide: Watering by Observation and Reporting",
+      "source_url": "https://ntrs.nasa.gov/citations/20170007815",
+      "source_location": "PDF page 2, Leafy greens care guide, steps 7-8",
+      "source_file": "ntrs_20170007815.pdf",
+      "source_license": "NTRS record: public use permitted"
+    }
+  },
+  {
+    "id": "ntrs20170007815-leafy-greens-water-guide",
+    "text": "NASA On-Orbit Gardening Guides\nLeafy Green Size and Water Guide (Red Romaine Lettuce)\n\nLeafy green size and water guide:\nParameters apply to Chinese cabbage and red romaine lettuce\nSmall Leafy green plants\n1 to 4 leaves and measure up to approximately 3″ across and up to 3″ tall\n0 - 30 mL of water per water activity\nMedium leafy green plants\n5 to 8 leaves and measure approximately from 3″ to 5″ across and from 3″ to 5″ tall\n20 - 60 mL of water per activity\nLarge leafy green plants\nMore than 8 leaves and be larger than 5″ tall and larger than 5″ wide\n50 - 120 mL of water per activity",
+    "metadata": {
+      "source_id": "ntrs20170007815",
+      "section": "NASA On-Orbit Gardening Guides",
+      "subsection": "Leafy Green Size and Water Guide (Red Romaine Lettuce)",
+      "source_url": "https://ntrs.nasa.gov/citations/20170007815",
+      "source_location": "PDF page 2, Leafy green size and water guide",
+      "source_file": "ntrs_20170007815.pdf",
+      "source_license": "NTRS record: public use permitted"
+    }
+  },
+  {
+    "id": "ntrs20170007815-zinnia-care-guide",
+    "text": "NASA On-Orbit Gardening Guides\nZinnia Care Guide (Crop: Zinnia, Not Lettuce): Mold, Moisture and Fan Speed\n\nZinnia care guide for the on-orbit gardener:\nInspect the plants for growth and mold – if mold present follow the steps previously used in message 46-0082\nCheck pillows and plants for moisture and growth\nIncrease or decrease fan speed at crew discretion\nWater plants per the size/water guide below\nPlants showing no signs of growth over a 3 day period are likely stressed from either too much or too little water. Mature plants will stop growing in size but will continue other growth processes like flowering\nReport any fan speed changes and water quantities to the ground\nPhotograph the plants",
+    "metadata": {
+      "source_id": "ntrs20170007815",
+      "section": "NASA On-Orbit Gardening Guides",
+      "subsection": "Zinnia Care Guide (Crop: Zinnia, Not Lettuce): Mold, Moisture and Fan Speed",
+      "source_url": "https://ntrs.nasa.gov/citations/20170007815",
+      "source_location": "PDF page 1, Zinnia care guide, steps 1-4",
+      "source_file": "ntrs_20170007815.pdf",
+      "source_license": "NTRS record: public use permitted"
+    }
+  },
+  {
+    "id": "ntrs20160004060-veg01-grow-harvest-freeze",
+    "text": "Veggie: Space Vegetables for the ISS (Massa 2016)\nVEG-01 Lettuce Operations, Harvest and Frozen Return\n\nThe Veggie technology validation test, VEG-01, was initiated with the first test crop of ‘Outredgeous’ red romaine lettuce. Prior to flight, lettuce seeds were sanitized and planted in a substrate of arcillite (baked ceramic) mixed with controlled release fertilizer. Upon initiation, astronauts open the packaged plant pillows, install them in the Veggie hardware, and prime the system with water. Operations include plant thinning, watering, and photography. Plants were grown on the ISS for 33 days, harvested, and returned frozen to Earth for analysis.",
+    "metadata": {
+      "source_id": "ntrs20160004060",
+      "section": "Veggie: Space Vegetables for the ISS (Massa 2016)",
+      "subsection": "VEG-01 Lettuce Operations, Harvest and Frozen Return",
+      "source_url": "https://ntrs.nasa.gov/citations/20160004060",
+      "source_location": "Abstract, page 1",
+      "source_file": "ntrs_20160004060.pdf",
+      "source_license": "NTRS record: public use permitted"
+    }
+  },
+  {
+    "id": "ntrs20160004060-food-safety-second-crop",
+    "text": "Veggie: Space Vegetables for the ISS (Massa 2016)\nPost-Harvest Analysis, Consumption Approval and Second Lettuce Crop\n\nReturned plant samples were analyzed for microbial food safety and chemistry including elements, antioxidants, anthocyanins and phenolics. In addition the entire plant microbiome was sequenced, and returned plant pillows were analyzed via x-ray tomography. Food safety analyses allowed us to gain approvals for future consumption of lettuce by the flight surgeons and the payload safety office. A second crop of lettuce was grown in 2015, and the crew consumed half the produce, with the remainder frozen for later analysis.",
+    "metadata": {
+      "source_id": "ntrs20160004060",
+      "section": "Veggie: Space Vegetables for the ISS (Massa 2016)",
+      "subsection": "Post-Harvest Analysis, Consumption Approval and Second Lettuce Crop",
+      "source_url": "https://ntrs.nasa.gov/citations/20160004060",
+      "source_location": "Abstract, page 1",
+      "source_file": "ntrs_20160004060.pdf",
+      "source_license": "NTRS record: public use permitted"
+    }
+  },
+  {
+    "id": "ntrs20160004060-zinnia-watering-fungus",
+    "text": "Veggie: Space Vegetables for the ISS (Massa 2016)\nZinnia Test (Crop: Zinnia, Not Lettuce), Watering Challenges and Fungal Growth\n\nThis growth test was followed by testing of a new crop in Veggie, zinnias. Zinnias were grown to test a longer duration flowering crop in preparation for tests of tomatoes and other fruiting crops in the future. Zinnias were harvested in February. Samples from the second harvest of lettuce and the zinnia harvest are frozen on the ISS and will return with the next cargo return flight. Some challenges occurred in all tests, especially in the area of watering, with plants receiving insufficient or excess water leading to stressed growth. Zinnia plants were also challenged with fungal growth.",
+    "metadata": {
+      "source_id": "ntrs20160004060",
+      "section": "Veggie: Space Vegetables for the ISS (Massa 2016)",
+      "subsection": "Zinnia Test (Crop: Zinnia, Not Lettuce), Watering Challenges and Fungal Growth",
+      "source_url": "https://ntrs.nasa.gov/citations/20160004060",
+      "source_location": "Abstract, page 1",
+      "source_file": "ntrs_20160004060.pdf",
+      "source_license": "NTRS record: public use permitted"
+    }
+  },
+  {
+    "id": "nasa-growing-plants-zinnia-fungus",
+    "text": "NASA: Growing Plants in Space\nOverwatered Zinnias, Lack of Air Flow and Fungus (Crop: Zinnia, Not Lettuce)\n\nThere is anecdotal evidence, too, that plants in space may be struggling to fend off pathogens. Once, the zinnias in Veggie got a little overwatered, and there was a lack of air flow. A fungus started growing on the plants, and some died. Astronaut Scott Kelly delicately cleaned off the fungus, nursed the surviving plants back to health and got them to flower. It could have been a fluke, but it raised the question if space was weakening the zinnia’s health.",
+    "metadata": {
+      "source_id": "nasa-growing-plants",
+      "section": "NASA: Growing Plants in Space",
+      "subsection": "Overwatered Zinnias, Lack of Air Flow and Fungus (Crop: Zinnia, Not Lettuce)",
+      "source_url": "https://www.nasa.gov/exploration-research-and-technology/growing-plants-in-space/",
+      "source_location": "Paragraph beginning \"There is anecdotal evidence, too\" (after the \"Biological Research in Canisters\" heading)",
+      "source_file": "exploration-research-and-technology_growing-plants-in-space_.html",
+      "source_license": "NASA web page"
+    }
+  },
+  {
+    "id": "nasa-growing-plants-harvest-return",
+    "text": "NASA: Growing Plants in Space\nVeggie Crops Including Zinnia: Eaten by Crew, Samples Returned to Earth\n\nTo date, Veggie has successfully grown a variety of plants, including three types of lettuce, Chinese cabbage, mizuna mustard, red Russian kale and zinnia flowers. The flowers were especially popular with astronaut Scott Kelly, who picked a bouquet and photographed it floating in the cupola against the backdrop of Earth. Some of the plants were harvested and eaten by the crew members, with remaining samples returned to Earth to be analyzed. One concern was harmful microbes growing on the produce. So far, no harmful contamination has been detected, and the food has been safe (and enjoyable) for the crew to eat.",
+    "metadata": {
+      "source_id": "nasa-growing-plants",
+      "section": "NASA: Growing Plants in Space",
+      "subsection": "Veggie Crops Including Zinnia: Eaten by Crew, Samples Returned to Earth",
+      "source_url": "https://www.nasa.gov/exploration-research-and-technology/growing-plants-in-space/",
+      "source_location": "Paragraph beginning \"To date, Veggie has successfully grown\" (after the \"Veggie\" heading)",
+      "source_file": "exploration-research-and-technology_growing-plants-in-space_.html",
+      "source_license": "NASA web page"
+    }
+  },
+  {
+    "id": "osd358-zinnia-growth-watering",
+    "text": "OSDR OSD-358: Fungal Pathogen on ISS-Grown Plants (VEG-01C)\nZinnia Growth Protocol (Crop: Zinnia, Not Lettuce): Pillow Hydration and Direct Watering\n\nPlant pillows containing seeds of a five-color mix of zinnia (Zinnia hybrida cv. ‘Profusion’) were initiated on November 16, 2015 by Kjell Lindgren and subsequently cared for by Kjell and Scott Kelly. Zinnias were initiated and grown similarly to lettuce except that the photoperiod of this short day plant was set to 10 h light /14 h dark. As in previous tests, one plant pillow failed to hydrate, however in this case there was successful germination of zinnia plants in that malfunctioning pillow, likely due to excess water wicking into the pillow from the reservoir and the wicking surfaces of other plant pillows. Photo frequency was reduced to save crew time, and water was directly added to plant pillows with only initial water added to the reservoir.",
+    "metadata": {
+      "source_id": "osd358",
+      "section": "OSDR OSD-358: Fungal Pathogen on ISS-Grown Plants (VEG-01C)",
+      "subsection": "Zinnia Growth Protocol (Crop: Zinnia, Not Lettuce): Pillow Hydration and Direct Watering",
+      "source_url": "https://osdr.nasa.gov/bio/repo/data/studies/OSD-358",
+      "source_location": "Study protocols, \"growth protocol\"",
+      "source_file": "meta_358.json",
+      "source_license": "NASA open data"
+    }
+  },
+  {
+    "id": "osd358-zinnia-mycelium-high-water-stress",
+    "text": "OSDR OSD-358: Fungal Pathogen on ISS-Grown Plants (VEG-01C)\nAerial Mycelium on Zinnia Plants (Crop: Zinnia, Not Lettuce) Under High-Water Stress\n\nThirty-six days after the initiation of plant growth—on December 22, 2015—aerial mycelium was observed on the leaves and stems of zinnia plants. Diagnosis of the causal agent revealed that F. oxysporum sensu lato acted as an opportunistic pathogen on the severely high-water stressed plants.",
+    "metadata": {
+      "source_id": "osd358",
+      "section": "OSDR OSD-358: Fungal Pathogen on ISS-Grown Plants (VEG-01C)",
+      "subsection": "Aerial Mycelium on Zinnia Plants (Crop: Zinnia, Not Lettuce) Under High-Water Stress",
+      "source_url": "https://osdr.nasa.gov/bio/repo/data/studies/OSD-358",
+      "source_location": "Study protocols, \"treatment protocol\"",
+      "source_file": "meta_358.json",
+      "source_license": "NASA open data"
+    }
+  },
+  {
+    "id": "osd358-zinnia-tissue-freezing-return",
+    "text": "OSDR OSD-358: Fungal Pathogen on ISS-Grown Plants (VEG-01C)\nZinnia Tissue Harvest, Freezing and Return (Crop: Zinnia, Not Lettuce)\n\nLeaf and root tissues were harvested on 22-Dec-2015 and 08-Jan-2016 (36 and 53 days after initiating the crop of zinnia plants, respectively), frozen at −80°C on-orbit, during re-entry, and until returned to the NASA Kennedy Space Center, FL labs on 18-May-2016.",
+    "metadata": {
+      "source_id": "osd358",
+      "section": "OSDR OSD-358: Fungal Pathogen on ISS-Grown Plants (VEG-01C)",
+      "subsection": "Zinnia Tissue Harvest, Freezing and Return (Crop: Zinnia, Not Lettuce)",
+      "source_url": "https://osdr.nasa.gov/bio/repo/data/studies/OSD-358",
+      "source_location": "Study protocols, \"sample collection\"",
+      "source_file": "meta_358.json",
+      "source_license": "NASA open data"
+    }
+  },
+  {
+    "id": "osd177-zinnia-fusarium-rot",
+    "text": "OSDR OSD-177: Fusarium oxysporum Isolates from ISS-Grown Plants\nFoliar, Stem and Root Rot on Zinnia Plants (Crop: Zinnia, Not Lettuce)\n\nDuring the course of the Veggie project (a vegetable production system flown onboard the International Space Station [ISS] to study the effects of the space environment on plant growth and function), Zinnia hybrida plants became afflicted with a foliar, stem, and root rot disease caused by the fungus Fusarium oxysporum. Isolates were cultured from the leaf (VEG-01C1) and the root (VEG-01C2) of these infected plants.",
+    "metadata": {
+      "source_id": "osd177",
+      "section": "OSDR OSD-177: Fusarium oxysporum Isolates from ISS-Grown Plants",
+      "subsection": "Foliar, Stem and Root Rot on Zinnia Plants (Crop: Zinnia, Not Lettuce)",
+      "source_url": "https://osdr.nasa.gov/bio/repo/data/studies/OSD-177",
+      "source_location": "Study protocols, \"sample collection\"",
+      "source_file": "m177.json",
+      "source_license": "NASA open data"
+    }
+  },
+  {
+    "id": "ntrs20150021302-precautionary-wiping-proposal",
+    "text": "Veggie ISS Validation Test Results and Produce Consumption (2015)\nMicrobial Assessment and Proposed Precautionary Wiping of Produce\n\nMicrobial Assessment continued…\nMeasured microbial levels and composition do not indicate a threat to crew health\nPrevious ground testing showed naturally low microbial levels on lettuce\nProposed that precautionary wiping of produce with a Pro-San® sanitizing wipe would further reduce microbial levels",
+    "metadata": {
+      "source_id": "ntrs20150021302",
+      "section": "Veggie ISS Validation Test Results and Produce Consumption (2015)",
+      "subsection": "Microbial Assessment and Proposed Precautionary Wiping of Produce",
+      "source_url": "https://ntrs.nasa.gov/citations/20150021302",
+      "source_location": "Slide 8 (PDF page 8)",
+      "source_file": "ntrs_20150021302.pdf",
+      "source_license": "NTRS record: public use permitted"
+    }
+  },
+  {
+    "id": "ntrs20150021302-pro-san-wipes",
+    "text": "Veggie ISS Validation Test Results and Produce Consumption (2015)\nPro-San Citric Acid Sanitizer Wipes for Produce and Hardware\n\nPro-San Sanitizer for Vegetables\nCommercial citric acid-based produce sanitizer\nA Pro-San® wipe was developed for cleaning the Veggie hardware: already approved for spaceflight and used on ISS\nStudies were performed to determine the efficacy of using wipes containing Pro-San® to clean and disinfect.\nVegetables grown in vegetable production units like Veggie (these data are in backups).\nVeggie hardware surfaces (these data are in backups).\nWipes reduce levels by >4 orders of magnitude.",
+    "metadata": {
+      "source_id": "ntrs20150021302",
+      "section": "Veggie ISS Validation Test Results and Produce Consumption (2015)",
+      "subsection": "Pro-San Citric Acid Sanitizer Wipes for Produce and Hardware",
+      "source_url": "https://ntrs.nasa.gov/citations/20150021302",
+      "source_location": "Slide 9 (PDF page 9)",
+      "source_file": "ntrs_20150021302.pdf",
+      "source_license": "NTRS record: public use permitted"
+    }
+  },
+  {
+    "id": "ntrs20150021302-consumption-approval",
+    "text": "Veggie ISS Validation Test Results and Produce Consumption (2015)\nApproval to Eat Produce with Precautionary Wiping\n\nProduce Consumption Approval\nA splinter session was held at the HRP meeting to discuss Veggie results and a plan for consumption.\nUsing on-board produce sanitizing wipes was tested\nPresentations were made to the Flight Medicine Board and the Tri-board (Space Medicine, Biomedical Research & Environmental Sciences, and Human Systems Engineering & Development) at JSC and received approval.\nThe Payload Safety Review panel approved.\nCrew was approved to consume produce with precautionary wiping.",
+    "metadata": {
+      "source_id": "ntrs20150021302",
+      "section": "Veggie ISS Validation Test Results and Produce Consumption (2015)",
+      "subsection": "Approval to Eat Produce with Precautionary Wiping",
+      "source_url": "https://ntrs.nasa.gov/citations/20150021302",
+      "source_location": "Slide 10 (PDF page 10)",
+      "source_file": "ntrs_20150021302.pdf",
+      "source_license": "NTRS record: public use permitted"
+    }
+  },
+  {
+    "id": "ntrs20150021302-safe-handling-procedures",
+    "text": "Veggie ISS Validation Test Results and Produce Consumption (2015)\nApproved Safe-Handling Procedures: Gloves, Wiping Hardware, Tools and Produce\n\nApproved Safe-Handling Procedures\nVeggie seeds, media, wicks and pillows shall be clean and free of contaminants.\nCrew shall wear gloves when handling pillows and plants.\nVeggie hardware (bellows, etc.) shall be wiped with Pro-San wipes prior to installation of plant pillows and following growth.\nTools shall be wiped before and after use.\nProduce shall be wiped at harvest according to produce-specific procedure.",
+    "metadata": {
+      "source_id": "ntrs20150021302",
+      "section": "Veggie ISS Validation Test Results and Produce Consumption (2015)",
+      "subsection": "Approved Safe-Handling Procedures: Gloves, Wiping Hardware, Tools and Produce",
+      "source_url": "https://ntrs.nasa.gov/citations/20150021302",
+      "source_location": "Slide 11 (PDF page 11)",
+      "source_file": "ntrs_20150021302.pdf",
+      "source_license": "NTRS record: public use permitted"
+    }
+  },
+  {
+    "id": "ntrs20150021302-second-crop-split",
+    "text": "Veggie ISS Validation Test Results and Produce Consumption (2015)\nVEG-01 Second Lettuce Crop: Half Eaten, Half for Science\n\nVeg-01 Second Crop\n½ the produce harvested for consumption, ½ for science\nPlants harvested Aug. 10, 2015 and eaten live on NASA TV",
+    "metadata": {
+      "source_id": "ntrs20150021302",
+      "section": "Veggie ISS Validation Test Results and Produce Consumption (2015)",
+      "subsection": "VEG-01 Second Lettuce Crop: Half Eaten, Half for Science",
+      "source_url": "https://ntrs.nasa.gov/citations/20150021302",
+      "source_location": "Slide 13 (PDF page 13)",
+      "source_file": "ntrs_20150021302.pdf",
+      "source_license": "NTRS record: public use permitted"
+    }
+  },
+  {
+    "id": "ntrs20150021302-lettuce-sanitizing-result",
+    "text": "Veggie ISS Validation Test Results and Produce Consumption (2015)\nGround Test: Pro-San Sanitization of Inoculated Lettuce (Log Reduction)\n\nPro-San sanitization achieved a 5.25 log reduction in APC and a 4.37 log reduction in EC on lettuce.",
+    "metadata": {
+      "source_id": "ntrs20150021302",
+      "section": "Veggie ISS Validation Test Results and Produce Consumption (2015)",
+      "subsection": "Ground Test: Pro-San Sanitization of Inoculated Lettuce (Log Reduction)",
+      "source_url": "https://ntrs.nasa.gov/citations/20150021302",
+      "source_location": "Slide 19 (PDF page 19), chart notes",
+      "source_file": "ntrs_20150021302.pdf",
+      "source_license": "NTRS record: public use permitted"
+    }
+  },
+  {
+    "id": "nasa-garden-microbes-contamination-risk",
+    "text": "NASA: Researchers Put Space Garden Microbes Under the Microscope (2021)\nContaminated Plant Growth Systems Can Compromise Crops\n\n“NASA is going to the Moon and will someday head to Mars. These long missions will need systems like Veggie,” explains Oubre. “But if the crew consumes food contaminated with pathogenic organisms, they could become ill. Or, if plant growth systems become contaminated with plant pathogens, the crops could be compromised or fail. To prepare, we must assess Veggie’s vulnerabilities and carefully monitor it for microbial growth.”",
+    "metadata": {
+      "source_id": "nasa-garden-microbes",
+      "section": "NASA: Researchers Put Space Garden Microbes Under the Microscope (2021)",
+      "subsection": "Contaminated Plant Growth Systems Can Compromise Crops",
+      "source_url": "https://www.nasa.gov/missions/station/researchers-put-space-garden-microbes-under-the-microscope/",
+      "source_location": "Paragraph quoting Dr. Cherie Oubre, beginning \"NASA is going to the Moon\"",
+      "source_file": "microbes.html",
+      "source_license": "NASA web page"
+    }
+  },
+  {
+    "id": "nasa-garden-microbes-surveillance-response",
+    "text": "NASA: Researchers Put Space Garden Microbes Under the Microscope (2021)\nMicrobial Surveillance of Veggie and Response to Pathogens\n\n“Such microbial growth alone is not always enough to cause concern or even warrant any immediate action,” says Castro. “Continued surveillance is important to capture patterns or trends that indicate issues. And if known pathogens are ever isolated, we’re on hand to step the crew through how to remove them, and the crew will assist us in resampling to make sure the pathogens stay gone.”",
+    "metadata": {
+      "source_id": "nasa-garden-microbes",
+      "section": "NASA: Researchers Put Space Garden Microbes Under the Microscope (2021)",
+      "subsection": "Microbial Surveillance of Veggie and Response to Pathogens",
+      "source_url": "https://www.nasa.gov/missions/station/researchers-put-space-garden-microbes-under-the-microscope/",
+      "source_location": "Paragraph quoting Victoria Castro, beginning \"Such microbial growth alone\"",
+      "source_file": "microbes.html",
+      "source_license": "NASA web page"
+    }
+  },
+  {
+    "id": "ntrs20250000411-plant-care-behavioral-health",
+    "text": "Behavioral Health Benefits of the ISS Pick-and-Eat Crop Growth System (2025)\nWatering, Harvesting and Eating Plants and Crew Behavioral Health\n\nPlant activities such as voluntary viewing, watering, harvesting, and consuming, were positively related to task engagement and meaning, and enjoyment and well-being. Findings suggest that working with plants and consuming them can be a behavioral health countermeasure for long-duration spaceflight.",
+    "metadata": {
+      "source_id": "ntrs20250000411",
+      "section": "Behavioral Health Benefits of the ISS Pick-and-Eat Crop Growth System (2025)",
+      "subsection": "Watering, Harvesting and Eating Plants and Crew Behavioral Health",
+      "source_url": "https://ntrs.nasa.gov/citations/20250000411",
+      "source_location": "Abstract, RESULTS & DISCUSSION (NTRS record abstract field)",
+      "source_file": "ntrs_20250000411.json",
+      "source_license": "NTRS record: public use permitted"
+    }
+  },
+  {
+    "id": "hrp-bmed-2025-failing-crops-well-being",
+    "text": "NASA HRP Evidence Report: Behavioral Health and Crop Growth (2025)\nRisk When Crops Fail or Die\n\nAs crews invest themselves in this meaningful activity, and in the context of prolonged isolation and confinement, it is important to consider the potential for deleterious effects if the crops are not resilient to the hazards of spaceflight (e.g., fail or die), thus being ineffective as a countermeasure and instead being detrimental to crew well-being.",
+    "metadata": {
+      "source_id": "hrp-bmed-2025",
+      "section": "NASA HRP Evidence Report: Behavioral Health and Crop Growth (2025)",
+      "subsection": "Risk When Crops Fail or Die",
+      "source_url": "https://humanresearchroadmap.nasa.gov/evidence/reports/HRP-ER-BMED-HFBP-20250210.pdf",
+      "source_location": "PDF page 52",
+      "source_file": "bmed.pdf",
+      "source_license": "NASA Human Research Program evidence report: approved for public release, February 10, 2025"
+    }
+  }
+]

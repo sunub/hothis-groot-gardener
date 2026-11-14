@@ -1,0 +1,392 @@
+import { describe, expect, it } from 'vitest';
+import type { AiCrisisOutput, CrisisRequest, PlantState } from '@/lib/contract/types';
+import { evidence } from '@/lib/evidence';
+import { computeStage, selectCandidates } from '@/lib/evidence/select';
+import { INITIAL_PLANT_STATE } from '@/lib/game/rules';
+import { fallbackCrises, getFallbackCrisis } from '../fallback';
+import { buildGenerationInput, type GenerationInput, type StagedCandidate } from '../generator';
+import { createCrisis } from '../pipeline';
+import { validateAiOutput } from '../validate';
+import { chatJson, parseJsonText } from './client';
+import { readLlmConfig, type LlmConfig } from './config';
+import { createLlmGenerator, GenerationRejectedError, shuffle } from './generator';
+import { checkWording } from './guard';
+import { buildOutputSchema, buildUserPrompt } from './prompt';
+import { buildRetrievalQuery } from './retrieval';
+
+// --- helpers -------------------------------------------------------------------
+
+function request(state: Partial<PlantState>, patch: Partial<Omit<CrisisRequest, 'state'>> = {}): CrisisRequest {
+  return {
+    locale: 'en',
+    cultivation_day: 12,
+    state: { ...INITIAL_PLANT_STATE, ...state },
+    danger_days: { root_moisture: 1, humidity: 0 },
+    history: [],
+    active: null,
+    ...patch,
+  };
+}
+
+const dry = request({ root_moisture: 20 });
+const wet = request({ root_moisture: 85 });
+
+function staged(req: CrisisRequest): StagedCandidate[] {
+  return selectCandidates(evidence, req.state, undefined).map(({ crisis }) => ({
+    crisis,
+    stage: computeStage(crisis, req.state, req.danger_days, 0),
+  }));
+}
+
+function inputFor(req: CrisisRequest): { input: GenerationInput; candidates: StagedCandidate[] } {
+  const candidates = staged(req);
+  return { input: buildGenerationInput(req, candidates), candidates };
+}
+
+const baseConfig: LlmConfig = {
+  provider: 'ollama',
+  baseUrl: 'http://ollama.test',
+  model: 'gemma4:e4b',
+  timeoutMs: 30_000,
+  temperature: 0.4,
+  numCtx: 8192,
+  think: false,
+  ragTopN: 4,
+  ragTimeoutMs: 1_000,
+};
+
+/** A good water_shortage stage 1 text, as a model would return it. */
+function goodWaterText(): AiCrisisOutput {
+  return {
+    crisis_id: 'water_shortage',
+    scene: 'The young lettuce plants look smaller than they should at this point. The wicks at the base of the pillows look pale and dry.',
+    plant_line: "I'm barely getting any bigger, and the wicks under me feel dry.",
+    clues: [
+      { symptom_id: 'poor_growth', text: 'The plants have hardly grown since the last check.' },
+      { symptom_id: 'dry_wicks', text: 'The pillow wicks look dry.' },
+    ],
+    options: [
+      { action_id: 'add_water_direct', label: 'Add water directly to the plant pillows', result_line: 'That reached my roots. I feel stronger.', why: 'Water added to the pillows reaches the roots without the reservoir.' },
+      { action_id: 'refill_reservoir', label: 'Refill the reservoir under the pillows', result_line: 'A little helps, but not much.', why: 'The reservoir does not supply enough through the wicks.' },
+      { action_id: 'wait_for_schedule', label: 'Wait for the next scheduled watering', result_line: 'Nothing changed. I feel weaker.', why: 'Waiting lets the roots keep drying.' },
+      { action_id: 'fan_high', label: 'Set the fan to high', result_line: 'The moving air makes me feel worse.', why: 'The high fan setting dries moisture and makes the shortage worse.' },
+    ],
+  };
+}
+
+interface Call {
+  url: string;
+  body: Record<string, unknown>;
+  headers: Record<string, string>;
+}
+
+/** Fake fetch: answers the model URL and the search URL, and records every call. */
+function fakeFetch(opts: {
+  modelReplies: unknown[];
+  rag?: 'ok' | 'down';
+}) {
+  const calls: Call[] = [];
+  let modelCall = 0;
+  const impl = (async (input: RequestInfo | URL, init?: RequestInit) => {
+    const url = String(input);
+    const body = init?.body ? (JSON.parse(String(init.body)) as Record<string, unknown>) : {};
+    calls.push({ url, body, headers: (init?.headers ?? {}) as Record<string, string> });
+    if (url.endsWith('/retrieve')) {
+      if (opts.rag === 'down') throw new TypeError('fetch failed');
+      return Response.json({
+        query: body.query,
+        mode: 'keyword',
+        results: [
+          {
+            rank: 1,
+            id: 'veg01-stall-a',
+            section: 'VEG-01',
+            subsection: 'Growth stall',
+            text: 'VEG-01\nGrowth stall\n\nPhotos at 14 days showed stunted plants.',
+            source_url: 'https://doi.org/10.1515/opag-2017-0003',
+            source_location: '§2.1, p. 35',
+            source_license: null,
+          },
+        ],
+      });
+    }
+    const reply = opts.modelReplies[Math.min(modelCall, opts.modelReplies.length - 1)];
+    modelCall++;
+    if (reply instanceof Response) return reply;
+    return Response.json({ message: { role: 'assistant', content: typeof reply === 'string' ? reply : JSON.stringify(reply) } });
+  }) as typeof fetch;
+  return { impl, calls };
+}
+
+const inOrder = () => 0.999; // shuffle keeps the order when random() is always close to 1
+
+// --- config --------------------------------------------------------------------
+
+describe('readLlmConfig', () => {
+  it('is off without LLM_MODEL', () => {
+    expect(readLlmConfig({})).toBeNull();
+    expect(readLlmConfig({ LLM_MODEL: '  ' })).toBeNull();
+  });
+
+  it('uses Ollama defaults with thinking off', () => {
+    const config = readLlmConfig({ LLM_MODEL: 'gemma4:e4b' })!;
+    expect(config).toMatchObject({
+      provider: 'ollama',
+      baseUrl: 'http://127.0.0.1:11434',
+      model: 'gemma4:e4b',
+      timeoutMs: 30_000,
+      numCtx: 8192,
+      think: false,
+      keepAlive: '30m',
+    });
+    expect(config.ragUrl).toBeUndefined();
+    expect(readLlmConfig({ LLM_MODEL: 'm', LLM_KEEP_ALIVE: 'omit' })!.keepAlive).toBeUndefined();
+    expect(readLlmConfig({ LLM_MODEL: 'm', LLM_KEEP_ALIVE: '-1' })!.keepAlive).toBe('-1');
+  });
+
+  it('reads every setting and trims trailing slashes', () => {
+    const config = readLlmConfig({
+      LLM_PROVIDER: 'openai',
+      LLM_BASE_URL: 'https://pod-8000.proxy.runpod.net/v1/',
+      LLM_MODEL: 'google/gemma-4-e4b-it',
+      LLM_API_KEY: 'k',
+      LLM_TIMEOUT_MS: '45000',
+      LLM_TEMPERATURE: '0.2',
+      LLM_THINK: 'omit',
+      RAG_URL: 'http://127.0.0.1:8000/',
+      RAG_TOP_N: '3',
+      LLM_LOG_DIR: 'logs',
+    })!;
+    expect(config).toMatchObject({
+      provider: 'openai',
+      baseUrl: 'https://pod-8000.proxy.runpod.net/v1',
+      apiKey: 'k',
+      timeoutMs: 45_000,
+      temperature: 0.2,
+      think: undefined,
+      ragUrl: 'http://127.0.0.1:8000',
+      ragTopN: 3,
+      logDir: 'logs',
+    });
+  });
+
+  it('rejects bad values with a clear message', () => {
+    expect(() => readLlmConfig({ LLM_MODEL: 'm', LLM_PROVIDER: 'other' })).toThrow(/LLM_PROVIDER/);
+    expect(() => readLlmConfig({ LLM_MODEL: 'm', LLM_PROVIDER: 'openai' })).toThrow(/LLM_BASE_URL/);
+    expect(() => readLlmConfig({ LLM_MODEL: 'm', LLM_TIMEOUT_MS: '-1' })).toThrow(/LLM_TIMEOUT_MS/);
+    expect(() => readLlmConfig({ LLM_MODEL: 'm', LLM_TEMPERATURE: '3' })).toThrow(/LLM_TEMPERATURE/);
+  });
+});
+
+// --- prompt and schema ---------------------------------------------------------
+
+describe('prompt and output schema', () => {
+  it('limits ids to the candidate in the schema', () => {
+    const { input } = inputFor(dry);
+    const candidate = input.candidates[0];
+    const schema = buildOutputSchema(candidate, input.limits.clues_max);
+    expect(schema.properties.crisis_id.enum).toEqual(['water_shortage']);
+    expect(schema.properties.clues.items.properties.symptom_id.enum).toEqual(
+      candidate.symptoms.map((s) => s.symptom_id),
+    );
+    expect(schema.properties.options.items.properties.action_id.enum).toEqual(
+      candidate.actions.map((a) => a.action_id),
+    );
+    expect(schema.properties.options.minItems).toBe(Math.min(3, candidate.actions.length));
+  });
+
+  it('puts the allowed symptoms, every action with its verdict, the example and the excerpts in the prompt', () => {
+    const { input } = inputFor(dry);
+    const candidate = input.candidates[0];
+    const prompt = buildUserPrompt({
+      input,
+      candidate,
+      excerpts: [{ id: 'x', subsection: 'Growth stall', text: 'Plants were stunted.', source_url: 'u', source_location: 'p', source_license: null }],
+      example: getFallbackCrisis('water_shortage', 1, 'en', [])!,
+    });
+    for (const s of candidate.symptoms) expect(prompt).toContain(`${s.symptom_id}: ${s.name}`);
+    for (const a of candidate.actions) expect(prompt).toContain(`${a.action_id}: ${a.name} | verdict: ${a.verdict}`);
+    expect(prompt).toContain('STYLE EXAMPLE');
+    expect(prompt).toContain('[1] Growth stall: Plants were stunted.');
+    expect(prompt).toContain('root moisture is far too low');
+  });
+
+  it('builds an English search query from the crisis', () => {
+    const { input } = inputFor(dry);
+    const query = buildRetrievalQuery(input.candidates[0]);
+    expect(query).toContain('Water shortage');
+    expect(query).toContain('Dry pillow wicks');
+    expect(query).toContain('Add water directly to the plant pillows');
+  });
+});
+
+// --- wording guard -------------------------------------------------------------
+
+describe('checkWording', () => {
+  it('passes every reviewed pre-made crisis', () => {
+    for (const entry of fallbackCrises.crises) {
+      const req = entry.output.crisis_id === 'water_shortage' ? dry : wet;
+      const candidates = staged(req).map((c) => ({ ...c, stage: entry.stage }));
+      const input = buildGenerationInput(req, candidates);
+      const candidate = input.candidates.find((c) => c.crisis_id === entry.output.crisis_id)!;
+      expect(checkWording(entry.output, candidate), `${entry.output.crisis_id} stage ${entry.stage}`).toEqual([]);
+    }
+  });
+
+  it('catches a symptom that is not allowed', () => {
+    const { input } = inputFor(dry);
+    const text = { ...goodWaterText(), scene: 'The lettuce is wilting badly. The wicks look dry.' };
+    expect(checkWording(text, input.candidates[0]).join(' ')).toMatch(/wilting/);
+  });
+
+  it('allows fungus words only from the stage where fungal growth is a symptom', () => {
+    const { input } = inputFor(wet);
+    const stage1 = input.candidates[0];
+    const stage2 = { ...stage1, stage: 2, symptoms: evidence.crises[1].symptoms.filter((s) => s.stage <= 2).map((s) => ({ symptom_id: s.symptom_id, name: s.name, stage: s.stage })) };
+    const out = { ...getFallbackCrisis('overwater_mold', 1, 'en', [])!, scene: 'White mold covers the stems. Droplets sit on the leaves.' };
+    expect(checkWording(out, stage1).join(' ')).toMatch(/mold/);
+    expect(checkWording(out, stage2).filter((i) => i.includes('mold'))).toEqual([]);
+  });
+
+  it('catches a scene that names the fan setting (seen in a real Gemma run)', () => {
+    const { input } = inputFor(dry);
+    const text = {
+      ...goodWaterText(),
+      scene: 'The lettuce plants are not showing expected growth. The wicks appear dry. The fan remains on a low setting.',
+    };
+    expect(checkWording(text, input.candidates[0]).join(' ')).toMatch(/fan/);
+  });
+
+  it('catches "soil" (seen in a real Gemma run; Veggie uses a clay substrate)', () => {
+    const { input } = inputFor(dry);
+    const text = { ...goodWaterText(), plant_line: 'The soil around me feels dry.' };
+    expect(checkWording(text, input.candidates[0]).join(' ')).toMatch(/soil/);
+  });
+
+  it('catches a safety or edibility claim anywhere in the text', () => {
+    const { input } = inputFor(dry);
+    const text = goodWaterText();
+    text.options[0] = { ...text.options[0], why: 'This keeps the leaves edible.' };
+    expect(checkWording(text, input.candidates[0]).join(' ')).toMatch(/edible/);
+  });
+
+  it('catches labels that hint at the answer and a plant line that names the cause', () => {
+    const { input } = inputFor(dry);
+    const text = goodWaterText();
+    text.options[0] = { ...text.options[0], label: 'Best: add water to the pillows' };
+    text.plant_line = 'I need more water.';
+    const issues = checkWording(text, input.candidates[0]).join(' ');
+    expect(issues).toMatch(/Best/);
+    expect(issues).toMatch(/names the cause/);
+  });
+});
+
+// --- model client --------------------------------------------------------------
+
+describe('chatJson', () => {
+  it('calls Ollama with the schema, thinking off and the context size', async () => {
+    const { impl, calls } = fakeFetch({ modelReplies: [{ ok: true }] });
+    const out = await chatJson(baseConfig, [{ role: 'user', content: 'hi' }], { type: 'object' }, new AbortController().signal, impl);
+    expect(out).toEqual({ ok: true });
+    expect(calls[0].url).toBe('http://ollama.test/api/chat');
+    expect(calls[0].body).toMatchObject({ model: 'gemma4:e4b', stream: false, think: false, format: { type: 'object' }, options: { num_ctx: 8192 } });
+    expect(calls[0].body).not.toHaveProperty('keep_alive');
+    const kept = fakeFetch({ modelReplies: [{ ok: true }] });
+    await chatJson({ ...baseConfig, keepAlive: '30m' }, [], {}, new AbortController().signal, kept.impl);
+    expect(kept.calls[0].body.keep_alive).toBe('30m');
+  });
+
+  it('calls an OpenAI-compatible server with response_format and a key', async () => {
+    const calls: Call[] = [];
+    const impl = (async (input: RequestInfo | URL, init?: RequestInit) => {
+      calls.push({ url: String(input), body: JSON.parse(String(init?.body)), headers: init?.headers as Record<string, string> });
+      return Response.json({ choices: [{ message: { content: '```json\n{"a":1}\n```' } }] });
+    }) as typeof fetch;
+    const config: LlmConfig = { ...baseConfig, provider: 'openai', baseUrl: 'https://pod.test/v1', apiKey: 'secret' };
+    const out = await chatJson(config, [], { type: 'object' }, new AbortController().signal, impl);
+    expect(out).toEqual({ a: 1 });
+    expect(calls[0].url).toBe('https://pod.test/v1/chat/completions');
+    expect(calls[0].body.response_format).toMatchObject({ type: 'json_schema' });
+    expect(calls[0].headers.Authorization).toBe('Bearer secret');
+    expect(calls[0].body).not.toHaveProperty('think');
+  });
+
+  it('throws on an HTTP error and on text that is not JSON', async () => {
+    const http = fakeFetch({ modelReplies: [new Response('model not found', { status: 404 })] });
+    await expect(chatJson(baseConfig, [], {}, new AbortController().signal, http.impl)).rejects.toThrow(/404/);
+    expect(() => parseJsonText('not json')).toThrow(/not valid JSON/);
+  });
+});
+
+// --- generator -----------------------------------------------------------------
+
+describe('createLlmGenerator', () => {
+  it('returns text that passes validation, with excerpts from the search in the prompt', async () => {
+    const { impl, calls } = fakeFetch({ modelReplies: [goodWaterText()], rag: 'ok' });
+    const generator = createLlmGenerator({ ...baseConfig, ragUrl: 'http://rag.test' }, { fetchImpl: impl, random: inOrder });
+    const { input, candidates } = inputFor(dry);
+    const out = await generator(input, new AbortController().signal);
+    expect(validateAiOutput(out, { candidates, excludedActionIds: [] }).ok).toBe(true);
+    expect(calls.map((c) => c.url)).toEqual(['http://rag.test/retrieve', 'http://ollama.test/api/chat']);
+    const userPrompt = (calls[1].body.messages as { content: string }[])[1].content;
+    expect(userPrompt).toContain('Photos at 14 days showed stunted plants.');
+    expect(userPrompt).not.toContain('VEG-01\nGrowth stall');
+  });
+
+  it('goes on without excerpts when the search server is down', async () => {
+    const { impl, calls } = fakeFetch({ modelReplies: [goodWaterText()], rag: 'down' });
+    const generator = createLlmGenerator({ ...baseConfig, ragUrl: 'http://rag.test' }, { fetchImpl: impl });
+    const out = await generator(inputFor(dry).input, new AbortController().signal);
+    expect(out).toMatchObject({ crisis_id: 'water_shortage' });
+    const userPrompt = (calls[1].body.messages as { content: string }[])[1].content;
+    expect(userPrompt).not.toContain('BACKGROUND EXCERPTS');
+  });
+
+  it('shuffles the options', async () => {
+    const { impl } = fakeFetch({ modelReplies: [goodWaterText()] });
+    const generator = createLlmGenerator(baseConfig, { fetchImpl: impl, random: () => 0 });
+    const out = (await generator(inputFor(dry).input, new AbortController().signal)) as AiCrisisOutput;
+    expect(out.options.map((o) => o.action_id)).not.toEqual(goodWaterText().options.map((o) => o.action_id));
+    expect(new Set(out.options.map((o) => o.action_id))).toEqual(new Set(goodWaterText().options.map((o) => o.action_id)));
+  });
+
+  it('rejects text that invents a symptom', async () => {
+    const bad = { ...goodWaterText(), plant_line: 'My leaves are drooping.' };
+    const { impl } = fakeFetch({ modelReplies: [bad] });
+    const generator = createLlmGenerator(baseConfig, { fetchImpl: impl });
+    await expect(generator(inputFor(dry).input, new AbortController().signal)).rejects.toBeInstanceOf(GenerationRejectedError);
+  });
+});
+
+describe('createCrisis with the model generator', () => {
+  it('serves generated text with verdicts and sources from the evidence list', async () => {
+    const { impl } = fakeFetch({ modelReplies: [goodWaterText()] });
+    const response = await createCrisis(dry, { generator: createLlmGenerator(baseConfig, { fetchImpl: impl, random: inOrder }) });
+    expect(response.origin).toBe('generated');
+    expect(response.scene).toBe(goodWaterText().scene);
+    const direct = response.options.find((o) => o.action_id === 'add_water_direct')!;
+    expect(direct.verdict).toBe('appropriate');
+    expect(direct.source).not.toBeNull();
+  });
+
+  it('retries once, then falls back to the pre-made crisis when the text keeps failing the guard', async () => {
+    const bad = { ...goodWaterText(), scene: 'The lettuce is wilting.' };
+    const { impl, calls } = fakeFetch({ modelReplies: [bad, bad] });
+    const response = await createCrisis(dry, { generator: createLlmGenerator(baseConfig, { fetchImpl: impl }) });
+    expect(response.origin).toBe('fallback');
+    expect(calls.filter((c) => c.url.endsWith('/api/chat'))).toHaveLength(2);
+  });
+
+  it('uses the second attempt when only the first fails', async () => {
+    const bad = { ...goodWaterText(), scene: 'The lettuce is wilting.' };
+    const { impl } = fakeFetch({ modelReplies: [bad, goodWaterText()] });
+    const response = await createCrisis(dry, { generator: createLlmGenerator(baseConfig, { fetchImpl: impl, random: inOrder }) });
+    expect(response.origin).toBe('generated');
+  });
+});
+
+describe('shuffle', () => {
+  it('keeps every item', () => {
+    expect(shuffle([1, 2, 3, 4], Math.random).sort()).toEqual([1, 2, 3, 4]);
+  });
+});

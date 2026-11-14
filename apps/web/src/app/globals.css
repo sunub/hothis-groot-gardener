@@ -1,0 +1,11 @@
+/*
+ * Global stylesheet. Order matters: Tailwind first, then the design system layers.
+ * - tokens.css:    @theme tokens (color, type, motion)
+ * - utilities.css: pixel-* utilities (frames, bubble, hatch)
+ * - base.css:      element defaults
+ * Spec: docs/DESIGN.md.
+ */
+@import "tailwindcss";
+@import "../styles/tokens.css";
+@import "../styles/utilities.css";
+@import "../styles/base.css";

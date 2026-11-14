@@ -1,0 +1,1077 @@
+[
+  {
+    "id": "veggie-03a-fan-restart",
+    "text": "ISS Red Romaine Lettuce Growth and Harvest Evidence\nFan Shutdown After Power Cycling and Excess Moisture\n\nAdditionally, germinating seedlings in the VEG-03A test had excess moisture in the early period of growth, likely due to a fan malfunction, when compared to the VEG-01A and VEG-01B plants. It was during this experiment that our team identified a consistent anomaly with the Veggie hardware – specifically that when power is cycled to the hardware, upon restarting the fan will read “low” but it will actually be off.",
+    "metadata": {
+      "source_id": "khodadad2020",
+      "section": "ISS Red Romaine Lettuce Growth and Harvest Evidence",
+      "subsection": "Fan Shutdown After Power Cycling and Excess Moisture",
+      "source_url": "https://doi.org/10.3389/fpls.2020.00199",
+      "source_location": "VEG-03A · Discussion · pp. 9–10",
+      "source_file": "ISS_Outredgeous_Lettuce_RAG.md",
+      "source_license": "CC BY 4.0",
+      "simulator_application_ko": "전원을 재시작한 뒤 표시가 ‘low’이거나 유묘에 물기가 많으면, **팬이 실제로 도는지 확인한다**는 선택지를 제시할 수 있다. 초기 과습의 원인과 미생물 수에 미친 영향은 별도로 판단한다."
+    }
+  },
+  {
+    "id": "veggie-leaf-moisture",
+    "text": "ISS Red Romaine Lettuce Growth and Harvest Evidence\nLeaf Surface Moisture and Air Circulation\n\nPoor air circulation can cause persistent droplets of moisture on the surface of a leaf due to transpiration producing a micro environment favorable for microbial proliferation.",
+    "metadata": {
+      "source_id": "khodadad2020",
+      "section": "ISS Red Romaine Lettuce Growth and Harvest Evidence",
+      "subsection": "Leaf Surface Moisture and Air Circulation",
+      "source_url": "https://doi.org/10.3389/fpls.2020.00199",
+      "source_location": "Discussion · p. 9",
+      "source_file": "ISS_Outredgeous_Lettuce_RAG.md",
+      "source_license": "CC BY 4.0",
+      "simulator_application_ko": "잎에 물방울이 계속 남아 있으면 **공기 순환을 점검한다**는 선택지를 제시할 수 있다. 관찰만으로 오염 여부나 급수량 변경을 결정할 수는 없다."
+    }
+  },
+  {
+    "id": "veggie-harvest-method",
+    "text": "ISS Red Romaine Lettuce Growth and Harvest Evidence\nSingle Final Harvest and Sequential Harvest of Mature Leaves\n\nMultiple plantings were grown on ISS and harvested using either a single, final harvest, or sequential harvests in which several mature leaves were removed from the plants at weekly intervals.\n\nVEG-01A and B were harvested after 33 days of growth using sanitized scissors to remove the leaves (Table 1). VEG-03A leaves were harvested sequentially starting at 33 days followed by 3 weekly harvests.",
+    "metadata": {
+      "source_id": "khodadad2020",
+      "section": "ISS Red Romaine Lettuce Growth and Harvest Evidence",
+      "subsection": "Single Final Harvest and Sequential Harvest of Mature Leaves",
+      "source_url": "https://doi.org/10.3389/fpls.2020.00199",
+      "source_location": "Abstract · p. 1 / Materials and Methods · pp. 3–4",
+      "source_file": "ISS_Outredgeous_Lettuce_RAG.md",
+      "source_license": "CC BY 4.0",
+      "simulator_application_ko": "VEG-01A/B에서는 **33일차에 소독한 가위로 한 번 수확**, VEG-03A에서는 **성숙한 잎 일부를 수확하고 나머지 재배를 이어가기**를 제시할 수 있다. VEG-03A에서 실제 날짜를 재현하려면 아래 일정의 원문 불일치를 함께 참고한다."
+    }
+  },
+  {
+    "id": "veggie-03a-harvest-timing",
+    "text": "ISS Red Romaine Lettuce Growth and Harvest Evidence\nVEG-03A Harvest Timing and Conflicting Schedule Statements\n\nAs described in section “Materials and Methods,” there were four repeated harvests (38, 45, 59, and 64 days after initiation) of this experiment and only two (day 45 and day 64) were returned to earth.\n\nTable 1 (transcription): initiation 25 October 2016, 2nd harvest 9 December 2016, 4th harvest 28 December 2016 (elapsed days 45 and 64). The Methods paragraph reports the first harvest on day 33 and three weekly follow-ups. Discussion lists days 38, 45, 59 and 64. The first and third dates should be treated as uncertain for historical simulation.",
+    "metadata": {
+      "source_id": "khodadad2020",
+      "section": "ISS Red Romaine Lettuce Growth and Harvest Evidence",
+      "subsection": "VEG-03A Harvest Timing and Conflicting Schedule Statements",
+      "source_url": "https://doi.org/10.3389/fpls.2020.00199",
+      "source_location": "VEG-03A · Table 1 · p. 3 / Materials and Methods · p. 4 / Discussion · p. 12",
+      "source_file": "ISS_Outredgeous_Lettuce_RAG.md",
+      "source_license": "CC BY 4.0",
+      "simulator_application_ko": "2차·4차 날짜는 표 1과 Discussion의 경과 일수가 일치한다. 1차 수확일은 Methods(33일차)와 Discussion(38일차)이 다르고, Discussion의 일수 간격도 Methods의 ‘weekly’와 일치하지 않는다. **실험 일정을 재현할 때는 출처가 일치하는 2차·4차 일정을 사용**하고, 1·3차의 확정 일정은 보류한다. 이 청크에는 원문에서 충돌하는 설명이 있다는 문맥도 함께 넣는다."
+    }
+  },
+  {
+    "id": "veggie-03a-sample-handling",
+    "text": "ISS Red Romaine Lettuce Growth and Harvest Evidence\nCrew Consumption and Sample Return After Sequential Harvest\n\nHarvested leaves from each plant were wrapped in foil and placed into a −80°C freezer. The first, third, and half of the fourth harvests were consumed by the crew. Only the 2nd harvest and the remaining leaves (approximately half of the total leaves) of the final harvest from VEG-03A were stored for sample return.",
+    "metadata": {
+      "source_id": "khodadad2020",
+      "section": "ISS Red Romaine Lettuce Growth and Harvest Evidence",
+      "subsection": "Crew Consumption and Sample Return After Sequential Harvest",
+      "source_url": "https://doi.org/10.3389/fpls.2020.00199",
+      "source_location": "VEG-03A · Materials and Methods · p. 4",
+      "source_file": "ISS_Outredgeous_Lettuce_RAG.md",
+      "source_license": "CC BY 4.0",
+      "simulator_application_ko": "수확 뒤 **분석용 잎을 따로 포장해 냉동 보관한다**는 선택지의 근거. −80°C는 이 논문의 분석 시료 보존 조건이다."
+    }
+  },
+  {
+    "id": "veggie-03a-late-harvest-microbes",
+    "text": "ISS Red Romaine Lettuce Growth and Harvest Evidence\nMicrobial Counts on the Second and Fourth Harvests\n\nAn increase between the 2nd and 4th harvests was not seen in bacterial counts on the leaves, however, fungal counts in the flight leaves were significantly higher in the 4th harvest when compared to the 2nd harvest (P = 0.0002).\n\nThe comparison covers two sampled harvests. Chamber records were incomplete. The study does not establish that the harvest schedule, fan malfunction or excess moisture caused the difference in fungal counts.",
+    "metadata": {
+      "source_id": "khodadad2020",
+      "section": "ISS Red Romaine Lettuce Growth and Harvest Evidence",
+      "subsection": "Microbial Counts on the Second and Fourth Harvests",
+      "source_url": "https://doi.org/10.3389/fpls.2020.00199",
+      "source_location": "VEG-03A · Results · p. 6 / Discussion · p. 9",
+      "source_file": "ISS_Outredgeous_Lettuce_RAG.md",
+      "source_license": "CC BY 4.0",
+      "simulator_application_ko": "반복 수확 시 **회차별 미생물 검사 결과를 비교한다**는 선택지의 근거. p. 9에 따르면 VEG-03A의 장치 환경 데이터는 64일 전체에 걸쳐 수집되지 않았다. 수확 횟수, 과습, 팬 고장을 진균 증가의 원인으로 확정할 수 없다."
+    }
+  },
+  {
+    "id": "veggie-pathogen-screening",
+    "text": "ISS Red Romaine Lettuce Growth and Harvest Evidence\nTargeted Pathogen Screening of Harvested Leaves\n\nScreening for potential food borne pathogens, E. coli, Salmonella sp., and S. aureus on the leaf tissue yielded negative results. These screening results were corroborated by NGS data.\n\nThe negative findings apply to the sampled leaves and the listed targets. The paper describes case-by-case assessment of fresh ISS produce. Packaged-food limits do not define a safety threshold for fresh lettuce.",
+    "metadata": {
+      "source_id": "khodadad2020",
+      "section": "ISS Red Romaine Lettuce Growth and Harvest Evidence",
+      "subsection": "Targeted Pathogen Screening of Harvested Leaves",
+      "source_url": "https://doi.org/10.3389/fpls.2020.00199",
+      "source_location": "Results · p. 6 / Introduction · pp. 2–3",
+      "source_file": "ISS_Outredgeous_Lettuce_RAG.md",
+      "source_license": "CC BY 4.0",
+      "simulator_application_ko": "이 연구에서 검사한 잎 시료의 결과로 표시한다. 논문 발행 당시 우주 재배 신선 농산물의 미생물 기준은 없었으며, ISS 신선 작물의 적합성은 유사한 지상 재배의 미생물 분석을 참고해 사례별로 판단했다고 설명한다. 측정 전 상태에 ‘섭취 가능’을 자동 부여할 근거는 없다."
+    }
+  },
+  {
+    "id": "veggie-day7-thinning",
+    "text": "ISS Red Romaine Lettuce Growth and Harvest Evidence\nThinning to One Plant per Pillow on Day 7\n\nEach experiment began with six rooting pillows. Germinated seeds were thinned to one plant per pillow at day 7.",
+    "metadata": {
+      "source_id": "khodadad2020",
+      "section": "ISS Red Romaine Lettuce Growth and Harvest Evidence",
+      "subsection": "Thinning to One Plant per Pillow on Day 7",
+      "source_url": "https://doi.org/10.3389/fpls.2020.00199",
+      "source_location": "Materials and Methods · p. 3",
+      "source_file": "ISS_Outredgeous_Lettuce_RAG.md",
+      "source_license": "CC BY 4.0",
+      "simulator_application_ko": "7일차에 한 패드에서 두 포기가 자랐다면 **한 포기만 남겨 솎는다**. 기존 VEG-01 자료에도 같은 조치가 있다."
+    }
+  },
+  {
+    "id": "veggie-light-photoperiod",
+    "text": "ISS Red Romaine Lettuce Growth and Harvest Evidence\nLED Distance, Spectral Ratio, and Photoperiod\n\nThe Veggie baseplate was positioned 30.5–31.75 cm below the LED light array to provide approximately 200 µmol·m²·s⁻¹ of photosynthetically active radiation at the surface of the pillows in the center of the Veggie unit at a ratio of 12 red (630 nm): 3 Blue (455 nm): 1 green (530 nm). A photoperiod was set to 16 h light/8 h dark.",
+    "metadata": {
+      "source_id": "khodadad2020",
+      "section": "ISS Red Romaine Lettuce Growth and Harvest Evidence",
+      "subsection": "LED Distance, Spectral Ratio, and Photoperiod",
+      "source_url": "https://doi.org/10.3389/fpls.2020.00199",
+      "source_location": "Materials and Methods · p. 4",
+      "source_file": "ISS_Outredgeous_Lettuce_RAG.md",
+      "source_license": "CC BY 4.0",
+      "simulator_application_ko": "초기 조명 상태에 활용할 실험 설정이다. 영어 인용문의 면적 단위에는 논문 인쇄 표기(m²)를 유지했고, 한국어에는 광양자속 밀도의 표준 단위(m⁻²)를 썼다."
+    }
+  },
+  {
+    "id": "veggie-seeds-substrate",
+    "text": "ISS Red Romaine Lettuce Growth and Harvest Evidence\nSeed Placement, Substrate, and Fertilizer\n\nBriefly, plants were grown in Veggie pillows containing solid, porous, arcillite (calcined clay) substrate in two different blends, either 100% sized to 600 µ–1 mm or a 1:1 ratio of that size to 1–2 mm (Turface Proleague, Profile Products, LLC) and controlled release fertilizer (Nutricote 18-6-8, type 180, Florikan, Sarasota, FL, United States). Procedures for detailed substrate and pillow preparation are outlined in Massa et al. (2017b). Two surface sanitized seeds were attached with guar in each plant pillow between paired germination wicks.",
+    "metadata": {
+      "source_id": "khodadad2020",
+      "section": "ISS Red Romaine Lettuce Growth and Harvest Evidence",
+      "subsection": "Seed Placement, Substrate, and Fertilizer",
+      "source_url": "https://doi.org/10.3389/fpls.2020.00199",
+      "source_location": "Materials and Methods · p. 3",
+      "source_file": "ISS_Outredgeous_Lettuce_RAG.md",
+      "source_license": "CC BY 4.0",
+      "simulator_application_ko": "초기 패드 구성에 활용한다. 이 대목에는 배지의 우열이나 비료를 추가할 시점·용량이 제시되지 않는다."
+    }
+  },
+  {
+    "id": "veggie-nutritional-results",
+    "text": "ISS Red Romaine Lettuce Growth and Harvest Evidence\nLeaf Mineral and Antioxidant Outcomes\n\nComparing total phenolics, VEG-03A with 15.0 (ground) and 19.6 (flight) mg/g of dry weight (gallic acid equivalents) had the statistically lowest amounts when compared to either VEG-01A or VEG-01B (P ≤ 0.001). Anthocyanins measured as cyanidin-3-glucoside equivalents showed no difference among all three experiments compared. \n\nSimilarly, ORAC units measured among all three experiments did not exhibit any observable variance.\n\nWithin each experiment, the Results section reports no significant ground–flight difference in elemental composition. The authors found insufficient evidence to attribute between-experiment differences in minerals or phenolics to sequential harvesting.",
+    "metadata": {
+      "source_id": "khodadad2020",
+      "section": "ISS Red Romaine Lettuce Growth and Harvest Evidence",
+      "subsection": "Leaf Mineral and Antioxidant Outcomes",
+      "source_url": "https://doi.org/10.3389/fpls.2020.00199",
+      "source_location": "Results · p. 8, Table 7 and Table 8 · p. 12 / Discussion · p. 13",
+      "source_file": "ISS_Outredgeous_Lettuce_RAG.md",
+      "source_license": "CC BY 4.0",
+      "simulator_application_ko": "수확 결과 화면의 배경 정보로 활용할 수 있다. 같은 실험 내 지상과 ISS 간 무기 원소 함량에는 유의한 차이가 관찰되지 않았다(Results p. 8). 세 실험을 비교하면 VEG-03A의 Fe와 K가 낮았지만, 반복 수확 때문에 원소나 페놀 함량이 떨어진다고 결론 내릴 데이터는 부족하다(Discussion p. 13). 급수량·비료량 조절이나 점수 증감의 근거로 해석하지 않는다."
+    }
+  },
+  {
+    "id": "veggie-cultivar-airflow",
+    "text": "ISS Red Romaine Lettuce — Source Excerpts for RAG\nCultivar and Air Circulation in Veggie\n\nRed romaine lettuce Lactuca sativa cv. ‘Outredgeous’ was grown in Veggie rooting pillows as described by Massa et al. (2017a).\n\nVeggie is a simple plant growth facility that uses LED lights and fans to circulate ISS air through the plant growth volume. A transparent, extensible bellows attached to the light unit via magnets contains the growing plants and any debris, and directs air flow from the bottom of the canopy to the top of the growth volume (Figure 1). Screens remove large particles from the cabin air before it passes through the plant growth chamber, however, no level of filtration is present, so plants growing in Veggie are exposed to any microbial or chemical constituents present in the ISS environment.",
+    "metadata": {
+      "source_id": "khodadad2020",
+      "section": "ISS Red Romaine Lettuce — Source Excerpts for RAG",
+      "subsection": "Cultivar and Air Circulation in Veggie",
+      "source_url": "https://doi.org/10.3389/fpls.2020.00199",
+      "source_location": "§Materials and Methods, p. 3 / §Introduction, p. 2",
+      "source_file": "ISS_red_romaine_lettuce_RAG.md",
+      "kind": "action",
+      "source_license": "CC BY 4.0",
+      "simulator_application_ko": "챔버에서 공기 순환 상태를 살피는 선택지의 배경. 팬 이상 대응에는 아래의 별도 청크를 함께 참고.",
+      "interpretation_note_en": "The excerpts describe the Veggie chamber and the Outredgeous cultivar. See veggie-fan-restart-moisture for the documented fan anomaly."
+    }
+  },
+  {
+    "id": "veggie-pillow-substrate",
+    "text": "ISS Red Romaine Lettuce — Source Excerpts for RAG\nPlant Pillows, Substrate, and Fertilizer\n\nPlant pillows are small growing bags that interact with a root mat water reservoir on the Veggie baseplate. Pillows contain a calcined clay substrate mixed with controlled release fertilizer and wicks for seed attachment.\n\nBriefly, plants were grown in Veggie pillows containing solid, porous, arcillite (calcined clay) substrate in two different blends, either 100% sized to 600 µ–1 mm or a 1:1 ratio of that size to 1–2 mm (Turface Proleague, Profile Products, LLC) and controlled release fertilizer (Nutricote 18-6-8, type 180, Florikan, Sarasota, FL, United States).",
+    "metadata": {
+      "source_id": "khodadad2020",
+      "section": "ISS Red Romaine Lettuce — Source Excerpts for RAG",
+      "subsection": "Plant Pillows, Substrate, and Fertilizer",
+      "source_url": "https://doi.org/10.3389/fpls.2020.00199",
+      "source_location": "§Introduction, p. 2 / §Materials and Methods, p. 3",
+      "source_file": "ISS_red_romaine_lettuce_RAG.md",
+      "kind": "action",
+      "source_license": "CC BY 4.0",
+      "simulator_application_ko": "실험에 쓰인 두 배지 조성. 두 조성의 우열이나 비료 투입량은 이 발췌에서 도출할 수 없음.",
+      "interpretation_note_en": "The paper lists two tested substrate blends and a fertilizer formulation. It does not establish a better blend or give a fertilizer dose here."
+    }
+  },
+  {
+    "id": "veggie-seed-wicks-thinning",
+    "text": "ISS Red Romaine Lettuce — Source Excerpts for RAG\nSeed Preparation and Thinning After Germination\n\nTwo surface sanitized seeds were attached with guar in each plant pillow between paired germination wicks. All plant rooting pillows with attached seeds were kept dry in heat sealed, gas-impermeable Tedlar bags until test initiation on the ISS.\n\nEach experiment began with six rooting pillows. Germinated seeds were thinned to one plant per pillow at day 7.",
+    "metadata": {
+      "source_id": "khodadad2020",
+      "section": "ISS Red Romaine Lettuce — Source Excerpts for RAG",
+      "subsection": "Seed Preparation and Thinning After Germination",
+      "source_url": "https://doi.org/10.3389/fpls.2020.00199",
+      "source_location": "§Materials and Methods, p. 3",
+      "source_file": "ISS_red_romaine_lettuce_RAG.md",
+      "kind": "action",
+      "source_license": "CC BY 4.0",
+      "simulator_application_ko": "파우치당 발아 개체가 여러 개일 때 솎아 한 개체를 남기는 선택지의 근거. Day 7은 실험 일정.",
+      "interpretation_note_en": "Day 7 and one plant per pillow describe the procedure used in these trials."
+    }
+  },
+  {
+    "id": "veggie-light-setting",
+    "text": "ISS Red Romaine Lettuce — Source Excerpts for RAG\nLED Placement, Light Intensity, and Photoperiod\n\nThe Veggie baseplate was positioned 30.5–31.75 cm below the LED light array to provide approximately 200 µmol·m²·s⁻¹ of photosynthetically active radiation at the surface of the pillows in the center of the Veggie unit at a ratio of 12 red (630 nm): 3 Blue (455 nm): 1 green (530 nm). A photoperiod was set to 16 h light/8 h dark.",
+    "metadata": {
+      "source_id": "khodadad2020",
+      "section": "ISS Red Romaine Lettuce — Source Excerpts for RAG",
+      "subsection": "LED Placement, Light Intensity, and Photoperiod",
+      "source_url": "https://doi.org/10.3389/fpls.2020.00199",
+      "source_location": "§Materials and Methods, p. 4",
+      "source_file": "ISS_red_romaine_lettuce_RAG.md",
+      "kind": "action",
+      "source_license": "CC BY 4.0",
+      "simulator_application_ko": "이 실험의 조명 설정값으로 사용. 원문에는 광량 단위의 면적 지수가 m²로 인쇄되어 있다. 한국어 번역에서는 광자속밀도의 통상 표기인 m⁻²로 적었다. 12:3:1은 논문이 제시한 LED 비율이며 색별 광량 비율로 별도 환산하지 않는다.",
+      "interpretation_note_en": "The paper prints the area exponent as m². The usual unit of photon flux density is µmol·m⁻²·s⁻¹. These are experiment settings; the 12:3:1 LED ratio does not specify photon flux by color."
+    }
+  },
+  {
+    "id": "veggie-monitoring-location",
+    "text": "ISS Red Romaine Lettuce — Source Excerpts for RAG\nTemperature and Relative Humidity Inside Veggie\n\nWithin a Veggie chamber, conditions such as humidity and temperature can vary from ISS conditions outside the chamber, for example, the temperature and humidity inside the Veggie tend to be slightly elevated compared to the open cabin air. These differences may have an impact on the elemental, nutritional and microbiological components of the plant.\n\nEnvironmental conditions from the three experiments are summarized in Supplementary Table S1. Both the VEG-01A and part of the VEG-03A experiment on ISS had data collected inside the Veggie chamber using a temperature and relative humidity data logger.",
+    "metadata": {
+      "source_id": "khodadad2020",
+      "section": "ISS Red Romaine Lettuce — Source Excerpts for RAG",
+      "subsection": "Temperature and Relative Humidity Inside Veggie",
+      "source_url": "https://doi.org/10.3389/fpls.2020.00199",
+      "source_location": "§Introduction, p. 2 / §Materials and Methods, p. 4",
+      "source_file": "ISS_red_romaine_lettuce_RAG.md",
+      "kind": "action",
+      "source_license": "CC BY 4.0",
+      "simulator_application_ko": "챔버 내부 측정값을 확인하는 선택지에 사용. 첨부 본문이 가리키는 상세 실험값은 보충 표 S1에 있으며 이 발췌에 포함하지 않았다.",
+      "interpretation_note_en": "Chamber readings can differ from cabin readings. The attached main article refers to Supplementary Table S1 for environmental measurements."
+    }
+  },
+  {
+    "id": "veggie-fan-restart-moisture",
+    "text": "ISS Red Romaine Lettuce — Source Excerpts for RAG\nFan Failure After a Power Cycle and Early Excess Moisture\n\nPoor air circulation can cause persistent droplets of moisture on the surface of a leaf due to transpiration producing a micro environment favorable for microbial proliferation. In the case of the three Veggie plantings on the ISS, environmental data collected by HOBO data recorders (Supplementary Table S1) showed that temperature and humidity were slightly higher inside the Veggie chamber during the first 22 days of VEG-03A growth than the other two Veggie tests. Additionally, germinating seedlings in the VEG-03A test had excess moisture in the early period of growth, likely due to a fan malfunction, when compared to the VEG-01A and VEG-01B plants. It was during this experiment that our team identified a consistent anomaly with the Veggie hardware – specifically that when power is cycled to the hardware, upon restarting the fan will read “low” but it will actually be off. This problem also led to issues of excess moisture in an earlier Zinnia test but a repetition of this with lettuce confirmed the anomaly.\n\nLogged data from VEG-03A were not collected for the duration of the 64 days experiment so it is speculative to conclude any correlation between microbial counts and Veggie chamber conditions.",
+    "metadata": {
+      "source_id": "khodadad2020",
+      "section": "ISS Red Romaine Lettuce — Source Excerpts for RAG",
+      "subsection": "Fan Failure After a Power Cycle and Early Excess Moisture",
+      "source_url": "https://doi.org/10.3389/fpls.2020.00199",
+      "source_location": "§Discussion, p. 9",
+      "source_file": "ISS_red_romaine_lettuce_RAG.md",
+      "kind": "action",
+      "source_license": "CC BY 4.0",
+      "simulator_application_ko": "전원 재시작 이력이 있거나 잎에 물방울이 계속 보일 때 팬의 실제 작동을 확인하는 선택지에 사용. 특정 습도에서의 발병률이나 팬 조작의 개선 효과를 이 실험에서 계산할 수 없음.",
+      "interpretation_note_en": "In the simulator, a recent power cycle or persistent leaf droplets can trigger an option to check actual airflow. The early excess moisture was attributed to a likely fan malfunction, and the study did not establish a microbial response curve."
+    }
+  },
+  {
+    "id": "veggie-manual-watering",
+    "text": "ISS Red Romaine Lettuce — Source Excerpts for RAG\nEarly Water Shortage and Manual Watering\n\nIn contrast, VEG-01A and VEG-01B tests had no fan issues, but instead the plants had some periods of low water early on (see Massa et al., 2017a). Given that Veggie is a manually watered system and that fluid behavior in microgravity differs considerably from that on Earth, these early Veggie experiments involved considerable variation in fluid addition as both the ground teams and the astronauts struggled to effectively water the crops.",
+    "metadata": {
+      "source_id": "khodadad2020",
+      "section": "ISS Red Romaine Lettuce — Source Excerpts for RAG",
+      "subsection": "Early Water Shortage and Manual Watering",
+      "source_url": "https://doi.org/10.3389/fpls.2020.00199",
+      "source_location": "§Discussion, p. 9",
+      "source_file": "ISS_red_romaine_lettuce_RAG.md",
+      "kind": "action",
+      "source_license": "CC BY 4.0",
+      "simulator_application_ko": "초기 생육 상태에 따라 물 공급 상태를 살피는 근거. 1회 급수량과 급수 주기는 별도 출처에서 확인해야 함.",
+      "interpretation_note_en": "This evidence supports checking water delivery. The excerpt gives no volume or interval for a watering action."
+    }
+  },
+  {
+    "id": "veggie-single-harvest",
+    "text": "ISS Red Romaine Lettuce — Source Excerpts for RAG\nSingle Harvest on Day 33\n\nVEG-01A and B were harvested after 33 days of growth using sanitized scissors to remove the leaves (Table 1).",
+    "metadata": {
+      "source_id": "khodadad2020",
+      "section": "ISS Red Romaine Lettuce — Source Excerpts for RAG",
+      "subsection": "Single Harvest on Day 33",
+      "source_url": "https://doi.org/10.3389/fpls.2020.00199",
+      "source_location": "§Materials and Methods, p. 4",
+      "source_file": "ISS_red_romaine_lettuce_RAG.md",
+      "kind": "action",
+      "source_license": "CC BY 4.0",
+      "simulator_application_ko": "일괄 수확의 실험 사례. 33일 차를 모든 생육 조건에 적용하는 성숙 기준으로 사용하지 않는다.",
+      "interpretation_note_en": "Day 33 is the observed VEG-01A/01B harvest timing, not a general maturity threshold."
+    }
+  },
+  {
+    "id": "veggie-sequential-harvest-methods",
+    "text": "ISS Red Romaine Lettuce — Source Excerpts for RAG\nSequential Leaf Harvesting and Sample Storage\n\nMultiple plantings were grown on ISS and harvested using either a single, final harvest, or sequential harvests in which several mature leaves were removed from the plants at weekly intervals.\n\nVEG-03A leaves were harvested sequentially starting at 33 days followed by 3 weekly harvests. Harvested leaves from each plant were wrapped in foil and placed into a −80 °C freezer. The first, third, and half of the fourth harvests were consumed by the crew. Only the 2nd harvest and the remaining leaves (approximately half of the total leaves) of the final harvest from VEG-03A were stored for sample return.",
+    "metadata": {
+      "source_id": "khodadad2020",
+      "section": "ISS Red Romaine Lettuce — Source Excerpts for RAG",
+      "subsection": "Sequential Leaf Harvesting and Sample Storage",
+      "source_url": "https://doi.org/10.3389/fpls.2020.00199",
+      "source_location": "§Abstract, p. 1 / §Materials and Methods, p. 4",
+      "source_file": "ISS_red_romaine_lettuce_RAG.md",
+      "kind": "action",
+      "source_license": "CC BY 4.0",
+      "simulator_application_ko": "마지막에 한 번 수확하는 경로와 성숙한 잎을 여러 차례 나누어 수확하는 경로가 기록돼 있다. VEG-03A 첫 수확일은 방법 절(p. 4)의 33일 차와 고찰(p. 12)의 38일 차가 달라 고정 날짜로 쓰지 않는다.",
+      "interpretation_note_en": "The abstract supports a sequential option that removes several mature leaves. VEG-03A first-harvest timing conflicts between Methods (day 33) and Discussion (day 38). Treat both as reported statements, not a fixed trigger."
+    }
+  },
+  {
+    "id": "veggie-sequential-harvest-calendar",
+    "text": "ISS Red Romaine Lettuce — Source Excerpts for RAG\nConflicting VEG-03A Harvest Schedules\n\nAs described in section “Materials and Methods,” there were four repeated harvests (38, 45, 59, and 64 days after initiation) of this experiment and only two (day 45 and day 64) were returned to earth.\n\nVEG-03A leaves were harvested sequentially starting at 33 days followed by 3 weekly harvests.",
+    "metadata": {
+      "source_id": "khodadad2020",
+      "section": "ISS Red Romaine Lettuce — Source Excerpts for RAG",
+      "subsection": "Conflicting VEG-03A Harvest Schedules",
+      "source_url": "https://doi.org/10.3389/fpls.2020.00199",
+      "source_location": "§Discussion, p. 12 / §Materials and Methods, p. 4",
+      "source_file": "ISS_red_romaine_lettuce_RAG.md",
+      "kind": "context",
+      "source_license": "CC BY 4.0",
+      "simulator_application_ko": "표 1(p. 3)은 2016-10-25 시작, 2차 2016-12-09(45일 차), 4차 2016-12-28(64일 차)을 기재. 1차 수확일과 주간 간격이 본문에서 충돌하므로, 이 PDF만으로 VEG-03A의 첫 수확일이나 수확 간격을 확정하지 않는다.",
+      "interpretation_note_en": "Table 1 corroborates the second and fourth dates: December 9 and 28, 2016, or days 45 and 64 after October 25. The first date and spacing between all harvests are inconsistent across the article."
+    }
+  },
+  {
+    "id": "veggie-sequential-harvest-microbial-outcomes",
+    "text": "ISS Red Romaine Lettuce — Source Excerpts for RAG\nObserved Leaf Bacteria and Fungi Across Sequential Harvests\n\nAn increase between the 2nd and 4th harvests was not seen in bacterial counts on the leaves, however, fungal counts in the flight leaves were significantly higher in the 4th harvest when compared to the 2nd harvest (P = 0.0002) (Figure 3).\n\nThe bacterial counts on lettuce leaves grown on ISS in VEG-01A, B and both harvests from VEG-03A were relatively low on average, 3.53, 4.86, 2.89, and 2.14 log₁₀ CFU/g respectively (Figure 2), when compared to farm or market produce counts of similar type (Valentin-Bon and Jacobson, 2008; Rastogi et al., 2012; Jackson et al., 2013; Holvoet et al., 2015; Wood et al., 2015; Hagenmair and Baker, 2016; Oyinlola et al., 2017; Fröhling et al., 2018; Zhang et al., 2018).",
+    "metadata": {
+      "source_id": "khodadad2020",
+      "section": "ISS Red Romaine Lettuce — Source Excerpts for RAG",
+      "subsection": "Observed Leaf Bacteria and Fungi Across Sequential Harvests",
+      "source_url": "https://doi.org/10.3389/fpls.2020.00199",
+      "source_location": "§Results, p. 6",
+      "source_file": "ISS_red_romaine_lettuce_RAG.md",
+      "kind": "outcome",
+      "source_license": "CC BY 4.0",
+      "simulator_application_ko": "VEG-03A의 2차·4차 수확에서 관측한 값. 원문은 진균 결과에 그림 3을 인용하지만, 실제 잎 그래프는 그림 2B(p. 7)다. 수확 횟수만으로 다음 작물의 진균 수나 오염 여부를 예측할 수 없음.",
+      "interpretation_note_en": "These are observed leaf outcomes for the reported experiments. Figure 2B on p. 7 shows the leaf fungal counts, although the quoted Results sentence cites Figure 3, which shows roots."
+    }
+  },
+  {
+    "id": "veggie-food-safety-screen",
+    "text": "ISS Red Romaine Lettuce — Source Excerpts for RAG\nScreening for Selected Foodborne Pathogens on Leaves\n\nScreening for potential food borne pathogens, E. coli, Salmonella sp., and S. aureus on the leaf tissue yielded negative results. These screening results were corroborated by NGS data.\n\nBacterial and fungal counts on fresh plant material are not necessarily an indication of the food quality and microbiological safety of the item and vary depending on the type of plant (Leff and Fierer, 2013; Qadri et al., 2015).",
+    "metadata": {
+      "source_id": "khodadad2020",
+      "section": "ISS Red Romaine Lettuce — Source Excerpts for RAG",
+      "subsection": "Screening for Selected Foodborne Pathogens on Leaves",
+      "source_url": "https://doi.org/10.3389/fpls.2020.00199",
+      "source_location": "§Results, p. 6 / §Discussion, p. 9",
+      "source_file": "ISS_red_romaine_lettuce_RAG.md",
+      "kind": "outcome",
+      "source_license": "CC BY 4.0",
+      "simulator_application_ko": "논문 시료의 검사 결과와 검사 항목에 한정. 수확한 작물에 대한 무검사 섭취 허용 규칙으로 사용하지 않는다.",
+      "interpretation_note_en": "The result applies to the tested leaf samples and named targets. It is not a rule permitting consumption of any untested harvest."
+    }
+  },
+  {
+    "id": "veggie-leaf-elemental-content",
+    "text": "ISS Red Romaine Lettuce — Source Excerpts for RAG\nElemental Content of Harvested Leaves\n\nLeaf tissue from flight and ground experiments were analyzed for changes in elemental composition (Table 7). There was no significant differences between ground and flight samples within each experiment, however when comparing among all three experiments, Fe and K content were significantly lower in VEG-03A samples compared to VEG-01A and VEG-01B (Fe, P ≤ 0.001; K, P ≤ 0.0001). On the other hand, Na content was found to be significantly higher in VEG-01B compared to VEG-01A or VEG-03A (P ≤ 0.0001). Phosphate (P) measured among all three experiments showed that VEG-01B had higher P contents than VEG-01A and VEG-03A (P ≤ 0.05). Similarly, sulfate measured as S and Zn contents were statistically higher in VEG-01B compared to either VEG-01A or VEG-03A (S, P ≤ 0.05; Zn, P ≤ 0.0001). No significant differences were observed in either Ca, Mg, or Mn content.",
+    "metadata": {
+      "source_id": "khodadad2020",
+      "section": "ISS Red Romaine Lettuce — Source Excerpts for RAG",
+      "subsection": "Elemental Content of Harvested Leaves",
+      "source_url": "https://doi.org/10.3389/fpls.2020.00199",
+      "source_location": "§Results, p. 8",
+      "source_file": "ISS_red_romaine_lettuce_RAG.md",
+      "kind": "outcome",
+      "source_license": "CC BY 4.0",
+      "simulator_application_ko": "영양 결과 설명에 사용. 실험 간 차이로부터 미세중력, 급수 또는 반복 수확 중 하나의 효과를 추정할 수 없음.",
+      "interpretation_note_en": "The significant differences are between experiments. The paper does not establish an effect attributable to microgravity, watering, or sequential harvest alone."
+    }
+  },
+  {
+    "id": "veggie-leaf-phenolics-orac",
+    "text": "ISS Red Romaine Lettuce — Source Excerpts for RAG\nTotal Phenolics, Anthocyanins, and Antioxidant Capacity\n\nAs a measure of antioxidant capacity, total phenolics, anthocyanins and oxygen radical absorbance capacity (ORAC) were measured on lettuce leaf tissue, flight and ground samples from all three tests (Table 8). Comparing total phenolics, VEG-03A with 15.0 (ground) and 19.6 (flight) mg/g of dry weight (gallic acid equivalents) had the statistically lowest amounts when compared to either VEG-01A or VEG-01B (P ≤ 0.001). Anthocyanins measured as cyanidin-3-glucoside equivalents showed no difference among all three experiments compared.\n\nSimilarly, ORAC units measured among all three experiments did not exhibit any observable variance.\n\nAgain, there are not enough data to make any conclusions about the effects of the sequential harvesting method on plant ionome or phenolic content and more robust experiments are needed.",
+    "metadata": {
+      "source_id": "khodadad2020",
+      "section": "ISS Red Romaine Lettuce — Source Excerpts for RAG",
+      "subsection": "Total Phenolics, Anthocyanins, and Antioxidant Capacity",
+      "source_url": "https://doi.org/10.3389/fpls.2020.00199",
+      "source_location": "§Results, p. 8 / §Discussion, p. 13",
+      "source_file": "ISS_red_romaine_lettuce_RAG.md",
+      "kind": "outcome",
+      "source_license": "CC BY 4.0",
+      "simulator_application_ko": "관측된 영양 결과 설명에 사용. p. 8 본문은 총 페놀 비교를 P ≤ 0.001로 기재하고, p. 12 표 8은 VEG-03A 값에 P ≤ 0.0001을 뜻하는 별표 4개를 표시한다. 비교 유의성 설명에는 출처를 구분하고, 이 값으로 선택지별 영양 변화량을 만들지 않는다.",
+      "interpretation_note_en": "The Results text gives P ≤ 0.001 for total phenolics; Table 8 marks VEG-03A with four asterisks (P ≤ 0.0001). The observations do not quantify an effect of sequential harvest."
+    }
+  },
+  {
+    "id": "stutte2022-pressure-treatments",
+    "text": "Growing red-leaf lettuce under reduced atmospheric pressure\nStudy scope and total-pressure treatments\n\nThe three treatment conditions were 1, 2/3 and 1/3 ambient atmospheric pressures, which correspond to 97 kPa, 66 kPa, and 33 kPa respectively (Table 1).\n\nEnglish data — Table 1\n\n| Treatment label | Measured total pressure (kPa) | Air temperature (°C) | Relative humidity (%) | CO₂ (kPa) | O₂ (kPa) |\n|---|---:|---:|---:|---:|---:|\n| 97 kPa | 96.1 ± 0.32 | 21.8 ± 0.00 | 61.6 ± 0.89 | 0.1203 ± 0.0006 | 21.1 ± 0.2 |\n| 67 kPa | 65.0 ± 0.56 | 21.8 ± 0.03 | 62.6 ± 1.06 | 0.1250 ± 0.0009 | 21.0 ± 0.1 |\n| 33 kPa | 32.6 ± 0.03 | 21.9 ± 0.09 | 61.9 ± 1.67 | 0.1259 ± 0.0002 | 21.1 ± 0.2 |\n\nThe experiment was conducted in ground-based low-pressure chambers at the University of Guelph. Section 2.1 calls the middle group 66 kPa, while Table 1 labels it 67 kPa and reports a measured mean of 65.0 kPa. The ambient control is labeled 97 kPa in Table 1 and described as 96 kPa in the abstract. Table 1 reports means of three replicates and specifies that its CO₂ data were normalized to 1 atm (101 kPa) and that CO₂ was uncontrolled during the dark cycle.",
+    "metadata": {
+      "source_id": "stutte2022",
+      "section": "Growing red-leaf lettuce under reduced atmospheric pressure",
+      "subsection": "Study scope and total-pressure treatments",
+      "source_url": "https://doi.org/10.1016/j.lssr.2022.06.001",
+      "source_location": "p. 39, §2.1; p. 40, Table 1",
+      "source_file": "lettuce_low_pressure_RAG.md",
+      "simulator_application_ko": "**압력 설정을 고를 수 있고, 적상추 수확 무게가 목표임**\n\n현지 대기압 대조군을 유지한다. 저압 조건을 비교하려면 67 또는 33 kPa 처리군을 선택한다."
+    }
+  },
+  {
+    "id": "stutte2022-sowing-thinning",
+    "text": "Growing red-leaf lettuce under reduced atmospheric pressure\nSowing, germination and thinning after 72 hours\n\nFor all pressure treatments, three seeds per position were planted and allowed to germinate for 72 h under ambient (~97 kPa) pressure, at which time the plants were thinned to one plant per position, and the designated pressure treatment (33 kPa, 66 kPa, or 97 kPa) imposed. This protocol ensured a uniform population of developing seedlings for each treatment.\n\nPressure treatments for ‘Outredgeous’ and ‘Flandria’ began 3 days after planting and continued for the remaining 18 days until harvest on day 21.",
+    "metadata": {
+      "source_id": "stutte2022",
+      "section": "Growing red-leaf lettuce under reduced atmospheric pressure",
+      "subsection": "Sowing, germination and thinning after 72 hours",
+      "source_url": "https://doi.org/10.1016/j.lssr.2022.06.001",
+      "source_location": "p. 39, §2.2; p. 42, §4",
+      "source_file": "lettuce_low_pressure_RAG.md",
+      "simulator_application_ko": "**파종 3일 차, 한 자리에 여러 유묘가 있음**\n\n자리마다 유묘 한 포기만 남긴다. 이어서 시나리오에 지정된 총압을 적용한다."
+    }
+  },
+  {
+    "id": "stutte2022-rockwool-spacing",
+    "text": "Growing red-leaf lettuce under reduced atmospheric pressure\nRockwool substrate, recirculating hydroponics and plant spacing\n\nAll plants were grown in 140 × 40 cm stainless steel troughs in a rockwool substrate (Grodan™, Coppell, TX) using a recirculating nutrient film technique delivery system. A 5 cm wide x 3 cm deep “channel” was cut into the bottom of the rockwool to promote nutrient solution flow. The rockwool was rinsed with DI water prior to use to remove particulate material from the substrate.\n\n‘Outredgeous’ was spaced in the rockwool substrate at 15 cm centers within and between troughs, and ‘Flandria’ was spaced at 12 cm centers within and between troughs. Stainless steel plates were placed over the rockwool between plants to minimize algae growth and reduce evaporation rates (Fig. 1B).",
+    "metadata": {
+      "source_id": "stutte2022",
+      "section": "Growing red-leaf lettuce under reduced atmospheric pressure",
+      "subsection": "Rockwool substrate, recirculating hydroponics and plant spacing",
+      "source_url": "https://doi.org/10.1016/j.lssr.2022.06.001",
+      "source_location": "p. 39, §2.2",
+      "source_file": "lettuce_low_pressure_RAG.md"
+    }
+  },
+  {
+    "id": "stutte2022-light-temperature-gas",
+    "text": "Growing red-leaf lettuce under reduced atmospheric pressure\nLight, temperature and gas partial pressures\n\nLighting was provided from six 1000 W metal halide (MH) (P.L. Light Systems, Beamsville, ON, Canada) lamps, which were cycled to provide a 16 h light/08-h dark photoperiod at 300 μmol m⁻² s⁻¹ PPF (17.3 mol m⁻² d⁻¹). Air temperatures were maintained at a constant 22 °C; Vapor Pressure Deficit (VPD) was maintained at a constant 0.9 kPa (~ 62% RH) for the duration of the experiment (Table 1).\n\nCO₂ was maintained at 1200 μ mol⁻¹ (0.12 kPa) partial pressure, and O₂ was maintained at ~21 kPa partial pressure in all chambers.\n\nCO₂ concentration was not controlled during the dark cycle.\n\nThe abstract lists a daily light integral of 17.2 mol m⁻² d⁻¹, and §2.1 lists 17.3 mol m⁻² d⁻¹. Oxygen accounted for about 63.5% of total pressure in the nominal 33 kPa treatment. The authors report that the effect of that O₂ percentage is unknown. Total pressure varied across treatments while O₂ partial pressure was held near 21 kPa. The paper did not test a pressure drop with the O₂ fraction kept at 21%.",
+    "metadata": {
+      "source_id": "stutte2022",
+      "section": "Growing red-leaf lettuce under reduced atmospheric pressure",
+      "subsection": "Light, temperature and gas partial pressures",
+      "source_url": "https://doi.org/10.1016/j.lssr.2022.06.001",
+      "source_location": "p. 39, §2.1; p. 40, Table 1 note; p. 42, §4",
+      "source_file": "lettuce_low_pressure_RAG.md"
+    }
+  },
+  {
+    "id": "stutte2022-nutrient-solution",
+    "text": "Growing red-leaf lettuce under reduced atmospheric pressure\nNutrient solution pH, EC and reservoir replenishment\n\nSolution was automatically controlled to near 5.8 pH with additions of dilute nitric acid (0.4 M HNO₃). Water depletion from the nutrient reservoirs due to evapotranspiration was monitored and condensate added back to the reservoir.\n\nBoth cultivars received a modified half-strength Hoagland’s nutrient solution in this recirculating rockwool NFT system. Electrical conductivity (EC) was monitored and maintained near 1200 μS cm⁻¹ (1.2 dS m⁻¹) by adding a complete stock solution. These values describe the experimental hydroponic setup.",
+    "metadata": {
+      "source_id": "stutte2022",
+      "section": "Growing red-leaf lettuce under reduced atmospheric pressure",
+      "subsection": "Nutrient solution pH, EC and reservoir replenishment",
+      "source_url": "https://doi.org/10.1016/j.lssr.2022.06.001",
+      "source_location": "pp. 39–40, §2.2; p. 40, Table 1",
+      "source_file": "lettuce_low_pressure_RAG.md",
+      "simulator_application_ko": "**저압 재배 중 저장조 수위가 낮아짐**\n\n저장조 수위와 양액 EC를 확인한다. 실험 절차를 따르는 시나리오라면 회수한 응축수를 보충한다."
+    }
+  },
+  {
+    "id": "stutte2022-harvest",
+    "text": "Growing red-leaf lettuce under reduced atmospheric pressure\nDay-21 harvest and chamber opening\n\nPlants were harvested at 21-d after planting (DAP). At harvest, chamber pressure was slowly returned to ambient prior to opening (Fig. 1C).\n\nAt harvest, canopy area (calculated from length and width), plant height, leaf area, and fresh mass were determined for each plant.",
+    "metadata": {
+      "source_id": "stutte2022",
+      "section": "Growing red-leaf lettuce under reduced atmospheric pressure",
+      "subsection": "Day-21 harvest and chamber opening",
+      "source_url": "https://doi.org/10.1016/j.lssr.2022.06.001",
+      "source_location": "p. 40, §§2.3.1–2.3.2",
+      "source_file": "lettuce_low_pressure_RAG.md",
+      "simulator_application_ko": "**파종 21일 차, 저압 챔버에서 수확하려 함**\n\n챔버 압력을 현지 대기압까지 서서히 되돌린 뒤 열고 수확한다."
+    }
+  },
+  {
+    "id": "stutte2022-outredgeous-growth",
+    "text": "Growing red-leaf lettuce under reduced atmospheric pressure\nRed-leaf ‘Outredgeous’ harvest mass and leaf area under low pressure\n\nThe reduced growth of ‘Outredgeous’ was quantified. There was a 22.5% reduction in fresh mass, 14.3% reduction in dry mass, 14.5% reduction in plant height, 11% reduction in canopy coverage, 20% reduction in leaf area, and 15% reduction in leaf area index as the pressure was reduced from ambient (97 kPa) to 2/3 ambient (67 kPa) (Table 2). Reducing the pressure from ambient (97 kPa) to 1/3 ambient (33 kPa) pressure had even greater effect, with a 41% reduction in fresh mass, 31% reduction in dry mass, 25.7% reduction in plant height, 30.3% reduction in canopy coverage, and 38.2% reduction in leaf area.\n\nEnglish data — Table 2, means ± SE, three replicates\n\n| Treatment label | Fresh mass (g) | Dry mass (g) | Plant height (mm) | Canopy area (cm²) | Total leaf area (cm²) | Leaf area index |\n|---|---:|---:|---:|---:|---:|---:|\n| 97 kPa | 8.0 ± 0.7 (a) | 0.42 ± 0.07 (a) | 66.2 ± 6.9 (a) | 181 ± 25.4 (a) | 217 ± 14.2 (a) | 1.20 ± 0.10 (a) |\n| 67 kPa | 6.2 ± 1.5 (a) | 0.36 ± 0.08 (a) | 56.6 ± 7.9 (a) | 161 ± 30.6 (a) | 172 ± 39.7 (a) | 1.02 ± 0.10 (a) |\n| 33 kPa | 4.7 ± 0.4 (b) | 0.29 ± 0.02 (a) | 49.2 ± 1.8 (a) | 126 ± 6.7 (a) | 134 ± 4.9 (a) | 1.07 ± 0.08 (a) |\n\nThese are day-21 observations from one ground-chamber experiment with ~21 kPa O₂ partial pressure. The abstract describes the fresh-mass and leaf-area changes as statistically nonsignificant, while Table 2 labels 33 kPa fresh mass “b” and the other two “a”; its footnote defines different letters as P < 0.05. The Results and Discussion also contain inconsistent significance notation. The §3.1 linear test for plant height is reported separately (p = 0.046). The fresh-mass and leaf-area values are best retrieved as observed means with this reporting discrepancy attached.",
+    "metadata": {
+      "source_id": "stutte2022",
+      "section": "Growing red-leaf lettuce under reduced atmospheric pressure",
+      "subsection": "Red-leaf ‘Outredgeous’ harvest mass and leaf area under low pressure",
+      "source_url": "https://doi.org/10.1016/j.lssr.2022.06.001",
+      "source_location": "p. 37, Abstract; pp. 40–41, §3.1 and Table 2; p. 42, §4",
+      "source_file": "lettuce_low_pressure_RAG.md"
+    }
+  },
+  {
+    "id": "stutte2022-appearance-chlorophyll",
+    "text": "Growing red-leaf lettuce under reduced atmospheric pressure\nVisual appearance and chlorophyll under low pressure\n\nEven though the plants appeared smaller under reduced atmospheric pressure, they appeared healthy and showed no visual signs of tissue damage. In addition, the purple/red pigmentation (anthocyanins) of ‘Outredgeous’ appeared more intense under hypobaric than under ambient pressure (Fig. 2).\n\nThere was no effect of hypobaric pressures down to 1/3 atmosphere (33 kPa) on the apparent chlorophyll content, as determined with the Minolta SPAD values, of either ‘Outredgeous’ or ‘Flandria’ cultivars (Tables 4 and 5).\n\nAt day 21, ‘Outredgeous’ mean redness (CIE a*) was 3.57 at 97 kPa, 4.55 at 67 kPa and 5.01 at 33 kPa. Table 4 assigns the same statistical group letter to all three redness means. The absence of visible damage was a visual observation at harvest.",
+    "metadata": {
+      "source_id": "stutte2022",
+      "section": "Growing red-leaf lettuce under reduced atmospheric pressure",
+      "subsection": "Visual appearance and chlorophyll under low pressure",
+      "source_url": "https://doi.org/10.1016/j.lssr.2022.06.001",
+      "source_location": "p. 41, §§3.1–3.2, Fig. 2 and Tables 4–5",
+      "source_file": "lettuce_low_pressure_RAG.md",
+      "simulator_application_ko": "**33 kPa에서 재배한 적상추가 작고 붉게 보임**\n\n잎 면적과 생체중을 기록한다. 필요하면 색소 측정 결과를 비교한다."
+    }
+  },
+  {
+    "id": "stutte2022-anthocyanin-orac",
+    "text": "Growing red-leaf lettuce under reduced atmospheric pressure\n‘Outredgeous’ anthocyanin concentration and antioxidant capacity\n\nReducing atmospheric pressure trended toward increasing the concentration of anthocyanins in the red-leafed lettuce ‘Outredgeous’.\n\nThere was no statistical effect of pressure on the total antioxidant potential (ORAC) of the leaf of either cultivar.\n\nEnglish data — Tables 6 and 7, ‘Outredgeous’, means ± SE, three replicates\n\n| Treatment label | Anthocyanin (μg per g fresh mass) | ORAC (μmol Trolox equivalents per g fresh mass) |\n|---|---:|---:|\n| 97 kPa | 364 ± 32 | 16.8 ± 1.7 |\n| 67 kPa | 402 ± 60 | 16.4 ± 1.5 |\n| 33 kPa | 453 ± 36 | 17.0 ± 1.1 |\n\nAnthocyanin concentration was about 10.4% higher in the middle-pressure group and 24.5% higher at 33 kPa than in the ambient control. Table 6 reports means and standard errors without pairwise significance markers. Concentration is measured per gram of fresh mass; total anthocyanins per plant would require a separate calculation or measurement. An increase in concentration and a change in ORAC are separate outcomes.",
+    "metadata": {
+      "source_id": "stutte2022",
+      "section": "Growing red-leaf lettuce under reduced atmospheric pressure",
+      "subsection": "‘Outredgeous’ anthocyanin concentration and antioxidant capacity",
+      "source_url": "https://doi.org/10.1016/j.lssr.2022.06.001",
+      "source_location": "pp. 41–42, §3.3 and Tables 6–7; p. 42, §4",
+      "source_file": "lettuce_low_pressure_RAG.md"
+    }
+  },
+  {
+    "id": "stutte2022-flandria-comparison",
+    "text": "Growing red-leaf lettuce under reduced atmospheric pressure\nGreen ‘Flandria’ as a cultivar comparison\n\nIn contrast, the green bibb-type lettuce cultivar ‘Flandria’ had no statistically significant reduction in biometric parameters as the pressure was reduced from ambient (97 kPa) to 2/3 ambient (67 kPa) (Table 3).\n\nEnglish data — Tables 3, 6 and 7, ‘Flandria’, means ± SE, three replicates\n\n| Treatment label | Fresh mass (g) | Dry mass (g) | Total leaf area (cm²) | Anthocyanin (μg per g fresh mass) | ORAC (μmol Trolox equivalents per g fresh mass) |\n|---|---:|---:|---:|---:|---:|\n| 97 kPa | 7.3 ± 1.3 | 0.40 ± 0.09 | 139 ± 16.6 | 7.6 ± 1.6 | 10.9 ± 2.4 |\n| 67 kPa | 6.8 ± 0.5 | 0.38 ± 0.03 | 140 ± 14.7 | 6.3 ± 1.3 | 11.0 ± 1.9 |\n| 33 kPa | 5.3 ± 0.2 | 0.29 ± 0.04 | 97 ± 6.5 | 6.9 ± 0.1 | 10.3 ± 1.9 |\n\nThe three ‘Flandria’ pressure groups share the same letter for each biometric variable in Table 3. These cultivar-specific observations at day 21 should stay associated with ‘Flandria’ in retrieval.",
+    "metadata": {
+      "source_id": "stutte2022",
+      "section": "Growing red-leaf lettuce under reduced atmospheric pressure",
+      "subsection": "Green ‘Flandria’ as a cultivar comparison",
+      "source_url": "https://doi.org/10.1016/j.lssr.2022.06.001",
+      "source_location": "p. 41, §3.1 and Table 3; p. 42, Tables 6–7",
+      "source_file": "lettuce_low_pressure_RAG.md"
+    }
+  },
+  {
+    "id": "stutte2022-transpiration",
+    "text": "Growing red-leaf lettuce under reduced atmospheric pressure\nTranspiration observations under low pressure\n\nTranspiration rate was higher under 33 kPa and 66 kPa than under ambient pressure (data not shown), but water was not expected to have been limiting in the hydroponic troughs.\n\nThe paper provides no numeric transpiration rates or direct leaf-temperature measurements. It discusses possible links between increased evapotranspiration and plant responses as hypotheses. This passage can ground a monitoring option for reservoir water or solution EC in the simulator. It provides no dosing amount or adjustment interval.",
+    "metadata": {
+      "source_id": "stutte2022",
+      "section": "Growing red-leaf lettuce under reduced atmospheric pressure",
+      "subsection": "Transpiration observations under low pressure",
+      "source_url": "https://doi.org/10.1016/j.lssr.2022.06.001",
+      "source_location": "p. 42, §4",
+      "source_file": "lettuce_low_pressure_RAG.md",
+      "simulator_application_ko": "시뮬레이션에서 양액 저장조 수위나 EC를 확인하는 선택지의 근거로 쓸 수 있으며, 보충량이나 조절 주기를 계산할 수 있는 수치는 제공되지 않는다."
+    }
+  },
+  {
+    "id": "mickens2018-ground-conditions",
+    "text": "LED light recipes for Outredgeous red romaine lettuce\nBaseline conditions in the ground growth chamber\n\nNASA Kennedy Space Center tested seven fixed LED spectra on red romaine lettuce (*Lactuca sativa* cv. ‘Outredgeous’) in a ground growth chamber for 28 days. The study targeted future Advanced Plant Habitat (APH) experiments aboard the ISS. The chamber was held at 23 ± 0.4 °C, 65 ± 3% relative humidity, and 1,200 ± 60 ppm CO₂. Measured air speed ranged from about 0.5 to 1.0 m/s. The canopy PPFD target was about 180 µmol m⁻² s⁻¹ over 400–700 nm, with 18 h of light and 6 h of darkness daily (DLI ≈ 12 mol m⁻² day⁻¹).",
+    "metadata": {
+      "source_id": "mickens2018",
+      "section": "LED light recipes for Outredgeous red romaine lettuce",
+      "subsection": "Baseline conditions in the ground growth chamber",
+      "source_url": "https://doi.org/10.1016/j.lssr.2018.09.003",
+      "source_location": "Abstract, §§2.1 and 2.3",
+      "evidence_type": "experimental_setup"
+    }
+  },
+  {
+    "id": "mickens2018-sowing-and-thinning",
+    "text": "LED light recipes for Outredgeous red romaine lettuce\nSowing, germination, sub-irrigation, and thinning\n\nIn the ground chamber, four ‘Outredgeous’ seeds were surface-sown per pot on moist Arcillite. Each pot contained 500 mL of medium mixed with 18-6-8 controlled-release NPK fertilizer at 7.5 g per liter of dry medium. The pots sat in sub-irrigation trays containing about 1 cm of deionized water. For the first three days, the researchers used clear covers and misted with deionized water to promote germination. They measured tray water levels and logged the amount added daily. On day 7 they removed one plant per pot, choosing the weakest or an unsuccessfully germinated seedling. They harvested plants for growth measurements at 14, 21, and 28 DAS.",
+    "metadata": {
+      "source_id": "mickens2018",
+      "section": "LED light recipes for Outredgeous red romaine lettuce",
+      "subsection": "Sowing, germination, sub-irrigation, and thinning",
+      "source_url": "https://doi.org/10.1016/j.lssr.2018.09.003",
+      "source_location": "§§2.2 and 2.4",
+      "evidence_type": "experimental_protocol",
+      "simulator_application_ko": "저면관수, 분무, 솎기 수치는 지상 챔버 재현용 실험 절차에 해당한다."
+    }
+  },
+  {
+    "id": "mickens2018-led-spectra",
+    "text": "LED light recipes for Outredgeous red romaine lettuce\nSeven LED light recipes\n\nThe LED spectra tested on ‘Outredgeous’ red romaine lettuce were W (white control), RB (red + blue), WB (white + blue), WG (white + green), WR (white + red), WFR (white + far-red), and RGB + FR (red + green + blue + far-red, approximating natural sunlight). RB used 635 nm red and 460 nm blue. The supplemental peaks in WB, WG, WR, and WFR were about 460, 520, 635, and 745 nm, respectively. The custom RGB + FR recipe used peaks near 660/630 nm (red), 520 nm (green), 425 nm (blue), and 733 nm (far-red).\n\n| Recipe | Blue share | Green share | Red share | Mean PPFD (400–700 nm) | Far-red flux (700–800 nm) |\n| --- | ---: | ---: | ---: | ---: | ---: |\n| W | 20% | 48% | 32% | 180 ± 33 | 1 |\n| RB | 40% | 0% | 60% | 187 ± 34 | 0 |\n| WB | 43% | 34% | 23% | 178 ± 30 | 0.8 |\n| WG | 17% | 57% | 25% | 180 ± 35 | 0 |\n| WR | 16% | 38% | 46% | 178 ± 32 | 0 |\n| WFR | 20% | 48% | 32% | 185 ± 35 | 34 |\n| RGB + FR | 16% | 24% | 60% | 188 ± 28 | 36 |\n\nBoth flux columns use µmol m⁻² s⁻¹. Blue, green, and red shares are percentages within 400–700 nm, while far-red flux is reported separately. They describe the resulting spectrum.",
+    "metadata": {
+      "source_id": "mickens2018",
+      "section": "LED light recipes for Outredgeous red romaine lettuce",
+      "subsection": "Seven LED light recipes",
+      "source_url": "https://doi.org/10.1016/j.lssr.2018.09.003",
+      "source_location": "§2.3, Table 1 and Fig. 1",
+      "evidence_type": "experimental_setup"
+    }
+  },
+  {
+    "id": "mickens2018-early-growth",
+    "text": "LED light recipes for Outredgeous red romaine lettuce\nEarly growth at 7–14 days after sowing\n\nUnder white + green (WG), ‘Outredgeous’ seedlings showed earlier hypocotyl elongation and faster first true-leaf expansion by 7 DAS. At 14 DAS, WG shoot fresh mass was significantly above the white control, while red + blue (RB) was significantly below it. The other treatments showed no significant fresh-mass difference from the white control at 14 DAS.",
+    "metadata": {
+      "source_id": "mickens2018",
+      "section": "LED light recipes for Outredgeous red romaine lettuce",
+      "subsection": "Early growth at 7–14 days after sowing",
+      "source_url": "https://doi.org/10.1016/j.lssr.2018.09.003",
+      "source_location": "§3.1 and Fig. 3(a)",
+      "evidence_type": "measured_result"
+    }
+  },
+  {
+    "id": "mickens2018-late-growth-and-yield",
+    "text": "LED light recipes for Outredgeous red romaine lettuce\nLate growth and harvest biomass at 21–28 days after sowing\n\nIn ‘Outredgeous’ red romaine lettuce, early growth under white + green (WG) slowed after 21 DAS. Under white + red (WR), shoot dry mass rose more rapidly late in the cycle (21–28 DAS). At the 28 DAS harvest, both WG and WR dry mass were statistically comparable to the white control (W). RGB + FR gave the highest shoot fresh mass and dry mass. Of the tested spectra, only RGB + FR (higher) and RB (lower) differed significantly from W in final shoot dry mass. RGB + FR had the greatest mean leaf area, with WFR in the same statistical group for that comparison.\n\n| Recipe | Shoot fresh mass (g) | Shoot dry mass (g) | Leaf area (cm²) |\n| --- | ---: | ---: | ---: |\n| W | 22.8 | 1.79 | 731.7 |\n| RB | 19.1 | 1.47 | 620.2 |\n| WB | 21.1 | 1.52 | 667.4 |\n| WG | 25.6 | 1.79 | 822.0 |\n| WR | 27.3 | 2.08 | 858.4 |\n| WFR | 26.2 | 1.91 | 935.1 |\n| RGB + FR | 30.1 | 2.55 | 1006.0 |\n\nValues are day-28 treatment means (n = 30 per treatment). For example, WR and RGB + FR shared a Tukey group for fresh mass, while they differed for dry mass.",
+    "metadata": {
+      "source_id": "mickens2018",
+      "section": "LED light recipes for Outredgeous red romaine lettuce",
+      "subsection": "Late growth and harvest biomass at 21–28 days after sowing",
+      "source_url": "https://doi.org/10.1016/j.lssr.2018.09.003",
+      "source_location": "§3.1, Table 2 and Figs. 3–4",
+      "evidence_type": "measured_result"
+    }
+  },
+  {
+    "id": "mickens2018-pigmentation-and-nutrients",
+    "text": "LED light recipes for Outredgeous red romaine lettuce\nLeaf pigmentation and nutrient concentrations\n\nAt 14 DAS, ‘Outredgeous’ leaves looked darker under WB and RB, both of which supplied at least 40% blue light within the 400–700 nm band. The authors describe the color response visually. At 28 DAS, WB had the highest reported leaf potassium concentration, and RB had the highest measured lutein concentration. Lutein concentrations under WB, WG, and WR were statistically comparable to W. RGB + FR had lower concentrations of the four displayed minerals (Ca, K, Mg, and P), and both WFR and RGB + FR had lower lutein concentrations than W. The nutrient figures report concentration per gram of dry tissue.",
+    "metadata": {
+      "source_id": "mickens2018",
+      "section": "LED light recipes for Outredgeous red romaine lettuce",
+      "subsection": "Leaf pigmentation and nutrient concentrations",
+      "source_url": "https://doi.org/10.1016/j.lssr.2018.09.003",
+      "source_location": "§§3.1–3.3, Figs. 2, 5–7 and §4",
+      "evidence_type": "measured_result, visual_observation"
+    }
+  },
+  {
+    "id": "mickens2018-far-red-morphology",
+    "text": "LED light recipes for Outredgeous red romaine lettuce\nLeaf and petiole responses under far-red recipes\n\nIn ‘Outredgeous’ red romaine lettuce, both WFR and RGB + FR produced wider shoots than white at 21 DAS. At 28 DAS, WFR produced the tallest shoots (26.5 cm), with elongated petioles and shoot dry mass statistically comparable to white. RGB + FR produced a large leaf area and the highest dry mass. The far-red fluxes were similar for the two recipes (34 and 36 µmol m⁻² s⁻¹), while their red-to-far-red ratios were 1.7 and 3.1, respectively.",
+    "metadata": {
+      "source_id": "mickens2018",
+      "section": "LED light recipes for Outredgeous red romaine lettuce",
+      "subsection": "Leaf and petiole responses under far-red recipes",
+      "source_url": "https://doi.org/10.1016/j.lssr.2018.09.003",
+      "source_location": "§§2.3 and 3.1, Tables 1–2 and Figs. 3(b) and 5",
+      "evidence_type": "measured_result"
+    }
+  },
+  {
+    "id": "mickens2018-light-switch-hypothesis",
+    "text": "LED light recipes for Outredgeous red romaine lettuce\nProposed light-recipe switches during the crop cycle\n\nThe authors suggest testing a switch from white + green (WG) to white + red (WR) or RGB + FR at 21 days after sowing to see whether final ‘Outredgeous’ yield improves. They also propose testing a switch from WB or RB to WR to balance yield and nutrient concentration. The experiment compared fixed, full-cycle light recipes, so the effects of mid-cycle switching remain untested in this study.",
+    "metadata": {
+      "source_id": "mickens2018",
+      "section": "LED light recipes for Outredgeous red romaine lettuce",
+      "subsection": "Proposed light-recipe switches during the crop cycle",
+      "source_url": "https://doi.org/10.1016/j.lssr.2018.09.003",
+      "source_location": "§4, Conclusion (PDF p. 9)",
+      "evidence_type": "author_hypothesis",
+      "original_excerpt_en": "It would also be informative to see if the lighting strategy could be switched from WG to WR or RGB + FR at 21 DAS",
+      "simulator_application_ko": "21일차 전환을 선택했을 때는 효과가 미확인 상태임을 표시한다. RGB + FR을 처음부터 유지한 처리군의 30.1 g 또는 2.55 g을 중간 전환 결과로 그대로 적용할 근거는 없다."
+    }
+  },
+  {
+    "id": "morsi2022-study-setting",
+    "text": "Controlled-Release Fertilizer and Repeated Harvests in Outredgeous Red Romaine Lettuce\nStudy Setting and Evidence Scope\n\n*Paraphrase*\n\nThe researchers grew Outredgeous red romaine lettuce (*Lactuca sativa* L.) in six ground-based BPSe growth units. A walk-in chamber reproduced temperature, humidity, and LED-lighting conditions similar to those in the ISS Veggie system. The fertilizer and harvest findings therefore come from a terrestrial Veggie analogue.",
+    "metadata": {
+      "source_id": "morsi2022",
+      "section": "Controlled-Release Fertilizer and Repeated Harvests in Outredgeous Red Romaine Lettuce",
+      "subsection": "Study Setting and Evidence Scope",
+      "source_url": "https://doi.org/10.1016/j.lssr.2021.12.001",
+      "source_location": "Abstract",
+      "source_file": "Morsi_2022_Outredgeous_RAG.md",
+      "evidence_type": "ground_analog"
+    }
+  },
+  {
+    "id": "morsi2022-arcillite-wick-irrigation",
+    "text": "Controlled-Release Fertilizer and Repeated Harvests in Outredgeous Red Romaine Lettuce\nArcillite Root Substrate and Wick Irrigation\n\n*Paraphrase*\n\nIn both ISS Veggie and the ground-based BPSe analogue, a wick uses capillary action to move water in one direction into the arcillite clay around the roots. The two controlled-release fertilizer blends tested on Outredgeous were incorporated into that substrate.",
+    "metadata": {
+      "source_id": "morsi2022",
+      "section": "Controlled-Release Fertilizer and Repeated Harvests in Outredgeous Red Romaine Lettuce",
+      "subsection": "Arcillite Root Substrate and Wick Irrigation",
+      "source_url": "https://doi.org/10.1016/j.lssr.2021.12.001",
+      "source_location": "Abstract",
+      "source_file": "Morsi_2022_Outredgeous_RAG.md",
+      "evidence_type": "ground_analog"
+    }
+  },
+  {
+    "id": "morsi2022-harvest-schedule",
+    "text": "Controlled-Release Fertilizer and Repeated Harvests in Outredgeous Red Romaine Lettuce\nThree Cut-and-Come-Again Harvests from the Same Plants\n\n*Verbatim*\n\nPlants were grown for 56 days with three “cut-and-come again” leaf harvests from the same plants.\n\n*Paraphrase*\n\nIn this ground-based Veggie analogue experiment, Outredgeous leaves were collected on days 28, 48, and 56 after planting. This cut-and-come-again method lets the plant continue growing after a leaf harvest. The researchers compared growth, yield, and leaf mineral composition between the two fertilizer treatments.",
+    "metadata": {
+      "source_id": "morsi2022",
+      "section": "Controlled-Release Fertilizer and Repeated Harvests in Outredgeous Red Romaine Lettuce",
+      "subsection": "Three Cut-and-Come-Again Harvests from the Same Plants",
+      "source_url": "https://doi.org/10.1016/j.lssr.2021.12.001",
+      "source_location": "Abstract",
+      "source_file": "Morsi_2022_Outredgeous_RAG.md",
+      "evidence_type": "ground_analog",
+      "simulator_application_ko": "- [실험 일정을 따르는 시나리오의 28일차 또는 48일차](#시뮬레이터-행동-후보-예시)"
+    }
+  },
+  {
+    "id": "morsi2022-fertilizer-growth-rate",
+    "text": "Controlled-Release Fertilizer and Repeated Harvests in Outredgeous Red Romaine Lettuce\nFertilizer Release Rates and Growth Between Harvests\n\n*Paraphrase*\n\nThe two fertilizer blends both included fast-release T70. One paired it with intermediate-release T100, and the other paired it with slower-release T180. Growth rates were comparable between treatments through the second harvest. Both treatments showed faster growth at the second harvest than at the first, followed by slower growth at the third. The late decline was more pronounced with the T180 blend.",
+    "metadata": {
+      "source_id": "morsi2022",
+      "section": "Controlled-Release Fertilizer and Repeated Harvests in Outredgeous Red Romaine Lettuce",
+      "subsection": "Fertilizer Release Rates and Growth Between Harvests",
+      "source_url": "https://doi.org/10.1016/j.lssr.2021.12.001",
+      "source_location": "Abstract",
+      "source_file": "Morsi_2022_Outredgeous_RAG.md",
+      "evidence_type": "ground_analog",
+      "simulator_application_ko": "- [재배 시작 전, 배지에 섞을 비료를 고르는 중](#시뮬레이터-행동-후보-예시)\n- [재생장 후반에 생장이 둔화되고 pH·EC는 실험의 정상 범위로 표시됨](#시뮬레이터-행동-후보-예시)"
+    }
+  },
+  {
+    "id": "morsi2022-leaf-mineral-trends",
+    "text": "Controlled-Release Fertilizer and Repeated Harvests in Outredgeous Red Romaine Lettuce\nLeaf Mineral Trends Across Repeated Harvests\n\n*Paraphrase*\n\nWith either fertilizer blend, successive harvests of Outredgeous showed lower tissue levels of nitrogen (N), phosphorus (P), and potassium (K), and higher levels of boron (B), zinc (Zn), and manganese (Mn).",
+    "metadata": {
+      "source_id": "morsi2022",
+      "section": "Controlled-Release Fertilizer and Repeated Harvests in Outredgeous Red Romaine Lettuce",
+      "subsection": "Leaf Mineral Trends Across Repeated Harvests",
+      "source_url": "https://doi.org/10.1016/j.lssr.2021.12.001",
+      "source_location": "Abstract",
+      "source_file": "Morsi_2022_Outredgeous_RAG.md",
+      "evidence_type": "ground_analog",
+      "simulator_application_ko": "- [재생장 후반에 생장이 둔화되고 pH·EC는 실험의 정상 범위로 표시됨](#시뮬레이터-행동-후보-예시)"
+    }
+  },
+  {
+    "id": "morsi2022-rootzone-ph-ec",
+    "text": "Controlled-Release Fertilizer and Repeated Harvests in Outredgeous Red Romaine Lettuce\nRoot-Zone pH, Electrical Conductivity, and Yield Decline\n\n*Paraphrase*\n\nDuring the ground-analogue trial, root-zone pH stayed within the expected range for nutrient availability. Electrical conductivity (EC) indicated neither an excess nor a depletion of salts in the root zone. The authors suggested that declines in macronutrients and increases in micronutrients within the plant tissue may have played a part in the decline in yield.",
+    "metadata": {
+      "source_id": "morsi2022",
+      "section": "Controlled-Release Fertilizer and Repeated Harvests in Outredgeous Red Romaine Lettuce",
+      "subsection": "Root-Zone pH, Electrical Conductivity, and Yield Decline",
+      "source_url": "https://doi.org/10.1016/j.lssr.2021.12.001",
+      "source_location": "Abstract",
+      "source_file": "Morsi_2022_Outredgeous_RAG.md",
+      "evidence_type": "ground_analog",
+      "simulator_application_ko": "- [재생장 후반에 생장이 둔화되고 pH·EC는 실험의 정상 범위로 표시됨](#시뮬레이터-행동-후보-예시)"
+    }
+  },
+  {
+    "id": "morsi2022-fertilizer-yield-comparison",
+    "text": "Controlled-Release Fertilizer and Repeated Harvests in Outredgeous Red Romaine Lettuce\nYield Over 56 Days and Final Regrowth Interval\n\n*Paraphrase*\n\nBoth controlled-release blends supported adequate Outredgeous yield over the 56-day ground-based trial. The blend containing intermediate-release T100 tended to produce a slightly greater yield, particularly in the final regrowth interval from day 48 to day 56. The authors described the mineral content associated with that formulation as adequate.",
+    "metadata": {
+      "source_id": "morsi2022",
+      "section": "Controlled-Release Fertilizer and Repeated Harvests in Outredgeous Red Romaine Lettuce",
+      "subsection": "Yield Over 56 Days and Final Regrowth Interval",
+      "source_url": "https://doi.org/10.1016/j.lssr.2021.12.001",
+      "source_location": "Abstract",
+      "source_file": "Morsi_2022_Outredgeous_RAG.md",
+      "evidence_type": "ground_analog",
+      "simulator_application_ko": "- [재배 시작 전, 배지에 섞을 비료를 고르는 중](#시뮬레이터-행동-후보-예시)"
+    }
+  },
+  {
+    "id": "veg01-setup",
+    "text": "VEG-01 적색 로메인 상추 재배 근거\nVeggie Setup and Initial Plant Pillow Watering\n\nAt the initiation of an experiment, the light intensity, duration, and fan speed are programmed. Plant pillows are removed from their packages and attached to the reservoir via elastic silicone bands. Pillows are hydrated with ISS potable water via a quick disconnect attachment leading to a drip ring inside each pillow. The Veggie bellows are closed and the reservoir is filled with water via an external port.",
+    "metadata": {
+      "source_id": "veg01",
+      "section": "VEG-01 적색 로메인 상추 재배 근거",
+      "subsection": "Veggie Setup and Initial Plant Pillow Watering",
+      "source_url": "https://doi.org/10.1515/opag-2017-0003",
+      "source_location": "§1, p. 35",
+      "simulator_application_ko": "파종 시작 시 장비와 패드를 준비하는 선택지의 근거."
+    }
+  },
+  {
+    "id": "veg01-wick-thinning",
+    "text": "VEG-01 적색 로메인 상추 재배 근거\nOpening Germination Wicks on Day 3 and Thinning Seedlings on Day 7\n\nPlant care operations include separating the germination wicks at three days after initiation to allow seedlings to emerge, thinning seedlings to one plant per pillow at seven days after initiation, and periodic watering and photographing.",
+    "metadata": {
+      "source_id": "veg01",
+      "section": "VEG-01 적색 로메인 상추 재배 근거",
+      "subsection": "Opening Germination Wicks on Day 3 and Thinning Seedlings on Day 7",
+      "source_url": "https://doi.org/10.1515/opag-2017-0003",
+      "source_location": "§1, p. 35",
+      "simulator_application_ko": "Day 3에는 심지를 벌린다. Day 7에는 유묘가 있는 패드에서 한 포기만 남기는 선택지를 제시할 수 있다."
+    }
+  },
+  {
+    "id": "veg01-light",
+    "text": "VEG-01 적색 로메인 상추 재배 근거\nVEG-01A/B Lighting Settings and Photoperiod\n\nLED lights were set to red and blue on high and green on, with the bellows baseplate positioned 30.5-31.75 cm below the light array to provide approximately 200 µmol·m²·s⁻¹ of photosynthetically active radiation at the surface of the pillows in the center of the Veggie unit at a ratio of 12 red (630 nm): 3 Blue (455 nm): 1 green (530 nm). A photoperiod was set to 16 h light / 8 h dark.\n\nThe VEG-01B test was initiated by ISS astronaut Scott Kelly in July, 2015, with the same lighting and photoperiod settings as VEG-01A.",
+    "metadata": {
+      "source_id": "veg01",
+      "section": "VEG-01 적색 로메인 상추 재배 근거",
+      "subsection": "VEG-01A/B Lighting Settings and Photoperiod",
+      "source_url": "https://doi.org/10.1515/opag-2017-0003",
+      "source_location": "§2.1, p. 35 / §2.2, p. 37",
+      "simulator_application_ko": "VEG-01 시나리오의 초기 설정값. 약 200은 장치 중앙 패드 표면에서의 조건이다. 영문 인용의 단위는 PDF 표기를 따랐고, 한국어에서는 PPFD의 표준 단위(m⁻²)를 사용했다."
+    }
+  },
+  {
+    "id": "veg01-water-a",
+    "text": "VEG-01 적색 로메인 상추 재배 근거\nVEG-01A Initial Water Volumes\n\nSeeds of red romaine lettuce (Lactuca sativa cv. ‘Outredgeous’) were initiated by Astronaut Steve Swanson following the installation of the Veggie hardware, with Steve adding between 100 and 150 mL of water to each plant pillow and 1020 mL of water to the reservoir.",
+    "metadata": {
+      "source_id": "veg01",
+      "section": "VEG-01 적색 로메인 상추 재배 근거",
+      "subsection": "VEG-01A Initial Water Volumes",
+      "source_url": "https://doi.org/10.1515/opag-2017-0003",
+      "source_location": "§2.1, p. 35",
+      "simulator_application_ko": "VEG-01A 첫날의 투입량. 패드별 급수량과 저장조 급수량을 서로 다른 값으로 저장한다."
+    }
+  },
+  {
+    "id": "veg01-no-flow-a",
+    "text": "VEG-01 적색 로메인 상추 재배 근거\nReplacing a Plant Pillow After Initial Watering Failure\n\nAt initiation, one of the flight pillows, pillow A, could not be hydrated. This was thought to be the result of a blocked or damaged pillow quick disconnect or internal tube. This pillow was swapped with one of the other set of red romaine lettuce plant pillows.",
+    "metadata": {
+      "source_id": "veg01",
+      "section": "VEG-01 적색 로메인 상추 재배 근거",
+      "subsection": "Replacing a Plant Pillow After Initial Watering Failure",
+      "source_url": "https://doi.org/10.1515/opag-2017-0003",
+      "source_location": "§2.1, p. 35",
+      "simulator_application_ko": "물이 패드에 들어가지 않을 때 교체 선택지의 근거. 당시에는 커넥터와 튜브가 모두 의심 대상이었다."
+    }
+  },
+  {
+    "id": "veg01-early-a",
+    "text": "VEG-01 적색 로메인 상추 재배 근거\nVEG-01A Germination Failure and Day 7 Plant Care\n\nFollowing initiation, germination was noted in all pillows except pillow B. Plants were thinned so that each pillow (except pillow B) had one seedling per pillow on day 7. Additional water (420 mL) was added to the reservoir.",
+    "metadata": {
+      "source_id": "veg01",
+      "section": "VEG-01 적색 로메인 상추 재배 근거",
+      "subsection": "VEG-01A Germination Failure and Day 7 Plant Care",
+      "source_url": "https://doi.org/10.1515/opag-2017-0003",
+      "source_location": "§2.1, p. 35",
+      "simulator_application_ko": "미발아 패드는 관찰 기록을 남기고 솎기 대상에서 제외하는 선택지의 근거. 420 mL는 이 실험의 추가 급수량이다."
+    }
+  },
+  {
+    "id": "veg01-stall-a",
+    "text": "VEG-01 적색 로메인 상추 재배 근거\nVEG-01A Day 14 Lettuce Growth Stall and Direct Watering\n\nPhotos were taken weekly, and photos at 14 days after initiation showed that three of the five plants were stunted and did not appear to be growing. The Veggie team suspected that the reservoir was not providing sufficient water to the plant pillows, and the astronauts were sent directions to manually add water to the plant pillows to save the plants. One of the three recovered from the low water event, but two plants died.",
+    "metadata": {
+      "source_id": "veg01",
+      "section": "VEG-01 적색 로메인 상추 재배 근거",
+      "subsection": "VEG-01A Day 14 Lettuce Growth Stall and Direct Watering",
+      "source_url": "https://doi.org/10.1515/opag-2017-0003",
+      "source_location": "§2.1, p. 35",
+      "simulator_application_ko": "생장 정체 사진 → 물 공급 부족 의심 → 패드 직접 급수. 정체만으로 원인을 확정하거나 처치 후 회복을 보장하지 않는다."
+    }
+  },
+  {
+    "id": "veg01-harvest-a",
+    "text": "VEG-01 적색 로메인 상추 재배 근거\nVEG-01A Harvest Delay\n\nThe three remaining plants were originally intended to grow for 28 days, but due to the growth limiting water conditions, plants were allowed to grow for 33 days.",
+    "metadata": {
+      "source_id": "veg01",
+      "section": "VEG-01 적색 로메인 상추 재배 근거",
+      "subsection": "VEG-01A Harvest Delay",
+      "source_url": "https://doi.org/10.1515/opag-2017-0003",
+      "source_location": "§2.1, p. 35",
+      "simulator_application_ko": "수분 부족으로 생장이 늦어진 VEG-01A 상황에서 수확을 미루는 선택지의 근거."
+    }
+  },
+  {
+    "id": "veg01-no-flow-b",
+    "text": "VEG-01 적색 로메인 상추 재배 근거\nVEG-01B Recurring Watering Failure and Confirmed Fill Tube Blockage\n\nThe original non-functional plant pillow A had been saved from VEG-01A, and the quick disconnect water attachment had been swapped after harvest with one that was known to function. Kelly attempted to prime this plant pillow in VEG-01B but again water was unable to enter, indicating failure in a component other than the quick disconnect. This pillow was left unprimed in the hardware. After it was returned to Earth, a failure analysis noted that the internal fill tube was clogged, likely during manufacture.",
+    "metadata": {
+      "source_id": "veg01",
+      "section": "VEG-01 적색 로메인 상추 재배 근거",
+      "subsection": "VEG-01B Recurring Watering Failure and Confirmed Fill Tube Blockage",
+      "source_url": "https://doi.org/10.1515/opag-2017-0003",
+      "source_location": "§2.2, p. 37",
+      "simulator_application_ko": "커넥터를 바꾼 뒤에도 물이 들어가지 않는 상황에서 내부 급수 튜브를 의심할 근거. 튜브 막힘은 지상 분석에서 확인됐다."
+    }
+  },
+  {
+    "id": "veg01-water-b",
+    "text": "VEG-01 적색 로메인 상추 재배 근거\nVEG-01B Initial Water Volume and Photo Frequency\n\nAll other pillows were primed with 165 mL of water, an increased volume designed to better establish an initial water column. The reservoir was filled similarly to VEG-01A. Wick opening and thinning procedures and watering were also conducted similarly to VEG-01A but daily photos were taken of plants following thinning.",
+    "metadata": {
+      "source_id": "veg01",
+      "section": "VEG-01 적색 로메인 상추 재배 근거",
+      "subsection": "VEG-01B Initial Water Volume and Photo Frequency",
+      "source_url": "https://doi.org/10.1515/opag-2017-0003",
+      "source_location": "§2.2, p. 37",
+      "simulator_application_ko": "165 mL는 VEG-01B의 초기 급수량. 생장 도중 직접 급수할 때의 양으로 사용하지 않는다."
+    }
+  },
+  {
+    "id": "veg01-stall-b",
+    "text": "VEG-01 적색 로메인 상추 재배 근거\nVEG-01B Lettuce Growth Stall on Day 15 and Direct Watering on Day 16\n\nAt 15 days after initiation plant growth appeared to cease. Plant pillows and the reservoir were watered at 16 days and water was directly added to plant pillows on every scheduled watering event after that. The plants recovered and were harvested after 33 days of growth (Fig. 4A).",
+    "metadata": {
+      "source_id": "veg01",
+      "section": "VEG-01 적색 로메인 상추 재배 근거",
+      "subsection": "VEG-01B Lettuce Growth Stall on Day 15 and Direct Watering on Day 16",
+      "source_url": "https://doi.org/10.1515/opag-2017-0003",
+      "source_location": "§2.2, p. 37",
+      "simulator_application_ko": "생장 정체 관찰 → 패드와 저장조 급수 → 이후 예정된 급수 때 패드 직접 급수. 이 대목에는 회차별 급수량이나 일정 간격이 제시되지 않는다."
+    }
+  },
+  {
+    "id": "veg01-harvest-b",
+    "text": "VEG-01 적색 로메인 상추 재배 근거\nVEG-01B Lettuce Consumption and Sample Preservation After Harvest\n\nHalf of the produce harvested was consumed after a precautionary sanitizing step using Pro-San® (Microcide, Inc., Sterling Heights, MI) wipes (Fig. 4B). Leaves were placed between layers of wipes in a re-closable bag and pressed for 30 seconds before being removed and consumed. The remainder of the produce was harvested and frozen similarly to VEG-01A for return to Earth for analysis.",
+    "metadata": {
+      "source_id": "veg01",
+      "section": "VEG-01 적색 로메인 상추 재배 근거",
+      "subsection": "VEG-01B Lettuce Consumption and Sample Preservation After Harvest",
+      "source_url": "https://doi.org/10.1515/opag-2017-0003",
+      "source_location": "§2.2, p. 37",
+      "simulator_application_ko": "수확 후 처리 선택지를 구현할 때 사용할 수 있는 실험 사례. 당시 승무원에게 적용한 절차다."
+    }
+  },
+  {
+    "id": "veg01-repeat-harvest",
+    "text": "VEG-01 적색 로메인 상추 재배 근거\nVEG-03 Repeated Harvest of Red Romaine Lettuce\n\nOne crop of ‘Outredgeous’ lettuce was initiated Oct. 25, 2016 and repeatedly harvested until a final harvest on Dec. 28, 2016, with both crew consumption and science samples taken from the plants.",
+    "metadata": {
+      "source_id": "veg01",
+      "section": "VEG-01 적색 로메인 상추 재배 근거",
+      "subsection": "VEG-03 Repeated Harvest of Red Romaine Lettuce",
+      "source_url": "https://doi.org/10.1515/opag-2017-0003",
+      "source_location": "§3, p. 40",
+      "simulator_application_ko": "반복 수확을 별도 시나리오에 쓸 수 있다. 이 문장은 첫 수확일, 수확 간격, 절단 위치를 제시하지 않는다."
+    }
+  },
+  {
+    "id": "veg01-light-hardware",
+    "text": "VEG-01 적색 로메인 상추 재배 근거\nVeggie Lighting, Air Circulation, and Height-Adjustable Hardware\n\nThe hardware consists of an LED lighting array that contains red (630 nm), blue, (455 nm) and green (530 nm) LEDs and a fan which draws ISS cabin air through the hardware and expels it back to the cabin.",
+    "metadata": {
+      "source_id": "veg01",
+      "section": "VEG-01 적색 로메인 상추 재배 근거",
+      "subsection": "Veggie Lighting, Air Circulation, and Height-Adjustable Hardware",
+      "source_url": "https://doi.org/10.1515/opag-2017-0003",
+      "source_location": "§1, p. 33",
+      "simulator_application_ko": "팬의 역할은 선내 공기를 재배 장치로 순환시키는 것이다."
+    }
+  },
+  {
+    "id": "veg01-reservoir",
+    "text": "VEG-01 적색 로메인 상추 재배 근거\nVeggie Reservoir Wicking and Water Capacity\n\nThe baseline Veggie watering system is a passive wicking design consisting of a reservoir that wicks to substrate filled pouches or plant pillows. The reservoir is designed to hold up to 2 L of water.",
+    "metadata": {
+      "source_id": "veg01",
+      "section": "VEG-01 적색 로메인 상추 재배 근거",
+      "subsection": "Veggie Reservoir Wicking and Water Capacity",
+      "source_url": "https://doi.org/10.1515/opag-2017-0003",
+      "source_location": "§1, p. 33",
+      "simulator_application_ko": "저장조의 설계 용량과 각 실험에서 실제 채운 양을 따로 기록한다."
+    }
+  },
+  {
+    "id": "veg01-substrate",
+    "text": "VEG-01 적색 로메인 상추 재배 근거\nPlant Pillow Substrate and Seed Placement\n\nFor VEG-01, half the pillows in each set were filled with substrate sieved to 600 µm-1 mm and the other half were filled with a 50:50 blend of 600 µm-1 mm and 1-2 mm.\n\nTwo surface sanitized seeds are glued with guar in each plant pillow in between paired germination wicks.",
+    "metadata": {
+      "source_id": "veg01",
+      "section": "VEG-01 적색 로메인 상추 재배 근거",
+      "subsection": "Plant Pillow Substrate and Seed Placement",
+      "source_url": "https://doi.org/10.1515/opag-2017-0003",
+      "source_location": "§1, p. 34",
+      "simulator_application_ko": "초기 패드 구성에 사용할 정보. 이 문장에서 입자 조성의 우열을 판단할 수 없다."
+    }
+  },
+  {
+    "id": "veg01-iss-environment",
+    "text": "VEG-01 적색 로메인 상추 재배 근거\nISS Cabin Environmental Measurements\n\n| Experiment | Duration (days) | Temperature (°C) | Relative Humidity (%) | CO₂ Level (µmol mol⁻¹) |\n|---|---:|---:|---:|---:|\n| VEG-01A | 33 | 22.2 ± 0.2 | 43.9 ± 3.7 | 2798.9 ± 677.7 |\n| VEG-01B | 33 | 23.3 ± 0.4 | 38.3 ± 4.5 | 2559.5 ± 660.3 |",
+    "metadata": {
+      "source_id": "veg01",
+      "section": "VEG-01 적색 로메인 상추 재배 근거",
+      "subsection": "ISS Cabin Environmental Measurements",
+      "source_url": "https://doi.org/10.1515/opag-2017-0003",
+      "source_location": "Table 1, p. 35. 아래는 표의 값 전사다.",
+      "simulator_application_ko": "실험 기간의 선내 배경 환경으로 사용한다. 장치 내부 온습도는 Table 2를 참조하고, 선내 관측 평균에는 권장 설정값이라는 의미를 부여하지 않는다."
+    }
+  },
+  {
+    "id": "veg01a-veggie-environment",
+    "text": "VEG-01 적색 로메인 상추 재배 근거\nVEG-01A Environmental Measurements Inside Veggie\n\n| Period | Temperature (°C) | Relative Humidity (%) |\n|---|---:|---:|\n| Data Logger-Day | 24.77 ± 0.09 | 38.19 ± 0.51 |\n| Data Logger-Night | 21.70 ± 0.15 | 44.32 ± 0.68 |",
+    "metadata": {
+      "source_id": "veg01",
+      "section": "VEG-01 적색 로메인 상추 재배 근거",
+      "subsection": "VEG-01A Environmental Measurements Inside Veggie",
+      "source_url": "https://doi.org/10.1515/opag-2017-0003",
+      "source_location": "Table 2, p. 36. 아래는 표에서 양쪽 센서 위치를 합친 행(Both)의 값 전사다.",
+      "simulator_application_ko": "장치 내부 주야간 관측값으로 사용할 수 있다. 이 표의 값에서 온습도 조절 조치를 시작할 기준을 정할 수는 없다."
+    }
+  },
+  {
+    "id": "VEG-03J-01",
+    "text": "VEG-03 J | Growing Red Romaine in ISS Veggie with Seed Film\nSeed film material and function\n\nScientists at NASA’S Kennedy Space Center (KSC) developed a food-safe water-soluble polymer known as seed film into which seeds can be embedded for storage and planting. The reported properties of several polymers were evaluated, and a pullulan formulation was developed, tested, and selected, with the methodology refined to produce a functional approach.\n\nSeed films were created by combining 9 g pullulan (TCI America, Portland, OR), 1 g food-grade glycerol, and 90 g deionized water and stirring the solution overnight to allow the polymer to dissolve completely.",
+    "metadata": {
+      "source_id": "veg03j",
+      "section": "VEG-03 J | Growing Red Romaine in ISS Veggie with Seed Film",
+      "subsection": "Seed film material and function",
+      "source_url": "https://doi.org/10.1016/j.actaastro.2026.05.031",
+      "source_location": "Abstract, p. 506; §2.1 Seed film preparation, p. 507",
+      "source_file": "VEG-03J_seed_film_RAG.md"
+    }
+  },
+  {
+    "id": "VEG-03J-02",
+    "text": "VEG-03 J | Growing Red Romaine in ISS Veggie with Seed Film\nPreparing a three-seed film coupon\n\nIndividual, sanitized ‘Outredgeous’ seeds were placed on the film surface in groupings of three with 2.54 cm of separation between the edge of each grouping. Following placement, 10 μL aliquots of sterile, deionized water were placed on each seed before allowing the droplets to fully dry, resulting in total encapsulation of the seeds within the seed film. The grouped, encapsulated seeds were then cut into 6.45 cm² (1 in²) coupons, and a small, triangular notch was cut into the bottom edge of each coupon to indicate the planting orientation (Fig. 1).",
+    "metadata": {
+      "source_id": "veg03j",
+      "section": "VEG-03 J | Growing Red Romaine in ISS Veggie with Seed Film",
+      "subsection": "Preparing a three-seed film coupon",
+      "source_url": "https://doi.org/10.1016/j.actaastro.2026.05.031",
+      "source_location": "§2.1 Seed film preparation, p. 508",
+      "source_file": "VEG-03J_seed_film_RAG.md"
+    }
+  },
+  {
+    "id": "VEG-03J-03",
+    "text": "VEG-03 J | Growing Red Romaine in ISS Veggie with Seed Film\nPlant pillow substrate and fertilizer\n\nTwelve pillows (6 for flight, 6 for ground) were prepared following methods as described by Massa et al. [9]. Pillow substrate was a 1:1 mix of 600 μm-1 mm and 1-2 mm porous ceramic (Profile Products LLC Greensgrade and Turface Pro-League, respectively). Fertilizer was added into the substrate in the following amounts: Nutricote 18-6-8 T70 fertilizer: 1.000-1.0049 g per pillow; Nutricote 18-6-8 T180 fertilizer: 1.2500-1.2549 g (Florikan ESA, Sarasota, FL) per pillow for a total rate of 9 g fertilizer per liter substrate.",
+    "metadata": {
+      "source_id": "veg03j",
+      "section": "VEG-03 J | Growing Red Romaine in ISS Veggie with Seed Film",
+      "subsection": "Plant pillow substrate and fertilizer",
+      "source_url": "https://doi.org/10.1016/j.actaastro.2026.05.031",
+      "source_location": "§2.3 Payload preparation, p. 508",
+      "source_file": "VEG-03J_seed_film_RAG.md"
+    }
+  },
+  {
+    "id": "VEG-03J-04",
+    "text": "VEG-03 J | Growing Red Romaine in ISS Veggie with Seed Film\nDay 0 sowing and initial watering\n\nDuring planting, wicks were spread open and seed film coupons were inserted with the notch toward the bottom of the pillow allowing the top of the coupon to remain just above the top edge of the pillow gasket. Following coupon placement, wicks were returned to the closed position, and pillows were initiated with 150 mL water from the ISS Potable Water Dispenser.",
+    "metadata": {
+      "source_id": "veg03j",
+      "section": "VEG-03 J | Growing Red Romaine in ISS Veggie with Seed Film",
+      "subsection": "Day 0 sowing and initial watering",
+      "source_url": "https://doi.org/10.1016/j.actaastro.2026.05.031",
+      "source_location": "§2.4 Flight and ground operations, p. 509",
+      "source_file": "VEG-03J_seed_film_RAG.md"
+    }
+  },
+  {
+    "id": "VEG-03J-05",
+    "text": "VEG-03 J | Growing Red Romaine in ISS Veggie with Seed Film\nDay 3 wick opening to assist seedling emergence\n\nThree days after initiation (DAI), astronauts used forceps to spread wicks apart to assist with seedling emergence.",
+    "metadata": {
+      "source_id": "veg03j",
+      "section": "VEG-03 J | Growing Red Romaine in ISS Veggie with Seed Film",
+      "subsection": "Day 3 wick opening to assist seedling emergence",
+      "source_url": "https://doi.org/10.1016/j.actaastro.2026.05.031",
+      "source_location": "§2.4 Flight and ground operations, p. 509",
+      "source_file": "VEG-03J_seed_film_RAG.md",
+      "simulator_application_ko": "**행동 선택지**에는 04~08 청크를 연결할 수 있다. 예를 들어 3 DAI에 새싹이 나오기 시작하는 상황이면 05와 07을 검색해 `핀셋으로 심지 벌리기`와 `주머니당 물 30 mL 주기`를 제시할 근거를 가져온다. 두 행동은 실험에서 같은 날 기록됐다. 화면에서 한 번에 한 가지를 선택하게 하면, 남은 작업은 다음 선택지로 계속 보여줄 수 있다."
+    }
+  },
+  {
+    "id": "VEG-03J-06",
+    "text": "VEG-03 J | Growing Red Romaine in ISS Veggie with Seed Film\nDay 7 thinning to one viable seedling per pillow\n\nAt 7 DAI, seedlings were selectively thinned from the pillows by cutting so that each pillow contained one viable seedling.",
+    "metadata": {
+      "source_id": "veg03j",
+      "section": "VEG-03 J | Growing Red Romaine in ISS Veggie with Seed Film",
+      "subsection": "Day 7 thinning to one viable seedling per pillow",
+      "source_url": "https://doi.org/10.1016/j.actaastro.2026.05.031",
+      "source_location": "§2.4 Flight and ground operations, p. 509",
+      "source_file": "VEG-03J_seed_film_RAG.md"
+    }
+  },
+  {
+    "id": "VEG-03J-07",
+    "text": "VEG-03 J | Growing Red Romaine in ISS Veggie with Seed Film\nWatering the plant pillows and root mat\n\nThroughout crop growth, plant pillows were watered, and the root mat was filled with 600 mL of water at 16 DAI. Watering amounts can be seen in Table 4.\n\nWater added to the Veggie pillows and root mat in Flight on each DAI. Watering protocol was determined by pre-flight testing and on-orbit imagery. Pillow values represent the average amount of water (mL) added to each pillow (n = 6), with standard deviations (mL) in parentheses. The root mat value represents the total amount of water (mL) added to the Veggie root mat (n = 1) on that DAI.\n\nTable 4 · Flight\n\n| DAI | Pillow (mL pillow⁻¹) | Root mat (mL) |\n| ---: | ---: | ---: |\n| 0 | 150 (0) | |\n| 3 | 30 (0) | |\n| 5 | 40 (0) | |\n| 7 | 45 (0) | |\n| 9 | 30 (0) | |\n| 11 | 45 (0) | |\n| 13 | 20 (0) | |\n| 15 | 30 (0) | |\n| 16 | 0 | 600 |\n| 18 | 35 (0) | |\n| 20 | 47 (9) | |\n| 22 | 50 (0) | |\n| 25 | 100 (0) | 400 |\n| 26 | 100 (0) | |\n| 27 | 100 (0) | |\n| 28 | 95 (11) | |\n| 29 | 100 (0) | |\n| Total | 1017 (17) | 1000 |",
+    "metadata": {
+      "source_id": "veg03j",
+      "section": "VEG-03 J | Growing Red Romaine in ISS Veggie with Seed Film",
+      "subsection": "Watering the plant pillows and root mat",
+      "source_url": "https://doi.org/10.1016/j.actaastro.2026.05.031",
+      "source_location": "§2.4 Flight and ground operations and Table 4, p. 509",
+      "source_file": "VEG-03J_seed_film_RAG.md",
+      "simulator_application_ko": "**수치 사용 범위**는 청크와 함께 유지한다. 관수량은 VEG-03 J의 비행 기록, 온도·습도·CO₂는 관측값, 발아율과 수확량은 해당 표본의 결과다. 날짜가 밀렸을 때 급수량을 어떻게 바꿀지, 어떤 수분 값에서 급수할지, 잎끝 마름이 보일 때 어떻게 조치할지는 이 논문에서 정하지 않았다."
+    }
+  },
+  {
+    "id": "VEG-03J-08",
+    "text": "VEG-03 J | Growing Red Romaine in ISS Veggie with Seed Film\nDay 29 harvest and research sample storage\n\nPlant cultivation continued until 29 DAI, at which point the plants were harvested. Harvested tissue was wrapped in pre-weighed, sterile foil sheets and placed into sterile, resealable plastic storage bags before being frozen and stored at −80 °C until return to Earth.",
+    "metadata": {
+      "source_id": "veg03j",
+      "section": "VEG-03 J | Growing Red Romaine in ISS Veggie with Seed Film",
+      "subsection": "Day 29 harvest and research sample storage",
+      "source_url": "https://doi.org/10.1016/j.actaastro.2026.05.031",
+      "source_location": "§2.4 Flight and ground operations, p. 509",
+      "source_file": "VEG-03J_seed_film_RAG.md",
+      "simulator_application_ko": "**수확과 검사**는 따로 다룬다. 08의 동결은 지구로 가져와 분석할 실험 시료의 보관 절차다. 12의 병원체 검사 음성과 효모·곰팡이 수치는 서로 다른 검사 결과로 유지한다."
+    }
+  },
+  {
+    "id": "VEG-03J-09",
+    "text": "VEG-03 J | Growing Red Romaine in ISS Veggie with Seed Film\nTemperature, relative humidity, and CO₂ measured on the ISS\n\nIn flight, one HOBO® data logger (Onset Computer Corporation, Bourne, MA) was secured at the height of the plant pillows to measure the temperature and relative humidity inside the Veggie unit.\n\nFlight ambient values are readings from the Columbus module, which were used as targeted setpoints for the ground control walk-in growth chamber.\n\nLighting set points in Veggie were the same as those utilized during VEG-01 A [11].\n\nTable 3 · Flight columns only\n\nMeasurements are means with standard deviations in parentheses. Ambient means Columbus module air. Veggie means air inside the growth unit.\n\n| Parameter | Measurement location | Day / Night | 1–14 DAI | 15–28 DAI |\n| --- | --- | --- | ---: | ---: |\n| Temperature (°C) | Ambient | Day | 22.9 (0.003) | 23.0 (0.003) |\n| Temperature (°C) | Ambient | Night | 22.8 (0.005) | 22.8 (0.003) |\n| Temperature (°C) | Veggie | Day | 27.6 (0.02) | 24.2 (0.05) |\n| Temperature (°C) | Veggie | Night | 22.8 (0.02) | 21.7 (0.05) |\n| Relative humidity (%) | Ambient | Day | 36.4 (0.01) | 40.1 (0.03) |\n| Relative humidity (%) | Ambient | Night | 36.4 (0.01) | 39.8 (0.04) |\n| Relative humidity (%) | Veggie | Day | 74.8 (0.07) | 88.5 (0.18) |\n| Relative humidity (%) | Veggie | Night | 80.3 (0.12) | 89.6 (0.31) |\n| CO₂ (ppm) | Ambient | Day | 1768 (2.7) | 1914 (3.4) |\n| CO₂ (ppm) | Ambient | Night | 1526 (3.8) | 1670 (4.6) |",
+    "metadata": {
+      "source_id": "veg03j",
+      "section": "VEG-03 J | Growing Red Romaine in ISS Veggie with Seed Film",
+      "subsection": "Temperature, relative humidity, and CO₂ measured on the ISS",
+      "source_url": "https://doi.org/10.1016/j.actaastro.2026.05.031",
+      "source_location": "§2.4 Flight and ground operations and Table 3, p. 508",
+      "source_file": "VEG-03J_seed_film_RAG.md"
+    }
+  },
+  {
+    "id": "VEG-03J-10",
+    "text": "VEG-03 J | Growing Red Romaine in ISS Veggie with Seed Film\nGermination and harvested fresh mass\n\nAs seed film was a new technology, three seeds were inserted into each Veggie pillow, instead of the former seeding rate of two per pillow, to increase chances that each pillow would ultimately have at least one successfully germinated and established plant. Germination on the ISS was highly successful (94%) with only one out of 18 seeds failing to germinate. Ground germination was comparatively lower (67%), potentially due to water behavior issues; future testing is anticipated to clarify this. All pillows in both flight (total harvested plants [n2] = 6) and ground (n2 = 6) had successful plant growth for the entire test (Fig. 2), which had been a challenge in the past.\n\nTable 5a · VEG-03 J rows only\n\n| Study | Seeds planted (n1) | Germination (%) | Days | Harvested plants (n2) | Fresh mass (g plant⁻¹) |\n| --- | ---: | ---: | ---: | ---: | ---: |\n| VEG-03 J Flight | 18 | 94 | 29 | 6 | 28.25 ± 6.48 |\n| VEG-03 J Ground | 18 | 67 | 29 | 6 | 26.94 ± 4.43 |",
+    "metadata": {
+      "source_id": "veg03j",
+      "section": "VEG-03 J | Growing Red Romaine in ISS Veggie with Seed Film",
+      "subsection": "Germination and harvested fresh mass",
+      "source_url": "https://doi.org/10.1016/j.actaastro.2026.05.031",
+      "source_location": "§3.1 Crop growth and Table 5a, p. 510",
+      "source_file": "VEG-03J_seed_film_RAG.md"
+    }
+  },
+  {
+    "id": "VEG-03J-11",
+    "text": "VEG-03 J | Growing Red Romaine in ISS Veggie with Seed Film\nMild tip burn observed after germination\n\nPlant growth after germination was successful as well, with some plants even exhibiting mild tip burn, which is indicative of rapid growth [23].",
+    "metadata": {
+      "source_id": "veg03j",
+      "section": "VEG-03 J | Growing Red Romaine in ISS Veggie with Seed Film",
+      "subsection": "Mild tip burn observed after germination",
+      "source_url": "https://doi.org/10.1016/j.actaastro.2026.05.031",
+      "source_location": "§4 Discussion, p. 512",
+      "source_file": "VEG-03J_seed_film_RAG.md"
+    }
+  },
+  {
+    "id": "VEG-03J-12",
+    "text": "VEG-03 J | Growing Red Romaine in ISS Veggie with Seed Film\nPathogen screening and yeast and mold counts at harvest\n\nDespite having a higher mean heterotrophic plate count value than other Veggie technology demonstrations, the VEG-03 J samples returned negative results on all performed pathogen-specific screening tests. These results were corroborated by the absence of pathogenic organisms in the 16S rRNA data.\n\nThe samples also returned countable IMA plates to provide yeast and mold data for flight and ground. None of the sample sets differed significantly from each other between technology demonstrations or between flight and ground experiments (p > 0.05). All the ground samples, including those collected in VEG-03 J, were found to have a mean culturable fungal load lower than the current NASA safety standards for non-thermostabilized foods: 1 × 10³ Colony Forming Units (CFU) g⁻¹ [20]. The only flight samples below this threshold value were from VEG-01 A (μ = 5.6 × 10² CFU g⁻¹). At present, these are the closest approximate standards for the evaluation of food safety of fresh grown produce in a flight scenario. Other standards for the evaluation of food safety of these commodities in situ are in development.",
+    "metadata": {
+      "source_id": "veg03j",
+      "section": "VEG-03 J | Growing Red Romaine in ISS Veggie with Seed Film",
+      "subsection": "Pathogen screening and yeast and mold counts at harvest",
+      "source_url": "https://doi.org/10.1016/j.actaastro.2026.05.031",
+      "source_location": "§3.2.1 Quantified comparison of microbes between Veggie Technology Demonstrations, p. 510",
+      "source_file": "VEG-03J_seed_film_RAG.md"
+    }
+  }
+]
+

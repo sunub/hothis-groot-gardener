@@ -1,0 +1,81 @@
+{
+  "meta": {
+    "description": "License of each source that the retrieval chunks (data/json/total_RAG.json) are cut from, and what the license allows this project to do with the text.",
+    "checked_on": "2026-11-15",
+    "method": "The license field of the publisher record of each DOI (Crossref REST API). The NASA Technical Reports Server and PubMed Central were searched for a public copy of each article that is not openly licensed; none was found (two or three search phrases per article, not an exhaustive search).",
+    "use_rules": {
+      "quote": "The source sentences may be shown on screen and stored in data files that the screens read, with attribution.",
+      "facts_only": "Do not show or publish the source sentences. State the fact in the team's own words and cite the source (DOI and location). The chunks may still be used for retrieval on a developer machine.",
+      "translation": "A translation is an adaptation. It may be published only where the license allows adaptations."
+    },
+    "ai_disclosure": "The license lookup was run and summarized with an AI coding assistant. The team has not asked a lawyer; this file records what the publisher records say."
+  },
+  "sources": [
+    {
+      "source_id": "khodadad2020",
+      "citation": "Khodadad et al. (2020). Microbiological and Nutritional Analysis of Lettuce Crops Grown on the International Space Station. Frontiers in Plant Science 11:199.",
+      "url": "https://doi.org/10.3389/fpls.2020.00199",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "use": "quote",
+      "translation_may_be_published": true,
+      "public_nasa_copy": null,
+      "note": "Open access. The license is on the version of record."
+    },
+    {
+      "source_id": "veg01",
+      "citation": "Massa et al. (2017). VEG-01: Veggie Hardware Validation Testing on the International Space Station. Open Agriculture 2(1).",
+      "url": "https://doi.org/10.1515/opag-2017-0003",
+      "license": "CC BY-NC-ND 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-nc-nd/4.0/",
+      "use": "facts_only",
+      "translation_may_be_published": false,
+      "public_nasa_copy": null,
+      "note": "The license allows sharing the text unchanged for non-commercial purposes with attribution, but not adaptations. The challenge terms ask for data that is unrestricted or under an open-source license, so the text is treated as facts only until the team decides otherwise. NASA documents on the same test that may be quoted: NTRS 20150001374 (abstract) and NTRS 20150021302 (presentation)."
+    },
+    {
+      "source_id": "veg03j",
+      "citation": "Curry et al. (2026). Sowing in space: Seed film enables crew-planted crops on the International Space Station. Acta Astronautica.",
+      "url": "https://doi.org/10.1016/j.actaastro.2026.05.031",
+      "license": "CC BY-NC-ND 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-nc-nd/4.0/",
+      "use": "facts_only",
+      "translation_may_be_published": false,
+      "public_nasa_copy": null,
+      "note": "Same conditions as veg01."
+    },
+    {
+      "source_id": "stutte2022",
+      "citation": "Stutte et al. (2022). Effect of reduced atmospheric pressure on growth and quality of two lettuce cultivars. Life Sciences in Space Research.",
+      "url": "https://doi.org/10.1016/j.lssr.2022.06.001",
+      "license": "CC BY-NC-ND 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-nc-nd/4.0/",
+      "use": "facts_only",
+      "translation_may_be_published": false,
+      "public_nasa_copy": null,
+      "note": "Ground study. Same conditions as veg01."
+    },
+    {
+      "source_id": "mickens2018",
+      "citation": "Mickens et al. (2018). A strategic approach for investigating light recipes for 'Outredgeous' red romaine lettuce using white and monochromatic LEDs. Life Sciences in Space Research.",
+      "url": "https://doi.org/10.1016/j.lssr.2018.09.003",
+      "license": null,
+      "license_url": null,
+      "use": "facts_only",
+      "translation_may_be_published": false,
+      "public_nasa_copy": null,
+      "note": "Ground study. The publisher record has no open license (text and data mining terms only). The text must not be published in the repository."
+    },
+    {
+      "source_id": "morsi2022",
+      "citation": "Morsi et al. (2022). Comparison of two controlled-release fertilizer formulations for cut-and-come-again harvest yield and mineral content of Lactuca sativa L. cv. Outredgeous grown under International Space Station environmental conditions. Life Sciences in Space Research.",
+      "url": "https://doi.org/10.1016/j.lssr.2021.12.001",
+      "license": null,
+      "license_url": null,
+      "use": "facts_only",
+      "translation_may_be_published": false,
+      "public_nasa_copy": null,
+      "note": "Ground study. The publisher record has no open license for the published version. It lists the Elsevier user license for the accepted manuscript after an embargo (http://www.elsevier.com/open-access/userlicense/1.0/); the team has not read its terms. The text must not be published in the repository."
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "name": "hothis-groot-gardener",
+  "version": "0.1.0",
+  "private": true,
+  "workspaces": [
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev -w web",
+    "build": "npm run build -w web",
+    "start": "npm run start -w web",
+    "lint": "npm run lint -w web",
+    "typecheck": "npm run typecheck -w web",
+    "test": "npm run test -w web",
+    "test:watch": "npm run test:watch -w web",
+    "check": "npm run check -w web"
+  }
+}
