@@ -1,5 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import evidence from '@/data/evidence.json';
+import {
+  FORBIDDEN_CLAIM_PATTERNS,
+  SAFE_DENIAL_PATTERN,
+  SAFE_PATTERN,
+} from '@/lib/contract/claims';
 import { en } from './en';
 
 /**
@@ -20,19 +25,10 @@ function collectStrings(value: unknown, path: string, out: [string, string][]): 
   }
 }
 
-const FORBIDDEN: readonly RegExp[] = [
-  /\bedible\b/i,
-  /\bsafe to eat\b/i,
-  /\bok to eat\b/i,
-  /\bcan be eaten\b/i,
-  /\bpass(ed|es)?\b/i,
-  /\bapproved\b/i,
-  /\bcertified\b/i,
-];
-
-/** "safe" may appear only in a sentence that denies a safety conclusion. */
-const SAFE = /\bsafe(ty)?\b/i;
-const SAFE_DENIAL = /\b(not|never|no|cannot|without)\b[^.]*\bsafe(ty)?\b/i;
+// Shared with the generated-text check, so screen text and generated text follow one list.
+const FORBIDDEN = FORBIDDEN_CLAIM_PATTERNS;
+const SAFE = SAFE_PATTERN;
+const SAFE_DENIAL = SAFE_DENIAL_PATTERN;
 
 function violations(strings: [string, string][]): string[] {
   const found: string[] = [];

@@ -1,7 +1,16 @@
 import { describe, expect, it } from 'vitest';
+import {
+  AI_CLUE_TEXT_MAX_LENGTH,
+  AI_LABEL_MAX_LENGTH,
+  AI_PLANT_LINE_MAX_LENGTH,
+  AI_RESULT_LINE_MAX_LENGTH,
+  AI_SCENE_MAX_LENGTH,
+  AI_WHY_MAX_LENGTH,
+} from '@/lib/contract/schemas';
 import type { AiCrisisOutput } from '@/lib/contract/types';
 import { evidence, findCrisis } from '@/lib/evidence';
-import { validateAiOutput, type ValidationContext } from './validate';
+import { fallbackCrises } from './fallback';
+import { REVEAL_PHRASES, validateAiOutput, type ValidationContext } from './validate';
 
 const mold = findCrisis(evidence, 'overwater_mold')!;
 const water = findCrisis(evidence, 'water_shortage')!;
@@ -190,5 +199,131 @@ describe('validateAiOutput', () => {
     expect(issuesOf(out, context(1, ['add_water']))).toEqual([
       'action_id "add_water" was already chosen and must not be offered again.',
     ]);
+  });
+});
+
+/** Sets one generated text field of an output, by the path the shape issues use. */
+const TEXT_FIELDS = {
+  scene: (o: AiCrisisOutput, v: string): void => {
+    o.scene = v;
+  },
+  plant_line: (o: AiCrisisOutput, v: string): void => {
+    o.plant_line = v;
+  },
+  'clues.0.text': (o: AiCrisisOutput, v: string): void => {
+    o.clues[0].text = v;
+  },
+  'options.0.label': (o: AiCrisisOutput, v: string): void => {
+    o.options[0].label = v;
+  },
+  'options.0.result_line': (o: AiCrisisOutput, v: string): void => {
+    o.options[0].result_line = v;
+  },
+  'options.0.why': (o: AiCrisisOutput, v: string): void => {
+    o.options[0].why = v;
+  },
+};
+type TextField = keyof typeof TEXT_FIELDS;
+
+describe('validateAiOutput text limits', () => {
+  it.each<[TextField, number]>([
+    ['scene', AI_SCENE_MAX_LENGTH],
+    ['plant_line', AI_PLANT_LINE_MAX_LENGTH],
+    ['clues.0.text', AI_CLUE_TEXT_MAX_LENGTH],
+    ['options.0.label', AI_LABEL_MAX_LENGTH],
+    ['options.0.result_line', AI_RESULT_LINE_MAX_LENGTH],
+    ['options.0.why', AI_WHY_MAX_LENGTH],
+  ])('rejects %s longer than %i characters', (path, max) => {
+    const atCap = stageOne();
+    TEXT_FIELDS[path](atCap, 'a'.repeat(max));
+    expect(validateAiOutput(atCap, context(1)).ok).toBe(true);
+    const over = stageOne();
+    TEXT_FIELDS[path](over, 'a'.repeat(max + 1));
+    const issues = issuesOf(over, context(1));
+    expect(issues).toHaveLength(1);
+    expect(issues[0].startsWith(`shape: ${path}:`)).toBe(true);
+  });
+
+  it('leaves at least 2x headroom over every pre-made text', () => {
+    const caps: [string, number, (o: AiCrisisOutput) => string[]][] = [
+      ['scene', AI_SCENE_MAX_LENGTH, (o) => [o.scene]],
+      ['plant_line', AI_PLANT_LINE_MAX_LENGTH, (o) => [o.plant_line]],
+      ['clue text', AI_CLUE_TEXT_MAX_LENGTH, (o) => o.clues.map((c) => c.text)],
+      ['label', AI_LABEL_MAX_LENGTH, (o) => o.options.map((x) => x.label)],
+      ['result_line', AI_RESULT_LINE_MAX_LENGTH, (o) => o.options.map((x) => x.result_line)],
+      ['why', AI_WHY_MAX_LENGTH, (o) => o.options.map((x) => x.why)],
+    ];
+    for (const [name, cap, read] of caps) {
+      const longest = Math.max(
+        ...fallbackCrises.crises.flatMap((e) => read(e.output).map((t) => t.length)),
+      );
+      expect(cap, name).toBeGreaterThanOrEqual(2 * longest);
+    }
+  });
+});
+
+describe('validateAiOutput label reveal check (planning document: 정답을 드러내는 표현 금지)', () => {
+  it.each(REVEAL_PHRASES)('rejects a label containing "%s"', (phrase) => {
+    const out = stageOne();
+    out.options[0].label = `Turn the fan up (${phrase.toUpperCase()})`;
+    const issues = issuesOf(out, context(1));
+    expect(issues).toHaveLength(1);
+    expect(issues[0]).toMatch(/^options\[0\]\.label gives the verdict away/);
+  });
+
+  it('matches whole words only, across extra spaces', () => {
+    const out = stageOne();
+    out.options[0].label = 'Turn the fan up, the best   choice';
+    expect(issuesOf(out, context(1))).toHaveLength(1);
+    // "inappropriately" is not the word "inappropriate".
+    out.options[0].label = 'Turn the fan up inappropriately';
+    expect(validateAiOutput(out, context(1)).ok).toBe(true);
+  });
+
+  it('accepts labels that use common words innocently', () => {
+    const out = stageOne();
+    out.options[0].label = 'Correct the airflow with the right fan setting';
+    out.options[1].label = 'Do your best to wipe the surfaces';
+    out.options[2].label = 'Give the proper pillow more water';
+    expect(validateAiOutput(out, context(1)).ok).toBe(true);
+  });
+
+  it('checks labels only, not the result text', () => {
+    const out = stageOne();
+    out.options[0].why = 'Moving air is the appropriate fix for damp leaves.';
+    expect(validateAiOutput(out, context(1)).ok).toBe(true);
+  });
+
+  it('passes every label in the pre-made crises', () => {
+    for (const entry of fallbackCrises.crises) {
+      for (const option of entry.output.options) {
+        for (const phrase of REVEAL_PHRASES) {
+          expect(option.label.toLowerCase(), phrase).not.toMatch(new RegExp(`\\b${phrase}\\b`));
+        }
+      }
+    }
+  });
+});
+
+describe('validateAiOutput banned safety claims (planning document: 말하지 않는 것)', () => {
+  it.each<[TextField, string, string]>([
+    ['scene', 'scene', 'The lettuce is edible already.'],
+    ['plant_line', 'plant_line', 'I am ok to eat now.'],
+    ['clues.0.text', 'clues[0].text', 'The leaves passed inspection'],
+    ['options.0.label', 'options[0].label', 'Mark the crop approved'],
+    ['options.0.result_line', 'options[0].result_line', 'I am certified clean.'],
+    ['options.0.why', 'options[0].why', 'Dry leaves are safe.'],
+  ])('rejects a banned claim in %s', (field, path, value) => {
+    const out = stageOne();
+    TEXT_FIELDS[field](out, value);
+    const issues = issuesOf(out, context(1));
+    expect(issues).toHaveLength(1);
+    expect(issues[0].startsWith(`${path} makes a banned safety claim`)).toBe(true);
+  });
+
+  it('allows "safe" in a sentence that denies a safety conclusion', () => {
+    const out = stageOne();
+    out.options[0].why = 'Moving air helps, but it does not make the harvest safe.';
+    expect(validateAiOutput(out, context(1)).ok).toBe(true);
   });
 });

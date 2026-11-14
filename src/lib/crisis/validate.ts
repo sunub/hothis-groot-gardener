@@ -1,4 +1,5 @@
 import { AI_CLUES_MAX, AI_OPTIONS_MAX, AI_OPTIONS_MIN, aiCrisisOutputSchema } from '@/lib/contract/schemas';
+import { findBannedClaims } from '@/lib/contract/claims';
 import type { AiCrisisOutput } from '@/lib/contract/types';
 import { findAction } from '@/lib/evidence/select';
 import { minCluesFor, type StagedCandidate } from './generator';
@@ -10,6 +11,41 @@ export interface ValidationContext {
   /** Actions already chosen in this crisis that must not be offered again. */
   excludedActionIds: readonly string[];
 }
+
+/**
+ * Words and phrases that give the verdict away in an option label (planning
+ * document: labels must not reveal the answer). Matched as whole words,
+ * case-insensitive. Words with common innocent uses in a label ("correct the
+ * level", "the right side", "best", "proper") appear only inside unambiguous
+ * phrases. English only.
+ */
+export const REVEAL_PHRASES: readonly string[] = [
+  'appropriate',
+  'inappropriate',
+  'incorrect',
+  'recommended',
+  'optimal',
+  'suboptimal',
+  'mistake',
+  'correct answer',
+  'correct choice',
+  'correct option',
+  'right answer',
+  'right choice',
+  'right option',
+  'wrong answer',
+  'wrong choice',
+  'wrong option',
+  'best answer',
+  'best choice',
+  'best option',
+  'good idea',
+  'bad idea',
+];
+
+const REVEAL_PATTERNS: readonly RegExp[] = REVEAL_PHRASES.map(
+  (phrase) => new RegExp(`\\b${phrase.split(' ').map(escapeRegExp).join('\\s+')}\\b`, 'i'),
+);
 
 /** The parsed output, or every rule it broke. */
 export type ValidationResult =
@@ -86,5 +122,37 @@ export function validateAiOutput(output: unknown, context: ValidationContext): V
     issues.push('No option is an appropriate action.');
   }
 
+  value.options.forEach((option, i) => {
+    for (const pattern of REVEAL_PATTERNS) {
+      if (pattern.test(option.label)) {
+        issues.push(`options[${i}].label gives the verdict away (${pattern}).`);
+      }
+    }
+  });
+
+  for (const [path, fieldText] of generatedTexts(value)) {
+    for (const claim of findBannedClaims(fieldText)) {
+      issues.push(`${path} makes a banned safety claim (${claim}).`);
+    }
+  }
+
   return issues.length === 0 ? { ok: true, value } : { ok: false, issues };
+}
+
+/** Every generated text field with its path, for the content checks. */
+function generatedTexts(value: AiCrisisOutput): [string, string][] {
+  return [
+    ['scene', value.scene],
+    ['plant_line', value.plant_line],
+    ...value.clues.map((c, i): [string, string] => [`clues[${i}].text`, c.text]),
+    ...value.options.flatMap((o, i): [string, string][] => [
+      [`options[${i}].label`, o.label],
+      [`options[${i}].result_line`, o.result_line],
+      [`options[${i}].why`, o.why],
+    ]),
+  ];
+}
+
+function escapeRegExp(literal: string): string {
+  return literal.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }

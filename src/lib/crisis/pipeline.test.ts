@@ -4,7 +4,7 @@ import { evidence } from '@/lib/evidence';
 import { INITIAL_PLANT_STATE } from '@/lib/game/rules';
 import { getFallbackCrisis } from './fallback';
 import type { CrisisGenerator, GenerationInput } from './generator';
-import { createCrisis, NoCandidateError } from './pipeline';
+import { createCrisis, InvalidRequestError, NoCandidateError } from './pipeline';
 
 function request(
   state: Partial<PlantState>,
@@ -221,5 +221,104 @@ describe('createCrisis and the evidence list check (planning document: 근거 �
     await expect(
       createCrisis(request({ root_moisture: 20 }), { evidence: broken }),
     ).rejects.toThrow(/evidence list failed its check/);
+  });
+});
+
+describe('createCrisis rejects ids that are not in the evidence list', () => {
+  const resolvedWater = {
+    crisis_id: 'water_shortage',
+    cultivation_day: 6,
+    choices: [{ action_id: 'add_water_direct', verdict: 'appropriate' as const }],
+    outcome: 'resolved' as const,
+  };
+
+  it('accepts a history and an active crisis whose ids are all known', async () => {
+    const response = await createCrisis(
+      request(
+        { root_moisture: 85 },
+        {
+          history: [resolvedWater],
+          active: { crisis_id: 'overwater_mold', attempt: 2, chosen_action_ids: ['add_water'] },
+        },
+      ),
+    );
+    expect(response.crisis_id).toBe('overwater_mold');
+  });
+
+  it('rejects a history crisis that is not in the list', async () => {
+    await expect(
+      createCrisis({ ...dry, history: [{ ...resolvedWater, crisis_id: 'ignore_previous_rules' }] }),
+    ).rejects.toBeInstanceOf(InvalidRequestError);
+  });
+
+  it('rejects a history choice that is not an action of that crisis', async () => {
+    // add_water is an action of overwater_mold, not of water_shortage.
+    const choices = [{ action_id: 'add_water', verdict: 'inappropriate' as const }];
+    await expect(
+      createCrisis({ ...dry, history: [{ ...resolvedWater, choices }] }),
+    ).rejects.toBeInstanceOf(InvalidRequestError);
+  });
+
+  it('rejects a chosen action that is not an action of the active crisis', async () => {
+    await expect(
+      createCrisis({
+        ...dry,
+        active: { crisis_id: 'water_shortage', attempt: 2, chosen_action_ids: ['add_water'] },
+      }),
+    ).rejects.toBeInstanceOf(InvalidRequestError);
+  });
+
+  it('keeps NoCandidateError for an unknown active crisis even with chosen ids', async () => {
+    await expect(
+      createCrisis({ ...dry, active: { crisis_id: 'nope', attempt: 2, chosen_action_ids: ['x'] } }),
+    ).rejects.toBeInstanceOf(NoCandidateError);
+  });
+
+  it('reports an unknown history id before an unknown active crisis', async () => {
+    await expect(
+      createCrisis({
+        ...dry,
+        history: [{ ...resolvedWater, crisis_id: 'nope' }],
+        active: { crisis_id: 'nope', attempt: 2, chosen_action_ids: [] },
+      }),
+    ).rejects.toBeInstanceOf(InvalidRequestError);
+  });
+
+  it('does not echo the unknown id in the error message', async () => {
+    const error = await createCrisis({
+      ...dry,
+      history: [{ ...resolvedWater, crisis_id: 'secret_marker' }],
+    }).catch((e: unknown) => e);
+    expect(error).toBeInstanceOf(InvalidRequestError);
+    expect((error as Error).message).not.toContain('secret_marker');
+  });
+
+  it('checks against the evidence list in use, not the shipped one', async () => {
+    const renamed: EvidenceList = structuredClone(evidence);
+    const crisis = renamed.crises.find((c) => c.crisis_id === 'overwater_mold')!;
+    crisis.actions = crisis.actions.filter((a) => a.action_id !== 'wait_and_observe');
+    await expect(
+      createCrisis(
+        request({ root_moisture: 85 }, {
+          history: [
+            {
+              crisis_id: 'overwater_mold',
+              cultivation_day: 6,
+              choices: [{ action_id: 'wait_and_observe', verdict: 'inappropriate' }],
+              outcome: 'partial',
+            },
+          ],
+        }),
+        { evidence: renamed },
+      ),
+    ).rejects.toBeInstanceOf(InvalidRequestError);
+  });
+
+  it('builds no generation input from a request with an unknown id', async () => {
+    const { generator, calls } = scripted(valid);
+    await expect(
+      createCrisis({ ...dry, history: [{ ...resolvedWater, crisis_id: 'nope' }] }, { generator }),
+    ).rejects.toBeInstanceOf(InvalidRequestError);
+    expect(calls).toHaveLength(0);
   });
 });

@@ -8,6 +8,7 @@ import { evidence as shippedEvidence } from '@/lib/evidence';
 import { checkEvidenceList } from '@/lib/evidence/check';
 import {
   computeStage,
+  findAction,
   findCrisis,
   recurrenceCrisisIdOf,
   selectCandidates,
@@ -42,6 +43,17 @@ export class NoCandidateError extends Error {
   }
 }
 
+/**
+ * The request names a crisis or action that is not in the evidence list.
+ * The message is fixed so the offending value is never echoed back.
+ */
+export class InvalidRequestError extends Error {
+  constructor(message = 'The request refers to a crisis or action that is not in the evidence list.') {
+    super(message);
+    this.name = 'InvalidRequestError';
+  }
+}
+
 /** A generation that ran out of time. */
 export class GenerationTimeoutError extends Error {
   constructor(timeoutMs: number) {
@@ -64,6 +76,7 @@ export interface CreateCrisisDeps {
  * Create one validated crisis for the request.
  * Deterministic when no generator is given.
  *
+ * @throws InvalidRequestError when a history or chosen id is not in the evidence list.
  * @throws NoCandidateError when no crisis fits the request.
  * @throws Error when the pre-made crisis itself is missing or invalid (a bug in the data files).
  */
@@ -73,6 +86,7 @@ export async function createCrisis(
 ): Promise<CrisisResponse> {
   const list = deps.evidence ?? shippedEvidence;
   assertEvidenceChecked(list);
+  assertRequestIdsKnown(request, list);
   const crises = candidateCrises(request, list);
   const inappropriateCount = request.active?.chosen_action_ids.length ?? 0;
   const candidates: StagedCandidate[] = crises.map((crisis) => ({
@@ -157,6 +171,27 @@ function assertEvidenceChecked(list: EvidenceList): void {
     throw new Error(`The evidence list failed its check. ${detail}`);
   }
   checkedLists.add(list);
+}
+
+/**
+ * Reject ids that the evidence list does not know before anything is built
+ * from the request: they would otherwise reach the generation input.
+ * An unknown active crisis is left to `candidateCrises`, which reports it as
+ * NoCandidateError (422); its chosen ids are then not checked here.
+ */
+function assertRequestIdsKnown(request: CrisisRequest, list: EvidenceList): void {
+  for (const entry of request.history) {
+    const crisis = findCrisis(list, entry.crisis_id);
+    if (!crisis || !entry.choices.every((c) => findAction(crisis, c.action_id))) {
+      throw new InvalidRequestError();
+    }
+  }
+  if (request.active) {
+    const crisis = findCrisis(list, request.active.crisis_id);
+    if (crisis && !request.active.chosen_action_ids.every((id) => findAction(crisis, id))) {
+      throw new InvalidRequestError();
+    }
+  }
 }
 
 function candidateCrises(request: CrisisRequest, list: EvidenceList): EvidenceCrisis[] {
