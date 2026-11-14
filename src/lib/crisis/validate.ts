@@ -43,7 +43,8 @@ export const REVEAL_PHRASES: readonly string[] = [
   'bad idea',
 ];
 
-const REVEAL_PATTERNS: readonly RegExp[] = REVEAL_PHRASES.map(
+/** REVEAL_PHRASES as whole-word, case-insensitive patterns. Also used for event card labels. */
+export const REVEAL_PATTERNS: readonly RegExp[] = REVEAL_PHRASES.map(
   (phrase) => new RegExp(`\\b${phrase.split(' ').map(escapeRegExp).join('\\s+')}\\b`, 'i'),
 );
 

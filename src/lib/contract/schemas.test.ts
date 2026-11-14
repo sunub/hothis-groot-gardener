@@ -1,11 +1,23 @@
 import { describe, expect, it } from 'vitest';
+import eventsFile from '@/data/events.json';
 import fallbackFile from '@/data/fallback-crises.json';
 import type { CrisisRequest } from '@/lib/contract/types';
 import { evidence } from '@/lib/evidence';
+import { eventEffectSchema, RESPONSE_OPS } from '@/lib/events/schema';
 import {
+  AI_LABEL_MAX_LENGTH,
+  AI_PLANT_LINE_MAX_LENGTH,
+  AI_RESULT_LINE_MAX_LENGTH,
   AI_SCENE_MAX_LENGTH,
+  AI_WHY_MAX_LENGTH,
   crisisRequestSchema,
   crisisResponseSchema,
+  EVENT_CARD_OPTIONS_MAX,
+  eventCardEffectSchema,
+  eventCardOutputSchema,
+  eventCardRequestSchema,
+  eventCardResponseSchema,
+  eventResponseOpSchema,
   REQUEST_ATTEMPT_MAX,
   REQUEST_CHOICES_MAX,
   REQUEST_CHOSEN_ACTIONS_MAX,
@@ -141,5 +153,138 @@ describe('crisisResponseSchema text limits', () => {
     const shape = crisisResponseSchema.shape.scene;
     expect(shape.safeParse('a'.repeat(AI_SCENE_MAX_LENGTH)).success).toBe(true);
     expect(shape.safeParse('a'.repeat(AI_SCENE_MAX_LENGTH + 1)).success).toBe(false);
+  });
+});
+
+describe('event card schemas', () => {
+  const eventRequest = {
+    locale: 'en',
+    cultivation_day: 3,
+    state: {
+      plant_health: 80,
+      root_moisture: 50,
+      humidity: 50,
+      fan: 'low',
+      light: { red: 'medium', blue: 'medium' },
+    },
+    event_id: 'wick_opening',
+  };
+
+  it('accepts a request with and without offered actions', () => {
+    expect(eventCardRequestSchema.safeParse(eventRequest).success).toBe(true);
+    expect(
+      eventCardRequestSchema.safeParse({ ...eventRequest, offered_action_ids: ['open_wicks'] }).success,
+    ).toBe(true);
+  });
+
+  it('bounds the cultivation day to 0-33', () => {
+    for (const day of [0, 33]) {
+      expect(eventCardRequestSchema.safeParse({ ...eventRequest, cultivation_day: day }).success).toBe(true);
+    }
+    for (const day of [-1, 34, 1.5]) {
+      expect(eventCardRequestSchema.safeParse({ ...eventRequest, cultivation_day: day }).success).toBe(false);
+    }
+  });
+
+  it('accepts only plain snake_case ids up to the length cap', () => {
+    const ok = 'a'.repeat(REQUEST_ID_MAX_LENGTH);
+    expect(eventCardRequestSchema.safeParse({ ...eventRequest, event_id: ok }).success).toBe(true);
+    for (const bad of [`${ok}a`, 'wick opening', ' wick_opening', 'Wick', '']) {
+      expect(eventCardRequestSchema.safeParse({ ...eventRequest, event_id: bad }).success).toBe(false);
+      expect(
+        eventCardRequestSchema.safeParse({ ...eventRequest, offered_action_ids: [bad] }).success,
+      ).toBe(false);
+    }
+  });
+
+  it('bounds offered_action_ids to 1-EVENT_CARD_OPTIONS_MAX distinct ids', () => {
+    const ids = (n: number) => Array.from({ length: n }, (_, i) => `a${i}`);
+    expect(
+      eventCardRequestSchema.safeParse({ ...eventRequest, offered_action_ids: ids(EVENT_CARD_OPTIONS_MAX) })
+        .success,
+    ).toBe(true);
+    for (const offered of [[], ids(EVENT_CARD_OPTIONS_MAX + 1), ['a', 'a']]) {
+      expect(eventCardRequestSchema.safeParse({ ...eventRequest, offered_action_ids: offered }).success).toBe(
+        false,
+      );
+    }
+  });
+
+  it('rejects unknown request keys', () => {
+    expect(eventCardRequestSchema.safeParse({ ...eventRequest, kind: 'scheduled' }).success).toBe(false);
+  });
+
+  it('caps the output text with the crisis text caps and rejects extra keys', () => {
+    const option = { action_id: 'open_wicks', label: 'Spread the wicks', result_line: 'Better.', why: 'Because.' };
+    const output = { event_id: 'wick_opening', scene: 'A scene.', plant_line: 'A line.', options: [option] };
+    expect(eventCardOutputSchema.safeParse(output).success).toBe(true);
+    const cases: Record<string, unknown>[] = [
+      { ...output, scene: 'a'.repeat(AI_SCENE_MAX_LENGTH + 1) },
+      { ...output, plant_line: 'a'.repeat(AI_PLANT_LINE_MAX_LENGTH + 1) },
+      { ...output, options: [{ ...option, label: 'a'.repeat(AI_LABEL_MAX_LENGTH + 1) }] },
+      { ...output, options: [{ ...option, result_line: 'a'.repeat(AI_RESULT_LINE_MAX_LENGTH + 1) }] },
+      { ...output, options: [{ ...option, why: 'a'.repeat(AI_WHY_MAX_LENGTH + 1) }] },
+      { ...output, options: [{ ...option, verdict: 'appropriate' }] },
+      { ...output, clues: [] },
+      { ...output, options: [] },
+      { ...output, options: Array.from({ length: EVENT_CARD_OPTIONS_MAX + 1 }, () => option) },
+      { ...output, scene: '   ' },
+    ];
+    for (const bad of cases) expect(eventCardOutputSchema.safeParse(bad).success).toBe(false);
+  });
+
+  it('keeps the op list equal to RESPONSE_OPS in src/lib/events/schema.ts', () => {
+    expect([...eventResponseOpSchema.options]).toEqual([...RESPONSE_OPS]);
+  });
+
+  it('accepts the same effects as eventEffectSchema in src/lib/events/schema.ts', () => {
+    const effects = (eventsFile.events as { actions?: { effect: unknown }[] }[]).flatMap(
+      (e) => e.actions?.map((a) => a.effect) ?? [],
+    );
+    expect(effects.length).toBeGreaterThan(0);
+    for (const effect of effects) {
+      expect(eventCardEffectSchema.safeParse(effect).success).toBe(true);
+      expect(eventEffectSchema.safeParse(effect).success).toBe(true);
+    }
+    for (const bad of [{ moisture: 1 }, { fan: 'off' }, { clear_flags: ['Bad Flag'] }, { plant_health: '1' }]) {
+      expect(eventCardEffectSchema.safeParse(bad).success).toBe(false);
+      expect(eventEffectSchema.safeParse(bad).success).toBe(false);
+    }
+  });
+
+  it('requires draft: true and game values in the response', () => {
+    const response = {
+      event_id: 'wick_opening',
+      kind: 'scheduled',
+      name: 'Open the germination wicks',
+      cultivation_day: 3,
+      scene: 'A scene.',
+      plant_line: 'A line.',
+      options: [
+        {
+          action_id: 'open_wicks',
+          op: 'open_wicks',
+          label: 'Spread the wicks',
+          result_line: 'Better.',
+          why: 'Because.',
+          verdict: 'appropriate',
+          effect: { plant_health: 0 },
+          value_type: 'game_value',
+        },
+      ],
+      summary: 'A summary.',
+      source_chunks: ['VEG-03J-05'],
+      draft: true,
+      origin: 'fallback',
+    };
+    expect(eventCardResponseSchema.safeParse(response).success).toBe(true);
+    expect(eventCardResponseSchema.safeParse({ ...response, draft: false }).success).toBe(false);
+    expect(eventCardResponseSchema.safeParse({ ...response, kind: 'crisis' }).success).toBe(false);
+    expect(
+      eventCardResponseSchema.safeParse({
+        ...response,
+        options: [{ ...response.options[0], value_type: 'measured' }],
+      }).success,
+    ).toBe(false);
   });
 });

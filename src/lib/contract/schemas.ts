@@ -4,8 +4,10 @@ import type {
   AiCrisisOutput,
   CrisisRequest,
   CrisisResponse,
+  EventEffect,
   EvidenceList,
   PlantState,
+  ResponseOp,
   SourceRef,
 } from './types';
 
@@ -297,3 +299,116 @@ export const evidenceListSchema = z.strictObject({
   }),
   background: z.array(z.strictObject({ claim_id: text, claim: text, source: sourceRefSchema })),
 }) satisfies z.ZodType<EvidenceList>;
+
+// --- Event cards (POST /api/event) --------------------------------------------
+
+/*
+ * Event cards show a scheduled or conditional timeline event from
+ * src/data/events.json. Their text has no clues: events have no symptoms, so
+ * the crisis output format (clues tied to symptom ids) cannot carry them.
+ * Text caps are the crisis caps, so the same choice and result components
+ * can render both.
+ */
+
+/**
+ * Most options one event card may offer. Every card event in events.json has
+ * 3 actions; the cap only bounds the work one request can cause.
+ */
+export const EVENT_CARD_OPTIONS_MAX = 6;
+
+/**
+ * Response operations of an event action. A copy of RESPONSE_OPS in
+ * src/lib/events/schema.ts: that file imports this one, so importing it back
+ * would be a module cycle that leaves one side undefined at load time.
+ * schemas.test.ts checks that the two lists are equal.
+ */
+export const eventResponseOpSchema = z.enum([
+  'water_normal',
+  'water_heavy',
+  'fan_high',
+  'fan_low',
+  'open_wicks',
+  'thin_to_one',
+  'replace_pillow',
+  'check_fan_running',
+  'keep_observing',
+  'do_nothing',
+] as const satisfies readonly ResponseOp[]);
+
+/**
+ * What an event action changes. Same rules as eventEffectSchema in
+ * src/lib/events/schema.ts, defined here for the same module-cycle reason;
+ * schemas.test.ts checks that both accept the same effects.
+ */
+export const eventCardEffectSchema = z.strictObject({
+  root_moisture: z.number().optional(),
+  humidity: z.number().optional(),
+  plant_health: z.number().optional(),
+  fan: fanLevelSchema.optional(),
+  clear_flags: z.array(z.string().regex(REQUEST_ID_PATTERN)).optional(),
+}) satisfies z.ZodType<EventEffect>;
+
+const offeredActionIdsSchema = z
+  .array(requestId)
+  .min(1)
+  .max(EVENT_CARD_OPTIONS_MAX)
+  .refine((ids) => new Set(ids).size === ids.length, { message: 'offered_action_ids must not repeat an id' });
+
+/**
+ * The game engine decides which event occurs and which actions are offered;
+ * the server only checks that they belong together.
+ */
+export const eventCardRequestSchema = z.strictObject({
+  locale: localeSchema,
+  cultivation_day: z.number().int().min(0).max(33),
+  state: plantStateSchema,
+  event_id: requestId,
+  /** Actions to offer, in the order shown. All of the event's actions when omitted. */
+  offered_action_ids: offeredActionIdsSchema.optional(),
+});
+
+/**
+ * Shape check only, for generated text and each pre-made entry. Whether the
+ * ids match the event and the offered actions, and the content rules, are
+ * checked by validateEventCardOutput in src/lib/event-cards/validate.ts.
+ */
+export const eventCardOutputSchema = z.strictObject({
+  event_id: text,
+  scene: aiSceneSchema,
+  plant_line: aiPlantLineSchema,
+  options: z.array(z.strictObject(aiOptionShape)).min(1).max(EVENT_CARD_OPTIONS_MAX),
+});
+
+/** The screen checks the API response with this before the game logic uses it. */
+export const eventCardResponseSchema = z.strictObject({
+  event_id: text,
+  kind: z.enum(['scheduled', 'conditional']),
+  name: text,
+  cultivation_day: z.number().int().min(0).max(33),
+  scene: aiSceneSchema,
+  plant_line: aiPlantLineSchema,
+  options: z
+    .array(
+      z.strictObject({
+        ...aiOptionShape,
+        op: eventResponseOpSchema,
+        verdict: verdictSchema,
+        effect: eventCardEffectSchema,
+        value_type: z.literal('game_value'),
+      }),
+    )
+    .min(1)
+    .max(EVENT_CARD_OPTIONS_MAX),
+  /** What was actually recorded, from events.json. */
+  summary: text,
+  /** Chunk ids in data/json/total_RAG.json, from events.json. */
+  source_chunks: z.array(text),
+  /** Verdicts and effects are draft game values (events.json meta.status). */
+  draft: z.literal(true),
+  origin: z.enum(['fallback', 'generated']),
+});
+
+export type EventCardRequest = z.infer<typeof eventCardRequestSchema>;
+export type EventCardOutput = z.infer<typeof eventCardOutputSchema>;
+export type EventCardResponse = z.infer<typeof eventCardResponseSchema>;
+export type EventCardOption = EventCardResponse['options'][number];
