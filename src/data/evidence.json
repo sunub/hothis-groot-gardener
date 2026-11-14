@@ -1,88 +1,151 @@
 {
   "meta": {
     "schema_version": 1,
-    "description": "Evidence list for the Space Garden Simulator: crises, symptoms and actions recorded in ISS Veggie plant growth tests, with the source sentence for each. Verdicts are assigned by the team from the cited record. Every delta is a game value set for game balance, not a NASA value.",
-    "ai_disclosure": "An AI coding assistant helped search the source documents and draft this file. Each quote was checked by script to be a verbatim substring of the cited source text. The team reviews verdicts and game values.",
-    "updated": "2026-11-15 (provisional: sources under verification)"
+    "description": "Evidence list for the Space Garden Simulator: crises, symptoms and actions taken from records of ISS Veggie plant growth tests, with the source sentence for each. Verdicts are assigned by the team from the cited record. Every delta is a game value set for game balance, not a NASA value. value_type \"measured\" marks a statement or number taken from the cited source.",
+    "ai_disclosure": "An AI coding assistant was used to search the downloaded source documents and to draft this file. Every quote was checked by script to be a verbatim part of the text of the cited source. The team reviews the verdicts and the game values.",
+    "updated": "2026-11-15"
   },
   "crises": [
     {
       "crisis_id": "water_shortage",
       "name": "Water shortage",
-      "summary": "In the VEG-01A and VEG-01B lettuce tests the plants had periods of low water early in growth.",
+      "summary": "In the first Veggie lettuce test (VEG-01A), after about a week and a half the plants were not growing well and the pillow wicks were dry. The reservoir was not supplying enough water to the plant pillows.",
       "record": {
         "crop": "Red romaine lettuce 'Outredgeous'",
-        "experiment": "VEG-01A, VEG-01B",
+        "experiment": "VEG-01A",
         "note": ""
       },
       "trigger": {
-        "any_of": [{ "metric": "root_moisture", "side": "low" }]
+        "any_of": [
+          {
+            "metric": "root_moisture",
+            "side": "low"
+          }
+        ]
       },
       "symptoms": [
         {
-          "symptom_id": "wilting",
-          "name": "Wilting leaves",
+          "symptom_id": "poor_growth",
+          "name": "Plants not growing well",
           "stage": 1,
-          "value_type": "game_value",
-          "source": null
+          "value_type": "measured",
+          "source": {
+            "title": "Massa, Dufour and Smith (2015). Veggie Hardware Validation Test Preliminary Results and Lessons Learned (abstract). NASA Technical Reports Server 20150001374",
+            "url": "https://ntrs.nasa.gov/citations/20150001374",
+            "quote": "After about a week and a half it was observed that plants were not growing well and that pillow wicks were dry.",
+            "license": "NASA Technical Reports Server record: public use permitted"
+          }
         },
         {
-          "symptom_id": "stressed_growth",
-          "name": "Stressed, slowed growth",
+          "symptom_id": "dry_wicks",
+          "name": "Dry pillow wicks",
+          "stage": 1,
+          "value_type": "measured",
+          "source": {
+            "title": "Massa, Dufour and Smith (2015). Veggie Hardware Validation Test Preliminary Results and Lessons Learned (abstract). NASA Technical Reports Server 20150001374",
+            "url": "https://ntrs.nasa.gov/citations/20150001374",
+            "quote": "After about a week and a half it was observed that plants were not growing well and that pillow wicks were dry.",
+            "license": "NASA Technical Reports Server record: public use permitted"
+          }
+        },
+        {
+          "symptom_id": "stressed_plants",
+          "name": "Stressed plants that are slow to recover",
           "stage": 2,
-          "value_type": "game_value",
-          "source": null
+          "value_type": "measured",
+          "source": {
+            "title": "Massa, Dufour and Smith (2015). Veggie Hardware Validation Test Preliminary Results and Lessons Learned (abstract). NASA Technical Reports Server 20150001374",
+            "url": "https://ntrs.nasa.gov/citations/20150001374",
+            "quote": "Direct watering of the pillows led to a recovery in several of the stressed plants; a couple of which did not recover.",
+            "license": "NASA Technical Reports Server record: public use permitted"
+          }
         }
       ],
       "actions": [
         {
-          "action_id": "inject_water_direct",
+          "action_id": "add_water_direct",
           "name": "Add water directly to the plant pillows",
           "verdict": "appropriate",
-          "reason": "Water added directly to the pillow reaches the roots without waiting for the reservoir.",
-          "delta": { "root_moisture": "to_mid", "plant_health": 5 },
+          "reason": "Water added directly to the pillows reaches the roots without depending on the reservoir.",
+          "delta": {
+            "root_moisture": "to_mid",
+            "plant_health": 5
+          },
           "value_type": "game_value",
-          "source": null
+          "source": {
+            "title": "Massa, Dufour and Smith (2015). Veggie Hardware Validation Test Preliminary Results and Lessons Learned (abstract). NASA Technical Reports Server 20150001374",
+            "url": "https://ntrs.nasa.gov/citations/20150001374",
+            "quote": "Direct watering of the pillows led to a recovery in several of the stressed plants; a couple of which did not recover.",
+            "license": "NASA Technical Reports Server record: public use permitted"
+          }
         },
         {
           "action_id": "refill_reservoir",
-          "name": "Refill the root mat reservoir",
+          "name": "Refill the reservoir and let the wicks draw water",
           "verdict": "partial",
-          "reason": "The reservoir supplies water slowly, so the roots recover only in part.",
-          "delta": { "root_moisture": "half_to_mid", "plant_health": 0 },
+          "reason": "The reservoir did not supply enough water to the pillows through the wicks, so the roots recover only in part.",
+          "delta": {
+            "root_moisture": "half_to_mid",
+            "plant_health": 0
+          },
           "value_type": "game_value",
-          "source": null
+          "source": {
+            "title": "Massa, Dufour and Smith (2015). Veggie Hardware Validation Test Preliminary Results and Lessons Learned (abstract). NASA Technical Reports Server 20150001374",
+            "url": "https://ntrs.nasa.gov/citations/20150001374",
+            "quote": "This indicated that the reservoir was not supplying sufficient water to the pillows via wicking, and so the team reverted to an operational fix which added water directly to the plant pillows.",
+            "license": "NASA Technical Reports Server record: public use permitted",
+            "note": "The source records the fact. The verdict for this situation is assigned by the team."
+          }
         },
         {
           "action_id": "wait_for_schedule",
           "name": "Wait for the next scheduled watering",
           "verdict": "inappropriate",
-          "reason": "The roots keep drying until the next scheduled watering.",
-          "delta": { "root_moisture": -10, "plant_health": -10 },
+          "reason": "The care guide says to adjust watering to what you observe. Waiting lets the roots keep drying.",
+          "delta": {
+            "root_moisture": -10,
+            "plant_health": -10
+          },
           "value_type": "game_value",
-          "source": null
+          "source": {
+            "title": "NASA (2017). On-Orbit Gardening Guides. NASA Technical Reports Server 20170007815",
+            "url": "https://ntrs.nasa.gov/citations/20170007815",
+            "quote": "Adjust water quantities and frequency based on your observations",
+            "license": "NASA Technical Reports Server record: public use permitted",
+            "note": "The source records the fact. The verdict for this situation is assigned by the team."
+          }
         },
         {
           "action_id": "fan_high",
           "name": "Set the fan to high",
           "verdict": "inappropriate",
-          "reason": "More air flow dries the plants faster when water is already short.",
-          "delta": { "root_moisture": -10, "plant_health": -10, "fan": "high" },
+          "reason": "The high fan setting dries moisture, which makes a water shortage worse.",
+          "delta": {
+            "root_moisture": -10,
+            "plant_health": -10,
+            "fan": "high"
+          },
           "value_type": "game_value",
-          "source": null
+          "source": {
+            "title": "NASA (2017). On-Orbit Gardening Guides. NASA Technical Reports Server 20170007815",
+            "url": "https://ntrs.nasa.gov/citations/20170007815",
+            "quote": "Increase or decrease fan speed at crew discretion (nominal setting is low, high setting will dry excess moisture)",
+            "license": "NASA Technical Reports Server record: public use permitted",
+            "note": "The source records the fact. The verdict for this situation is assigned by the team."
+          }
         }
       ],
       "source": {
-        "title": "Khodadad et al. (2020), Microbiological and Nutritional Analysis of Lettuce Crops Grown on the International Space Station, Frontiers in Plant Science",
-        "url": "https://doi.org/10.3389/fpls.2020.00199",
-        "quote": "PROVISIONAL",
-        "license": "CC BY"
+        "title": "Massa, Dufour and Smith (2015). Veggie Hardware Validation Test Preliminary Results and Lessons Learned (abstract). NASA Technical Reports Server 20150001374",
+        "url": "https://ntrs.nasa.gov/citations/20150001374",
+        "quote": "This indicated that the reservoir was not supplying sufficient water to the pillows via wicking, and so the team reverted to an operational fix which added water directly to the plant pillows.",
+        "license": "NASA Technical Reports Server record: public use permitted"
       }
     },
     {
       "crisis_id": "overwater_mold",
       "name": "Excess water and stagnant air leading to mold",
-      "summary": "In the VEG-01C zinnia test, excess water and a lack of air flow were followed by fungal growth on the plants.",
+      "summary": "In the Veggie zinnia test (VEG-01C) the plants got overwatered and there was a lack of air flow. A fungus started growing on the plants, and some died.",
       "record": {
         "crop": "Zinnia",
         "experiment": "VEG-01C",
@@ -90,39 +153,66 @@
       },
       "trigger": {
         "any_of": [
-          { "metric": "root_moisture", "side": "high" },
-          { "metric": "humidity", "side": "high" }
+          {
+            "metric": "root_moisture",
+            "side": "high"
+          },
+          {
+            "metric": "humidity",
+            "side": "high"
+          }
         ],
         "fan": "low"
       },
       "symptoms": [
         {
-          "symptom_id": "guttation",
-          "name": "Water droplets at the leaf tips",
+          "symptom_id": "excess_moisture",
+          "name": "Excess moisture around the plants",
           "stage": 1,
-          "value_type": "game_value",
-          "source": null
+          "value_type": "measured",
+          "source": {
+            "title": "Khodadad et al. (2020). Microbiological and Nutritional Analysis of Lettuce Crops Grown on the International Space Station. Frontiers in Plant Science 11:199",
+            "url": "https://doi.org/10.3389/fpls.2020.00199",
+            "quote": "This problem also led to issues of excess moisture in an earlier Zinnia test but a repetition of this with lettuce confirmed the anomaly.",
+            "license": "CC BY",
+            "note": "The problem named in the sentence is a Veggie fan that reads \"low\" after a power cycle but is off."
+          }
         },
         {
-          "symptom_id": "epinasty",
-          "name": "Leaves bending and curling downward",
+          "symptom_id": "leaf_droplets",
+          "name": "Droplets of moisture that stay on the leaves",
           "stage": 1,
-          "value_type": "game_value",
-          "source": null
+          "value_type": "measured",
+          "source": {
+            "title": "Khodadad et al. (2020). Microbiological and Nutritional Analysis of Lettuce Crops Grown on the International Space Station. Frontiers in Plant Science 11:199",
+            "url": "https://doi.org/10.3389/fpls.2020.00199",
+            "quote": "Poor air circulation can cause persistent droplets of moisture on the surface of a leaf due to transpiration",
+            "license": "CC BY",
+            "note": "A general statement about poor air circulation, not an observation from the zinnia test."
+          }
         },
         {
-          "symptom_id": "necrosis",
-          "name": "Dead, brown tissue",
-          "stage": 2,
-          "value_type": "game_value",
-          "source": null
-        },
-        {
-          "symptom_id": "mold",
+          "symptom_id": "fungal_growth",
           "name": "Fungal growth on leaves and stems",
+          "stage": 2,
+          "value_type": "measured",
+          "source": {
+            "title": "NASA Open Science Data Repository, OSD-358. Diagnosing an Opportunistic Fungal Pathogen on Spaceflight-Grown Plants Using the MinION Sequencing Platform (study description)",
+            "url": "https://osdr.nasa.gov/bio/repo/data/studies/OSD-358",
+            "quote": "Thirty-six days after the initiation of plant growth—on December 22, 2015—aerial mycelium was observed on the leaves and stems of zinnia plants"
+          }
+        },
+        {
+          "symptom_id": "rot",
+          "name": "Rot on leaves and stems",
           "stage": 3,
-          "value_type": "game_value",
-          "source": null
+          "value_type": "measured",
+          "source": {
+            "title": "NASA Open Science Data Repository, OSD-177. Draft Genome Sequences of Two Fusarium oxysporum Isolates Cultured from Infected Zinnia hybrida Plants Grown on the International Space Station (study description)",
+            "url": "https://osdr.nasa.gov/bio/repo/data/studies/OSD-177",
+            "quote": "Zinnia hybrida plants became afflicted with a foliar, stem, and root rot disease caused by the fungus Fusarium oxysporum.",
+            "note": "The sources do not date the rot relative to the first fungal growth. The order of stages 2 and 3 is set by the team."
+          }
         }
       ],
       "actions": [
@@ -130,43 +220,79 @@
           "action_id": "fan_high",
           "name": "Set the fan to high",
           "verdict": "appropriate",
-          "reason": "More air flow removes the moisture that builds up around the leaves.",
-          "delta": { "humidity": "to_mid", "root_moisture": "to_mid", "plant_health": 5, "fan": "high" },
+          "reason": "The high fan setting dries excess moisture around the plants.",
+          "delta": {
+            "humidity": "to_mid",
+            "root_moisture": "to_mid",
+            "plant_health": 5,
+            "fan": "high"
+          },
           "value_type": "game_value",
-          "source": null
+          "source": {
+            "title": "NASA (2017). On-Orbit Gardening Guides. NASA Technical Reports Server 20170007815",
+            "url": "https://ntrs.nasa.gov/citations/20170007815",
+            "quote": "Increase or decrease fan speed at crew discretion (nominal setting is low, high setting will dry excess moisture)",
+            "license": "NASA Technical Reports Server record: public use permitted",
+            "note": "From the care guide for leafy greens. No source found records the fan actually being set to high during the zinnia test."
+          }
         },
         {
-          "action_id": "remove_dead_tissue",
-          "name": "Cut away the dead tissue",
+          "action_id": "clean_plant_surfaces",
+          "name": "Clean the plant surfaces",
           "verdict": "partial",
-          "reason": "Removing dead tissue leaves less material for fungus to grow on, but the air stays humid.",
-          "delta": { "humidity": "half_to_mid", "root_moisture": "half_to_mid", "plant_health": 0 },
+          "reason": "Cleaning removes what is on the plants, but the excess moisture and still air remain.",
+          "delta": {
+            "humidity": "half_to_mid",
+            "root_moisture": "half_to_mid",
+            "plant_health": 0
+          },
           "value_type": "game_value",
-          "source": null
-        },
-        {
-          "action_id": "sanitize_surfaces",
-          "name": "Clean the plant surfaces with sanitizing wipes",
-          "verdict": "partial",
-          "reason": "Cleaning removes what is on the surface, but the air stays humid.",
-          "delta": { "humidity": "half_to_mid", "root_moisture": "half_to_mid", "plant_health": 0 },
-          "value_type": "game_value",
-          "source": null
+          "source": {
+            "title": "NASA. Growing Plants in Space",
+            "url": "https://www.nasa.gov/exploration-research-and-technology/growing-plants-in-space/",
+            "quote": "Astronaut Scott Kelly delicately cleaned off the fungus, nursed the surviving plants back to health and got them to flower.",
+            "note": "The source records the fact. The verdict for this situation is assigned by the team."
+          }
         },
         {
           "action_id": "add_water",
           "name": "Add more water",
           "verdict": "inappropriate",
-          "reason": "More water on plants that already have too much makes the excess worse.",
-          "delta": { "root_moisture": 20, "plant_health": -10 },
+          "reason": "The record starts with plants that got too much water. More water makes the excess worse.",
+          "delta": {
+            "root_moisture": 20,
+            "plant_health": -10
+          },
           "value_type": "game_value",
-          "source": null
+          "source": {
+            "title": "NASA. Growing Plants in Space",
+            "url": "https://www.nasa.gov/exploration-research-and-technology/growing-plants-in-space/",
+            "quote": "Once, the zinnias in Veggie got a little overwatered, and there was a lack of air flow.",
+            "note": "The source records the fact. The verdict for this situation is assigned by the team."
+          }
+        },
+        {
+          "action_id": "wait_and_observe",
+          "name": "Keep the settings and check again later",
+          "verdict": "inappropriate",
+          "reason": "Without more air flow the moisture stays around the plants.",
+          "delta": {
+            "humidity": 5,
+            "plant_health": -10
+          },
+          "value_type": "game_value",
+          "source": {
+            "title": "NASA. Growing Plants in Space",
+            "url": "https://www.nasa.gov/exploration-research-and-technology/growing-plants-in-space/",
+            "quote": "Once, the zinnias in Veggie got a little overwatered, and there was a lack of air flow.",
+            "note": "The source records the fact. The verdict for this situation is assigned by the team."
+          }
         }
       ],
       "source": {
-        "title": "NASA, Growing Plants in Space",
+        "title": "NASA. Growing Plants in Space",
         "url": "https://www.nasa.gov/exploration-research-and-technology/growing-plants-in-space/",
-        "quote": "PROVISIONAL"
+        "quote": "Once, the zinnias in Veggie got a little overwatered, and there was a lack of air flow. A fungus started growing on the plants, and some died."
       }
     }
   ],
@@ -174,59 +300,131 @@
     "steps": [
       {
         "step_id": "harvest_sanitize",
-        "name": "Harvest and sanitize",
-        "description": "Harvest the leaves on cultivation day 33 and wipe them with produce sanitizing wipes.",
-        "value_type": "game_value",
-        "source": null
+        "name": "Harvest with sanitized scissors",
+        "description": "On cultivation day 33 the leaves are cut with sanitized scissors.",
+        "value_type": "measured",
+        "source": {
+          "title": "Khodadad et al. (2020). Microbiological and Nutritional Analysis of Lettuce Crops Grown on the International Space Station. Frontiers in Plant Science 11:199",
+          "url": "https://doi.org/10.3389/fpls.2020.00199",
+          "quote": "VEG-01A and B were harvested after 33 days of growth using sanitized scissors to remove the leaves",
+          "license": "CC BY"
+        }
       },
       {
         "step_id": "freeze_return",
         "name": "Freeze and return samples",
-        "description": "Freeze part of the harvest and return it to Earth.",
-        "value_type": "game_value",
-        "source": null
+        "description": "The harvest is frozen and returned to Earth for analysis.",
+        "value_type": "measured",
+        "source": {
+          "title": "Massa (2016). Veggie: Space Vegetables for the International Space Station and Beyond. NASA Technical Reports Server 20160004060",
+          "url": "https://ntrs.nasa.gov/citations/20160004060",
+          "quote": "Plants were grown on the ISS for 33 days, harvested, and returned frozen to Earth for analysis.",
+          "license": "NASA Technical Reports Server record: public use permitted"
+        }
       },
       {
         "step_id": "ground_analysis",
-        "name": "Ground analysis report",
-        "description": "The returned samples are analyzed on the ground.",
-        "value_type": "game_value",
-        "source": null
+        "name": "Ground analysis",
+        "description": "The returned samples are kept frozen and analyzed on the ground at Kennedy Space Center.",
+        "value_type": "measured",
+        "source": {
+          "title": "Khodadad et al. (2020). Microbiological and Nutritional Analysis of Lettuce Crops Grown on the International Space Station. Frontiers in Plant Science 11:199",
+          "url": "https://doi.org/10.3389/fpls.2020.00199",
+          "quote": "After return to Kennedy Space Center, Merritt Island, FL, United States samples from all three experiments were maintained in a −80°C freezer until analysis.",
+          "license": "CC BY"
+        }
       }
     ],
     "microbial_range": {
       "min": 2.14,
       "max": 4.86,
       "unit": "log10 CFU/g",
-      "description": "Total counts for bacteria and yeast/molds reported for flight and ground lettuce tissues.",
+      "description": "Lowest and highest of the four mean bacterial counts on leaves of lettuce grown on the ISS (VEG-01A, VEG-01B and two harvests of VEG-03A), per gram of frozen tissue. It is a range that was observed, not a limit.",
       "value_type": "measured",
       "source": {
-        "title": "Khodadad et al. (2020), Microbiological and Nutritional Analysis of Lettuce Crops Grown on the International Space Station, Frontiers in Plant Science",
+        "title": "Khodadad et al. (2020). Microbiological and Nutritional Analysis of Lettuce Crops Grown on the International Space Station. Frontiers in Plant Science 11:199",
         "url": "https://doi.org/10.3389/fpls.2020.00199",
-        "quote": "PROVISIONAL",
-        "license": "CC BY"
+        "quote": "The bacterial counts on lettuce leaves grown on ISS in VEG-01A, B and both harvests from VEG-03A were relatively low on average, 3.53, 4.86, 2.89, and 2.14",
+        "license": "CC BY",
+        "note": "The values are in log10 CFU/g. Fungal counts on the same lettuce are reported separately (2.3 to 4.3)."
       }
     },
     "pathogen_screen": {
-      "organisms": ["E. coli", "Salmonella sp.", "S. aureus"],
+      "organisms": [
+        "E. coli",
+        "Salmonella sp.",
+        "S. aureus"
+      ],
       "result": "Negative on leaf tissue",
       "value_type": "measured",
       "source": {
-        "title": "Khodadad et al. (2020), Microbiological and Nutritional Analysis of Lettuce Crops Grown on the International Space Station, Frontiers in Plant Science",
+        "title": "Khodadad et al. (2020). Microbiological and Nutritional Analysis of Lettuce Crops Grown on the International Space Station. Frontiers in Plant Science 11:199",
         "url": "https://doi.org/10.3389/fpls.2020.00199",
-        "quote": "PROVISIONAL",
+        "quote": "Screening for potential food borne pathogens, E. coli, Salmonella sp., and S. aureus on the leaf tissue yielded negative results.",
         "license": "CC BY"
       }
     },
     "standards_note": {
-      "text": "There are no standards for microbial levels in fresh produce grown in space.",
+      "text": "There are no standards in place for microbial levels in fresh produce grown in space.",
       "source": {
-        "title": "Khodadad et al. (2020), Microbiological and Nutritional Analysis of Lettuce Crops Grown on the International Space Station, Frontiers in Plant Science",
+        "title": "Khodadad et al. (2020). Microbiological and Nutritional Analysis of Lettuce Crops Grown on the International Space Station. Frontiers in Plant Science 11:199",
         "url": "https://doi.org/10.3389/fpls.2020.00199",
-        "quote": "PROVISIONAL",
+        "quote": "Currently, however, there are no standards in place for microbial levels in fresh produce grown in space.",
         "license": "CC BY"
       }
     }
   },
-  "background": []
+  "background": [
+    {
+      "claim_id": "contamination_crop_failure",
+      "claim": "If a plant growth system is contaminated with plant pathogens, the crop could be compromised or fail.",
+      "source": {
+        "title": "NASA (2021). Researchers Put Space Garden Microbes Under the Microscope",
+        "url": "https://www.nasa.gov/missions/station/researchers-put-space-garden-microbes-under-the-microscope/",
+        "quote": "Or, if plant growth systems become contaminated with plant pathogens, the crops could be compromised or fail.",
+        "note": "Words of a NASA scientist quoted in the article."
+      }
+    },
+    {
+      "claim_id": "contamination_crew_exposure",
+      "claim": "If produce were contaminated, the crew could be more exposed to food-borne pathogens.",
+      "source": {
+        "title": "Khodadad et al. (2020). Microbiological and Nutritional Analysis of Lettuce Crops Grown on the International Space Station. Frontiers in Plant Science 11:199",
+        "url": "https://doi.org/10.3389/fpls.2020.00199",
+        "quote": "However, if a contamination event were to occur, the risks to the crew of exposure to food borne pathogens could be increased considering the association of immune dysregulation to spaceflight",
+        "license": "CC BY"
+      }
+    },
+    {
+      "claim_id": "crop_failure_wellbeing",
+      "claim": "NASA asks to consider that crops which fail or die could be detrimental to crew well-being instead of helping it.",
+      "source": {
+        "title": "NASA Human Research Program (2025). Evidence Report: Risk of Adverse Cognitive or Behavioral Changes and Psychiatric Disorders Leading to In-Mission Health and Performance and Long-Term Health Effects",
+        "url": "https://humanresearchroadmap.nasa.gov/evidence/reports/HRP-ER-BMED-HFBP-20250210.pdf",
+        "quote": "it is important to consider the potential for deleterious effects if the crops are not resilient to the hazards of spaceflight (e.g., fail or die), thus being ineffective as a countermeasure and instead being detrimental to crew well-being.",
+        "license": "Public release by NASA, February 10, 2025",
+        "note": "A caution in the report, not a measured effect."
+      }
+    },
+    {
+      "claim_id": "plants_countermeasure",
+      "claim": "Findings from ISS crop growth work suggest that working with plants and eating them can support behavioral health on long missions.",
+      "source": {
+        "title": "Landon et al. (2025). Behavioral Health Benefits of the ISS Pick-and-Eat Crop Growth System (poster abstract). NASA Technical Reports Server 20250000411",
+        "url": "https://ntrs.nasa.gov/citations/20250000411",
+        "quote": "Findings suggest that working with plants and consuming them can be a behavioral health countermeasure for long-duration spaceflight.",
+        "license": "NASA Technical Reports Server record: public use permitted"
+      }
+    },
+    {
+      "claim_id": "manual_watering",
+      "claim": "Veggie is watered by hand, and the early tests had considerable variation in how much water was added.",
+      "source": {
+        "title": "Khodadad et al. (2020). Microbiological and Nutritional Analysis of Lettuce Crops Grown on the International Space Station. Frontiers in Plant Science 11:199",
+        "url": "https://doi.org/10.3389/fpls.2020.00199",
+        "quote": "Given that Veggie is a manually watered system and that fluid behavior in microgravity differs considerably from that on Earth, these early Veggie experiments involved considerable variation in fluid addition as both the ground teams and the astronauts struggled to effectively water the crops.",
+        "license": "CC BY"
+      }
+    }
+  ]
 }
