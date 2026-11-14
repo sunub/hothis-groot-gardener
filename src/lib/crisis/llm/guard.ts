@@ -1,5 +1,6 @@
 import type { AiCrisisOutput } from '@/lib/contract/types';
 import type { GenerationCandidate } from '../generator';
+import type { StyleExample } from './prompt';
 
 /**
  * Wording checks for generated text, on top of validateAiOutput.
@@ -12,6 +13,8 @@ import type { GenerationCandidate } from '../generator';
  * 3. A scene, plant line or clue that names the cause, a setting or a reading.
  * 4. Facts that are wrong for Veggie or microgravity (soil, dripping water).
  * 5. Result lines that are too short, and text far longer than the format asks for.
+ * 6. Labels that no longer name their action, a narrator instead of the
+ *    lettuce, and a scene or plant line copied from the style example.
  *
  * On a problem the model rewrites once (generator.ts); after that the attempt
  * fails, the pipeline retries once and then shows the pre-made crisis.
@@ -82,6 +85,38 @@ export const CAUSE_WORDS: Record<string, { pattern: RegExp; examples: string }> 
 export const MIN_RESULT_LINE = 25;
 
 /**
+ * Key words of an action. A label keeps at least one key word of its action's
+ * name, so it still names the same action. After the prompt banned "water" in
+ * the scene, a run carried the ban into the labels and wrote "Wait for the next
+ * scheduled nutrient cycle" for "Wait for the next scheduled watering" and
+ * "Increase the airflow rate in the chamber" for "Set the fan to high".
+ */
+export const ACTION_KEY_WORDS: { words: string[]; pattern: RegExp }[] = [
+  { words: ['water'], pattern: /\bwater(s|ed|ing)?\b/i },
+  { words: ['reservoir'], pattern: /\breservoirs?\b/i },
+  { words: ['fan'], pattern: /\bfans?\b/i },
+  { words: ['clean', 'wipe'], pattern: /\b(clean\w*|wip(e|es|ed|ing))\b/i },
+];
+
+/** The key words a label for this action must keep, or an empty list. */
+export function actionKeyWords(actionName: string): { words: string[]; pattern: RegExp }[] {
+  return ACTION_KEY_WORDS.filter((k) => k.pattern.test(actionName));
+}
+
+/**
+ * The lettuce speaks for itself in the plant line and the result lines. A run
+ * wrote 13 of 33 result lines as a narrator ("The wetness around the plants
+ * appears to diminish noticeably.").
+ */
+export const FIRST_PERSON = /\b(i|me|my|mine|myself)\b/i;
+
+/** Result lines per crisis that may go without I, me or my. */
+export const MAX_NARRATED_RESULT_LINES = 1;
+
+/** Consecutive words shared with the style example that count as copying. */
+export const COPY_RUN = 8;
+
+/**
  * Words the model must not use for this candidate, for the prompt. The same
  * lists are enforced by checkWording: `anywhere` in the scene, plant line,
  * clues and result lines; `describing` only in the scene, plant line and clues.
@@ -142,7 +177,27 @@ export function checkWording(output: AiCrisisOutput, candidate: GenerationCandid
   output.options.forEach((option, i) => {
     const hint = option.label.match(LABEL_HINT);
     if (hint) issues.push(`options.${i}.label: "${hint[0]}" hints at the answer.`);
+    const action = candidate.actions.find((a) => a.action_id === option.action_id);
+    const keys = action ? actionKeyWords(action.name) : [];
+    if (action && keys.length > 0 && !keys.some((k) => k.pattern.test(option.label))) {
+      const words = keys.flatMap((k) => k.words).map((w) => `"${w}"`).join(' or ');
+      issues.push(`options.${i}.label: "${option.label}" no longer names the action "${action.name}"; use the word ${words}.`);
+    }
   });
+
+  if (!FIRST_PERSON.test(output.plant_line)) {
+    issues.push('plant_line: the lettuce speaks for itself, with I, me or my.');
+  }
+  // One line without I, me or my is fine (the reviewed stage 3 text has "Nothing
+  // changed, and the soft spots feel worse."); two or more means a narrator.
+  const narrated = output.options
+    .map((o, i) => ({ i, line: o.result_line }))
+    .filter(({ line }) => !FIRST_PERSON.test(line));
+  if (narrated.length >= MAX_NARRATED_RESULT_LINES + 1) {
+    for (const { i, line } of narrated) {
+      issues.push(`options.${i}.result_line: "${line}" sounds like a narrator; the lettuce says it, with I, me or my.`);
+    }
+  }
 
   const allText: [string, string][] = [
     ...described,
@@ -177,6 +232,35 @@ export function checkWording(output: AiCrisisOutput, candidate: GenerationCandid
   });
 
   return issues;
+}
+
+/**
+ * Scene and plant line copied from the style example. Copying is not wrong in
+ * content (the example is reviewed text), but every run then reads the same:
+ * two of three overwater stage 1 runs in the fourth log opened with the
+ * example's scene sentence.
+ */
+export function checkCopying(output: AiCrisisOutput, example: StyleExample | undefined): string[] {
+  if (!example) return [];
+  const source = new Set<string>();
+  // Clues are left out: "fuzzy growth covers parts of the leaves and stems" is
+  // simply how that symptom is said, and a scene may say it too.
+  for (const text of [example.scene, example.plant_line]) {
+    for (const run of wordRuns(text)) source.add(run);
+  }
+  const issues: string[] = [];
+  for (const [field, text] of [['scene', output.scene], ['plant_line', output.plant_line]] as const) {
+    const copied = wordRuns(text).find((run) => source.has(run));
+    if (copied) issues.push(`${field}: "${copied}" is copied from the example; write it in new words.`);
+  }
+  return issues;
+}
+
+function wordRuns(text: string): string[] {
+  const words = text.toLowerCase().replace(/[’‘]/g, "'").replace(/[^a-z']+/g, ' ').trim().split(' ').filter(Boolean);
+  const runs: string[] = [];
+  for (let i = 0; i + COPY_RUN <= words.length; i++) runs.push(words.slice(i, i + COPY_RUN).join(' '));
+  return runs;
 }
 
 /**

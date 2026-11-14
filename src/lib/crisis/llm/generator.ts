@@ -6,7 +6,7 @@ import { fallbackCrises, pickFallbackCandidate } from '../fallback';
 import type { CrisisGenerator, GenerationCandidate, GenerationInput } from '../generator';
 import { chatJson } from './client';
 import type { LlmConfig } from './config';
-import { checkStructure, checkWording } from './guard';
+import { checkCopying, checkStructure, checkWording } from './guard';
 import { buildMessages, buildOutputSchema, type ChatMessage, type StyleExample } from './prompt';
 import { buildRetrievalQuery, retrieveExcerpts, type EvidenceChunk } from './retrieval';
 
@@ -62,12 +62,8 @@ export function createLlmGenerator(config: LlmConfig, deps: LlmGeneratorDeps = {
       });
     }
 
-    const messages = buildMessages({
-      input,
-      candidate,
-      excerpts,
-      example: styleExample(candidate),
-    });
+    const example = styleExample(candidate);
+    const messages = buildMessages({ input, candidate, excerpts, example });
     const schema = buildOutputSchema(candidate, input.limits.clues_max);
 
     let output: AiCrisisOutput | undefined;
@@ -76,14 +72,14 @@ export function createLlmGenerator(config: LlmConfig, deps: LlmGeneratorDeps = {
     let repairs = 0;
     try {
       let raw = await chatJson(config, messages, schema, signal, fetchImpl);
-      ({ output, issues } = review(raw, candidate, random));
+      ({ output, issues } = review(raw, candidate, example, random));
       firstIssues = issues;
       // Ask the model to fix its own rule breaks, inside the same attempt. A plain
       // retry gets the same input and tends to repeat the same mistake.
       while (issues.length > 0 && repairs < config.repairs) {
         repairs++;
         raw = await chatJson(config, repairMessages(messages, raw, issues), schema, signal, fetchImpl);
-        ({ output, issues } = review(raw, candidate, random));
+        ({ output, issues } = review(raw, candidate, example, random));
       }
     } catch (error) {
       issues = [error instanceof Error ? error.message : String(error)];
@@ -101,6 +97,7 @@ export function createLlmGenerator(config: LlmConfig, deps: LlmGeneratorDeps = {
 function review(
   raw: unknown,
   candidate: GenerationCandidate,
+  example: StyleExample | undefined,
   random: () => number,
 ): { output: AiCrisisOutput | undefined; issues: string[] } {
   const parsed = aiCrisisOutputSchema.safeParse(raw);
@@ -111,7 +108,10 @@ function review(
     };
   }
   const output = { ...parsed.data, options: shuffle(parsed.data.options, random) };
-  return { output, issues: [...checkStructure(output, candidate), ...checkWording(output, candidate)] };
+  return {
+    output,
+    issues: [...checkStructure(output, candidate), ...checkWording(output, candidate), ...checkCopying(output, example)],
+  };
 }
 
 /** The conversation so far, plus the list of rules the reply broke. */
