@@ -48,11 +48,13 @@ export const AI_OPTIONS_MAX = 4;
  * Length caps for generated text, in UTF-16 code units after trimming. Each is
  * at least 2.4x the longest English value in src/data/fallback-crises.json (measured
  * longest in parentheses), so a normal sentence fits while a runaway or
- * padded output is rejected and the pre-made crisis is used instead.
+ * padded output is rejected and the pre-made crisis is used instead. The
+ * scene and result-line caps also match the wording check that runs before
+ * this schema, so text that check accepts is never rejected here.
  */
 
 /** Scene description (longest pre-made: 165). */
-export const AI_SCENE_MAX_LENGTH = 400;
+export const AI_SCENE_MAX_LENGTH = 420;
 /** The plant's line (longest pre-made: 97). */
 export const AI_PLANT_LINE_MAX_LENGTH = 240;
 /** One clue's text (longest pre-made: 59). */
@@ -60,7 +62,7 @@ export const AI_CLUE_TEXT_MAX_LENGTH = 160;
 /** One option label (longest pre-made: 39). Labels are buttons, so the cap is tight. */
 export const AI_LABEL_MAX_LENGTH = 100;
 /** The plant's line after a choice (longest pre-made: 64). */
-export const AI_RESULT_LINE_MAX_LENGTH = 160;
+export const AI_RESULT_LINE_MAX_LENGTH = 220;
 /** Why the choice worked or not (longest pre-made: 111). */
 export const AI_WHY_MAX_LENGTH = 280;
 
