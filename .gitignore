@@ -1,0 +1,14 @@
+info
+data/json_ko
+data/json/*
+!data/json/total_RAG.json
+.env
+vector_db/
+__pycache__/
+result/
+.venv
+uv.lock
+
+# ChromaDB
+vector_db/**
+!vector_db/.gitkeep

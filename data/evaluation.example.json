@@ -1,0 +1,62 @@
+[
+  {
+    "query": "현재 상태: 파종 7일차이고 재배 파우치 한 개에 상추 유묘가 두 포기 자랐습니다. 다음에 할 수 있는 관리 행동을 추천해 주세요.",
+    "relevant_ids": ["veggie-day7-thinning", "veggie-seed-wicks-thinning", "veg01-wick-thinning", "veg01-early-a", "VEG-03J-06"]
+  },
+  {
+    "query": "현재 상태: 상추 잎 표면에 물방울이 오래 남아 있고, 전원을 다시 켠 뒤 팬의 동작이 불확실합니다. 다음에 확인하거나 조치할 행동을 추천해 주세요.",
+    "relevant_ids": ["veggie-leaf-moisture", "veggie-fan-restart-moisture", "veggie-03a-fan-restart"]
+  },
+  {
+    "query": "현재 상태: 파종 3일차이고 새싹이 나오기 시작했지만 발아 심지가 아직 닫혀 있습니다. 다음에 할 수 있는 행동을 추천해 주세요.",
+    "relevant_ids": ["VEG-03J-05", "veg01-wick-thinning"]
+  },
+  {
+    "query": "현재 상태: 재배를 시작하며 물을 공급했는데 한 재배 파우치로 물이 들어가지 않습니다. 다음에 점검하거나 교체할 대상을 추천해 주세요.",
+    "relevant_ids": ["veg01-no-flow-a", "veg01-no-flow-b"]
+  },
+  {
+    "query": "현재 상태: 파종 14일차에 상추 생장이 정체됐고 재배 파우치가 건조해 보입니다. 다음에 확인하거나 급수할 행동을 추천해 주세요.",
+    "relevant_ids": ["veg01-stall-a", "veg01-stall-b", "veggie-manual-watering"]
+  },
+  {
+    "query": "현재 상태: 저압 재배 챔버의 양액 저장조 수위가 낮아졌습니다. 다음에 확인하고 보충할 항목을 추천해 주세요.",
+    "relevant_ids": ["stutte2022-nutrient-solution", "stutte2022-transpiration"]
+  },
+  {
+    "query": "현재 상태: 저압 챔버에서 파종 21일차 상추를 수확하려고 합니다. 챔버를 열기 전에 할 행동을 추천해 주세요.",
+    "relevant_ids": ["stutte2022-harvest"]
+  },
+  {
+    "query": "현재 상태: 33 kPa 저압 조건에서 키운 적상추가 작고 더 붉게 보입니다. 다음에 기록하거나 비교할 생육 지표를 추천해 주세요.",
+    "relevant_ids": ["stutte2022-appearance-chlorophyll", "stutte2022-outredgeous-growth", "stutte2022-anthocyanin-orac"]
+  },
+  {
+    "query": "현재 상태: 예정한 수확일이 왔지만 상추가 물 부족 뒤 생장이 느려 아직 작습니다. 수확 시기에 대해 다음 행동을 추천해 주세요.",
+    "relevant_ids": ["veg01-harvest-a", "veg01-stall-a"]
+  },
+  {
+    "query": "현재 상태: 상추에 성숙한 잎이 생겼고 한 번에 전부 수확하지 않고 재배를 이어가고 싶습니다. 가능한 수확 행동을 추천해 주세요.",
+    "relevant_ids": ["veggie-harvest-method", "veggie-sequential-harvest-methods", "veg01-repeat-harvest"]
+  },
+  {
+    "query": "현재 상태: 상추 잎을 수확했고 일부를 나중에 분석할 시료로 보관해야 합니다. 다음 처리 행동을 추천해 주세요.",
+    "relevant_ids": ["veggie-03a-sample-handling", "veggie-sequential-harvest-methods", "VEG-03J-08", "veg01-harvest-b"]
+  },
+  {
+    "query": "현재 상태: 파종 7일차에 여러 재배 파우치 중 하나에서만 발아가 되지 않았습니다. 솎기와 관찰 기록을 어떻게 할지 추천해 주세요.",
+    "relevant_ids": ["veg01-early-a", "veggie-day7-thinning"]
+  },
+  {
+    "query": "현재 상태: Veggie 재배를 시작하려는데 LED 광주기와 빛의 세기가 아직 설정되지 않았습니다. 초기 조명 설정을 확인할 근거를 추천해 주세요.",
+    "relevant_ids": ["veg01-light", "veggie-light-setting", "veggie-light-photoperiod"]
+  },
+  {
+    "query": "현재 상태: 급수 커넥터를 바꾼 뒤에도 재배 파우치로 물이 흐르지 않습니다. 다음에 점검할 부품을 추천해 주세요.",
+    "relevant_ids": ["veg01-no-flow-b", "veg01-no-flow-a"]
+  },
+  {
+    "query": "현재 상태: 파종 전에 재배 파우치의 배지와 비료 및 씨앗 위치를 준비해야 합니다. 다음 준비 행동의 근거를 추천해 주세요.",
+    "relevant_ids": ["veggie-seeds-substrate", "veggie-pillow-substrate", "veg01-substrate", "veg01-setup"]
+  }
+]
