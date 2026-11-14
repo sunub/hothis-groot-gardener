@@ -10,7 +10,7 @@ import { validateAiOutput } from '../validate';
 import { chatJson, parseJsonText } from './client';
 import { readLlmConfig, type LlmConfig } from './config';
 import { createLlmGenerator, GenerationRejectedError, shuffle, styleExample } from './generator';
-import { checkStructure, checkWording } from './guard';
+import { checkCopying, checkStructure, checkWording } from './guard';
 import { buildOutputSchema, buildUserPrompt } from './prompt';
 import { buildRetrievalQuery } from './retrieval';
 
@@ -333,6 +333,61 @@ describe('checkWording', () => {
     expect(issues).toMatch(/Best/);
     expect(issues).toMatch(/names the cause/);
   });
+
+  it('catches labels that no longer name their action (fourth logged run)', () => {
+    const { input } = inputFor(dry);
+    const text = goodWaterText();
+    text.options[0] = { ...text.options[0], label: 'Add liquid directly into the planting pillows' };
+    text.options[1] = { ...text.options[1], label: 'Replenish the main liquid supply in the unit' };
+    text.options[2] = { ...text.options[2], label: 'Wait for the next scheduled maintenance period' };
+    text.options[3] = { ...text.options[3], label: 'Increase the airflow rate in the chamber' };
+    const issues = checkWording(text, input.candidates[0]);
+    expect(issues.filter((i) => i.includes('no longer names the action'))).toHaveLength(4);
+    expect(issues.join(' ')).toMatch(/maintenance period.*"Wait for the next scheduled watering"; use the word "water"/);
+    expect(issues.join(' ')).toMatch(/airflow rate.*use the word "fan"/);
+    // The reviewed label keeps one of the two key words of its action, which is enough.
+    expect(checkWording(goodWaterText(), input.candidates[0]).join(' ')).not.toMatch(/no longer names/);
+  });
+
+  it('catches result lines told by a narrator, but allows one line without I, me or my', () => {
+    const { input } = inputFor(wet);
+    const out = getFallbackCrisis('overwater_mold', 1, 'en', [])!;
+    const fromLog = [
+      'The wetness around the plants appears to diminish noticeably.',
+      'The moisture around the plants remains high, and the fuzzy growth seems to spread.',
+    ];
+    const narrator = { ...out, options: out.options.map((o, i) => (i < 2 ? { ...o, result_line: fromLog[i] } : o)) };
+    const issues = checkWording(narrator, input.candidates[0]).filter((i) => i.includes('narrator'));
+    expect(issues).toHaveLength(2);
+    const one = { ...out, options: out.options.map((o, i) => (i === 0 ? { ...o, result_line: 'Nothing changed, and the soft spots feel worse.' } : o)) };
+    expect(checkWording(one, input.candidates[0]).join(' ')).not.toMatch(/narrator/);
+    expect(checkWording({ ...out, plant_line: 'The leaves stay wet all day.' }, input.candidates[0]).join(' ')).toMatch(
+      /plant_line: the lettuce speaks for itself/,
+    );
+  });
+
+  it('catches a scene or plant line copied from the style example (fourth logged run)', () => {
+    const { input } = inputFor(wet);
+    const example = styleExample(input.candidates[0]);
+    const out = {
+      ...getFallbackCrisis('overwater_mold', 1, 'en', [])!,
+      scene: 'Small droplets of moisture sit on the lettuce leaves and do not dry off. The entire planting area looks damp.',
+      plant_line: 'My leaves stay wet, and the droplets on them never seem to go away. Everything around me feels damp.',
+    };
+    const issues = checkCopying(out, example).join(' ');
+    expect(issues).toMatch(/scene: "the lettuce leaves and do not dry off" is copied/);
+    expect(issues).toMatch(/plant_line: .* is copied/);
+    expect(checkCopying(goodWaterText(), styleExample(inputFor(dry).input.candidates[0]))).toEqual([]);
+    expect(checkCopying(out, undefined)).toEqual([]);
+  });
+
+  it('keeps the banned describing words out of labels in the prompt, and names each key word', () => {
+    const { input } = inputFor(dry);
+    const prompt = buildUserPrompt({ input, candidate: input.candidates[0], excerpts: [] });
+    expect(prompt).toMatch(/ALSO DO NOT USE[^\n]*These words are fine in labels and why lines\./);
+    expect(prompt).toMatch(/- fan_high: Set the fan to high \| verdict: inappropriate \|[^\n]*\| the label keeps the word "fan"/);
+    expect(prompt).toMatch(/- refill_reservoir:[^\n]*the label keeps the word "water" or "reservoir"/);
+  });
 });
 
 // --- model client --------------------------------------------------------------
@@ -426,6 +481,16 @@ describe('rewrite within an attempt', () => {
     expect(second.map((m) => m.role)).toEqual(['system', 'user', 'assistant', 'user']);
     expect(second[2].content).toContain('dry and limp');
     expect(second[3].content).toMatch(/broke these rules[\s\S]*limp/);
+  });
+
+  it('sends a copied scene back for a rewrite', async () => {
+    const copied = { ...goodWaterText(), scene: styleExample(inputFor(dry).input.candidates[0])!.scene };
+    const { impl, calls } = fakeFetch({ modelReplies: [copied, goodWaterText()] });
+    const generator = createLlmGenerator({ ...baseConfig, repairs: 1 }, { fetchImpl: impl, random: inOrder });
+    const out = (await generator(inputFor(dry).input, new AbortController().signal)) as AiCrisisOutput;
+    expect(out.scene).toBe(goodWaterText().scene);
+    const second = calls.filter((c) => c.url.endsWith('/api/chat'))[1].body.messages as { content: string }[];
+    expect(second[3].content).toMatch(/copied from the example/);
   });
 
   it('still throws when the rewrite breaks a rule too', async () => {
