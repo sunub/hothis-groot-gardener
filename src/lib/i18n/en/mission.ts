@@ -158,6 +158,7 @@ export const mission = {
     selected: '✓ Selected',
     confirm: 'Confirm action ▸',
     confirm_hint: 'The result stays hidden until you confirm. Wrong choices make the plant worse and you will be asked again.',
+    ai_written: 'An AI model wrote this scene and the option text. Verdicts, changes and sources come from the evidence list.',
   },
   result: {
     title: 'Result',

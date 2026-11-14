@@ -6,15 +6,18 @@ import {
   NoCandidateError,
   type CrisisGenerator,
 } from '@/lib/crisis';
+import { createLlmGenerator, readLlmConfig } from '@/lib/crisis/llm';
 
 /**
- * The text generator for crises. None is connected yet, so every crisis is a
- * pre-made one (implementation notes, entry 22).
+ * The text generator for crises (implementation notes, entry 22).
  *
- * GENERATOR HOOK: assign a `CrisisGenerator` here to enable generated crises.
- * Keep secrets on the server: read them inside the generator, not in the client.
+ * GENERATOR HOOK: connected when LLM_MODEL is set (see .env.example). Without
+ * it every crisis is a pre-made one, as before. Settings and any API key stay
+ * on the server.
  */
-const generator: CrisisGenerator | undefined = undefined;
+const llmConfig = readLlmConfig();
+const generator: CrisisGenerator | undefined = llmConfig ? createLlmGenerator(llmConfig) : undefined;
+const timeoutMs = llmConfig?.timeoutMs;
 
 // Responses are per request and contain the hidden verdicts, so no layer may store them.
 const NO_STORE = { 'Cache-Control': 'no-store' } as const;
@@ -51,7 +54,7 @@ export async function POST(request: Request): Promise<Response> {
   }
 
   try {
-    const crisis = await createCrisis(parsed.data, { generator });
+    const crisis = await createCrisis(parsed.data, { generator, timeoutMs });
     return Response.json(crisis, { status: 200, headers: NO_STORE });
   } catch (error) {
     if (error instanceof InvalidRequestError) {

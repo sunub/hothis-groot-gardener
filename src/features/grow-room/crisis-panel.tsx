@@ -17,6 +17,8 @@ export interface CrisisView {
   clues: readonly AiClue[];
   record_note: string;
   labels: readonly string[];
+  /** "generated": written by the language model, so the screen says so. */
+  origin: CrisisResponse['origin'];
 }
 
 /** Strip a crisis response down to what may be shown before the player chooses. */
@@ -27,6 +29,7 @@ export function toCrisisView(response: CrisisResponse): CrisisView {
     clues: response.clues,
     record_note: response.record_note,
     labels: response.options.map((o) => o.label),
+    origin: response.origin,
   };
 }
 
@@ -60,6 +63,9 @@ export function CrisisPanel({ view, onChoose }: { view: CrisisView; onChoose: (i
         <PanelHeading>{c.title}</PanelHeading>
         <p className="sr-only">{c.scene_label}</p>
         <p className="text-body">{view.scene}</p>
+        {view.origin === 'generated' ? (
+          <p className="text-caption text-ink-muted">{c.ai_written}</p>
+        ) : null}
       </div>
 
       {view.clues.length > 0 ? (
