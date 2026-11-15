@@ -36,8 +36,8 @@ export function CrisisMetrics({ mission, metrics }: { mission: MissionState; met
   const nights = missionSummary(mission).nights;
 
   return (
-    <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-      <div className="space-y-3">
+    <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
+      <div className="space-y-4">
         <SubHeading>{m.verdicts_title}</SubHeading>
         {metrics.total_choices === 0 ? (
           <p className="text-body text-ink-muted">{m.none}</p>
@@ -69,7 +69,7 @@ export function CrisisMetrics({ mission, metrics }: { mission: MissionState; met
         )}
       </div>
 
-      <div className="space-y-3">
+      <div className="space-y-4">
         <SubHeading>{m.danger_title}</SubHeading>
         <p className="text-body">
           <span className="font-data text-data-lg font-semibold tabular-nums">{metrics.danger_nights}</span>{' '}
@@ -90,7 +90,7 @@ export function CrisisMetrics({ mission, metrics }: { mission: MissionState; met
       </div>
 
       {metrics.attempts_per_crisis.length > 0 ? (
-        <div className="space-y-3 lg:col-span-2">
+        <div className="space-y-4 lg:col-span-2">
           <SubHeading>{m.attempts_title}</SubHeading>
           <TableRegion label={m.attempts_caption}>
             <table className="w-full min-w-[32rem] text-body">
