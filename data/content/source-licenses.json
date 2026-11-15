@@ -2,7 +2,7 @@
   "meta": {
     "description": "License of each source that the retrieval chunks (data/sources/total_RAG.json) are cut from, and what the license allows this project to do with the text.",
     "checked_on": "2026-11-15",
-    "method": "The license field of the publisher record of each DOI (Crossref REST API). The NASA Technical Reports Server and PubMed Central were searched for a public copy of each article that is not openly licensed; none was found (two or three search phrases per article, not an exhaustive search).",
+    "method": "The license field of the publisher record of each DOI (Crossref REST API); Haveman 2023 was checked against the Frontiers version of record. The NASA Technical Reports Server and PubMed Central were searched for a public copy of each article that is not openly licensed; none was found (two or three search phrases per article, not an exhaustive search).",
     "use_rules": {
       "quote": "The source sentences may be shown on screen and stored in data files that the screens read, with attribution.",
       "facts_only": "Do not show or publish the source sentences. State the fact in the team's own words and cite the source (DOI and location). The chunks may still be used for retrieval on a developer machine.",
@@ -21,6 +21,17 @@
       "translation_may_be_published": true,
       "public_nasa_copy": null,
       "note": "Open access. The license is on the version of record."
+    },
+    {
+      "source_id": "haveman2023",
+      "citation": "Haveman et al. (2023). Advancing the automation of plant nucleic acid extraction for rapid diagnosis of plant diseases in space. Frontiers in Plant Science 14:1194753.",
+      "url": "https://doi.org/10.3389/fpls.2023.1194753",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "use": "quote",
+      "translation_may_be_published": true,
+      "public_nasa_copy": null,
+      "note": "Open access. The Frontiers version of record states CC BY; credit the authors and original publication, link the license, and indicate adaptations."
     },
     {
       "source_id": "veg01",
