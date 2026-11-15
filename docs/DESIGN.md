@@ -175,7 +175,7 @@
 | `public/bg/bay-teal.jpg` | 재배실 배경(1672×941). 마젠타 그로우 라이트를 청록으로 옮긴 것 |
 | `public/bg/wall-teal.jpg` | 보고서 화면 배경 (같은 보정) |
 | `public/icons/fan.png` | 팬 조작 |
-| `public/icons/pruner.png` | 수확, 죽은 조직 제거 |
+| `public/icons/pruner.png` | 수확 |
 | `public/icons/water.png` | 급수 |
 | `public/icons/wipe.png` | 표면 닦기 (Partial 조치) |
 | `public/icons/syringe.png` | 필로우 직접 급수 |
