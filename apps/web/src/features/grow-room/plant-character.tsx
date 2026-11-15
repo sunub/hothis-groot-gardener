@@ -6,7 +6,7 @@ import type { MissionState } from '@/lib/contract/types';
 import { format, useDictionary, type Dictionary } from '@/lib/i18n';
 import { HEALTH_MAX, METRICS, growthStageOf, isCaution, isDanger, zoneOf } from '@/lib/game/rules';
 import { chosenOption, lastAttempt, todayRecord } from './derive';
-import { LettuceScene } from './lettuce-scene';
+import { LettuceScene, type SceneBackdrop } from './lettuce-scene';
 import { spriteFor } from './lettuce-sprite';
 
 /**
@@ -43,12 +43,25 @@ function overallOf(mission: MissionState): 'normal' | 'caution' | 'danger' {
   return 'normal';
 }
 
+/** Crisis phases use the event backdrop, the result of a choice the result one, the rest the normal one. */
+function backdropFor(mission: MissionState): SceneBackdrop {
+  switch (mission.phase) {
+    case 'crisis':
+    case 'crisis_pending':
+      return 'event';
+    case 'crisis_result':
+      return 'result';
+    default:
+      return 'normal';
+  }
+}
+
 const OVERALL_SYMBOL = { normal: '✓', caution: '△', danger: '✕' } as const;
 
 /**
- * The lettuce in the grow bay. From the sm breakpoint the speech bubble and the
- * overall state sit on the empty right half of the bay; on narrow screens the
- * bubble drops below the picture so its text never covers the plant.
+ * The lettuce in the grow bay. From the sm breakpoint the speech bubble hangs
+ * just above the plant's top leaf and the overall state sits bottom left; on
+ * narrow screens both drop below the picture so the text never covers the plant.
  */
 export function PlantCharacter({ mission }: { mission: MissionState }) {
   const t = useDictionary();
@@ -61,6 +74,7 @@ export function PlantCharacter({ mission }: { mission: MissionState }) {
     <section aria-label={c.label}>
       <LettuceScene
         sprite={spriteFor(mission)}
+        backdrop={backdropFor(mission)}
         dimLabel={mission.phase === 'night' ? c.night_label : undefined}
         label={format(c.svg_label, {
           stage: t.common.growth_stage[stage],
@@ -68,13 +82,18 @@ export function PlantCharacter({ mission }: { mission: MissionState }) {
           max: HEALTH_MAX,
         })}
       >
-        <div className="absolute top-[8%] left-[55%] hidden w-[42%] flex-col items-start gap-3 sm:flex">
-          <PlantSpeech text={line} tail="down" aria-live="polite" className="text-caption lg:text-body" />
-          <Badge tone={overall} appearance="solid" className="m-1 px-3 py-1 text-data">
-            <span aria-hidden>{OVERALL_SYMBOL[overall]}</span>
-            {c.overall[overall]}
-          </Badge>
+        {/* The tail tip rests just above the top leaf, so the bubble rises as the lettuce grows. */}
+        <div className="plant-speech-anchor hidden sm:block">
+          <PlantSpeech text={line} aria-live="polite" />
         </div>
+        <Badge
+          tone={overall}
+          appearance="solid"
+          className="absolute bottom-[4%] left-[3%] m-1 hidden px-3 py-1 text-data sm:inline-flex"
+        >
+          <span aria-hidden>{OVERALL_SYMBOL[overall]}</span>
+          {c.overall[overall]}
+        </Badge>
       </LettuceScene>
       <div className="mt-3 sm:hidden">
         <PlantSpeech text={line} tail="up" className="text-body" />
