@@ -35,6 +35,7 @@ export const common: Dictionary['common'] = {
     measured: '기록값',
     game_value: '게임 값',
   },
+  overnight_change: '밤사이 예상에 없던 변화: {metric} {from} → {to}.',
   value_type_help: {
     measured: '인용한 출처에서 가져온 값입니다.',
     game_value: '게임 균형을 위해 팀이 정한 값입니다. NASA의 값이 아닙니다.',

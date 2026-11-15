@@ -98,6 +98,17 @@ export function sideOf(zone: Zone): ZoneSide | null {
   return null;
 }
 
+/**
+ * Middle of the caution band on one side, rounded to an integer. The low band
+ * is [danger_low_below, caution_low_below), the high band (normal_max, caution_high_max].
+ */
+export function cautionMidOf(metric: Metric, side: ZoneSide): number {
+  const b = ZONE_BOUNDS[metric];
+  return side === 'low'
+    ? Math.round((b.danger_low_below + b.caution_low_below) / 2)
+    : Math.round((b.normal_max + b.caution_high_max) / 2);
+}
+
 export function clampMetric(value: number): number {
   return Math.min(METRIC_MAX, Math.max(METRIC_MIN, value));
 }
@@ -129,6 +140,17 @@ export const CRISIS_PROBABILITY = {
   /** Added on the day after a partial verdict for the same crisis. */
   recurrence_bonus: 0.3,
 } as const;
+
+/**
+ * Game values set by the team. A careful player would otherwise meet no
+ * crisis, so standard missions without a timeline get an overnight change
+ * (one watched value moves into its caution zone) until this many crises
+ * have occurred. 0 restores the state-only rule.
+ */
+export const MIN_CRISES_PER_MISSION = 2;
+
+/** Chance per crisis morning of an overnight change, while the minimum is not reached and nothing is a candidate. */
+export const OVERNIGHT_CHANGE_PROBABILITY = 0.3;
 
 // --- Verdict effects ---------------------------------------------------------
 

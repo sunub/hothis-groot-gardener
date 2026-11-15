@@ -223,6 +223,7 @@ function PhasePanel({
         <CrisisPanel
           key={`${response.crisis_id}-${response.attempt}`}
           view={toCrisisView(response)}
+          overnightChange={mission.days[mission.days.length - 1]?.overnight_change}
           // The action id is looked up here, outside the rendered options.
           onChoose={(index) => {
             const option = response.options[index];

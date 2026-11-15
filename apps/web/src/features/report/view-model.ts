@@ -12,6 +12,7 @@ import type {
   MicrobialResult,
   MissionState,
   NightRecord,
+  OvernightChange,
   PlantState,
   ReportMetrics,
   SourceRef,
@@ -254,6 +255,8 @@ export interface DayRow {
     outcome: CrisisOutcome | null;
   } | null;
   night: NightRecord | null;
+  /** The overnight change that raised this day's crisis, if any (older saves have none). */
+  overnightChange: OvernightChange | null;
   /** State at the end of the day: after the night, else after the last choice, else the morning. */
   end: PlantState;
   healthChange: number;
@@ -295,6 +298,7 @@ export function dayRows(mission: MissionState): DayRow[] {
           }
         : null,
       night: day.night,
+      overnightChange: day.overnight_change ?? null,
       end,
       healthChange: end.plant_health - day.start.plant_health,
       failedHere: mission.phase === 'failed' && i === last,

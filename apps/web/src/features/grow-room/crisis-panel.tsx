@@ -1,11 +1,12 @@
 'use client';
 
-import type { AiClue, CrisisResponse } from '@/lib/contract/types';
+import type { AiClue, CrisisResponse, OvernightChange } from '@/lib/contract/types';
 import { ChoiceList } from '@/components/choice-list';
 import { Badge } from '@/components/ui/badge';
 import { Callout } from '@/components/ui/callout';
 import { PixelIcon } from '@/components/ui/pixel-icon';
-import { useDictionary } from '@/lib/i18n';
+import { ValueTypeTag } from '@/components/value-type-tag';
+import { format, useDictionary } from '@/lib/i18n';
 import { PanelHeading } from './panel-heading';
 
 /** What the crisis screen shows before the choice. Verdict, reason, delta and source are not part of it. */
@@ -35,8 +36,18 @@ export function toCrisisView(response: CrisisResponse): CrisisView {
  * Crisis scene, clues, record note and the options (ChoiceList: labels only,
  * answered by position, so no verdict or action data reaches the DOM).
  */
-export function CrisisPanel({ view, onChoose }: { view: CrisisView; onChoose: (index: number) => void }) {
-  const c = useDictionary().mission.crisis;
+export function CrisisPanel({
+  view,
+  overnightChange,
+  onChoose,
+}: {
+  view: CrisisView;
+  /** The overnight change that raised today's crisis, if any. Shown as a value only, never with its cause. */
+  overnightChange?: OvernightChange;
+  onChoose: (index: number) => void;
+}) {
+  const t = useDictionary();
+  const c = t.mission.crisis;
 
   return (
     <div className="space-y-6">
@@ -55,6 +66,18 @@ export function CrisisPanel({ view, onChoose }: { view: CrisisView; onChoose: (i
           </span>
           <PanelHeading>{c.title}</PanelHeading>
         </div>
+        {overnightChange ? (
+          <p className="flex flex-wrap items-center gap-2 text-body">
+            <ValueTypeTag type="game_value" />
+            <span>
+              {format(t.common.overnight_change, {
+                metric: t.common.metric[overnightChange.metric],
+                from: overnightChange.from,
+                to: overnightChange.to,
+              })}
+            </span>
+          </p>
+        ) : null}
         <p className="sr-only">{c.scene_label}</p>
         <p className="text-body">{view.scene}</p>
         {view.origin === 'generated' ? (

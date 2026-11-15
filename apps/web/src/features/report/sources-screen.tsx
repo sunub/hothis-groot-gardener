@@ -25,10 +25,12 @@ import {
   METRIC_MAX,
   METRIC_MIN,
   MICROBIAL,
+  MIN_CRISES_PER_MISSION,
   MOLD_STAGE,
   NIGHT_DRIFT,
   NIGHT_HEALTH,
   NORMAL_MID,
+  OVERNIGHT_CHANGE_PROBABILITY,
   VERDICT_HEALTH_DEFAULT,
   WATER_AMOUNT,
   ZONE_BOUNDS,
@@ -564,6 +566,10 @@ function GameRules() {
               format(r.crisis_danger, { percent: pct(CRISIS_PROBABILITY.danger) }),
               format(r.crisis_caution, { percent: pct(CRISIS_PROBABILITY.caution) }),
               format(r.crisis_recurrence, { points: pct(CRISIS_PROBABILITY.recurrence_bonus) }),
+              format(r.crisis_minimum, {
+                count: MIN_CRISES_PER_MISSION,
+                percent: pct(OVERNIGHT_CHANGE_PROBABILITY),
+              }),
             ]}
           />
         </RuleBlock>

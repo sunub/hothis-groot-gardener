@@ -184,7 +184,12 @@ describe('a mission that fails (planning document: 식물 건강과 수확)', ()
 describe('recurrence after a partial verdict, across the game logic and the crisis API', () => {
   it('brings back the same crisis, not the other one that is also a candidate', async () => {
     // Seed 6: the day-6 roll is 0.54, above 30% and below the 60% of a recurring crisis.
-    let m = createMission({ mission_id: 'recurrence', mode: 'standard', seed: 6 });
+    // Marked as a demo mission so the state-only rule decides (no overnight change and no
+    // forced crisis for MIN_CRISES_PER_MISSION); the seed's rolls stay those of seed 6.
+    let m: MissionState = {
+      ...createMission({ mission_id: 'recurrence', mode: 'standard', seed: 6 }),
+      mode: 'demo',
+    };
     m = careDay(m, [{ kind: 'water', level: 'normal' }]);
     m = careDay(m, [{ kind: 'water', level: 'normal' }]);
     m = careDay(m, [{ kind: 'water', level: 'normal' }]);
