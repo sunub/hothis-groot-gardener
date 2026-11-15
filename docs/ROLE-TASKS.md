@@ -1,6 +1,6 @@
 # 역할별 작업 전달
 
-Space Garden Simulator · 2026-11-15 09:20 기준 · 기준 브랜치 `HwangSoon96`
+Space Garden Simulator · 2026-11-15 09:50 기준 · 기준 브랜치 `HwangSoon96`
 
 이 문서는 통합 브랜치의 지금 상태와, 세 역할이 이어서 할 일을 적은 것입니다. 역할의 경계는 `docs/TIMELINE-EVENTS-PLAN.md` 7절의 폴더 구분을 따릅니다.
 
@@ -15,7 +15,7 @@ Space Garden Simulator · 2026-11-15 09:20 기준 · 기준 브랜치 `HwangSoon
 
 ## 0. 지금 브랜치에 들어 있는 것
 
-`main`에는 `HwangSoon96`의 통합 병합(`lkh`, `woojin-llm`, `woojin-rag-server`)과 `sunub`의 폴더 구조 정리(`b32cf60`)가 들어가 있습니다(11/15 08:40). `HwangSoon96`은 그 위에 커밋 8개가 더 있습니다.
+`main`에는 `HwangSoon96`의 통합 병합(`lkh`, `woojin-llm`, `woojin-rag-server`)과 `sunub`의 폴더 구조 정리(`b32cf60`)가 들어가 있습니다(11/15 08:40). `HwangSoon96`은 그 위에 `lkh`의 새 작업(`265c912`: 기록 사건, 조짐 줄, 원문 인용 읽기)을 새 폴더 구조로 옮겨 합쳤고, 아래 표의 작업이 더 있습니다.
 
 | 폴더 | 내용 |
 |---|---|
@@ -29,13 +29,16 @@ Space Garden Simulator · 2026-11-15 09:20 기준 · 기준 브랜치 `HwangSoon
 | 내용 | 파일 |
 |---|---|
 | 사건의 근거 조각 목록 보완 | `data/content/events.json`, `data/eval/evaluation.events.json` |
+| 사건 목록의 급수 막힘 효과와 실험 기록 번호 12개 | `data/content/events.json` |
+| `lkh`의 기록 사건 12개, 조짐 줄, 원문 인용 읽기 (새 구조로 옮김) | `apps/web/src/lib/events/`, `apps/web/src/lib/contract/`, `data/content/events.json` |
+| 새 구조에 맞춘 정리: 사건 카드 API의 입구, Python 설정 예시 파일의 위치 | `apps/web/src/server/ai/event-cards/index.ts`, `services/rag/.env_example` |
 | 사건 카드 글 생성기와 생성 스위치 | `apps/web/src/server/ai/event-cards/llm-generator.ts`, `llm-prompt.ts`, `generation-switch.ts` |
 | README와 출처 문서의 사실 정정 | `README.md`, `docs/SOURCES.md` |
 | 이 문서 | `docs/ROLE-TASKS.md` |
 
 **확인함**
 
-- 새 폴더 구조에서 타입 검사, 린트, 테스트 582개, 빌드, Python 테스트 3개 통과.
+- 새 폴더 구조에서 타입 검사, 린트, 테스트 599개, 빌드 통과. Python 테스트 3개는 `lkh`를 합치기 전의 같은 구조에서 통과.
 - 폴더 구조를 바꾸기 전, 사건 카드 API를 넣기 전의 통합본으로 시연 임무를 1일째부터 보고서까지 브라우저에서 진행했습니다. 위기 3번의 글을 모두 언어 모델이 썼고(`origin: generated`), 수치는 `docs/DEMO-SCRIPT.md`와 같았고, 화면 오류는 없었습니다.
 - `POST /api/event`에 정상 요청 2종과 잘못된 요청 5종을 보내 200과 400을 확인했습니다.
 
@@ -135,23 +138,19 @@ cd services/rag && uv run --group server uvicorn rag_server:app --host 127.0.0.1
 - 사건은 게임 날(재배일 6, 12, 17, 22, 28)에만 납니다. 다른 날에 내려면 엔진이 날마다 계산해야 합니다.
 - **기다리는 것**: D1, D2.
 
-### A4. 사건 목록 보완을 막는 테스트 7개
+### A4, A5. 끝남 (`lkh`의 `265c912`)
 
-`docs/TIMELINE-ENGINE-NOTES.md`의 T5와 T6이 역할 B에 요청한 수정(`pillow_no_flow`의 `flag_effects`, 실험 기록의 `entry_id`)은 준비돼 있습니다. 그런데 넣으면 아래 테스트가 깨집니다 (합쳐서 돌려 확인함).
+- 사건 목록 보완을 막던 테스트를 `lkh`가 고쳤고, 그 뒤 데이터를 넣었습니다: `pillow_no_flow`의 `flag_effects`, 실험 기록의 `entry_id` 12개.
+- `verified_source`도 타입과 스키마에 들어갔습니다. `checked`인 기록에는 `verified_source`가 꼭 있어야 하고 `not_checked`인 기록에는 없어야 합니다(T10).
 
-| 테스트 | 깨지는 이유 |
-|---|---|
-| `events.test.ts`의 "warns about a flag that has no effect entry" | 실제 파일에서 경고가 나는 것을 검사합니다. 효과를 채우면 경고가 사라집니다 |
-| `judge.test.ts`의 "returns the dated track entries of a day with stable keys" | `VEG-01A#1` 형식의 키를 적어 두었습니다 |
-| `fixtures.test.ts`의 "has a log in day order that matches the list" 5개 | 예시 상태가 같은 형식의 키를 씁니다 |
+### A9. 기록 사건 12개를 검토한 결과 (엔진 쪽에서 볼 것)
 
-- **할 일**: 경고 테스트는 테스트용 목록을 쓰게 바꾸고, 예시 상태와 테스트의 키를 아래 번호로 바꿉니다. 그 뒤 역할 B가 데이터를 넣습니다.
-- **넣을 번호**: `veg01a_d0`, `veg01a_d7`, `veg01a_d14`, `veg01a_d33`, `veg01b_d15`, `veg01b_d16`, `veg01b_d33`, `veg03a_early_growth`, `veg03j_d3`, `veg03j_d7`, `veg03j_after_germination`, `veg03j_d29`.
+`docs/TIMELINE-ENGINE-NOTES.md`의 T12가 역할 B에 요청한 검토입니다. 문장별 결과는 B10에 있습니다. 엔진이 정할 것은 아래 네 가지입니다.
 
-### A5. `verified_source` 칸을 타입과 스키마에 추가
-
-- `events.json`의 실험 기록에 원문 인용 칸(`verified_source`: `title`, `url`, `quote`, `license`)을 더했습니다. 대조된 기록에만 있습니다.
-- `apps/web/src/lib/events/schema.ts`의 기록 스키마는 모르는 칸을 읽을 때 버립니다. `source_check`는 이미 들어갔고, `verified_source`도 넣어야 화면까지 갑니다.
+- **줄이 나올 수 있는 날이 1, 2, 4, 5일째뿐입니다.** 기간이 모두 하루이고 `window.from`으로만 맞추기 때문입니다. 6~33일째에는 기록 줄이 없습니다.
+- **`record_humidity_reading_high`의 조건이 글과 맞지 않습니다.** 조건은 "팬 약, 그리고 뿌리 수분 과다 또는 습도 과다"입니다. 그래서 습도가 정상이고 뿌리 수분만 높을 때에도 "습도가 평소보다 높게 읽힌다"는 줄이 나옵니다.
+- **같은 임무에서 서로 어긋나는 줄이 나올 수 있습니다.** 2일째 "한 패드에 아직 싹이 없다"(30%)와 4일째 "싹이 고르게 올라온다". 1일째 "패드에 물을 채웠다"와 같은 날의 `pillow_no_flow`(패드에 물이 들어가지 않음).
+- **마른 쪽과 젖은 쪽으로 동시에 향할 때** 묶음 순서 때문에 마른 쪽 줄만 나오고, 과습 위기의 조짐 줄은 나오지 않습니다(코드를 읽어 확인, 실행하지 않음).
 
 ### A6. 엔진 규칙 수정 (D4의 결정 뒤)
 
@@ -230,7 +229,7 @@ cd services/rag && uv run --group server uvicorn rag_server:app --host 127.0.0.1
 
 ### B4. 사건 목록 데이터
 
-- **A4 뒤에**: `pillow_no_flow`의 `flag_effects`와 실험 기록의 `entry_id`를 넣습니다.
+- **끝남**: `pillow_no_flow`의 `flag_effects`와 실험 기록의 `entry_id` 12개를 넣었습니다.
 - **D2 뒤에**: 정해진 수치를 `events.json`에 반영하고 초안 표시를 정리합니다(계획 문서의 B6).
 
 ### B5. 사건 카드의 글
@@ -267,6 +266,29 @@ D1에서 "상태 줄을 기본으로"로 정하면, 구간이 바뀌는 날과 �
 - 앱이 기본으로 쓰는 검색은 키워드 검색입니다(`services/rag/retriver.local.yaml`, 임베딩 키 불필요). 벡터 검색을 섞은 점수와 재정렬은 확인 못 함.
 - D3의 결정에 따라 `data/sources/total_RAG.json`, `data/vector_db/`, 한국어 번역(`data/sources/json_ko`)의 처리를 정합니다. 번역은 CC BY-NC-ND 출처의 변형물이라 공개할 수 없습니다.
 
+### B10. 기록 사건 12개의 문장과 출처 검토 (T12의 요청)
+
+인용한 조각의 본문과 한 줄씩 대조했습니다. `events.json`은 고치지 않았습니다. 문장을 고칠지는 역할 A·C와 정합니다.
+
+| 사건 | 날 | 결과 | 이유 |
+|---|---|---|---|
+| `record_pillows_initiated` | 1 | 문구 수정 | "물을 채웠다"가 같은 날의 `pillow_no_flow`와 어긋날 수 있음 |
+| `record_lights_programmed` | 1 | 괜찮음 | 조각에 있음(16시간 켬, 8시간 끔) |
+| `record_first_sprouts` | 2 | 문구 수정 | "심지 사이로 보인다"가 조각에 없음. 심지는 3일째에 벌림 |
+| `record_pillow_not_sprouting` | 2 | 팀 결정 | 4일째 "고르게 올라온다"와 같은 임무에서 함께 나올 수 있음 |
+| `record_wicks_look_dry` | 4 | **출처 없음** | "마른 심지"가 인용한 조각에도, 조각 81개 어디에도 없음. NASA 초록(NTRS 20150001374)에는 있으나 "약 일주일 반 뒤"의 일이고 DB에 아직 없음 |
+| `record_droplets_on_leaves` | 4 | 팀 결정 | 잎의 물방울은 일반 서술("생길 수 있다")이지 상추에서 관찰한 기록이 아님. 근거 목록의 과습 위기 증상과 같은 문제 |
+| `record_sprouts_even` | 4 | 문구 수정 | "고르게"가 조각에 없음 |
+| `record_seedlings_checked` | 4 | 문구 수정 | "매일 확인"이 조각에 없음(조각은 "주기적으로") |
+| `record_growth_slow` | 5 | 문구 수정 | 요약의 "성장이 멈췄다"가 조각보다 셈(조각은 "자라지 않는 것으로 보였다") |
+| `record_humidity_reading_high` | 5 | 팀 결정 | 조건이 글과 맞지 않음(A9). 요약이 Khodadad 2020의 문장을 잘못 옮김: 원문은 재배실 안과 밖의 비교가 아니라 VEG-03A와 다른 두 시험의 비교 |
+| `record_seedlings_growing` | 5 | 괜찮음 | 조각에 있음 |
+| `record_photos_sent` | 5 | 문구 수정 | "지상 팀에 보냈다"는 조각에 없는 추론 |
+
+- **상태 때문에 나오는 줄 7개(4일째와 5일째)는 실제 기록이 아니라 게임 값입니다.** "기록"이라고 부르고 지금 일어난 일처럼 적혀 있어서, 화면에서 실측처럼 보이지 않게 표시해야 합니다.
+- 조각의 문장을 5단어 이상 그대로 옮긴 곳은 "사실만 쓸 출처"에서는 없었습니다.
+- 확인 못 한 것: Massa 2017과 Curry 2026 조각의 원문 대조(원문이 없음), 화면에서의 표시(그리는 코드가 아직 없음).
+
 ### B9. 문서
 
 - `docs/SOURCES.md`와 README에 새 데이터 파일(`event-cards.json`, `public_sources_RAG.json`, `source-licenses.json`)과 새 출처를 적어야 합니다.
@@ -277,7 +299,7 @@ D1에서 "상태 줄을 기본으로"로 정하면, 구간이 바뀌는 날과 �
 ### C1. 시간 흐름 조작과 기록 목록 (계획 문서의 C1, C3)
 
 - 일시정지, 배속, "다음 사건까지". 사건 카드가 떠 있으면 시간이 멈춥니다.
-- 기록 목록: 사건 줄, 실제 실험 기록 줄, 게임 날 줄. D1에서 정해지면 상태 줄.
+- 기록 목록: 사건 줄, 실제 실험 기록 줄, 게임 날 줄, 기록 사건 줄(`record`, `lkh`의 T12). 상태 때문에 나오는 기록 사건 줄은 게임 값이므로 실측처럼 보이지 않게 표시합니다(B10).
 - 예시 상태는 `apps/web/src/lib/contract/fixtures.ts`의 `TIMELINE_FIXTURES` 6개입니다.
 
 ### C2. 사건 카드 (계획 문서의 C2)
