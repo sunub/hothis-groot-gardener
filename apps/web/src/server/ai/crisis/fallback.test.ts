@@ -12,11 +12,11 @@ function crisisOf(id: string) {
 }
 
 describe('fallback crisis file', () => {
-  it('has an entry for every crisis and every stage it can have', () => {
+  it.each(['en', 'ko'] as const)('has a %s entry for every crisis and every stage it can have', (locale) => {
     for (const crisis of evidence.crises) {
       for (let stage = 1; stage <= maxStageOf(crisis); stage++) {
         const found = fallbackCrises.crises.some(
-          (e) => e.output.crisis_id === crisis.crisis_id && e.stage === stage && e.locale === 'en',
+          (e) => e.output.crisis_id === crisis.crisis_id && e.stage === stage && e.locale === locale,
         );
         expect(found, `${crisis.crisis_id} stage ${stage}`).toBe(true);
       }
@@ -102,8 +102,14 @@ describe('getFallbackCrisis', () => {
     expect(getFallbackCrisis('nope', 1, 'en', [])).toBeNull();
   });
 
+  it('returns Korean text for the ko locale', () => {
+    const out = getFallbackCrisis('water_shortage', 1, 'ko', [])!;
+    expect(out.scene).toMatch(/[가-힣]/);
+    expect(out.options.every((o) => /[가-힣]/.test(o.label))).toBe(true);
+  });
+
   it('falls back to English for a locale without text', () => {
-    expect(getFallbackCrisis('water_shortage', 1, 'ko', [])).toEqual(
+    expect(getFallbackCrisis('water_shortage', 1, 'fr' as never, [])).toEqual(
       getFallbackCrisis('water_shortage', 1, 'en', []),
     );
   });

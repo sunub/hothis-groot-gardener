@@ -201,6 +201,204 @@
           }
         ]
       }
+    },
+    {
+      "stage": 1,
+      "locale": "ko",
+      "output": {
+        "crisis_id": "water_shortage",
+        "scene": "상추들이 작고, 지난번 확인 때보다 거의 자라지 않았습니다. 필로우 아래쪽 심지가 창백하고 말라 보입니다.",
+        "plant_line": "나는 제대로 자라지 못하고 있어요. 내 밑의 심지도 말라 있어요.",
+        "clues": [
+          { "symptom_id": "poor_growth", "text": "식물이 작고 천천히 자랍니다." },
+          { "symptom_id": "dry_wicks", "text": "필로우 심지가 말라 보입니다." }
+        ],
+        "options": [
+          {
+            "action_id": "refill_reservoir",
+            "label": "필로우 아래 저수조를 채운다",
+            "result_line": "조금씩 올라오긴 하는데 아주 느려요. 아주 조금 나아졌어요.",
+            "why": "저수조에서 심지를 타고 올라오는 물이 필로우에 충분하지 않아서, 뿌리는 일부만 회복합니다."
+          },
+          {
+            "action_id": "add_water_direct",
+            "label": "식물 필로우에 물을 바로 붓는다",
+            "result_line": "바로 뿌리까지 닿았어요. 벌써 힘이 나요.",
+            "why": "물을 화분(필로우)에 바로 주면 저수조에 기대지 않고 뿌리까지 닿습니다."
+          },
+          {
+            "action_id": "fan_high",
+            "label": "팬 설정을 강으로 올린다",
+            "result_line": "움직이는 공기가 나를 더 말려요. 더 나빠졌어요.",
+            "why": "팬을 강으로 하면 수분이 더 마르기 때문에 물 부족이 더 나빠집니다."
+          },
+          {
+            "action_id": "wait_for_schedule",
+            "label": "다음 정해진 물 주기를 기다린다",
+            "result_line": "내 뿌리 쪽은 달라진 게 없어요. 아까보다 더 힘이 없어요.",
+            "why": "일정을 기다리면 뿌리가 계속 마릅니다."
+          }
+        ]
+      }
+    },
+    {
+      "stage": 2,
+      "locale": "ko",
+      "output": {
+        "crisis_id": "water_shortage",
+        "scene": "상추들은 여전히 작고, 몇 포기는 지쳐서 윤기가 없어 보입니다. 아래쪽 필로우 심지는 말라 있습니다. 재배 장치 전체의 식물이 힘이 없어 보입니다.",
+        "plant_line": "너무 지치고 거의 자라지 못해요. 옆 친구들 중에는 나보다 더 안 좋아 보이는 아이도 있어요.",
+        "clues": [
+          { "symptom_id": "stressed_plants", "text": "여러 포기가 지쳐서 윤기가 없어 보입니다." },
+          { "symptom_id": "poor_growth", "text": "식물이 거의 자라지 않았습니다." },
+          { "symptom_id": "dry_wicks", "text": "필로우 심지가 말라 있습니다." }
+        ],
+        "options": [
+          {
+            "action_id": "wait_for_schedule",
+            "label": "다음 정해진 물 주기를 기다린다",
+            "result_line": "뿌리 쪽은 여전히 아무것도 없어요. 아까보다 더 힘이 없어요.",
+            "why": "일정을 기다리면 뿌리가 계속 마릅니다."
+          },
+          {
+            "action_id": "fan_high",
+            "label": "팬 설정을 강으로 올린다",
+            "result_line": "공기가 내 안의 물까지 더 빼앗아 가요. 훨씬 나빠졌어요.",
+            "why": "팬을 강으로 하면 수분이 더 마르기 때문에 물 부족이 더 나빠집니다."
+          },
+          {
+            "action_id": "add_water_direct",
+            "label": "식물 필로우에 물을 바로 붓는다",
+            "result_line": "벌써 뿌리에서 느껴져요. 회복되기 시작했어요.",
+            "why": "물을 화분(필로우)에 바로 주면 저수조에 기대지 않고 뿌리까지 닿습니다."
+          },
+          {
+            "action_id": "refill_reservoir",
+            "label": "필로우 아래 저수조를 채운다",
+            "result_line": "한 줄기쯤 올라와요. 조금 나아졌지만 다 나은 건 아니에요.",
+            "why": "저수조에서 심지를 타고 올라오는 물이 필로우에 충분하지 않아서, 뿌리는 일부만 회복합니다."
+          }
+        ]
+      }
+    },
+    {
+      "stage": 1,
+      "locale": "ko",
+      "output": {
+        "crisis_id": "overwater_mold",
+        "scene": "상추 잎 표면에 작은 물방울이 맺혀 마르지 않습니다. 식물과 주변 필로우가 축축해 보입니다.",
+        "plant_line": "잎이 계속 젖어 있고, 맺힌 물방울이 사라질 기미가 없어요. 주위가 다 눅눅해요.",
+        "clues": [
+          { "symptom_id": "leaf_droplets", "text": "잎 표면에 물방울이 그대로 맺혀 있습니다." },
+          { "symptom_id": "excess_moisture", "text": "식물과 필로우가 전체적으로 축축해 보입니다." }
+        ],
+        "options": [
+          {
+            "action_id": "add_water",
+            "label": "식물 필로우에 물을 더 준다",
+            "result_line": "더 나빠졌어요. 흠뻑 젖은 기분이에요.",
+            "why": "식물은 이미 물이 너무 많아서, 물을 더 주면 과잉이 더 심해집니다."
+          },
+          {
+            "action_id": "fan_high",
+            "label": "팬 설정을 강으로 올린다",
+            "result_line": "이제 숨 쉬겠어요. 잎이 마르고 있어요.",
+            "why": "팬을 강으로 하면 식물 주위의 남는 수분이 마릅니다."
+          },
+          {
+            "action_id": "clean_plant_surfaces",
+            "label": "식물 표면을 닦아 낸다",
+            "result_line": "잎은 깨끗해졌지만, 주위는 여전히 눅눅해요.",
+            "why": "닦으면 식물에 묻은 것은 없어지지만, 남는 수분과 정체된 공기는 그대로 남습니다."
+          },
+          {
+            "action_id": "wait_and_observe",
+            "label": "설정을 그대로 두고 나중에 다시 확인한다",
+            "result_line": "달라진 게 없어요. 여전히 온몸이 눅눅하고 무거워요.",
+            "why": "공기 흐름이 늘지 않으면 수분이 식물 주위에 그대로 남습니다."
+          }
+        ]
+      }
+    },
+    {
+      "stage": 2,
+      "locale": "ko",
+      "output": {
+        "crisis_id": "overwater_mold",
+        "scene": "일부 잎과 줄기에 가늘고 하얀 솜털 같은 것이 나타났습니다. 잎 표면에는 여전히 물방울이 맺혀 있고, 식물은 축축해 보입니다.",
+        "plant_line": "내 잎과 줄기에 솜털 같은 게 자라고 있어요. 그리고 잎은 아직도 마르지 않아요.",
+        "clues": [
+          { "symptom_id": "fungal_growth", "text": "하얀 솜털 같은 것이 잎과 줄기 일부를 덮고 있습니다." },
+          { "symptom_id": "leaf_droplets", "text": "잎 표면에 물방울이 맺혀 있습니다." },
+          { "symptom_id": "excess_moisture", "text": "식물이 전체적으로 축축해 보입니다." }
+        ],
+        "options": [
+          {
+            "action_id": "wait_and_observe",
+            "label": "설정을 그대로 두고 나중에 다시 확인한다",
+            "result_line": "나아진 게 없어요. 솜털 같은 얼룩이 아직 붙어 있어요.",
+            "why": "공기 흐름이 늘지 않으면 수분이 식물 주위에 그대로 남습니다."
+          },
+          {
+            "action_id": "add_water",
+            "label": "식물 필로우에 물을 더 준다",
+            "result_line": "더 나빠요. 흠뻑 젖어서 더 무거워졌어요.",
+            "why": "식물은 이미 물이 너무 많아서, 물을 더 주면 과잉이 더 심해집니다."
+          },
+          {
+            "action_id": "clean_plant_surfaces",
+            "label": "식물 표면을 닦아 낸다",
+            "result_line": "겉은 깨끗해졌지만 아직 눅눅해요.",
+            "why": "닦으면 식물에 묻은 것은 없어지지만, 남는 수분과 정체된 공기는 그대로 남습니다."
+          },
+          {
+            "action_id": "fan_high",
+            "label": "팬 설정을 강으로 올린다",
+            "result_line": "훨씬 나아졌어요. 잎이 마르고 있어요.",
+            "why": "팬을 강으로 하면 식물 주위의 남는 수분이 마릅니다."
+          }
+        ]
+      }
+    },
+    {
+      "stage": 3,
+      "locale": "ko",
+      "output": {
+        "crisis_id": "overwater_mold",
+        "scene": "일부 잎과 줄기가 물러지고 썩은 것처럼 보입니다. 솜털 같은 것이 식물 일부를 덮고 있고, 잎은 계속 젖어 있습니다.",
+        "plant_line": "줄기와 잎 군데군데가 물러졌어요. 솜털 같은 얼룩도 아직 붙어 있어요.",
+        "clues": [
+          { "symptom_id": "rot", "text": "일부 잎과 줄기가 물러지고 썩었습니다." },
+          { "symptom_id": "fungal_growth", "text": "솜털 같은 것이 식물 일부를 덮고 있습니다." },
+          { "symptom_id": "leaf_droplets", "text": "잎 표면에 물방울이 맺혀 있습니다." }
+        ],
+        "options": [
+          {
+            "action_id": "clean_plant_surfaces",
+            "label": "식물 표면을 닦아 낸다",
+            "result_line": "솜털이 조금 닦였지만 아직 눅눅해요.",
+            "why": "닦으면 식물에 묻은 것은 없어지지만, 남는 수분과 정체된 공기는 그대로 남습니다."
+          },
+          {
+            "action_id": "fan_high",
+            "label": "팬 설정을 강으로 올린다",
+            "result_line": "드디어 신선한 공기예요. 잎이 마르고 있어요.",
+            "why": "팬을 강으로 하면 식물 주위의 남는 수분이 마릅니다."
+          },
+          {
+            "action_id": "wait_and_observe",
+            "label": "설정을 그대로 두고 나중에 다시 확인한다",
+            "result_line": "달라진 게 없고, 물러진 곳은 더 안 좋아졌어요.",
+            "why": "공기 흐름이 늘지 않으면 수분이 식물 주위에 그대로 남습니다."
+          },
+          {
+            "action_id": "add_water",
+            "label": "식물 필로우에 물을 더 준다",
+            "result_line": "이제 흠뻑 젖었고, 아까보다 더 나빠졌어요.",
+            "why": "식물은 이미 물이 너무 많아서, 물을 더 주면 과잉이 더 심해집니다."
+          }
+        ]
+      }
     }
   ]
 }
