@@ -100,6 +100,16 @@ describe('createCrisis with a generator', () => {
     expect(response.scene).toMatch(/[가-힣]/);
   });
 
+  it('shows Korean names and reasons in Korean, with the same verdicts and deltas', async () => {
+    const en = await createCrisis(dry);
+    const ko = await createCrisis({ ...dry, locale: 'ko' });
+    expect(ko.name).toMatch(/[가-힣]/);
+    expect(ko.options.every((o) => /[가-힣]/.test(o.reason))).toBe(true);
+    const pick = (r: typeof en) =>
+      r.options.map((o) => [o.action_id, o.verdict, o.delta, o.source]).sort();
+    expect(pick(ko)).toEqual(pick(en));
+  });
+
   it('rejects generated output that offers an excluded action', async () => {
     const out = getFallbackCrisis('overwater_mold', 2, 'en', [])!;
     const { generator } = scripted(() => Promise.resolve(out));

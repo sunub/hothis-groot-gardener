@@ -7,6 +7,7 @@ import type {
 } from '@/lib/contract/types';
 import { evidence as shippedEvidence } from '@/lib/evidence';
 import { checkEvidenceList } from '@/lib/evidence/check';
+import { localizeEvidence } from '@/lib/evidence/localize';
 import {
   computeStage,
   findAction,
@@ -91,7 +92,9 @@ export async function createCrisis(
   const list = deps.evidence ?? shippedEvidence;
   assertEvidenceChecked(list);
   assertRequestIdsKnown(request, list);
-  const crises = candidateCrises(request, list);
+  // Checked as shipped; names and reasons shown to the player are in the request language.
+  const shown = localizeEvidence(list, request.locale);
+  const crises = candidateCrises(request, shown);
   const inappropriateCount = request.active?.chosen_action_ids.length ?? 0;
   const candidates: StagedCandidate[] = crises.map((crisis) => ({
     crisis,
@@ -138,7 +141,7 @@ export async function createCrisis(
     first.stage,
     request.locale,
     excludedActionIds,
-    list,
+    shown,
   );
   if (!output) {
     throw new Error(`No pre-made crisis for ${first.crisis.crisis_id} at stage ${first.stage}.`);
