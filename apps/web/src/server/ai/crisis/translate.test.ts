@@ -55,11 +55,21 @@ describe('checkTranslatedText', () => {
   });
 
   it('rejects the English text handed back', () => {
-    expect(checkTranslatedText('x', 'The leaves droop.', 'The leaves droop.')).toHaveLength(1);
+    expect(checkTranslatedText('x', 'The leaves droop.', 'The leaves droop.')[0]).toMatch(/not translated/);
   });
 
   it('rejects text that is mostly Latin letters', () => {
-    expect(checkTranslatedText('x', 'The leaves droop slowly.', 'The leaves droop 잎')).toHaveLength(1);
+    expect(checkTranslatedText('x', 'The leaves droop slowly.', 'The leaves droop 잎').join(' ')).toMatch(/mostly Latin/);
+  });
+
+  it('rejects an English word left in the Korean text, but allows ISS', () => {
+    expect(checkTranslatedText('x', 'The lettuce looks dry.', 'lettuce 잎이 말라 보여요.')[0]).toMatch(/lettuce/);
+    expect(checkTranslatedText('x', 'On the ISS.', 'ISS의 식물 공장이에요.')).toEqual([]);
+  });
+
+  it('rejects a known mistranslation of a game term', () => {
+    expect(checkTranslatedText('x', 'Pillows look dry.', '베개가 말라 보여요.')[0]).toMatch(/베개/);
+    expect(checkTranslatedText('x', 'The lettuce is small.', '양배추가 작아요.')[0]).toMatch(/양배추/);
   });
 
   it('rejects a lost number', () => {

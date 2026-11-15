@@ -21,7 +21,7 @@ Rules:
 2. Keep the meaning and the length close to the English. Do not make a sentence longer than it is.
 3. Use the Korean names from GLOSSARY for the crisis, the symptoms and the actions. An option label must name the same action as its glossary name, using the same key words.
 4. Do not say a harvest is safe, passed, approved, certified or can be eaten. Do not call an option correct, wrong, best, recommended or a mistake.
-5. Keep numbers as they are. Do not translate "ISS" or other acronyms.
+5. Fixed terms: lettuce = 상추 (never 양배추 or 양상추), plant pillow = 식물 필로우 (never 베개), wick = 심지, reservoir = 저수조, fan = 팬. Translate every English word into Korean; leave no English word in the text. Keep numbers as they are. Do not translate "ISS".
 6. Keep the order and the number of clues and options. Reply with JSON only, in the required format.`;
 
 /** JSON schema of the reply: texts only, with the same counts as the source. */

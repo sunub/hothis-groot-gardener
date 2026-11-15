@@ -105,6 +105,11 @@ export function applyTranslation(source: AiCrisisOutput, raw: unknown): Translat
 /** Hangul syllables and jamo. */
 const HANGUL = /[ᄀ-ᇿ㄰-㆏가-힯]/g;
 const LATIN = /[A-Za-z]/g;
+/** Known mistranslations of game terms (lettuce, plant pillow). */
+const WRONG_TERMS = ['양배추', '양상추', '베개'];
+
+/** Latin words that stay as they are in Korean text. */
+const KEPT_LATIN = new Set(['ISS']);
 
 /**
  * One translated text against its English source: it must be Korean (not the
@@ -119,6 +124,11 @@ export function checkTranslatedText(path: string, english: string, korean: strin
   } else if (latin > hangul) {
     issues.push(`${path} is mostly Latin letters; write it in Korean.`);
   }
+  for (const term of WRONG_TERMS) {
+    if (korean.includes(term)) issues.push(`${path} uses "${term}", a wrong term for this game.`);
+  }
+  const leftover = [...new Set(korean.match(/[A-Za-z]{3,}/g) ?? [])].filter((w) => !KEPT_LATIN.has(w));
+  if (leftover.length > 0) issues.push(`${path} leaves English words untranslated (${leftover.join(', ')}).`);
   for (const digits of new Set(english.match(/\d+/g) ?? [])) {
     if (!korean.includes(digits)) issues.push(`${path} lost the number ${digits}.`);
   }
