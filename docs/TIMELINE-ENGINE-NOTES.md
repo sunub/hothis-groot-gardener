@@ -8,9 +8,9 @@ Space Garden Simulator · 2026-11-15 · `lkh` 브랜치
 
 | 구분 | 내용 |
 |---|---|
-| 한 것 (S1) | 시간축 공용 타입(`src/lib/contract/types.ts` 끝에 추가), 사건 목록 스키마(`src/lib/events/schema.ts`), 화면용 예시 상태 6개(`src/lib/contract/fixtures.ts`) |
-| 한 것 (A1) | 사건 목록 읽기(`src/lib/events/index.ts`), 목록 점검(`check.ts`), 사건 판정(`judge.ts`)과 테스트 |
-| 하지 않은 것 | 엔진(`src/lib/game/`)과 임무 상태(`MissionState`), 저장 코드, 화면, `src/data/events.json`은 고치지 않았습니다. **게임 동작은 그대로입니다.** |
+| 한 것 (S1) | 시간축 공용 타입(`apps/web/src/lib/contract/types.ts` 끝에 추가), 사건 목록 스키마(`apps/web/src/lib/events/schema.ts`), 화면용 예시 상태 6개(`apps/web/src/lib/contract/fixtures.ts`) |
+| 한 것 (A1) | 사건 목록 읽기(`apps/web/src/lib/events/index.ts`), 목록 점검(`check.ts`), 사건 판정(`judge.ts`)과 테스트 |
+| 하지 않은 것 | 엔진(`apps/web/src/lib/game/`)과 임무 상태(`MissionState`), 저장 코드, 화면, `data/content/events.json`은 고치지 않았습니다. **게임 동작은 그대로입니다.** |
 | 이유 | 계획 문서 8절: 코드 고정(11/15 18:00) 전에는 게임 동작을 바꾸지 않는 묶음만 하는 편이 안전합니다. 판정 함수는 아직 엔진이 부르지 않습니다. |
 
 ## 건 목록
@@ -100,7 +100,7 @@ Space Garden Simulator · 2026-11-15 · `lkh` 브랜치
 
 ## T6. 스키마에서 엄격한 곳과 느슨한 곳
 
-- **계획 문서의 해당 부분**: 7.2절. "`events.json`의 `name`, `scene_hint`, `parallel_tracks[].text`는 `src/lib/i18n/en/events.ts`로 옮기고".
+- **계획 문서의 해당 부분**: 7.2절. "`events.json`의 `name`, `scene_hint`, `parallel_tracks[].text`는 `apps/web/src/lib/i18n/en/events.ts`로 옮기고".
 - **진행한 내용**:
   - **글 칸은 선택**으로 두었습니다 (`name`, `scene_hint`, 기록의 `text`). 글을 사전 파일로 옮기기 전과 후 모두 스키마를 통과합니다. 역할 B와 C가 옮기는 시점을 A와 맞출 필요가 없습니다.
   - **작업 메모는 허용**합니다 (`draft`, `open_questions`, `note`, `meta`의 설명). 읽을 때 버리므로 엔진에 닿지 않습니다.
@@ -139,7 +139,7 @@ Space Garden Simulator · 2026-11-15 · `lkh` 브랜치
   - `ParallelTrackEntry`에 `verified_source?: SourceRef`를 더했습니다. 형식은 근거 목록의 출처(`sourceRefSchema`)와 같아서, 화면은 위기의 출처와 같은 부품(`SourceCitation`)으로 그릴 수 있습니다.
   - 목록 점검(`check.ts`)에 규칙 두 개를 더했습니다. `checked`인 기록에는 `verified_source`가 꼭 있어야 하고, `not_checked`인 기록에는 없어야 합니다. 둘 다 오류입니다.
 - **그렇게 판단한 이유**: 화면이 "실측"이라고 표시하는 기록에는 늘 대조한 원문이 붙어 있어야 합니다. 반대로 대조하지 않은 기록에 인용이 붙어 있으면 화면이 실측처럼 보여 줄 수 있습니다.
-- **되돌리는 방법**: `src/lib/events/check.ts`의 두 규칙.
+- **되돌리는 방법**: `apps/web/src/lib/events/check.ts`의 두 규칙.
 
 ## T11. 바꿀 것이 없는 조작은 사건 카드의 선택지에서 뺌
 
@@ -198,7 +198,7 @@ Space Garden Simulator · 2026-11-15 · `lkh` 브랜치
 | 받는 역할 | 내용 |
 |---|---|
 | B (데이터) | T5: `pillow_no_flow`에 `flag_effects.water_blocked.blocks_watering` 추가. T6: 기록에 `entry_id`를 넣어도 테스트가 깨지지 않게 고쳤음 (ROLE-TASKS A4). 이제 넣어도 됨. T10: `checked`인 기록에는 `verified_source`가 꼭 있어야 하고, `not_checked`인 기록에는 없어야 함. 조건·효과·표시 효과 칸은 모르는 키가 있으면 오류 |
-| C (화면) | 예시 상태는 `src/lib/contract/fixtures.ts`의 `TIMELINE_FIXTURES` 6개. 기록의 글은 `event_id`와 `entry_key`로 사전에서 찾음. 줄 끝 표시는 `tone`(`positive` +, `negative` −, `mixed` ±, `neutral` 없음). 실측 표시는 `source_check`가 `checked`인 기록만, 원문은 `verified_source`(T10). T8 확인 |
+| C (화면) | 예시 상태는 `apps/web/src/lib/contract/fixtures.ts`의 `TIMELINE_FIXTURES` 6개. 기록의 글은 `event_id`와 `entry_key`로 사전에서 찾음. 줄 끝 표시는 `tone`(`positive` +, `negative` −, `mixed` ±, `neutral` 없음). 실측 표시는 `source_check`가 `checked`인 기록만, 원문은 `verified_source`(T10). T8 확인 |
 | 팀 (S2) | T2 확률을 읽는 방식, T3 남은 표시를 지우는 길 |
 | B (데이터, T12) | `events.json` 사건 목록 끝에 기록 사건 12개를 초안으로 넣었음. 문장과 출처 검토 부탁. 메타 규칙(`meta.rules`)에 한 줄 추가 |
 | C (화면, T12) | 기록 줄 종류 `record`가 생김 (`RecordLogEntry`: `event_id`, `tone`). 예시 상태 5개에 1·2일째와 4·5일째 기록 줄을 넣었음 |

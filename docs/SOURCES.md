@@ -4,7 +4,7 @@ Everything this project uses that the team did not make: NASA data and documents
 
 ## 1. NASA data and documents
 
-Sentences quoted from these documents are in `src/data/evidence.json`, each next to the claim it supports. Every quote was compared by a script with the text of the downloaded source document and is a verbatim part of it. The script and the downloaded documents are not part of this repository.
+Sentences quoted from these documents are in `data/content/evidence.json`, each next to the claim it supports. Every quote was compared by a script with the text of the downloaded source document and is a verbatim part of it. The script and the downloaded documents are not part of this repository.
 
 | Source | Used for | License or usage statement |
 |---|---|---|
@@ -32,7 +32,7 @@ No data files from these sources are included in the repository. The repository 
 
 ## 3. What is not from a source
 
-All state values and their changes (zones, overnight change, watering amounts, crisis probability, verdict effects, plant health, the microbial value of the harvest) are **game values** set by the team. They are listed in `src/lib/game/rules.ts` and `src/data/state-criteria.json` and shown on the "Evidence and sources" screen.
+All state values and their changes (zones, overnight change, watering amounts, crisis probability, verdict effects, plant health, the microbial value of the harvest) are **game values** set by the team. They are listed in `apps/web/src/lib/game/rules.ts` and `data/content/state-criteria.json` and shown on the "Evidence and sources" screen.
 
 ## 4. Open-source software
 
@@ -48,7 +48,7 @@ All state values and their changes (zones, overnight change, watering amounts, c
 | ESLint, eslint-config-next | 9.39.5, 16.4.6 | Linting | MIT |
 | @types/node, @types/react, @types/react-dom | 22.x, 19.x | Type definitions | MIT |
 
-The project was started from the `create-next-app` template (MIT). The random number generator in `src/lib/game/rng.ts` is written for this project. It follows the published mulberry32 algorithm.
+The project was started from the `create-next-app` template (MIT). The random number generator in `apps/web/src/lib/game/rng.ts` is written for this project. It follows the published mulberry32 algorithm.
 
 ## 5. References for structure and style
 
@@ -65,10 +65,10 @@ No code was copied from any of these.
 
 | Convention | Where it shows in the code |
 |---|---|
-| React: one external store read with `useSyncExternalStore`; state logic as pure functions | `src/features/mission/`, `src/lib/game/engine.ts` |
-| Redux style: state as plain serializable data, pure state transitions, one source of truth | `MissionState` in `src/lib/contract/types.ts`, `src/lib/game/engine.ts` |
+| React: one external store read with `useSyncExternalStore`; state logic as pure functions | `apps/web/src/features/mission/`, `apps/web/src/lib/game/engine.ts` |
+| Redux style: state as plain serializable data, pure state transitions, one source of truth | `MissionState` in `apps/web/src/lib/contract/types.ts`, `apps/web/src/lib/game/engine.ts` |
 | Google TypeScript style: naming, named exports, no `any`, comments that explain why | All TypeScript files |
-| Zod: parse at trust boundaries (API request and response, AI output, data file) | `src/lib/contract/schemas.ts` |
+| Zod: parse at trust boundaries (API request and response, AI output, data file) | `apps/web/src/lib/contract/schemas.ts` |
 | WCAG: a text label next to every color signal, visible focus, target size | Screens |
 | Simplified Technical English (ASD-STE100) principles: short sentences, one term per thing | `docs/IMPLEMENTATION-NOTES.md` and its English version |
 
