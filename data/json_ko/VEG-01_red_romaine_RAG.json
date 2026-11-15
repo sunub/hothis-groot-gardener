@@ -1,0 +1,254 @@
+[
+  {
+    "id": "veg01-setup",
+    "text": "VEG-01 적색 로메인 상추 재배 근거\nVeggie Setup and Initial Plant Pillow Watering\n\nAt the initiation of an experiment, the light intensity, duration, and fan speed are programmed. Plant pillows are removed from their packages and attached to the reservoir via elastic silicone bands. Pillows are hydrated with ISS potable water via a quick disconnect attachment leading to a drip ring inside each pillow. The Veggie bellows are closed and the reservoir is filled with water via an external port.",
+    "metadata": {
+      "source_id": "veg01",
+      "section": "VEG-01 적색 로메인 상추 재배 근거",
+      "subsection": "Veggie Setup and Initial Plant Pillow Watering",
+      "subsection_ko": "초기화와 파종 패드 급수",
+      "source_url": "https://doi.org/10.1515/opag-2017-0003",
+      "source_location": "§1, p. 35",
+      "translation_ko": "실험 시작 시 광량, 조명 시간, 팬 속도를 설정한다. 포장에서 꺼낸 재배 패드(plant pillow)는 탄성 실리콘 밴드로 물 저장조에 고정한다. 패드 내부의 점적 링에 연결된 퀵 커넥터를 통해 ISS 식수로 패드에 물을 공급한다. Veggie의 주름막을 닫고 외부 포트를 통해 저장조를 물로 채운다.",
+      "simulator_application_ko": "파종 시작 시 장비와 패드를 준비하는 선택지의 근거."
+    }
+  },
+  {
+    "id": "veg01-wick-thinning",
+    "text": "VEG-01 적색 로메인 상추 재배 근거\nOpening Germination Wicks on Day 3 and Thinning Seedlings on Day 7\n\nPlant care operations include separating the germination wicks at three days after initiation to allow seedlings to emerge, thinning seedlings to one plant per pillow at seven days after initiation, and periodic watering and photographing.",
+    "metadata": {
+      "source_id": "veg01",
+      "section": "VEG-01 적색 로메인 상추 재배 근거",
+      "subsection": "Opening Germination Wicks on Day 3 and Thinning Seedlings on Day 7",
+      "subsection_ko": "3일차 발아 심지 벌리기와 7일차 솎기",
+      "source_url": "https://doi.org/10.1515/opag-2017-0003",
+      "source_location": "§1, p. 35",
+      "translation_ko": "재배 관리에는 시작 3일 후 유묘가 올라올 수 있도록 발아 심지를 벌리는 작업, 시작 7일 후 패드당 한 포기만 남겨 솎는 작업, 주기적인 급수와 사진 촬영이 포함된다.",
+      "simulator_application_ko": "Day 3에는 심지를 벌린다. Day 7에는 유묘가 있는 패드에서 한 포기만 남기는 선택지를 제시할 수 있다."
+    }
+  },
+  {
+    "id": "veg01-light",
+    "text": "VEG-01 적색 로메인 상추 재배 근거\nVEG-01A/B Lighting Settings and Photoperiod\n\nLED lights were set to red and blue on high and green on, with the bellows baseplate positioned 30.5-31.75 cm below the light array to provide approximately 200 µmol·m²·s⁻¹ of photosynthetically active radiation at the surface of the pillows in the center of the Veggie unit at a ratio of 12 red (630 nm): 3 Blue (455 nm): 1 green (530 nm). A photoperiod was set to 16 h light / 8 h dark.\n\nThe VEG-01B test was initiated by ISS astronaut Scott Kelly in July, 2015, with the same lighting and photoperiod settings as VEG-01A.",
+    "metadata": {
+      "source_id": "veg01",
+      "section": "VEG-01 적색 로메인 상추 재배 근거",
+      "subsection": "VEG-01A/B Lighting Settings and Photoperiod",
+      "subsection_ko": "VEG-01A/B 조명과 명암 주기",
+      "source_url": "https://doi.org/10.1515/opag-2017-0003",
+      "source_location": "§2.1, p. 35 / §2.2, p. 37",
+      "translation_ko": "적색과 청색 LED는 높은 설정으로, 녹색 LED는 켠 상태로 설정했다. 받침판을 조명 배열 아래 30.5–31.75 cm에 두었을 때 Veggie 중앙의 패드 표면에 약 200 µmol·m⁻²·s⁻¹의 광합성 유효 광양자속 밀도를 제공했다. 빛의 비율은 적색(630 nm) 12, 청색(455 nm) 3, 녹색(530 nm) 1이었다. 명암 주기는 밝음 16시간, 어두움 8시간으로 설정했다.\n\nISS 우주비행사 Scott Kelly는 2015년 7월 VEG-01A와 동일한 조명 및 명암 주기 설정으로 VEG-01B를 시작했다.",
+      "simulator_application_ko": "VEG-01 시나리오의 초기 설정값. 약 200은 장치 중앙 패드 표면에서의 조건이다. 영문 인용의 단위는 PDF 표기를 따랐고, 한국어에서는 PPFD의 표준 단위(m⁻²)를 사용했다."
+    }
+  },
+  {
+    "id": "veg01-water-a",
+    "text": "VEG-01 적색 로메인 상추 재배 근거\nVEG-01A Initial Water Volumes\n\nSeeds of red romaine lettuce (Lactuca sativa cv. ‘Outredgeous’) were initiated by Astronaut Steve Swanson following the installation of the Veggie hardware, with Steve adding between 100 and 150 mL of water to each plant pillow and 1020 mL of water to the reservoir.",
+    "metadata": {
+      "source_id": "veg01",
+      "section": "VEG-01 적색 로메인 상추 재배 근거",
+      "subsection": "VEG-01A Initial Water Volumes",
+      "subsection_ko": "VEG-01A 초기 급수량",
+      "source_url": "https://doi.org/10.1515/opag-2017-0003",
+      "source_location": "§2.1, p. 35",
+      "translation_ko": "Steve Swanson 우주비행사는 Veggie 장비 설치 후 적색 로메인 상추(Lactuca sativa cv. ‘Outredgeous’) 종자의 재배를 시작했다. 각 재배 패드에는 물 100–150 mL, 저장조에는 물 1,020 mL를 넣었다.",
+      "simulator_application_ko": "VEG-01A 첫날의 투입량. 패드별 급수량과 저장조 급수량을 서로 다른 값으로 저장한다."
+    }
+  },
+  {
+    "id": "veg01-no-flow-a",
+    "text": "VEG-01 적색 로메인 상추 재배 근거\nReplacing a Plant Pillow After Initial Watering Failure\n\nAt initiation, one of the flight pillows, pillow A, could not be hydrated. This was thought to be the result of a blocked or damaged pillow quick disconnect or internal tube. This pillow was swapped with one of the other set of red romaine lettuce plant pillows.",
+    "metadata": {
+      "source_id": "veg01",
+      "section": "VEG-01 적색 로메인 상추 재배 근거",
+      "subsection": "Replacing a Plant Pillow After Initial Watering Failure",
+      "subsection_ko": "초기 급수 실패 시 패드 교체",
+      "source_url": "https://doi.org/10.1515/opag-2017-0003",
+      "source_location": "§2.1, p. 35",
+      "translation_ko": "재배 시작 시 비행 실험용 패드 A에 물을 공급할 수 없었다. 패드의 퀵 커넥터나 내부 튜브가 막혔거나 손상된 것으로 추정했다. 이 패드는 다른 적색 로메인 상추 실험 세트의 패드로 교체했다.",
+      "simulator_application_ko": "물이 패드에 들어가지 않을 때 교체 선택지의 근거. 당시에는 커넥터와 튜브가 모두 의심 대상이었다."
+    }
+  },
+  {
+    "id": "veg01-early-a",
+    "text": "VEG-01 적색 로메인 상추 재배 근거\nVEG-01A Germination Failure and Day 7 Plant Care\n\nFollowing initiation, germination was noted in all pillows except pillow B. Plants were thinned so that each pillow (except pillow B) had one seedling per pillow on day 7. Additional water (420 mL) was added to the reservoir.",
+    "metadata": {
+      "source_id": "veg01",
+      "section": "VEG-01 적색 로메인 상추 재배 근거",
+      "subsection": "VEG-01A Germination Failure and Day 7 Plant Care",
+      "subsection_ko": "VEG-01A 미발아 관찰과 7일차 관리",
+      "source_url": "https://doi.org/10.1515/opag-2017-0003",
+      "source_location": "§2.1, p. 35",
+      "translation_ko": "재배 시작 후 패드 B를 제외한 모든 패드에서 발아가 관찰됐다. 7일차에는 패드 B를 제외하고 각 패드에 유묘가 한 포기씩 남도록 솎았다. 저장조에는 물 420 mL를 추가했다.",
+      "simulator_application_ko": "미발아 패드는 관찰 기록을 남기고 솎기 대상에서 제외하는 선택지의 근거. 420 mL는 이 실험의 추가 급수량이다."
+    }
+  },
+  {
+    "id": "veg01-stall-a",
+    "text": "VEG-01 적색 로메인 상추 재배 근거\nVEG-01A Day 14 Lettuce Growth Stall and Direct Watering\n\nPhotos were taken weekly, and photos at 14 days after initiation showed that three of the five plants were stunted and did not appear to be growing. The Veggie team suspected that the reservoir was not providing sufficient water to the plant pillows, and the astronauts were sent directions to manually add water to the plant pillows to save the plants. One of the three recovered from the low water event, but two plants died.",
+    "metadata": {
+      "source_id": "veg01",
+      "section": "VEG-01 적색 로메인 상추 재배 근거",
+      "subsection": "VEG-01A Day 14 Lettuce Growth Stall and Direct Watering",
+      "subsection_ko": "VEG-01A 14일차 생장 정체와 직접 급수",
+      "source_url": "https://doi.org/10.1515/opag-2017-0003",
+      "source_location": "§2.1, p. 35",
+      "translation_ko": "사진은 매주 촬영했다. 시작 14일 후 찍은 사진에서 다섯 포기 중 세 포기의 생장이 부진했고 더 자라지 않는 것으로 보였다. Veggie 팀은 저장조에서 재배 패드로 물이 충분히 공급되지 않는다고 의심했고, 우주비행사에게 식물을 살리기 위해 패드에 직접 물을 넣도록 지시했다. 세 포기 중 한 포기가 수분 부족에서 회복했고, 두 포기는 죽었다.",
+      "simulator_application_ko": "생장 정체 사진 → 물 공급 부족 의심 → 패드 직접 급수. 정체만으로 원인을 확정하거나 처치 후 회복을 보장하지 않는다."
+    }
+  },
+  {
+    "id": "veg01-harvest-a",
+    "text": "VEG-01 적색 로메인 상추 재배 근거\nVEG-01A Harvest Delay\n\nThe three remaining plants were originally intended to grow for 28 days, but due to the growth limiting water conditions, plants were allowed to grow for 33 days.",
+    "metadata": {
+      "source_id": "veg01",
+      "section": "VEG-01 적색 로메인 상추 재배 근거",
+      "subsection": "VEG-01A Harvest Delay",
+      "subsection_ko": "VEG-01A 수확 일정 연장",
+      "source_url": "https://doi.org/10.1515/opag-2017-0003",
+      "source_location": "§2.1, p. 35",
+      "translation_ko": "남은 세 포기는 원래 28일간 기를 예정이었으나, 수분 조건이 생장을 제한해 총 33일간 기르도록 했다.",
+      "simulator_application_ko": "수분 부족으로 생장이 늦어진 VEG-01A 상황에서 수확을 미루는 선택지의 근거."
+    }
+  },
+  {
+    "id": "veg01-no-flow-b",
+    "text": "VEG-01 적색 로메인 상추 재배 근거\nVEG-01B Recurring Watering Failure and Confirmed Fill Tube Blockage\n\nThe original non-functional plant pillow A had been saved from VEG-01A, and the quick disconnect water attachment had been swapped after harvest with one that was known to function. Kelly attempted to prime this plant pillow in VEG-01B but again water was unable to enter, indicating failure in a component other than the quick disconnect. This pillow was left unprimed in the hardware. After it was returned to Earth, a failure analysis noted that the internal fill tube was clogged, likely during manufacture.",
+    "metadata": {
+      "source_id": "veg01",
+      "section": "VEG-01 적색 로메인 상추 재배 근거",
+      "subsection": "VEG-01B Recurring Watering Failure and Confirmed Fill Tube Blockage",
+      "subsection_ko": "VEG-01B 재현된 급수 실패와 확인된 원인",
+      "source_url": "https://doi.org/10.1515/opag-2017-0003",
+      "source_location": "§2.2, p. 37",
+      "translation_ko": "VEG-01A에서 작동하지 않았던 패드 A를 보관해 두었고, 수확 후 급수용 퀵 커넥터를 정상 작동이 확인된 것으로 교체했다. Kelly가 VEG-01B에서 이 패드에 물을 넣어 초기 급수를 시도했지만 다시 물이 들어가지 않았다. 퀵 커넥터 외의 부품에 문제가 있음을 시사했다. 이 패드는 초기 급수 없이 장비에 남겨 뒀다. 지구로 돌아온 뒤 고장 분석에서 내부 급수 튜브가 막힌 것이 확인됐고, 제조 과정에서 막혔을 가능성이 제기됐다.",
+      "simulator_application_ko": "커넥터를 바꾼 뒤에도 물이 들어가지 않는 상황에서 내부 급수 튜브를 의심할 근거. 튜브 막힘은 지상 분석에서 확인됐다."
+    }
+  },
+  {
+    "id": "veg01-water-b",
+    "text": "VEG-01 적색 로메인 상추 재배 근거\nVEG-01B Initial Water Volume and Photo Frequency\n\nAll other pillows were primed with 165 mL of water, an increased volume designed to better establish an initial water column. The reservoir was filled similarly to VEG-01A. Wick opening and thinning procedures and watering were also conducted similarly to VEG-01A but daily photos were taken of plants following thinning.",
+    "metadata": {
+      "source_id": "veg01",
+      "section": "VEG-01 적색 로메인 상추 재배 근거",
+      "subsection": "VEG-01B Initial Water Volume and Photo Frequency",
+      "subsection_ko": "VEG-01B 초기 급수량과 촬영 주기",
+      "source_url": "https://doi.org/10.1515/opag-2017-0003",
+      "source_location": "§2.2, p. 37",
+      "translation_ko": "다른 모든 패드에는 초기 물기둥 형성을 돕기 위해 이전보다 늘린 165 mL씩 물을 공급했다. 저장조는 VEG-01A와 비슷하게 채웠다. 심지 벌리기, 솎기, 급수 역시 VEG-01A와 유사하게 진행했으며 솎은 이후에는 매일 사진을 찍었다.",
+      "simulator_application_ko": "165 mL는 VEG-01B의 초기 급수량. 생장 도중 직접 급수할 때의 양으로 사용하지 않는다."
+    }
+  },
+  {
+    "id": "veg01-stall-b",
+    "text": "VEG-01 적색 로메인 상추 재배 근거\nVEG-01B Lettuce Growth Stall on Day 15 and Direct Watering on Day 16\n\nAt 15 days after initiation plant growth appeared to cease. Plant pillows and the reservoir were watered at 16 days and water was directly added to plant pillows on every scheduled watering event after that. The plants recovered and were harvested after 33 days of growth (Fig. 4A).",
+    "metadata": {
+      "source_id": "veg01",
+      "section": "VEG-01 적색 로메인 상추 재배 근거",
+      "subsection": "VEG-01B Lettuce Growth Stall on Day 15 and Direct Watering on Day 16",
+      "subsection_ko": "VEG-01B 15일차 생장 정체와 16일차 직접 급수",
+      "source_url": "https://doi.org/10.1515/opag-2017-0003",
+      "source_location": "§2.2, p. 37",
+      "translation_ko": "시작 15일 후 상추 생장이 멈춘 것으로 보였다. 16일차에 패드와 저장조에 물을 공급했고, 이후에는 예정된 급수 때마다 패드에 직접 물을 넣었다. 식물은 회복했고 33일간 자란 뒤 수확했다(그림 4A).",
+      "simulator_application_ko": "생장 정체 관찰 → 패드와 저장조 급수 → 이후 예정된 급수 때 패드 직접 급수. 이 대목에는 회차별 급수량이나 일정 간격이 제시되지 않는다."
+    }
+  },
+  {
+    "id": "veg01-harvest-b",
+    "text": "VEG-01 적색 로메인 상추 재배 근거\nVEG-01B Lettuce Consumption and Sample Preservation After Harvest\n\nHalf of the produce harvested was consumed after a precautionary sanitizing step using Pro-San® (Microcide, Inc., Sterling Heights, MI) wipes (Fig. 4B). Leaves were placed between layers of wipes in a re-closable bag and pressed for 30 seconds before being removed and consumed. The remainder of the produce was harvested and frozen similarly to VEG-01A for return to Earth for analysis.",
+    "metadata": {
+      "source_id": "veg01",
+      "section": "VEG-01 적색 로메인 상추 재배 근거",
+      "subsection": "VEG-01B Lettuce Consumption and Sample Preservation After Harvest",
+      "subsection_ko": "VEG-01B 수확물의 섭취와 시료 보존",
+      "source_url": "https://doi.org/10.1515/opag-2017-0003",
+      "source_location": "§2.2, p. 37",
+      "translation_ko": "수확물의 절반은 예방 조치로 Pro-San®(Microcide, Inc., Sterling Heights, MI) 소독용 와이프를 사용해 처리한 뒤 섭취했다(그림 4B). 다시 닫을 수 있는 봉투 안에 와이프를 여러 겹 놓고 그 사이에 잎을 넣어 30초간 누른 뒤 꺼내 먹었다. 나머지는 수확해 VEG-01A와 유사하게 냉동한 뒤 분석을 위해 지구로 돌려보냈다.",
+      "simulator_application_ko": "수확 후 처리 선택지를 구현할 때 사용할 수 있는 실험 사례. 당시 승무원에게 적용한 절차다."
+    }
+  },
+  {
+    "id": "veg01-repeat-harvest",
+    "text": "VEG-01 적색 로메인 상추 재배 근거\nVEG-03 Repeated Harvest of Red Romaine Lettuce\n\nOne crop of ‘Outredgeous’ lettuce was initiated Oct. 25, 2016 and repeatedly harvested until a final harvest on Dec. 28, 2016, with both crew consumption and science samples taken from the plants.",
+    "metadata": {
+      "source_id": "veg01",
+      "section": "VEG-01 적색 로메인 상추 재배 근거",
+      "subsection": "VEG-03 Repeated Harvest of Red Romaine Lettuce",
+      "subsection_ko": "VEG-03 적상추 반복 수확 사례",
+      "source_url": "https://doi.org/10.1515/opag-2017-0003",
+      "source_location": "§3, p. 40",
+      "translation_ko": "‘Outredgeous’ 상추 한 재배분을 2016년 10월 25일에 시작해 12월 28일 최종 수확까지 반복해서 수확했다. 상추는 승무원 섭취용과 과학 분석용 시료로 사용됐다.",
+      "simulator_application_ko": "반복 수확을 별도 시나리오에 쓸 수 있다. 이 문장은 첫 수확일, 수확 간격, 절단 위치를 제시하지 않는다."
+    }
+  },
+  {
+    "id": "veg01-light-hardware",
+    "text": "VEG-01 적색 로메인 상추 재배 근거\nVeggie Lighting, Air Circulation, and Height-Adjustable Hardware\n\nThe hardware consists of an LED lighting array that contains red (630 nm), blue, (455 nm) and green (530 nm) LEDs and a fan which draws ISS cabin air through the hardware and expels it back to the cabin.",
+    "metadata": {
+      "source_id": "veg01",
+      "section": "VEG-01 적색 로메인 상추 재배 근거",
+      "subsection": "Veggie Lighting, Air Circulation, and Height-Adjustable Hardware",
+      "subsection_ko": "조명·공기 순환·높이 조절 장비",
+      "source_url": "https://doi.org/10.1515/opag-2017-0003",
+      "source_location": "§1, p. 33",
+      "translation_ko": "장비에는 적색(630 nm), 청색(455 nm), 녹색(530 nm) LED 조명 배열과 ISS 선내 공기를 장비로 끌어들인 뒤 다시 선내로 내보내는 팬이 있다.",
+      "simulator_application_ko": "팬의 역할은 선내 공기를 재배 장치로 순환시키는 것이다."
+    }
+  },
+  {
+    "id": "veg01-reservoir",
+    "text": "VEG-01 적색 로메인 상추 재배 근거\nVeggie Reservoir Wicking and Water Capacity\n\nThe baseline Veggie watering system is a passive wicking design consisting of a reservoir that wicks to substrate filled pouches or plant pillows. The reservoir is designed to hold up to 2 L of water.",
+    "metadata": {
+      "source_id": "veg01",
+      "section": "VEG-01 적색 로메인 상추 재배 근거",
+      "subsection": "Veggie Reservoir Wicking and Water Capacity",
+      "subsection_ko": "기본 저장조의 급수 방식 및 용량",
+      "source_url": "https://doi.org/10.1515/opag-2017-0003",
+      "source_location": "§1, p. 33",
+      "translation_ko": "기본 Veggie 급수 시스템은 저장조의 물이 심지 작용으로 배지가 들어 있는 주머니, 즉 재배 패드에 이동하는 수동 급수 구조다. 저장조의 최대 설계 용량은 2 L다.",
+      "simulator_application_ko": "저장조의 설계 용량과 각 실험에서 실제 채운 양을 따로 기록한다."
+    }
+  },
+  {
+    "id": "veg01-substrate",
+    "text": "VEG-01 적색 로메인 상추 재배 근거\nPlant Pillow Substrate and Seed Placement\n\nFor VEG-01, half the pillows in each set were filled with substrate sieved to 600 µm-1 mm and the other half were filled with a 50:50 blend of 600 µm-1 mm and 1-2 mm.\n\nTwo surface sanitized seeds are glued with guar in each plant pillow in between paired germination wicks.",
+    "metadata": {
+      "source_id": "veg01",
+      "section": "VEG-01 적색 로메인 상추 재배 근거",
+      "subsection": "Plant Pillow Substrate and Seed Placement",
+      "subsection_ko": "패드 배지와 종자 배치",
+      "source_url": "https://doi.org/10.1515/opag-2017-0003",
+      "source_location": "§1, p. 34",
+      "translation_ko": "VEG-01에서는 각 세트의 패드 절반에 600 µm–1 mm로 체를 친 배지를 넣고, 나머지 절반에는 600 µm–1 mm 입자와 1–2 mm 입자를 50:50으로 섞은 배지를 넣었다.\n\n표면을 소독한 씨앗 두 개를 각 재배 패드의 발아 심지 한 쌍 사이에 구아 접착제로 붙인다.",
+      "simulator_application_ko": "초기 패드 구성에 사용할 정보. 이 문장에서 입자 조성의 우열을 판단할 수 없다."
+    }
+  },
+  {
+    "id": "veg01-iss-environment",
+    "text": "VEG-01 적색 로메인 상추 재배 근거\nISS Cabin Environmental Measurements\n\n| Experiment | Duration (days) | Temperature (°C) | Relative Humidity (%) | CO₂ Level (µmol mol⁻¹) |\n|---|---:|---:|---:|---:|\n| VEG-01A | 33 | 22.2 ± 0.2 | 43.9 ± 3.7 | 2798.9 ± 677.7 |\n| VEG-01B | 33 | 23.3 ± 0.4 | 38.3 ± 4.5 | 2559.5 ± 660.3 |",
+    "metadata": {
+      "source_id": "veg01",
+      "section": "VEG-01 적색 로메인 상추 재배 근거",
+      "subsection": "ISS Cabin Environmental Measurements",
+      "subsection_ko": "ISS 선내 환경 기록",
+      "source_url": "https://doi.org/10.1515/opag-2017-0003",
+      "source_location": "Table 1, p. 35. 아래는 표의 값 전사다.",
+      "translation_ko": "Duration은 재배 일수, Temperature는 온도, Relative Humidity는 상대습도, CO₂ Level은 이산화탄소 농도다. ± 값은 표준편차다. A는 ISS 미국 실험 모듈, B는 Columbus 모듈 센서값이다.",
+      "simulator_application_ko": "실험 기간의 선내 배경 환경으로 사용한다. 장치 내부 온습도는 Table 2를 참조하고, 선내 관측 평균에는 권장 설정값이라는 의미를 부여하지 않는다."
+    }
+  },
+  {
+    "id": "veg01a-veggie-environment",
+    "text": "VEG-01 적색 로메인 상추 재배 근거\nVEG-01A Environmental Measurements Inside Veggie\n\n| Period | Temperature (°C) | Relative Humidity (%) |\n|---|---:|---:|\n| Data Logger-Day | 24.77 ± 0.09 | 38.19 ± 0.51 |\n| Data Logger-Night | 21.70 ± 0.15 | 44.32 ± 0.68 |",
+    "metadata": {
+      "source_id": "veg01",
+      "section": "VEG-01 적색 로메인 상추 재배 근거",
+      "subsection": "VEG-01A Environmental Measurements Inside Veggie",
+      "subsection_ko": "VEG-01A Veggie 장치 내부 관측값",
+      "source_url": "https://doi.org/10.1515/opag-2017-0003",
+      "source_location": "Table 2, p. 36. 아래는 표에서 양쪽 센서 위치를 합친 행(Both)의 값 전사다.",
+      "translation_ko": "주간 평균은 온도 24.77°C, 상대습도 38.19%였다. 야간 평균은 온도 21.70°C, 상대습도 44.32%였다. 표의 주간 집계 시간은 10:00–15:45, 야간은 00:00–05:45이며, ± 값은 표준편차다.",
+      "simulator_application_ko": "장치 내부 주야간 관측값으로 사용할 수 있다. 이 표의 값에서 온습도 조절 조치를 시작할 기준을 정할 수는 없다."
+    }
+  }
+]

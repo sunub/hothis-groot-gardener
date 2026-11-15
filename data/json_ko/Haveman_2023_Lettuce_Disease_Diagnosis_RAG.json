@@ -1,0 +1,104 @@
+[
+  {
+    "id": "haveman2023-scope",
+    "text": "Outredgeous Lettuce Root Disease Diagnosis for Future Spaceflight\nEvidence scope for space crop disease diagnosis\n\nHaveman et al. developed a plant nucleic acid extraction workflow for future in situ disease diagnosis in space. They tested it at Kennedy Space Center using experimentally inoculated lettuce, tomato, and pepper. The study establishes a ground-based proof of concept for extracting plant and pathogen nucleic acids. Full automation and operation in a spaceflight environment remain future work.",
+    "metadata": {
+      "source_id": "haveman2023",
+      "section": "Outredgeous Lettuce Root Disease Diagnosis for Future Spaceflight",
+      "subsection": "Evidence scope for space crop disease diagnosis",
+      "subsection_ko": "우주 재배 작물 병 진단의 근거 범위",
+      "source_url": "https://doi.org/10.3389/fpls.2023.1194753.",
+      "section_ko": "우주 재배를 위한 Outredgeous 적색 로메인 상추 뿌리병 진단",
+      "source_location": "Abstract, p. 1; §2.2, p. 3; §4, p. 11",
+      "source_file": "Haveman_2023_Lettuce_Disease_Diagnosis_RAG(3).md",
+      "translation_ko": "연구진은 향후 우주 현장에서 식물병을 진단할 수 있도록 식물 핵산 추출 절차를 개발했다. 케네디 우주센터에서 병원체를 접종한 상추·토마토·고추에 적용했다. 이 연구는 지상에서 식물과 병원체의 핵산을 추출할 수 있는지 시험했으며, 완전 자동화와 우주비행 환경에서의 운용은 후속 과제다.",
+      "source_license": "CC BY 4.0",
+      "simulator_application_ko": "진단 장비를 쓰는 선택지에는 지상 실험 근거임을 표시한다."
+    }
+  },
+  {
+    "id": "haveman2023-pythium-root-symptoms",
+    "text": "Outredgeous Lettuce Root Disease Diagnosis for Future Spaceflight\nRoot symptoms in Pythium-inoculated Outredgeous lettuce\n\nPythium aphanidermatum is associated with root rot in hydroponically grown lettuce. In the inoculated Outredgeous plants, the authors observed dark, deteriorating roots and extensive tissue necrosis. They grew healthy controls at the same time and kept them in a separate incubator to limit cross-contamination.",
+    "metadata": {
+      "source_id": "haveman2023",
+      "section": "Outredgeous Lettuce Root Disease Diagnosis for Future Spaceflight",
+      "subsection": "Root symptoms in Pythium-inoculated Outredgeous lettuce",
+      "subsection_ko": "Pythium을 접종한 적색 로메인 상추의 뿌리 증상",
+      "source_url": "https://doi.org/10.3389/fpls.2023.1194753.",
+      "section_ko": "우주 재배를 위한 Outredgeous 적색 로메인 상추 뿌리병 진단",
+      "source_location": "§3.2, p. 6; Figure 4A, p. 8",
+      "source_file": "Haveman_2023_Lettuce_Disease_Diagnosis_RAG(3).md",
+      "translation_ko": "Pythium aphanidermatum은 수경재배 상추에서 뿌리썩음병을 일으킬 수 있다. 접종한 Outredgeous 상추에서는 어둡게 변하고 손상된 뿌리와 넓은 조직 괴사가 관찰됐다. 연구진은 같은 시기에 건강한 대조군도 재배했고 교차 오염을 줄이기 위해 별도 배양기에 뒀다.",
+      "source_license": "CC BY 4.0",
+      "simulator_application_ko": "뿌리 변색과 손상을 관찰하면 뿌리 상태를 기록하고 검체를 채취하는 선택지의 근거로 쓸 수 있다. 병원체 확인에는 검사 결과가 필요하다."
+    }
+  },
+  {
+    "id": "haveman2023-inoculation-timing",
+    "text": "Outredgeous Lettuce Root Disease Diagnosis for Future Spaceflight\nExperimental inoculation and inconsistent sampling timing\n\nThe investigators inoculated 21-day-old Outredgeous lettuce roots with Pythium aphanidermatum in a silica-sand growth system. Section 2.3 reports harvesting infected roots 21 days after inoculation. Section 3.2 describes symptom development for 14 days after inoculation, and Figure 4A labels the pictured roots as 14 days postinoculation. These are experimental timings, and the source gives different timings for root harvest and the illustrated observations.",
+    "metadata": {
+      "source_id": "haveman2023",
+      "section": "Outredgeous Lettuce Root Disease Diagnosis for Future Spaceflight",
+      "subsection": "Experimental inoculation and inconsistent sampling timing",
+      "subsection_ko": "접종 실험과 논문 내 채취 시점 차이",
+      "source_url": "https://doi.org/10.3389/fpls.2023.1194753.",
+      "section_ko": "우주 재배를 위한 Outredgeous 적색 로메인 상추 뿌리병 진단",
+      "source_location": "§2.3, p. 3; §3.2, p. 6; Figure 4A, p. 8",
+      "source_file": "Haveman_2023_Lettuce_Disease_Diagnosis_RAG(3).md",
+      "translation_ko": "연구진은 규사에서 재배한 21일령 Outredgeous 상추 뿌리에 Pythium aphanidermatum을 접종했다. 방법 절에는 접종 21일 후 감염 뿌리를 채취했다고 적혀 있다. 결과 절에는 접종 후 14일 동안 증상이 나타나도록 했다고 적혀 있고, 그림 4A의 뿌리 사진에도 접종 후 14일로 표시돼 있다.",
+      "source_license": "CC BY 4.0",
+      "simulator_application_ko": "증상 관찰과 검체 채취의 연구 기록을 구분하고, 이 시점을 게임의 고정 발병일로 쓰지 않는다."
+    }
+  },
+  {
+    "id": "haveman2023-root-sample-extraction",
+    "text": "Outredgeous Lettuce Root Disease Diagnosis for Future Spaceflight\nRoot sampling and DNA extraction limits\n\nThe researchers used approximately 1.2 g fresh weight of root material for DNA extraction from both healthy and inoculated lettuce. They ground the thick root tissue to powder with liquid nitrogen before processing it in the microHomogenizer. Softer material such as leaves did not need this extra step in the study. The authors identified improved homogenization of fibrous tissue as a design need for future use in microgravity.",
+    "metadata": {
+      "source_id": "haveman2023",
+      "section": "Outredgeous Lettuce Root Disease Diagnosis for Future Spaceflight",
+      "subsection": "Root sampling and DNA extraction limits",
+      "subsection_ko": "뿌리 검체 채취와 DNA 추출의 한계",
+      "source_url": "https://doi.org/10.3389/fpls.2023.1194753.",
+      "section_ko": "우주 재배를 위한 Outredgeous 적색 로메인 상추 뿌리병 진단",
+      "source_location": "§2.6, p. 3; §3.2, p. 6; Figure 4B, p. 8",
+      "source_file": "Haveman_2023_Lettuce_Disease_Diagnosis_RAG(3).md",
+      "translation_ko": "건강한 상추와 접종한 상추 모두 DNA 추출에 뿌리 생체중 약 1.2 g을 사용했다. 두껍고 단단한 뿌리는 액체질소로 분말화한 뒤 microHomogenizer로 처리했다. 잎처럼 부드러운 조직에는 이 추가 단계가 필요하지 않았다. 연구진은 미래 미세중력 운용을 위해 섬유질 조직의 균질화 방법을 개선할 필요가 있다고 설명했다.",
+      "source_license": "CC BY 4.0",
+      "simulator_application_ko": "뿌리 검체는 잎과 처리 과정이 다를 수 있다는 설명에 쓴다."
+    }
+  },
+  {
+    "id": "haveman2023-targeted-pcr",
+    "text": "Outredgeous Lettuce Root Disease Diagnosis for Future Spaceflight\nTargeted PCR detection of the lettuce root pathogen\n\nUsing semi-specific PCR primers, the researchers observed the expected 656 bp amplification product in the inoculated lettuce roots and in the cultured Pythium aphanidermatum positive control. The healthy-root sample did not show the same product. The result demonstrates detection of the target in the study's controlled samples.",
+    "metadata": {
+      "source_id": "haveman2023",
+      "section": "Outredgeous Lettuce Root Disease Diagnosis for Future Spaceflight",
+      "subsection": "Targeted PCR detection of the lettuce root pathogen",
+      "subsection_ko": "표적 PCR을 이용한 상추 뿌리 병원체 검출",
+      "source_url": "https://doi.org/10.3389/fpls.2023.1194753.",
+      "section_ko": "우주 재배를 위한 Outredgeous 적색 로메인 상추 뿌리병 진단",
+      "source_location": "§3.2, p. 6; Figure 4C, p. 8",
+      "source_file": "Haveman_2023_Lettuce_Disease_Diagnosis_RAG(3).md",
+      "translation_ko": "준특이적 프라이머를 이용한 PCR에서 접종 상추 뿌리와 배양한 Pythium aphanidermatum 양성 대조군에서 예상된 656 bp 증폭 산물이 관찰됐다. 건강한 뿌리 시료에서는 같은 산물이 관찰되지 않았다. 이 결과는 논문의 통제된 시료에서 표적을 검출했음을 보여준다.",
+      "source_license": "CC BY 4.0",
+      "simulator_application_ko": "Pythium이 의심되는 뿌리 검체에 표적 검사를 요청하는 선택지의 근거로 쓸 수 있다."
+    }
+  },
+  {
+    "id": "haveman2023-sequencing-reference-limit",
+    "text": "Outredgeous Lettuce Root Disease Diagnosis for Future Spaceflight\nReference database limitations for pathogen sequencing\n\nThe study's standard Kraken2 workflow did not identify Pythium aphanidermatum in inoculated lettuce roots because the relevant genome was missing from the curated RefSeq database used by the pipeline. Alignment against the target genome alone produced hits in inoculated roots and the pure culture. In a broader comparison with 420 oomycete genomes, the species was identified in the pure culture, with no species-level identification in inoculated roots.",
+    "metadata": {
+      "source_id": "haveman2023",
+      "section": "Outredgeous Lettuce Root Disease Diagnosis for Future Spaceflight",
+      "subsection": "Reference database limitations for pathogen sequencing",
+      "subsection_ko": "염기서열 검사에서 참조 데이터베이스의 한계",
+      "source_url": "https://doi.org/10.3389/fpls.2023.1194753.",
+      "section_ko": "우주 재배를 위한 Outredgeous 적색 로메인 상추 뿌리병 진단",
+      "source_location": "§3.3, pp. 8–9; Supplementary Tables S3–S4",
+      "source_file": "Haveman_2023_Lettuce_Disease_Diagnosis_RAG(3).md",
+      "translation_ko": "연구진이 사용한 RefSeq 데이터베이스에 해당 참조 유전체가 없어 기본 Kraken2 분석에서 접종 상추 뿌리의 Pythium aphanidermatum이 검출되지 않았다. 해당 종의 유전체만을 대상으로 정렬했을 때는 접종 뿌리와 순수 배양 시료에서 일치가 나왔다. 난균류 유전체 420개와 비교했을 때는 순수 배양 시료에서만 해당 종을 확인했다.",
+      "source_license": "CC BY 4.0",
+      "simulator_application_ko": "염기서열 분석의 미검출 결과를 해석할 때 참조 데이터베이스 범위를 확인하도록 안내한다."
+    }
+  }
+]

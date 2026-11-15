@@ -14,7 +14,7 @@ The simulator does not record or assess any health data about people. It trains 
 |---|---|
 | Plant state tracking (plant health, root moisture, chamber humidity, fan, lighting) with a history chart | Built |
 | Daily care (watering, fan, lighting) and overnight changes | Built |
-| Two crises: water shortage, and excess water with stagnant air leading to mold | Built |
+| Two crises: water shortage, and excess water with stagnant air leading to mold; a standard mission has at least two, raised by an overnight change when the state calls for none | Built |
 | Verdict, state change and source for every choice, taken from the evidence list | Built |
 | Harvest and sanitize, freeze samples for return, ground analysis report | Built |
 | Mission record saved in the browser | Built |
@@ -40,11 +40,35 @@ npm run build
 npm run check      # all of the above
 ```
 
-No environment variables, database or account are needed. The language model is optional; see below.
+No environment variables, database or account are needed. The language model is optional; to run with it in one step, use the setup script in [Language model](#language-model-optional).
 
 ## Language model (optional)
 
-The game runs without it. To let a model write the crisis text:
+The game runs without it. With no model configured, or when the model server does not answer, every crisis uses the reviewed pre-made text in `data/content/fallback-crises.json` (English and Korean) at once, and the Korean screen keeps the diary lines in English. Verdicts, state changes and sources are the same either way. The public demo link has no model server behind it, so it shows the pre-made crises.
+
+### Run with the model: one script
+
+The script checks Node.js, installs [Ollama](https://ollama.com) if it is missing (it asks first), downloads the model `gemma4:e4b` once (about 10 GB), installs the npm packages, writes `apps/web/.env.local`, then builds and starts the app at http://localhost:3000.
+
+Windows (PowerShell, in the repository folder):
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts\start-with-ai.ps1
+```
+
+macOS or Linux:
+
+```bash
+bash scripts/start-with-ai.sh
+```
+
+- Wait for `[llm] gemma4:e4b is loaded` in the terminal, then open http://localhost:3000. Crisis text written by the model is labelled on the crisis screen.
+- Options: `-Yes` / `--yes` installs and downloads without asking, `-Dev` / `--dev` runs the development server, `-Port 3001` / `--port 3001` uses another port.
+- A GPU is recommended. On a computer without one a reply can take longer than the 30-second limit, and the game then shows the pre-made text.
+- Stop with Ctrl+C. To run without the model again, delete `apps/web/.env.local`.
+- The script does not start the evidence search server; it is optional (step 2 below).
+
+### Manual setup
 
 1. Run a model server. Development used [Ollama](https://ollama.com) with `gemma4:e4b`:
    ```bash
@@ -57,15 +81,13 @@ The game runs without it. To let a model write the crisis text:
 3. Copy `apps/web/.env.example` to `apps/web/.env.local` and check the values (`LLM_MODEL`, `LLM_BASE_URL`, `RAG_URL`).
 4. `npm run dev`. The server starts loading the model in the background (`apps/web/src/instrumentation.ts`); the terminal shows `[llm] gemma4:e4b is loaded` when it is ready. For a demo, set `LLM_KEEP_ALIVE=-1` so the model stays loaded until the demo starts.
 
-What the model does and does not do:
+### What the model does and does not do
 
 - It writes text only. The code picks the crisis and its symptom stage, the JSON schema sent with the request lists only that crisis's symptom and action ids, and verdicts, state changes and sources are attached from the evidence list after the text is checked.
 - Each reply is checked twice: `validateAiOutput` (ids, counts, one appropriate option, no duplicates) and `checkStructure`/`checkWording` in `apps/web/src/server/ai/crisis/llm/guard.ts` (no symptom that is not allowed at the current stage, no setting or reading in the scene, no label that hints at the answer, no longer names its action or adds another action's key word, a clue for the symptom that is new at this stage, no plant line that names the cause, result lines spoken by the lettuce, no scene copied from the style example, no safety or edibility claim, no soil, no water that drips or pools in microgravity, length limits). On a problem the model gets the list of broken rules and rewrites once; if the rewrite fails too, the attempt is retried once, and then the pre-made crisis is shown. Style problems (a narrator instead of the lettuce, a scene copied from the style example) also ask for the rewrite, but do not reject the text.
 - Option order is shuffled after generation.
 - `LLM_PROVIDER=openai` switches to any OpenAI-compatible server (for example vLLM on RunPod) with the same checks.
 - `LLM_LOG_DIR` writes every generation (output, problems found, time taken) to `generations.jsonl` for quality checks.
-
-The public demo link has no model server behind it, so it shows the pre-made crises.
 
 ## How to read the numbers
 
@@ -92,6 +114,7 @@ apps/web/               Next.js app (npm workspace "web")
       events/           Timeline event list, schema and judging
       i18n/             All screen text
 services/rag/           Python evidence search server (FastAPI, Chroma, BM25), indexing and evaluation scripts
+scripts/                start-with-ai.ps1 (Windows) and start-with-ai.sh (macOS, Linux): run the app with the language model in one step
 data/
   content/              JSON the app reads: evidence, events, event-cards, fallback-crises, ...
   sources/              Source chunks for the search index (total_RAG.json, public_sources_RAG.json)

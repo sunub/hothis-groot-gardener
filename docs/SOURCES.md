@@ -32,18 +32,19 @@ The evidence list and the screens contain only short quoted sentences from the s
 
 ### Search excerpts (optional evidence search)
 
-The evidence search (`services/rag/retriver.py`, `services/rag/rag_server.py`) reads excerpts cut from six papers. The excerpts are in `data/sources/total_RAG.json` (81 excerpts) and in the search database `data/vector_db/`, which holds the same text with its embeddings. The license of each source is recorded in `data/content/source-licenses.json`, from the publisher record of each DOI.
+The evidence search (`services/rag/retriver.py`, `services/rag/rag_server.py`) reads excerpts cut from seven papers. The excerpts are in `data/sources/total_RAG.json` (76 excerpts) and in the search database `data/vector_db/`, which holds the same text with its embeddings. The license of each source is recorded in `data/content/source-licenses.json`, from the publisher record of each DOI.
 
 | Source | Excerpts | License in the publisher record |
 |---|---|---|
-| Khodadad et al. (2020), listed above | 25 | CC BY 4.0 |
+| Khodadad et al. (2020), listed above | 14 | CC BY 4.0 |
 | Massa et al. (2017). *VEG-01: Veggie Hardware Validation Testing on the International Space Station*. Open Agriculture 2(1). https://doi.org/10.1515/opag-2017-0003 | 18 | CC BY-NC-ND 4.0 |
 | Curry et al. (2026). *Sowing in space: Seed film enables crew-planted crops on the International Space Station*. Acta Astronautica. https://doi.org/10.1016/j.actaastro.2026.05.031 | 12 | CC BY-NC-ND 4.0 |
 | Stutte et al. (2022). *Effect of reduced atmospheric pressure on growth and quality of two lettuce cultivars*. Life Sciences in Space Research. https://doi.org/10.1016/j.lssr.2022.06.001 | 11 | CC BY-NC-ND 4.0 |
 | Mickens et al. (2018). *A strategic approach for investigating light recipes for 'Outredgeous' red romaine lettuce using white and monochromatic LEDs*. Life Sciences in Space Research. https://doi.org/10.1016/j.lssr.2018.09.003 | 8 | No open license in the publisher record |
 | Morsi et al. (2022). *Comparison of two controlled-release fertilizer formulations for cut-and-come-again harvest yield and mineral content of Lactuca sativa L. cv. Outredgeous grown under International Space Station environmental conditions*. Life Sciences in Space Research. https://doi.org/10.1016/j.lssr.2021.12.001 | 7 | No open license for the published version |
+| Haveman et al. (2023). *Advancing the automation of plant nucleic acid extraction for rapid diagnosis of plant diseases in space*. Frontiers in Plant Science 14:1194753. https://doi.org/10.3389/fpls.2023.1194753 | 6 | CC BY 4.0 |
 
-Five of the six sources do not allow free reuse of their text. Whether these excerpts stay in the public repository is an open team decision (`docs/ROLE-TASKS.md`, D3). The evidence list and the screen text do not quote these five sources. When the search server is on, retrieved excerpts are put into the prompt of the language model that writes crisis text.
+Five of the seven sources do not allow free reuse of their text. Whether these excerpts stay in the public repository is an open team decision (`docs/ROLE-TASKS.md`, D3). The evidence list and the screen text do not quote these five sources. When the search server is on, retrieved excerpts are put into the prompt of the language model that writes crisis text.
 
 `data/sources/public_sources_RAG.json` holds 26 excerpts copied word for word from the NASA documents in section 1. They are prepared for the search database and are not in it yet.
 

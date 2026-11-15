@@ -1,0 +1,125 @@
+[
+  {
+    "id": "mickens2018-ground-conditions",
+    "text": "LED light recipes for Outredgeous red romaine lettuce\nBaseline conditions in the ground growth chamber\n\nNASA Kennedy Space Center tested seven fixed LED spectra on red romaine lettuce (*Lactuca sativa* cv. ‘Outredgeous’) in a ground growth chamber for 28 days. The study targeted future Advanced Plant Habitat (APH) experiments aboard the ISS. The chamber was held at 23 ± 0.4 °C, 65 ± 3% relative humidity, and 1,200 ± 60 ppm CO₂. Measured air speed ranged from about 0.5 to 1.0 m/s. The canopy PPFD target was about 180 µmol m⁻² s⁻¹ over 400–700 nm, with 18 h of light and 6 h of darkness daily (DLI ≈ 12 mol m⁻² day⁻¹).",
+    "metadata": {
+      "source_id": "mickens2018",
+      "section": "LED light recipes for Outredgeous red romaine lettuce",
+      "subsection": "Baseline conditions in the ground growth chamber",
+      "subsection_ko": "지상 재배 챔버의 공통 조건",
+      "source_url": "https://doi.org/10.1016/j.lssr.2018.09.003",
+      "section_ko": "Outredgeous 적로메인 상추의 LED 조명 조합",
+      "source_location": "Abstract, §§2.1 and 2.3",
+      "evidence_type": "experimental_setup",
+      "translation_ko": "NASA 케네디 우주센터는 지상 재배 챔버에서 ‘Outredgeous’ 적로메인 상추를 28일간 키우며, 재배 기간 동안 유지한 7가지 LED 조명 조합을 비교했다. 연구 목적은 향후 ISS의 APH 실험에 적용할 조명 조합을 찾는 것이었다. 챔버는 23 ± 0.4 °C, 상대습도 65 ± 3%, CO₂ 1,200 ± 60 ppm으로 유지했다. 측정한 공기 흐름은 약 0.5~1.0 m/s였다. 잎이 덮인 면의 PPFD 목표는 400~700 nm에서 약 180 µmol m⁻² s⁻¹였으며, 매일 18시간 조명과 6시간 암기를 적용했다(일일광적산량 약 12 mol m⁻² day⁻¹)."
+    }
+  },
+  {
+    "id": "mickens2018-sowing-and-thinning",
+    "text": "LED light recipes for Outredgeous red romaine lettuce\nSowing, germination, sub-irrigation, and thinning\n\nIn the ground chamber, four ‘Outredgeous’ seeds were surface-sown per pot on moist Arcillite. Each pot contained 500 mL of medium mixed with 18-6-8 controlled-release NPK fertilizer at 7.5 g per liter of dry medium. The pots sat in sub-irrigation trays containing about 1 cm of deionized water. For the first three days, the researchers used clear covers and misted with deionized water to promote germination. They measured tray water levels and logged the amount added daily. On day 7 they removed one plant per pot, choosing the weakest or an unsuccessfully germinated seedling. They harvested plants for growth measurements at 14, 21, and 28 DAS.",
+    "metadata": {
+      "source_id": "mickens2018",
+      "section": "LED light recipes for Outredgeous red romaine lettuce",
+      "subsection": "Sowing, germination, sub-irrigation, and thinning",
+      "subsection_ko": "파종, 발아, 저면관수와 솎기",
+      "source_url": "https://doi.org/10.1016/j.lssr.2018.09.003",
+      "section_ko": "Outredgeous 적로메인 상추의 LED 조명 조합",
+      "source_location": "§§2.2 and 2.4",
+      "evidence_type": "experimental_protocol",
+      "translation_ko": "지상 챔버에서 물에 적신 Arcillite 배지 표면에 화분당 ‘Outredgeous’ 씨앗 4개를 뿌렸다. 화분마다 배지 500 mL를 넣었고, 마른 배지 1 L당 18-6-8 완효성 NPK 비료 7.5 g을 섞었다. 화분은 탈이온수를 약 1 cm 깊이로 채운 저면관수 트레이에 놓았다. 처음 3일은 투명 덮개를 씌우고 탈이온수를 분무해 발아를 도왔다. 매일 트레이의 수위를 재고 보충한 양을 기록했다. 파종 7일차에는 가장 약하거나 발아가 제대로 되지 않은 개체를 화분당 1개 제거했다. 파종 14·21·28일차에 생육 측정용으로 수확했다.",
+      "simulator_application_ko": "저면관수, 분무, 솎기 수치는 지상 챔버 재현용 실험 절차에 해당한다."
+    }
+  },
+  {
+    "id": "mickens2018-led-spectra",
+    "text": "LED light recipes for Outredgeous red romaine lettuce\nSeven LED light recipes\n\nThe LED spectra tested on ‘Outredgeous’ red romaine lettuce were W (white control), RB (red + blue), WB (white + blue), WG (white + green), WR (white + red), WFR (white + far-red), and RGB + FR (red + green + blue + far-red, approximating natural sunlight). RB used 635 nm red and 460 nm blue. The supplemental peaks in WB, WG, WR, and WFR were about 460, 520, 635, and 745 nm, respectively. The custom RGB + FR recipe used peaks near 660/630 nm (red), 520 nm (green), 425 nm (blue), and 733 nm (far-red).\n\n| Recipe | Blue share | Green share | Red share | Mean PPFD (400–700 nm) | Far-red flux (700–800 nm) |\n| --- | ---: | ---: | ---: | ---: | ---: |\n| W | 20% | 48% | 32% | 180 ± 33 | 1 |\n| RB | 40% | 0% | 60% | 187 ± 34 | 0 |\n| WB | 43% | 34% | 23% | 178 ± 30 | 0.8 |\n| WG | 17% | 57% | 25% | 180 ± 35 | 0 |\n| WR | 16% | 38% | 46% | 178 ± 32 | 0 |\n| WFR | 20% | 48% | 32% | 185 ± 35 | 34 |\n| RGB + FR | 16% | 24% | 60% | 188 ± 28 | 36 |\n\nBoth flux columns use µmol m⁻² s⁻¹. Blue, green, and red shares are percentages within 400–700 nm, while far-red flux is reported separately. They describe the resulting spectrum.",
+    "metadata": {
+      "source_id": "mickens2018",
+      "section": "LED light recipes for Outredgeous red romaine lettuce",
+      "subsection": "Seven LED light recipes",
+      "subsection_ko": "LED 조명 조합 7가지",
+      "source_url": "https://doi.org/10.1016/j.lssr.2018.09.003",
+      "section_ko": "Outredgeous 적로메인 상추의 LED 조명 조합",
+      "source_location": "§2.3, Table 1 and Fig. 1",
+      "evidence_type": "experimental_setup",
+      "translation_ko": "비교한 조합은 W(백색 대조군), RB(적색+청색), WB(백색+청색), WG(백색+녹색), WR(백색+적색), WFR(백색+원적색), RGB + FR(자연광과 비슷하게 구성한 적색+녹색+청색+원적색)이었다. RB는 635 nm 적색광과 460 nm 청색광을 썼다. WB·WG·WR·WFR에 보충한 LED의 피크 파장은 각각 약 460·520·635·745 nm였다. RGB + FR의 피크 파장은 적색 660·630 nm, 녹색 520 nm, 청색 425 nm, 원적색 733 nm 부근이었다. 표의 B/G/R 비율은 400~700 nm에서 측정한 광자속 비율이고, 원적색광은 700~800 nm 광자속으로 따로 표시했다. 두 광자속 열의 단위는 µmol m⁻² s⁻¹이다."
+    }
+  },
+  {
+    "id": "mickens2018-early-growth",
+    "text": "LED light recipes for Outredgeous red romaine lettuce\nEarly growth at 7–14 days after sowing\n\nUnder white + green (WG), ‘Outredgeous’ seedlings showed earlier hypocotyl elongation and faster first true-leaf expansion by 7 DAS. At 14 DAS, WG shoot fresh mass was significantly above the white control, while red + blue (RB) was significantly below it. The other treatments showed no significant fresh-mass difference from the white control at 14 DAS.",
+    "metadata": {
+      "source_id": "mickens2018",
+      "section": "LED light recipes for Outredgeous red romaine lettuce",
+      "subsection": "Early growth at 7–14 days after sowing",
+      "subsection_ko": "7~14일차 초기 생육",
+      "source_url": "https://doi.org/10.1016/j.lssr.2018.09.003",
+      "section_ko": "Outredgeous 적로메인 상추의 LED 조명 조합",
+      "source_location": "§3.1 and Fig. 3(a)",
+      "evidence_type": "measured_result",
+      "translation_ko": "백색에 녹색을 더한 WG에서는 파종 7일차까지 하배축(떡잎 아래 줄기)이 일찍 길어지고 첫 본잎이 더 빨리 펼쳐졌다. 파종 14일차의 지상부 생체중은 WG가 백색 대조군보다 유의하게 높았고, RB(적색+청색)는 유의하게 낮았다. 나머지 조합의 14일차 생체중은 백색 대조군과 유의한 차이가 없었다."
+    }
+  },
+  {
+    "id": "mickens2018-late-growth-and-yield",
+    "text": "LED light recipes for Outredgeous red romaine lettuce\nLate growth and harvest biomass at 21–28 days after sowing\n\nIn ‘Outredgeous’ red romaine lettuce, early growth under white + green (WG) slowed after 21 DAS. Under white + red (WR), shoot dry mass rose more rapidly late in the cycle (21–28 DAS). At the 28 DAS harvest, both WG and WR dry mass were statistically comparable to the white control (W). RGB + FR gave the highest shoot fresh mass and dry mass. Of the tested spectra, only RGB + FR (higher) and RB (lower) differed significantly from W in final shoot dry mass. RGB + FR had the greatest mean leaf area, with WFR in the same statistical group for that comparison.\n\n| Recipe | Shoot fresh mass (g) | Shoot dry mass (g) | Leaf area (cm²) |\n| --- | ---: | ---: | ---: |\n| W | 22.8 | 1.79 | 731.7 |\n| RB | 19.1 | 1.47 | 620.2 |\n| WB | 21.1 | 1.52 | 667.4 |\n| WG | 25.6 | 1.79 | 822.0 |\n| WR | 27.3 | 2.08 | 858.4 |\n| WFR | 26.2 | 1.91 | 935.1 |\n| RGB + FR | 30.1 | 2.55 | 1006.0 |\n\nValues are day-28 treatment means (n = 30 per treatment). For example, WR and RGB + FR shared a Tukey group for fresh mass, while they differed for dry mass.",
+    "metadata": {
+      "source_id": "mickens2018",
+      "section": "LED light recipes for Outredgeous red romaine lettuce",
+      "subsection": "Late growth and harvest biomass at 21–28 days after sowing",
+      "subsection_ko": "21~28일차 생육 변화와 최종 수확량",
+      "source_url": "https://doi.org/10.1016/j.lssr.2018.09.003",
+      "section_ko": "Outredgeous 적로메인 상추의 LED 조명 조합",
+      "source_location": "§3.1, Table 2 and Figs. 3–4",
+      "evidence_type": "measured_result",
+      "translation_ko": "WG에서 초기에 빨랐던 생육은 21일차 이후 둔화됐다. WR에서는 파종 21~28일차에 지상부 건물중이 빠르게 증가하는 추세가 나타났다. 28일차 수확에서 두 조합의 건물중은 백색 대조군(W)과 유의한 차이가 없었다. RGB + FR의 평균 지상부 생체중과 건물중이 가장 높았다. 최종 건물중이 백색 대조군과 유의하게 다른 조합은 RGB + FR(높음)과 RB(낮음) 두 가지였다. 평균 잎 면적은 RGB + FR에서 가장 컸고 WFR과는 유의한 차이가 없었다. 표는 28일차 처리군별 평균값이다(처리당 n = 30). WR과 RGB + FR은 28일차 생체중에 유의한 차이가 없었고 건물중은 유의하게 달랐다."
+    }
+  },
+  {
+    "id": "mickens2018-pigmentation-and-nutrients",
+    "text": "LED light recipes for Outredgeous red romaine lettuce\nLeaf pigmentation and nutrient concentrations\n\nAt 14 DAS, ‘Outredgeous’ leaves looked darker under WB and RB, both of which supplied at least 40% blue light within the 400–700 nm band. The authors describe the color response visually. At 28 DAS, WB had the highest reported leaf potassium concentration, and RB had the highest measured lutein concentration. Lutein concentrations under WB, WG, and WR were statistically comparable to W. RGB + FR had lower concentrations of the four displayed minerals (Ca, K, Mg, and P), and both WFR and RGB + FR had lower lutein concentrations than W. The nutrient figures report concentration per gram of dry tissue.",
+    "metadata": {
+      "source_id": "mickens2018",
+      "section": "LED light recipes for Outredgeous red romaine lettuce",
+      "subsection": "Leaf pigmentation and nutrient concentrations",
+      "subsection_ko": "적색 발현과 영양 성분 농도",
+      "source_url": "https://doi.org/10.1016/j.lssr.2018.09.003",
+      "section_ko": "Outredgeous 적로메인 상추의 LED 조명 조합",
+      "source_location": "§§3.1–3.3, Figs. 2, 5–7 and §4",
+      "evidence_type": "measured_result, visual_observation",
+      "translation_ko": "파종 14일차에 WB(백색+청색)와 RB(적색+청색)의 잎색이 더 진하게 보였다. 두 조합 모두 400~700 nm 광자속 중 청색광이 40% 이상이었다. 잎색 차이는 육안 관찰로 보고됐다. 파종 28일차에는 WB의 잎 조직 칼륨 농도가 가장 높게 보고됐고, RB의 루테인 농도가 가장 높게 측정됐다. WB·WG·WR의 루테인 농도는 백색 대조군과 유의한 차이가 없었다. RGB + FR에서는 그림에 표시된 무기원소 4가지(Ca·K·Mg·P)의 농도가 낮았고, WFR과 RGB + FR의 루테인 농도는 백색 대조군보다 낮았다. 영양 성분 그래프의 기준은 건조 조직 1 g당 농도다."
+    }
+  },
+  {
+    "id": "mickens2018-far-red-morphology",
+    "text": "LED light recipes for Outredgeous red romaine lettuce\nLeaf and petiole responses under far-red recipes\n\nIn ‘Outredgeous’ red romaine lettuce, both WFR and RGB + FR produced wider shoots than white at 21 DAS. At 28 DAS, WFR produced the tallest shoots (26.5 cm), with elongated petioles and shoot dry mass statistically comparable to white. RGB + FR produced a large leaf area and the highest dry mass. The far-red fluxes were similar for the two recipes (34 and 36 µmol m⁻² s⁻¹), while their red-to-far-red ratios were 1.7 and 3.1, respectively.",
+    "metadata": {
+      "source_id": "mickens2018",
+      "section": "LED light recipes for Outredgeous red romaine lettuce",
+      "subsection": "Leaf and petiole responses under far-red recipes",
+      "subsection_ko": "원적색광 조합별 잎과 잎자루 형태",
+      "source_url": "https://doi.org/10.1016/j.lssr.2018.09.003",
+      "section_ko": "Outredgeous 적로메인 상추의 LED 조명 조합",
+      "source_location": "§§2.3 and 3.1, Tables 1–2 and Figs. 3(b) and 5",
+      "evidence_type": "measured_result",
+      "translation_ko": "파종 21일차에 WFR(백색+원적색)과 RGB + FR은 백색 대조군보다 지상부 폭이 넓었다. 28일차의 WFR은 지상부 높이가 가장 높았고(26.5 cm) 잎자루가 늘어났다. 건물중은 백색 대조군과 유의한 차이가 없었다. RGB + FR에서는 잎 면적이 컸고 건물중이 가장 높았다. 두 조합의 원적색 광자속은 각각 34와 36 µmol m⁻² s⁻¹로 비슷했고, 적색/원적색 비율은 각각 1.7과 3.1이었다."
+    }
+  },
+  {
+    "id": "mickens2018-light-switch-hypothesis",
+    "text": "LED light recipes for Outredgeous red romaine lettuce\nProposed light-recipe switches during the crop cycle\n\nThe authors suggest testing a switch from white + green (WG) to white + red (WR) or RGB + FR at 21 days after sowing to see whether final ‘Outredgeous’ yield improves. They also propose testing a switch from WB or RB to WR to balance yield and nutrient concentration. The experiment compared fixed, full-cycle light recipes, so the effects of mid-cycle switching remain untested in this study.",
+    "metadata": {
+      "source_id": "mickens2018",
+      "section": "LED light recipes for Outredgeous red romaine lettuce",
+      "subsection": "Proposed light-recipe switches during the crop cycle",
+      "subsection_ko": "21일차 조명 전환 가설",
+      "source_url": "https://doi.org/10.1016/j.lssr.2018.09.003",
+      "section_ko": "Outredgeous 적로메인 상추의 LED 조명 조합",
+      "source_location": "§4, Conclusion (PDF p. 9)",
+      "evidence_type": "author_hypothesis",
+      "translation_ko": "저자들은 파종 21일차에 WG(백색+녹색)에서 WR(백색+적색) 또는 RGB + FR로 바꾸면 ‘Outredgeous’의 최종 수확량이 늘어나는지 후속 실험으로 확인하자고 제안했다. 수확량과 영양 성분 농도의 균형을 위해 WB 또는 RB에서 WR로 바꾸는 방안도 제안했다. 논문 실험에서는 재배 기간 동안 각 조합을 그대로 유지했으므로, 중간에 조명을 바꿨을 때의 효과는 이 연구에서 검증되지 않았다.\n\n> 파종 21일차에 조명 조합을 WG에서 WR 또는 RGB + FR로 바꿀 수 있는지 살펴보는 것도 도움이 될 것이다.",
+      "original_excerpt_en": "It would also be informative to see if the lighting strategy could be switched from WG to WR or RGB + FR at 21 DAS",
+      "simulator_application_ko": "21일차 전환을 선택했을 때는 효과가 미확인 상태임을 표시한다. RGB + FR을 처음부터 유지한 처리군의 30.1 g 또는 2.55 g을 중간 전환 결과로 그대로 적용할 근거는 없다."
+    }
+  }
+]

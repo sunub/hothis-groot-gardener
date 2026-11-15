@@ -1,0 +1,173 @@
+[
+  {
+    "id": "stutte2022-pressure-treatments",
+    "text": "Growing red-leaf lettuce under reduced atmospheric pressure\nStudy scope and total-pressure treatments\n\nThe three treatment conditions were 1, 2/3 and 1/3 ambient atmospheric pressures, which correspond to 97 kPa, 66 kPa, and 33 kPa respectively (Table 1).\n\nEnglish data — Table 1\n\n| Treatment label | Measured total pressure (kPa) | Air temperature (°C) | Relative humidity (%) | CO₂ (kPa) | O₂ (kPa) |\n|---|---:|---:|---:|---:|---:|\n| 97 kPa | 96.1 ± 0.32 | 21.8 ± 0.00 | 61.6 ± 0.89 | 0.1203 ± 0.0006 | 21.1 ± 0.2 |\n| 67 kPa | 65.0 ± 0.56 | 21.8 ± 0.03 | 62.6 ± 1.06 | 0.1250 ± 0.0009 | 21.0 ± 0.1 |\n| 33 kPa | 32.6 ± 0.03 | 21.9 ± 0.09 | 61.9 ± 1.67 | 0.1259 ± 0.0002 | 21.1 ± 0.2 |\n\nThe experiment was conducted in ground-based low-pressure chambers at the University of Guelph. Section 2.1 calls the middle group 66 kPa, while Table 1 labels it 67 kPa and reports a measured mean of 65.0 kPa. The ambient control is labeled 97 kPa in Table 1 and described as 96 kPa in the abstract. Table 1 reports means of three replicates and specifies that its CO₂ data were normalized to 1 atm (101 kPa) and that CO₂ was uncontrolled during the dark cycle.",
+    "metadata": {
+      "source_id": "stutte2022",
+      "section": "Growing red-leaf lettuce under reduced atmospheric pressure",
+      "subsection": "Study scope and total-pressure treatments",
+      "subsection_ko": "실험 범위와 압력 처리군",
+      "source_url": "https://doi.org/10.1016/j.lssr.2022.06.001",
+      "section_ko": "저압 환경에서의 적상추 재배",
+      "source_location": "p. 39, §2.1; p. 40, Table 1",
+      "source_file": "lettuce_low_pressure_RAG.md",
+      "translation_ko": "세 처리 조건은 현지 대기압의 1배, 2/3배, 1/3배로 각각 97 kPa, 66 kPa, 33 kPa에 해당한다(표 1). 실험은 Guelph 대학교의 지상 저압 챔버에서 수행했다. 중간 처리군은 방법에서 66 kPa, 표 1에서 67 kPa로 표기되며 실측 평균은 65.0 kPa다. 대조군은 표 1에서 97 kPa, 초록에서 96 kPa로 표기된다. 표 1은 세 반복의 평균을 제시한다. 표의 CO₂ 데이터는 1기압(101 kPa) 기준으로 정규화했으며, 암기에는 CO₂ 농도를 제어하지 않았다.",
+      "simulator_application_ko": "**압력 설정을 고를 수 있고, 적상추 수확 무게가 목표임**\n\n현지 대기압 대조군을 유지한다. 저압 조건을 비교하려면 67 또는 33 kPa 처리군을 선택한다."
+    }
+  },
+  {
+    "id": "stutte2022-sowing-thinning",
+    "text": "Growing red-leaf lettuce under reduced atmospheric pressure\nSowing, germination and thinning after 72 hours\n\nFor all pressure treatments, three seeds per position were planted and allowed to germinate for 72 h under ambient (~97 kPa) pressure, at which time the plants were thinned to one plant per position, and the designated pressure treatment (33 kPa, 66 kPa, or 97 kPa) imposed. This protocol ensured a uniform population of developing seedlings for each treatment.\n\nPressure treatments for ‘Outredgeous’ and ‘Flandria’ began 3 days after planting and continued for the remaining 18 days until harvest on day 21.",
+    "metadata": {
+      "source_id": "stutte2022",
+      "section": "Growing red-leaf lettuce under reduced atmospheric pressure",
+      "subsection": "Sowing, germination and thinning after 72 hours",
+      "subsection_ko": "파종과 발아 72시간 후 솎아내기",
+      "source_url": "https://doi.org/10.1016/j.lssr.2022.06.001",
+      "section_ko": "저압 환경에서의 적상추 재배",
+      "source_location": "p. 39, §2.2; p. 42, §4",
+      "source_file": "lettuce_low_pressure_RAG.md",
+      "translation_ko": "모든 압력 처리군에서 재배 자리마다 씨앗 3개를 심고 현지 대기압(약 97 kPa)에서 72시간 동안 발아시켰다. 그 시점에 자리마다 한 포기만 남기도록 솎아내고, 지정된 압력(33 kPa, 66 kPa 또는 97 kPa)을 적용했다. 이 절차로 각 처리군의 유묘 상태를 고르게 맞췄다. 적상추 ‘Outredgeous’와 녹색 상추 ‘Flandria’ 모두 파종 3일 차에 압력 처리를 시작해 21일 차 수확까지 18일간 유지했다.",
+      "simulator_application_ko": "**파종 3일 차, 한 자리에 여러 유묘가 있음**\n\n자리마다 유묘 한 포기만 남긴다. 이어서 시나리오에 지정된 총압을 적용한다."
+    }
+  },
+  {
+    "id": "stutte2022-rockwool-spacing",
+    "text": "Growing red-leaf lettuce under reduced atmospheric pressure\nRockwool substrate, recirculating hydroponics and plant spacing\n\nAll plants were grown in 140 × 40 cm stainless steel troughs in a rockwool substrate (Grodan™, Coppell, TX) using a recirculating nutrient film technique delivery system. A 5 cm wide x 3 cm deep “channel” was cut into the bottom of the rockwool to promote nutrient solution flow. The rockwool was rinsed with DI water prior to use to remove particulate material from the substrate.\n\n‘Outredgeous’ was spaced in the rockwool substrate at 15 cm centers within and between troughs, and ‘Flandria’ was spaced at 12 cm centers within and between troughs. Stainless steel plates were placed over the rockwool between plants to minimize algae growth and reduce evaporation rates (Fig. 1B).",
+    "metadata": {
+      "source_id": "stutte2022",
+      "section": "Growing red-leaf lettuce under reduced atmospheric pressure",
+      "subsection": "Rockwool substrate, recirculating hydroponics and plant spacing",
+      "subsection_ko": "암면 배지, 순환식 수경재배와 포기 간격",
+      "source_url": "https://doi.org/10.1016/j.lssr.2022.06.001",
+      "section_ko": "저압 환경에서의 적상추 재배",
+      "source_location": "p. 39, §2.2",
+      "source_file": "lettuce_low_pressure_RAG.md",
+      "translation_ko": "모든 상추는 140 × 40 cm 스테인리스 재배 홈통의 암면 배지에서 순환식 박막 양액 재배(NFT) 방식으로 키웠다. 양액이 잘 흐르도록 암면 바닥에 폭 5 cm, 깊이 3 cm의 통로를 팠다. 사용 전에는 배지에 남은 입자를 제거하기 위해 탈이온수로 암면을 헹궜다.\n\n홈통 안과 홈통 사이 모두 포기 중심 간격을 ‘Outredgeous’는 15 cm, ‘Flandria’는 12 cm로 맞췄다. 조류가 자라는 것을 억제하고 증발을 줄이기 위해 포기 사이의 암면을 스테인리스 판으로 덮었다(그림 1B)."
+    }
+  },
+  {
+    "id": "stutte2022-light-temperature-gas",
+    "text": "Growing red-leaf lettuce under reduced atmospheric pressure\nLight, temperature and gas partial pressures\n\nLighting was provided from six 1000 W metal halide (MH) (P.L. Light Systems, Beamsville, ON, Canada) lamps, which were cycled to provide a 16 h light/08-h dark photoperiod at 300 μmol m⁻² s⁻¹ PPF (17.3 mol m⁻² d⁻¹). Air temperatures were maintained at a constant 22 °C; Vapor Pressure Deficit (VPD) was maintained at a constant 0.9 kPa (~ 62% RH) for the duration of the experiment (Table 1).\n\nCO₂ was maintained at 1200 μ mol⁻¹ (0.12 kPa) partial pressure, and O₂ was maintained at ~21 kPa partial pressure in all chambers.\n\nCO₂ concentration was not controlled during the dark cycle.\n\nThe abstract lists a daily light integral of 17.2 mol m⁻² d⁻¹, and §2.1 lists 17.3 mol m⁻² d⁻¹. Oxygen accounted for about 63.5% of total pressure in the nominal 33 kPa treatment. The authors report that the effect of that O₂ percentage is unknown. Total pressure varied across treatments while O₂ partial pressure was held near 21 kPa. The paper did not test a pressure drop with the O₂ fraction kept at 21%.",
+    "metadata": {
+      "source_id": "stutte2022",
+      "section": "Growing red-leaf lettuce under reduced atmospheric pressure",
+      "subsection": "Light, temperature and gas partial pressures",
+      "subsection_ko": "조명, 온도와 기체 분압",
+      "source_url": "https://doi.org/10.1016/j.lssr.2022.06.001",
+      "section_ko": "저압 환경에서의 적상추 재배",
+      "source_location": "p. 39, §2.1; p. 40, Table 1 note; p. 42, §4",
+      "source_file": "lettuce_low_pressure_RAG.md",
+      "translation_ko": "1,000 W 메탈할라이드 램프 6개로 조명을 공급해 16시간 명기와 8시간 암기를 반복했다. 광합성 광량자속(PPF)은 300 μmol m⁻² s⁻¹이었고, 방법에 적힌 일일 광적산량은 17.3 mol m⁻² d⁻¹이었다. 실험 기간 동안 공기 온도는 22 °C, 증기압차(VPD)는 0.9 kPa(상대습도 약 62%)로 유지했다(표 1).\n\n모든 챔버에서 CO₂ 분압은 0.12 kPa(논문 표기 1200 μ mol⁻¹), 산소 분압은 약 21 kPa로 유지했다. 암기에는 CO₂ 농도를 제어하지 않았다.\n\n일일 광적산량은 초록에 17.2 mol m⁻² d⁻¹, 방법에 17.3 mol m⁻² d⁻¹로 적혀 있다. 33 kPa 처리군에서 산소 분압은 전체 압력의 약 63.5%에 해당했으며, 저자들은 이 산소 비율 자체가 미친 영향은 알 수 없다고 밝혔다. 처리군마다 총압을 달리하면서 산소 분압은 약 21 kPa로 유지했다. 산소 비율을 21%로 유지한 채 총압을 낮추는 조건은 실험하지 않았다."
+    }
+  },
+  {
+    "id": "stutte2022-nutrient-solution",
+    "text": "Growing red-leaf lettuce under reduced atmospheric pressure\nNutrient solution pH, EC and reservoir replenishment\n\nSolution was automatically controlled to near 5.8 pH with additions of dilute nitric acid (0.4 M HNO₃). Water depletion from the nutrient reservoirs due to evapotranspiration was monitored and condensate added back to the reservoir.\n\nBoth cultivars received a modified half-strength Hoagland’s nutrient solution in this recirculating rockwool NFT system. Electrical conductivity (EC) was monitored and maintained near 1200 μS cm⁻¹ (1.2 dS m⁻¹) by adding a complete stock solution. These values describe the experimental hydroponic setup.",
+    "metadata": {
+      "source_id": "stutte2022",
+      "section": "Growing red-leaf lettuce under reduced atmospheric pressure",
+      "subsection": "Nutrient solution pH, EC and reservoir replenishment",
+      "subsection_ko": "양액 pH·EC와 저장조 물 보충",
+      "source_url": "https://doi.org/10.1016/j.lssr.2022.06.001",
+      "section_ko": "저압 환경에서의 적상추 재배",
+      "source_location": "pp. 39–40, §2.2; p. 40, Table 1",
+      "source_file": "lettuce_low_pressure_RAG.md",
+      "translation_ko": "묽은 질산(0.4 M HNO₃)을 추가해 양액 pH를 약 5.8로 자동 조절했다. 증발산으로 양액 저장조의 물이 얼마나 줄어드는지 확인하고, 응축수를 저장조에 다시 넣었다. 이 순환식 암면 NFT 시스템에서는 두 품종 모두에 농도를 절반으로 낮춘 변형 Hoagland 양액을 사용했다. 전기전도도(EC)를 모니터링하면서 완전 양액 원액을 추가해 약 1,200 μS cm⁻¹(1.2 dS m⁻¹)로 유지했다. 이 수치는 해당 수경재배 실험의 조건이다.",
+      "simulator_application_ko": "**저압 재배 중 저장조 수위가 낮아짐**\n\n저장조 수위와 양액 EC를 확인한다. 실험 절차를 따르는 시나리오라면 회수한 응축수를 보충한다."
+    }
+  },
+  {
+    "id": "stutte2022-harvest",
+    "text": "Growing red-leaf lettuce under reduced atmospheric pressure\nDay-21 harvest and chamber opening\n\nPlants were harvested at 21-d after planting (DAP). At harvest, chamber pressure was slowly returned to ambient prior to opening (Fig. 1C).\n\nAt harvest, canopy area (calculated from length and width), plant height, leaf area, and fresh mass were determined for each plant.",
+    "metadata": {
+      "source_id": "stutte2022",
+      "section": "Growing red-leaf lettuce under reduced atmospheric pressure",
+      "subsection": "Day-21 harvest and chamber opening",
+      "subsection_ko": "21일 차 수확과 챔버 개방 순서",
+      "source_url": "https://doi.org/10.1016/j.lssr.2022.06.001",
+      "section_ko": "저압 환경에서의 적상추 재배",
+      "source_location": "p. 40, §§2.3.1–2.3.2",
+      "source_file": "lettuce_low_pressure_RAG.md",
+      "translation_ko": "파종 후 21일에 수확했다. 수확할 때는 챔버를 열기 전에 내부 압력을 현지 대기압까지 서서히 되돌렸다(그림 1C). 수확 시 각 포기의 캐노피 면적(길이와 폭으로 계산), 포기 높이, 잎 면적, 생체중을 측정했다.",
+      "simulator_application_ko": "**파종 21일 차, 저압 챔버에서 수확하려 함**\n\n챔버 압력을 현지 대기압까지 서서히 되돌린 뒤 열고 수확한다."
+    }
+  },
+  {
+    "id": "stutte2022-outredgeous-growth",
+    "text": "Growing red-leaf lettuce under reduced atmospheric pressure\nRed-leaf ‘Outredgeous’ harvest mass and leaf area under low pressure\n\nThe reduced growth of ‘Outredgeous’ was quantified. There was a 22.5% reduction in fresh mass, 14.3% reduction in dry mass, 14.5% reduction in plant height, 11% reduction in canopy coverage, 20% reduction in leaf area, and 15% reduction in leaf area index as the pressure was reduced from ambient (97 kPa) to 2/3 ambient (67 kPa) (Table 2). Reducing the pressure from ambient (97 kPa) to 1/3 ambient (33 kPa) pressure had even greater effect, with a 41% reduction in fresh mass, 31% reduction in dry mass, 25.7% reduction in plant height, 30.3% reduction in canopy coverage, and 38.2% reduction in leaf area.\n\nEnglish data — Table 2, means ± SE, three replicates\n\n| Treatment label | Fresh mass (g) | Dry mass (g) | Plant height (mm) | Canopy area (cm²) | Total leaf area (cm²) | Leaf area index |\n|---|---:|---:|---:|---:|---:|---:|\n| 97 kPa | 8.0 ± 0.7 (a) | 0.42 ± 0.07 (a) | 66.2 ± 6.9 (a) | 181 ± 25.4 (a) | 217 ± 14.2 (a) | 1.20 ± 0.10 (a) |\n| 67 kPa | 6.2 ± 1.5 (a) | 0.36 ± 0.08 (a) | 56.6 ± 7.9 (a) | 161 ± 30.6 (a) | 172 ± 39.7 (a) | 1.02 ± 0.10 (a) |\n| 33 kPa | 4.7 ± 0.4 (b) | 0.29 ± 0.02 (a) | 49.2 ± 1.8 (a) | 126 ± 6.7 (a) | 134 ± 4.9 (a) | 1.07 ± 0.08 (a) |\n\nThese are day-21 observations from one ground-chamber experiment with ~21 kPa O₂ partial pressure. The abstract describes the fresh-mass and leaf-area changes as statistically nonsignificant, while Table 2 labels 33 kPa fresh mass “b” and the other two “a”; its footnote defines different letters as P < 0.05. The Results and Discussion also contain inconsistent significance notation. The §3.1 linear test for plant height is reported separately (p = 0.046). The fresh-mass and leaf-area values are best retrieved as observed means with this reporting discrepancy attached.",
+    "metadata": {
+      "source_id": "stutte2022",
+      "section": "Growing red-leaf lettuce under reduced atmospheric pressure",
+      "subsection": "Red-leaf ‘Outredgeous’ harvest mass and leaf area under low pressure",
+      "subsection_ko": "저압에서의 적상추 수확량과 잎 면적",
+      "source_url": "https://doi.org/10.1016/j.lssr.2022.06.001",
+      "section_ko": "저압 환경에서의 적상추 재배",
+      "source_location": "p. 37, Abstract; pp. 40–41, §3.1 and Table 2; p. 42, §4",
+      "source_file": "lettuce_low_pressure_RAG.md",
+      "translation_ko": "‘Outredgeous’의 생육 감소를 수치로 확인했다. 현지 대기압(97 kPa)에서 약 2/3 수준(67 kPa)으로 낮췄을 때 생체중은 22.5%, 건물중은 14.3%, 포기 높이는 14.5%, 캐노피 면적은 11%, 잎 면적은 20%, 엽면적지수는 15% 감소했다(표 2). 97 kPa에서 약 1/3 수준(33 kPa)까지 낮췄을 때는 생체중 41%, 건물중 31%, 포기 높이 25.7%, 캐노피 면적 30.3%, 잎 면적 38.2%가 감소했다.\n\n이 값은 산소 분압이 약 21 kPa인 지상 챔버 실험의 파종 21일 차 관측치다. 초록은 생체중과 잎 면적의 변화가 통계적으로 유의하지 않았다고 설명한다. 반면 표 2는 33 kPa의 생체중에 ‘b’, 나머지 두 처리군에 ‘a’를 붙였으며, 표 각주는 문자가 다르면 P < 0.05라고 설명한다. 결과와 고찰의 유의성 표기도 서로 일치하지 않는다. §3.1에서 따로 보고한 포기 높이의 압력에 따른 선형 검정은 p = 0.046이다. 검색할 때 생체중·잎 면적의 관측 평균과 이 표기 차이를 함께 가져가는 편이 좋다."
+    }
+  },
+  {
+    "id": "stutte2022-appearance-chlorophyll",
+    "text": "Growing red-leaf lettuce under reduced atmospheric pressure\nVisual appearance and chlorophyll under low pressure\n\nEven though the plants appeared smaller under reduced atmospheric pressure, they appeared healthy and showed no visual signs of tissue damage. In addition, the purple/red pigmentation (anthocyanins) of ‘Outredgeous’ appeared more intense under hypobaric than under ambient pressure (Fig. 2).\n\nThere was no effect of hypobaric pressures down to 1/3 atmosphere (33 kPa) on the apparent chlorophyll content, as determined with the Minolta SPAD values, of either ‘Outredgeous’ or ‘Flandria’ cultivars (Tables 4 and 5).\n\nAt day 21, ‘Outredgeous’ mean redness (CIE a*) was 3.57 at 97 kPa, 4.55 at 67 kPa and 5.01 at 33 kPa. Table 4 assigns the same statistical group letter to all three redness means. The absence of visible damage was a visual observation at harvest.",
+    "metadata": {
+      "source_id": "stutte2022",
+      "section": "Growing red-leaf lettuce under reduced atmospheric pressure",
+      "subsection": "Visual appearance and chlorophyll under low pressure",
+      "subsection_ko": "저압 챔버에서 관찰한 외관·엽록소",
+      "source_url": "https://doi.org/10.1016/j.lssr.2022.06.001",
+      "section_ko": "저압 환경에서의 적상추 재배",
+      "source_location": "p. 41, §§3.1–3.2, Fig. 2 and Tables 4–5",
+      "source_file": "lettuce_low_pressure_RAG.md",
+      "translation_ko": "저압에서 자란 상추는 더 작아 보였지만 외관상 건강했고 눈에 보이는 조직 손상 징후는 없었다. ‘Outredgeous’의 자주색·붉은색 색소(안토시아닌)는 현지 대기압에서보다 저압에서 더 진해 보였다(그림 2). Minolta SPAD 측정값을 기준으로 33 kPa까지 낮춘 압력은 ‘Outredgeous’와 ‘Flandria’의 엽록소 추정량에 영향을 주지 않았다(표 4·5).\n\n파종 21일 차 ‘Outredgeous’의 붉은색 지표(CIE a*) 평균은 97, 67, 33 kPa에서 각각 3.57, 4.55, 5.01이었다. 표 4에서 세 평균의 통계 비교 문자는 같다. 조직 손상 징후가 없었다는 것은 수확 시점의 육안 관찰이다.",
+      "simulator_application_ko": "**33 kPa에서 재배한 적상추가 작고 붉게 보임**\n\n잎 면적과 생체중을 기록한다. 필요하면 색소 측정 결과를 비교한다."
+    }
+  },
+  {
+    "id": "stutte2022-anthocyanin-orac",
+    "text": "Growing red-leaf lettuce under reduced atmospheric pressure\n‘Outredgeous’ anthocyanin concentration and antioxidant capacity\n\nReducing atmospheric pressure trended toward increasing the concentration of anthocyanins in the red-leafed lettuce ‘Outredgeous’.\n\nThere was no statistical effect of pressure on the total antioxidant potential (ORAC) of the leaf of either cultivar.\n\nEnglish data — Tables 6 and 7, ‘Outredgeous’, means ± SE, three replicates\n\n| Treatment label | Anthocyanin (μg per g fresh mass) | ORAC (μmol Trolox equivalents per g fresh mass) |\n|---|---:|---:|\n| 97 kPa | 364 ± 32 | 16.8 ± 1.7 |\n| 67 kPa | 402 ± 60 | 16.4 ± 1.5 |\n| 33 kPa | 453 ± 36 | 17.0 ± 1.1 |\n\nAnthocyanin concentration was about 10.4% higher in the middle-pressure group and 24.5% higher at 33 kPa than in the ambient control. Table 6 reports means and standard errors without pairwise significance markers. Concentration is measured per gram of fresh mass; total anthocyanins per plant would require a separate calculation or measurement. An increase in concentration and a change in ORAC are separate outcomes.",
+    "metadata": {
+      "source_id": "stutte2022",
+      "section": "Growing red-leaf lettuce under reduced atmospheric pressure",
+      "subsection": "‘Outredgeous’ anthocyanin concentration and antioxidant capacity",
+      "subsection_ko": "적상추 안토시아닌 농도와 항산화 지표",
+      "source_url": "https://doi.org/10.1016/j.lssr.2022.06.001",
+      "section_ko": "저압 환경에서의 적상추 재배",
+      "source_location": "pp. 41–42, §3.3 and Tables 6–7; p. 42, §4",
+      "source_file": "lettuce_low_pressure_RAG.md",
+      "translation_ko": "대기압을 낮췄을 때 적상추 ‘Outredgeous’의 안토시아닌 농도가 증가하는 경향이 있었다. 두 품종 모두 잎의 총 항산화능(ORAC)에 대한 압력의 영향은 통계적으로 확인되지 않았다.\n\n대조군과 비교했을 때 안토시아닌 농도는 중간 압력군에서 약 10.4%, 33 kPa에서 약 24.5% 높았다. 표 6은 평균과 표준오차를 제시하며 처리군 간 유의성 표시는 없다. 농도는 생체중 1 g당 값이다. 포기 전체의 안토시아닌 양은 별도 계산이나 측정이 필요하다. 안토시아닌 농도와 ORAC는 서로 다른 측정 결과다."
+    }
+  },
+  {
+    "id": "stutte2022-flandria-comparison",
+    "text": "Growing red-leaf lettuce under reduced atmospheric pressure\nGreen ‘Flandria’ as a cultivar comparison\n\nIn contrast, the green bibb-type lettuce cultivar ‘Flandria’ had no statistically significant reduction in biometric parameters as the pressure was reduced from ambient (97 kPa) to 2/3 ambient (67 kPa) (Table 3).\n\nEnglish data — Tables 3, 6 and 7, ‘Flandria’, means ± SE, three replicates\n\n| Treatment label | Fresh mass (g) | Dry mass (g) | Total leaf area (cm²) | Anthocyanin (μg per g fresh mass) | ORAC (μmol Trolox equivalents per g fresh mass) |\n|---|---:|---:|---:|---:|---:|\n| 97 kPa | 7.3 ± 1.3 | 0.40 ± 0.09 | 139 ± 16.6 | 7.6 ± 1.6 | 10.9 ± 2.4 |\n| 67 kPa | 6.8 ± 0.5 | 0.38 ± 0.03 | 140 ± 14.7 | 6.3 ± 1.3 | 11.0 ± 1.9 |\n| 33 kPa | 5.3 ± 0.2 | 0.29 ± 0.04 | 97 ± 6.5 | 6.9 ± 0.1 | 10.3 ± 1.9 |\n\nThe three ‘Flandria’ pressure groups share the same letter for each biometric variable in Table 3. These cultivar-specific observations at day 21 should stay associated with ‘Flandria’ in retrieval.",
+    "metadata": {
+      "source_id": "stutte2022",
+      "section": "Growing red-leaf lettuce under reduced atmospheric pressure",
+      "subsection": "Green ‘Flandria’ as a cultivar comparison",
+      "subsection_ko": "품종 비교용 녹색 상추 ‘Flandria’",
+      "source_url": "https://doi.org/10.1016/j.lssr.2022.06.001",
+      "section_ko": "저압 환경에서의 적상추 재배",
+      "source_location": "p. 41, §3.1 and Table 3; p. 42, Tables 6–7",
+      "source_file": "lettuce_low_pressure_RAG.md",
+      "translation_ko": "녹색 빕형 상추 ‘Flandria’는 현지 대기압(97 kPa)에서 약 2/3 수준(67 kPa)으로 압력을 낮췄을 때 생육 지표가 통계적으로 유의하게 감소하지 않았다(표 3). 표 3의 각 생육 지표에서 세 압력군의 통계 비교 문자는 같다. 위 수치는 파종 21일 차 ‘Flandria’ 관측값이다."
+    }
+  },
+  {
+    "id": "stutte2022-transpiration",
+    "text": "Growing red-leaf lettuce under reduced atmospheric pressure\nTranspiration observations under low pressure\n\nTranspiration rate was higher under 33 kPa and 66 kPa than under ambient pressure (data not shown), but water was not expected to have been limiting in the hydroponic troughs.\n\nThe paper provides no numeric transpiration rates or direct leaf-temperature measurements. It discusses possible links between increased evapotranspiration and plant responses as hypotheses. This passage can ground a monitoring option for reservoir water or solution EC in the simulator. It provides no dosing amount or adjustment interval.",
+    "metadata": {
+      "source_id": "stutte2022",
+      "section": "Growing red-leaf lettuce under reduced atmospheric pressure",
+      "subsection": "Transpiration observations under low pressure",
+      "subsection_ko": "저압에서의 증산 관찰",
+      "source_url": "https://doi.org/10.1016/j.lssr.2022.06.001",
+      "section_ko": "저압 환경에서의 적상추 재배",
+      "source_location": "p. 42, §4",
+      "source_file": "lettuce_low_pressure_RAG.md",
+      "translation_ko": "33 kPa와 66 kPa에서 증산율이 현지 대기압에서보다 높았다(데이터 미제시). 다만 연구진은 수경재배 홈통에서 물 공급이 생육을 제한했을 가능성은 낮다고 봤다. 논문에는 증산율 수치와 잎 온도 실측치가 없다. 증발산 증가와 식물 반응 사이의 연결은 가설로 제시됐다.",
+      "simulator_application_ko": "시뮬레이션에서 양액 저장조 수위나 EC를 확인하는 선택지의 근거로 쓸 수 있으며, 보충량이나 조절 주기를 계산할 수 있는 수치는 제공되지 않는다."
+    }
+  }
+]
