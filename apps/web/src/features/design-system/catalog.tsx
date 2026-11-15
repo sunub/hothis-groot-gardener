@@ -17,6 +17,7 @@ import { VerdictBanner } from '@/components/verdict-banner';
 import { ZoneBadge } from '@/components/zone-badge';
 import { EventCard } from '@/features/event-card/event-card';
 import { HealthBar, ZoneGauge } from '@/features/grow-room/zone-gauge';
+import { TIMELINE_FIXTURES } from '@/lib/contract/fixtures';
 import { TimelinePreview } from './timeline-preview';
 
 /**
@@ -238,9 +239,68 @@ export function DesignSystemCatalog() {
         </ul>
       </Section>
 
+      <Section id="ds-event-card" title="09 · EVENT CARD">
+        <EventCardPreview />
+      </Section>
+
       <Section id="ds-timeline" title="10 · TIMELINE">
         <TimelinePreview />
       </Section>
+    </div>
+  );
+}
+
+/** Example timeline states that carry a pending event (src/lib/contract/fixtures.ts). */
+const EVENT_FIXTURES = TIMELINE_FIXTURES.filter((f) => f.timeline.pending_event !== null);
+
+/**
+ * The event card against the real POST /api/event, fed by the example states,
+ * until the engine produces pending events (ROLE-TASKS A1).
+ */
+function EventCardPreview() {
+  const [index, setIndex] = useState(0);
+  const [run, setRun] = useState(0);
+  const [log, setLog] = useState<string>('—');
+  const fixture = EVENT_FIXTURES[index];
+  const pending = fixture?.timeline.pending_event;
+  if (!fixture || !pending) return <p className="text-body text-ink-muted">No example state has a pending event.</p>;
+
+  return (
+    <div className="grid gap-6 lg:grid-cols-[16rem_minmax(0,1fr)]">
+      <div className="space-y-3">
+        <p className="font-sans text-caption text-ink-muted">
+          예시 상태(fixtures)의 사건을 실제 API로 불러옵니다. 대응은 엔진에 연결되지 않아 아래에 기록만 합니다.
+        </p>
+        <div className="grid gap-2">
+          {EVENT_FIXTURES.map((f, i) => (
+            <Button
+              key={f.id}
+              variant="toggle"
+              className="h-auto py-2 text-left whitespace-normal"
+              aria-pressed={i === index}
+              onClick={() => {
+                setIndex(i);
+                setRun((n) => n + 1);
+                setLog('—');
+              }}
+            >
+              {f.title}
+            </Button>
+          ))}
+        </div>
+        <Button variant="ghost" onClick={() => setRun((n) => n + 1)}>
+          Reset card
+        </Button>
+        <p className="font-data text-data-sm text-ink-muted">LOG · {log}</p>
+      </div>
+      <Card key={run}>
+        <EventCard
+          pending={pending}
+          plant={fixture.plant}
+          onRespond={(actionId) => setLog(`respond ${actionId}`)}
+          onContinue={() => setLog((l) => `${l} → continue`)}
+        />
+      </Card>
     </div>
   );
 }
