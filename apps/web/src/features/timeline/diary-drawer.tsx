@@ -1,6 +1,7 @@
 'use client';
 
-import { useEffect, useId, useRef, useState, type ReactNode } from 'react';
+import { useEffect, useId, useRef, useState, useSyncExternalStore, type ReactNode } from 'react';
+import { createPortal } from 'react-dom';
 import { useDictionary } from '@/lib/i18n';
 import { cn } from '@/lib/utils/cn';
 
@@ -8,6 +9,12 @@ import { cn } from '@/lib/utils/cn';
 const DRAWER_WIDTH = 380;
 /** Tab width in px: the drawer never grows past the screen minus the tab, so the tab stays reachable. */
 const TAB_WIDTH = 44;
+
+const noSubscribe = () => () => {};
+/** False on the server and in the first client render, true after: document.body exists. */
+function useMounted(): boolean {
+  return useSyncExternalStore(noSubscribe, () => true, () => false);
+}
 
 /**
  * The cultivation diary as a drawer on the right edge (design proposal B):
@@ -46,13 +53,18 @@ export function DiaryDrawer({ children }: { children: ReactNode }) {
     return () => document.removeEventListener('keydown', onKey);
   }, [open]);
 
-  return (
+  // Once mounted, rendered straight into <body>: inside the page, a parent's space-y-*
+  // gave the fixed backdrop and drawer a bottom margin and they stopped short of the
+  // screen's bottom. In <body> no parent can shrink them; m-0 stays as a second guard.
+  // The server and hydration render it in place (same markup, no body to portal into).
+  const mounted = useMounted();
+  const layers = (
     <>
       <div
         aria-hidden
         onClick={() => setOpen(false)}
         className={cn(
-          'fixed inset-0 z-20 bg-bg/60 motion-safe:transition-opacity motion-safe:duration-200',
+          'fixed inset-0 z-20 m-0 bg-bg/60 motion-safe:transition-opacity motion-safe:duration-200',
           open ? 'opacity-100' : 'pointer-events-none opacity-0',
         )}
       />
@@ -65,7 +77,7 @@ export function DiaryDrawer({ children }: { children: ReactNode }) {
       <div
         style={{ width: DRAWER_WIDTH, maxWidth: `calc(100vw - ${TAB_WIDTH}px)` }}
         className={cn(
-          'fixed inset-y-0 right-0 z-30 motion-safe:transition-transform motion-safe:duration-200',
+          'fixed inset-y-0 right-0 z-30 m-0 motion-safe:transition-transform motion-safe:duration-200',
           open ? 'translate-x-0' : 'translate-x-full',
         )}
       >
@@ -114,6 +126,7 @@ export function DiaryDrawer({ children }: { children: ReactNode }) {
       </div>
     </>
   );
+  return mounted ? createPortal(layers, document.body) : layers;
 }
 
 /** Clock with a back arrow: "history". */
