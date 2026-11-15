@@ -38,8 +38,12 @@ export interface LlmConfig {
    * means "keep it loaded".
    */
   keepAlive?: string | number;
-  /** Rewrites asked for within one attempt when a reply breaks a rule (0 turns it off). */
-  repairs: number;
+  /**
+   * Rewrites asked for within one attempt when a reply breaks a rule (0 turns
+   * it off). Optional so that other generators can build a config without it
+   * (event-cards/llm-generator.ts); readLlmConfig always sets it.
+   */
+  repairs?: number;
 }
 
 type Env = Record<string, string | undefined>;

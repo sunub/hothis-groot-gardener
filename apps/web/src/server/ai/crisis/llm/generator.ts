@@ -78,7 +78,7 @@ export function createLlmGenerator(config: LlmConfig, deps: LlmGeneratorDeps = {
       firstIssues = [...issues, ...style];
       // Ask the model to fix its own rule breaks, inside the same attempt. A plain
       // retry gets the same input and tends to repeat the same mistake.
-      while (issues.length + style.length > 0 && repairs < config.repairs) {
+      while (issues.length + style.length > 0 && repairs < (config.repairs ?? 0)) {
         repairs++;
         raw = await chatJson(config, repairMessages(messages, raw, [...issues, ...style]), schema, signal, fetchImpl);
         ({ output, issues, style } = review(raw, candidate, example, random));
