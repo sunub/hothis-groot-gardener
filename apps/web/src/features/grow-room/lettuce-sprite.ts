@@ -5,39 +5,37 @@ import { growthStageOf } from '@/lib/game/rules';
  * Picks the lettuce sprite in public/sprites for the current mission.
  * Sprite table from the euna demo branch (frontend notes v1.2, "assets in hand").
  * Read-only: it never changes the mission.
+ *
+ * Only symptoms in the evidence list are drawn (ROLE-TASKS C4). The asset set also
+ * has wilting (S1, G1, H1) and brown-edge (G3, H3) drawings; neither symptom is in
+ * the evidence list, so they are not used. Stunting with dry wicks (water shortage)
+ * and rot (overwatering stage 3) have no drawing yet: water shortage shows the
+ * healthy plant and stage 3 keeps the mold drawing, and the crisis text says the rest.
  */
 
-export type Symptom = 'ok' | 'wilt' | 'drop' | 'brown' | 'mold';
+export type Symptom = 'ok' | 'drop' | 'mold';
 
 const TABLE: Record<GrowthStage, Record<Symptom, string>> = {
-  // Germination has only wilting and droplet drawings.
+  // Germination has no mold drawing; the droplet one stands in.
   germination: {
     ok: 'S0_sprout',
-    wilt: 'S1_sprout_wilting',
     drop: 'S2_sprout_droplets',
-    brown: 'S2_sprout_droplets',
     mold: 'S2_sprout_droplets',
   },
   growth: {
     ok: 'G0_growing',
-    wilt: 'G1_wilting',
     drop: 'G2_droplets_curling',
-    brown: 'G3_brown_edges',
     mold: 'G4_mold',
   },
   // No symptom drawings for pre-harvest yet; the harvest-size ones stand in.
   pre_harvest: {
     ok: 'P0_preharvest',
-    wilt: 'H1_wilting',
     drop: 'H2_droplets_curling',
-    brown: 'H3_brown_edges',
     mold: 'H4_mold',
   },
   harvest: {
     ok: 'H0_harvest_ready',
-    wilt: 'H1_wilting',
     drop: 'H2_droplets_curling',
-    brown: 'H3_brown_edges',
     mold: 'H4_mold',
   },
 };
@@ -46,8 +44,7 @@ export const DEAD_SPRITE = 'D0_dead';
 
 /** Visible symptom of a crisis. Unknown crises show no symptom. */
 export function symptomOf(crisisId: string | null, stage: number): Symptom {
-  if (crisisId === 'water_shortage') return 'wilt';
-  if (crisisId === 'overwater_mold') return stage >= 3 ? 'mold' : stage === 2 ? 'brown' : 'drop';
+  if (crisisId === 'overwater_mold') return stage >= 2 ? 'mold' : 'drop';
   return 'ok';
 }
 
