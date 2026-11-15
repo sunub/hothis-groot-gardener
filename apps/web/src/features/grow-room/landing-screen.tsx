@@ -26,7 +26,7 @@ import './landing.css';
 const ART_W = 1600;
 const ART_H = 900;
 /** Below this window width the monitor content moves under the scene. */
-const NARROW_MAX = 768;
+const NARROW_MAX = 900;
 const BRIEF_KEY = 'sg_brief_hidden';
 const BRIEF_FALLBACK_MS = 3500;
 const FINISHED = new Set<MissionState['phase']>(['report', 'failed']);
