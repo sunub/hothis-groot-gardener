@@ -91,12 +91,14 @@ function LineText({ line }: { line: DiaryLine }) {
             {line.checked ? <ValueTypeTag type="measured" /> : <span className="text-caption text-ink-muted">{d.unchecked}</span>}
           </span>
           <span>{line.text}</span>
+          {line.ai_translated ? <span className="text-caption text-ink-muted">{d.ai_translated}</span> : null}
         </span>
       );
     case 'observation':
       return (
         <span className="flex flex-wrap items-center gap-2">
           <span>{line.text}</span>
+          {line.ai_translated ? <span className="text-caption text-ink-muted">{d.ai_translated}</span> : null}
           {line.from_state ? <ValueTypeTag type="game_value" /> : null}
         </span>
       );

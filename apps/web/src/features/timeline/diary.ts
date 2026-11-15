@@ -26,6 +26,8 @@ export type DiaryLine =
       text: string;
       /** Only entries compared with the original document are shown as recorded. */
       checked: boolean;
+      /** The text was translated by the language model for a Korean screen. */
+      ai_translated?: boolean;
     }
   | {
       kind: 'observation';
@@ -35,6 +37,8 @@ export type DiaryLine =
       text: string;
       /** Written because of the plant's state: a game value, not a record. */
       from_state: boolean;
+      /** The text was translated by the language model for a Korean screen. */
+      ai_translated?: boolean;
     }
   | { kind: 'game_day'; key: string; day: number; tone: LogTone; game_day: number }
   | ({ kind: 'zone'; key: string; day: number; tone: LogTone } & ZoneChange);

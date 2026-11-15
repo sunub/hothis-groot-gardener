@@ -169,6 +169,7 @@ export const mission = {
     game_day: 'Game day {game_day} reached.',
     zone: '{metric}: {from} → {to}',
     unchecked: 'Not yet checked against the original source',
+    ai_translated: 'AI translation',
     tone: { positive: 'good', negative: 'bad', mixed: 'mixed', neutral: '' },
   },
   pending: {

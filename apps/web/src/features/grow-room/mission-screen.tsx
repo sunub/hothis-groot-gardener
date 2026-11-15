@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { StateHistoryChart } from '@/components/state-history-chart';
 import { Card, CardTitle } from '@/components/ui/card';
 import { ValueTypeTag } from '@/components/value-type-tag';
@@ -8,12 +8,19 @@ import { PhaseGate } from '@/features/mission/phase-gate';
 import { ROUTES } from '@/features/mission/routes';
 import { useMission, type CrisisFetchStatus, type MissionActions } from '@/features/mission/use-mission';
 import type { MissionState } from '@/lib/contract/types';
-import { useDictionary } from '@/lib/i18n';
+import { CultivationDiary } from '@/features/timeline/cultivation-diary';
+import { diaryLines } from '@/features/timeline/diary';
+import { useDiaryTranslation } from '@/features/timeline/use-diary-translation';
+import type { EventCardResponse } from '@/lib/contract/schemas';
+import { eventList } from '@/lib/events';
+import { localizeEventList } from '@/lib/events/localize';
+import { useDictionary, useLocale } from '@/lib/i18n';
 import { CarePanel } from './care-panel';
 import { CrisisPanel, toCrisisView } from './crisis-panel';
 import { CrisisPendingPanel } from './crisis-pending-panel';
 import { CrisisResultPanel } from './crisis-result-panel';
 import { CultivationTimeline } from './cultivation-timeline';
+import { EventCardSection } from './event-card-section';
 import { NightPanel } from './night-panel';
 import { PhaseChangedContext } from './panel-heading';
 import { PlantCharacter } from './plant-character';
@@ -21,10 +28,18 @@ import { PlantStatusPanel } from './plant-status-panel';
 
 /** The /mission screen: gate to the mission phases that belong here, then the grow room. */
 export function MissionScreen() {
-  const { crisisStatus, actions } = useMission();
+  const { crisisStatus, eventCard, eventStatus, actions } = useMission();
   return (
     <PhaseGate route={ROUTES.mission} fallback={<GrowRoomLoading />}>
-      {(mission) => <GrowRoom mission={mission} crisisStatus={crisisStatus} actions={actions} />}
+      {(mission) => (
+        <GrowRoom
+          mission={mission}
+          crisisStatus={crisisStatus}
+          eventCard={eventCard}
+          eventStatus={eventStatus}
+          actions={actions}
+        />
+      )}
     </PhaseGate>
   );
 }
@@ -41,13 +56,18 @@ function GrowRoomLoading() {
 function GrowRoom({
   mission,
   crisisStatus,
+  eventCard,
+  eventStatus,
   actions,
 }: {
   mission: MissionState;
   crisisStatus: CrisisFetchStatus;
+  eventCard: EventCardResponse | null;
+  eventStatus: CrisisFetchStatus;
   actions: MissionActions;
 }) {
   const t = useDictionary();
+  const { locale } = useLocale();
   // Remember whether the phase has changed since the page opened, so the new panel can take focus.
   const [lastPhase, setLastPhase] = useState(mission.phase);
   const [phaseChanged, setPhaseChanged] = useState(false);
@@ -57,7 +77,21 @@ function GrowRoom({
   }
 
   // Crisis phases get a caution frame, so the panel that needs a decision stands out.
-  const tone = mission.phase === 'crisis' || mission.phase === 'crisis_pending' ? 'caution' : 'default';
+  const tone =
+    mission.phase === 'crisis' || mission.phase === 'crisis_pending' || mission.timeline?.pending_event
+      ? 'caution'
+      : 'default';
+  // Missions with a timeline: the cultivation diary lines, and an event card that stops time.
+  const sourceDiary = useMemo(
+    () =>
+      mission.timeline
+        ? diaryLines(mission.timeline.log, [], mission.timeline.cultivation_day, localizeEventList(eventList, locale))
+        : null,
+    [mission.timeline, locale],
+  );
+  // Korean screen: the English experiment and observation lines are translated by the language model.
+  const translatedDiary = useDiaryTranslation(sourceDiary ?? [], locale);
+  const diary = sourceDiary ? translatedDiary : null;
 
   return (
     <div className="space-y-4 sm:space-y-6">
@@ -81,7 +115,9 @@ function GrowRoom({
             className="@container sm:p-5"
           >
             <PhaseChangedContext value={phaseChanged}>
-              <PhasePanel mission={mission} crisisStatus={crisisStatus} actions={actions} />
+              <EventCardSection mission={mission} eventCard={eventCard} eventStatus={eventStatus} actions={actions}>
+                <PhasePanel mission={mission} crisisStatus={crisisStatus} actions={actions} />
+              </EventCardSection>
             </PhaseChangedContext>
           </Card>
         </aside>
@@ -92,6 +128,11 @@ function GrowRoom({
           </div>
           <StateHistoryChart days={mission.days} current={mission.plant} />
         </Card>
+        {diary ? (
+          <Card className="lg:col-start-1">
+            <CultivationDiary lines={diary} />
+          </Card>
+        ) : null}
       </div>
     </div>
   );
