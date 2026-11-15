@@ -143,9 +143,9 @@ export const CRISIS_PROBABILITY = {
 
 /**
  * Game values set by the team. A careful player would otherwise meet no
- * crisis, so standard missions without a timeline get an overnight change
- * (one watched value moves into its caution zone) until this many crises
- * have occurred. 0 restores the state-only rule.
+ * crisis, so standard missions (with or without the timeline; not the demo)
+ * get an overnight change (one watched value moves into its caution zone)
+ * until this many crises have occurred. 0 restores the state-only rule.
  */
 export const MIN_CRISES_PER_MISSION = 2;
 
