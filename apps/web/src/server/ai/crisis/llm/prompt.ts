@@ -1,5 +1,6 @@
 import type { AiCrisisOutput, Zone } from '@/lib/contract/types';
 import type { GenerationCandidate, GenerationInput } from '../generator';
+import { actionKeyWords, bannedWordsFor, newestSymptoms } from './guard';
 import type { EvidenceChunk } from './retrieval';
 
 /**
@@ -10,9 +11,12 @@ import type { EvidenceChunk } from './retrieval';
  */
 
 export interface ChatMessage {
-  role: 'system' | 'user';
+  role: 'system' | 'user' | 'assistant';
   content: string;
 }
+
+/** Tone and length example: the descriptive part of a reviewed pre-made crisis. */
+export type StyleExample = Pick<AiCrisisOutput, 'scene' | 'plant_line' | 'clues'>;
 
 /** Longest background excerpt passed to the model, in characters. */
 export const EXCERPT_MAX_CHARS = 600;
@@ -20,6 +24,7 @@ export const EXCERPT_MAX_CHARS = 600;
 export const SYSTEM_PROMPT = `You write the text for one crisis in Space Garden Simulator, a training game about growing 'Outredgeous' red romaine lettuce in the ISS Veggie plant growth unit.
 The game code has already decided which crisis happens, which actions are offered and whether each action is right. You only write short English text for it.
 Setting: each plant grows in a plant pillow filled with calcined clay (arcillite) substrate, not soil. Wicks draw water from a reservoir into the pillows.
+This is microgravity on the ISS: water does not drip, fall, run down or pool. Drops and films of water cling to leaves, wicks and pillows.
 
 Rules:
 1. Plain English for astronauts in training. Short sentences. No numbers, no units.
@@ -27,11 +32,11 @@ Rules:
 3. plant_line: 1 or 2 sentences in the first person, spoken by the lettuce. Only how it looks and feels, using the ALLOWED SYMPTOMS. Never the cause, never what to do, never the fan or a setting.
 4. clues: one clue per symptom, with that symptom's symptom_id. Each clue text is one short sentence about that symptom only.
 5. options: exactly one option for each ACTION, with that action's action_id.
-   - label: a short neutral instruction of at most 10 words saying what the astronaut does. It must not hint whether the action is right or wrong: do not use words such as best, correct, should, safe, recommended, proper, wrong or mistake.
-   - result_line: what the lettuce says right after that action, in the first person. It must match the verdict: appropriate means clearly better; partial means a little better but not fixed; inappropriate means worse or no better.
-   - why: one sentence that restates the given reason in your own words. Add nothing that is not in the reason.
-6. Never mention a symptom, cause, event or number that is not given in this message, and do not add details such as colors, textures or amounts that the symptom names do not give. Background excerpts are only for accurate wording; do not take new symptoms or events from them.
-7. Write new wording. Do not copy the example.
+   - label: a short neutral instruction of at most 10 words saying what the astronaut does. It names the same action as the action's name and keeps its key word (given in ACTIONS), so the player knows exactly what they choose. It must not hint whether the action is right or wrong: do not use words such as best, correct, should, safe, recommended, proper, wrong or mistake.
+   - result_line: what the lettuce itself says right after that action: one full sentence of 8 to 20 words in the first person (I, me, my) that says what changed for it. Not a narrator describing the plants. Every option gets its own line. It must match the verdict: appropriate means clearly better; partial means a little better but not fixed; inappropriate means worse or no better.
+   - why: one sentence that restates the given reason in your own words, with the same key words (such as water, reservoir or fan). Add nothing that is not in the reason, and do not turn the action into a different one.
+6. Never mention a symptom, cause, event or number that is not given in this message. Background excerpts are only for accurate wording; do not take new symptoms or events from them.
+7. Write new wording. The example only shows the tone and length of a scene, a plant line and clues; do not copy its sentences or long phrases.
 8. Reply with JSON only, in the required format.`;
 
 const ZONE_WORDS: Record<Zone, string> = {
@@ -95,8 +100,8 @@ export interface PromptParts {
   candidate: GenerationCandidate;
   /** Retrieved background excerpts. Empty when search is off or failed. */
   excerpts: readonly EvidenceChunk[];
-  /** A reviewed pre-made crisis for the same crisis, as a style example. */
-  example?: AiCrisisOutput;
+  /** Scene, plant line and clues of a reviewed pre-made crisis, as a style example. */
+  example?: StyleExample;
 }
 
 export function buildMessages(parts: PromptParts): ChatMessage[] {
@@ -124,6 +129,15 @@ export function buildUserPrompt({ input, candidate, excerpts, example }: PromptP
   for (const symptom of candidate.symptoms) {
     lines.push(`- ${symptom.symptom_id}: ${symptom.name}`);
   }
+  if (candidate.stage > 1) {
+    const newest = newestSymptoms(candidate).map((x) => x.symptom_id);
+    lines.push(`NEW AT THIS STAGE: ${newest.join(', ')}. Describe it in the scene and give it a clue.`);
+  }
+  const banned = bannedWordsFor(candidate);
+  lines.push(`DO NOT USE these words in the scene, plant line, clues or result lines: ${banned.anywhere.join('; ')}.`);
+  lines.push(
+    `ALSO DO NOT USE these words in the scene, plant line or clues: ${banned.describing.join('; ')}. These words are fine in labels and why lines.`,
+  );
   lines.push(
     `Write ${candidate.clues_min} to ${Math.max(candidate.clues_min, Math.min(input.limits.clues_max, candidate.symptoms.length))} clues.`,
   );
@@ -131,7 +145,9 @@ export function buildUserPrompt({ input, candidate, excerpts, example }: PromptP
 
   lines.push('ACTIONS (write exactly one option for each):');
   for (const action of candidate.actions) {
-    lines.push(`- ${action.action_id}: ${action.name} | verdict: ${action.verdict} | reason: ${action.reason}`);
+    const keys = actionKeyWords(action.name).flatMap((k) => k.words);
+    const keep = keys.length > 0 ? ` | the label keeps the word ${keys.map((w) => `"${w}"`).join(' or ')}` : '';
+    lines.push(`- ${action.action_id}: ${action.name} | verdict: ${action.verdict} | reason: ${action.reason}${keep}`);
   }
 
   if (input.active && input.active.crisis_id === candidate.crisis_id && input.active.attempt > 1) {
@@ -151,7 +167,7 @@ export function buildUserPrompt({ input, candidate, excerpts, example }: PromptP
 
   if (example) {
     lines.push('');
-    lines.push('STYLE EXAMPLE (a reviewed text for this crisis; match the tone and length, write new wording):');
+    lines.push('STYLE EXAMPLE (scene, plant line and clues from a reviewed text for this crisis; match the tone and length, write new wording):');
     lines.push(JSON.stringify(example));
   }
 
