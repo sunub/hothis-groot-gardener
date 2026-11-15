@@ -10,7 +10,7 @@ import { PhaseGate } from '@/features/mission/phase-gate';
 import { ROUTES } from '@/features/mission/routes';
 import { useMission, type MissionActions } from '@/features/mission/use-mission';
 import type { HarvestRecord, MissionState } from '@/lib/contract/types';
-import { evidence } from '@/lib/evidence';
+import { useEvidence } from '@/lib/evidence/use-evidence';
 import { format, useDictionary } from '@/lib/i18n';
 import { computeReportMetrics } from '@/lib/game/engine';
 import { HEALTH_MIN } from '@/lib/game/rules';
@@ -35,6 +35,7 @@ type SectionId = 'microbial' | 'pathogen' | 'factors' | 'crises' | 'history' | '
 
 function Report({ mission, actions }: { mission: MissionState; actions: MissionActions }) {
   const t = useDictionary();
+  const evidence = useEvidence();
   const metrics = useMemo(() => computeReportMetrics(mission), [mission]);
   const rows = useMemo(() => dayRows(mission), [mission]);
   const failed = mission.phase === 'failed';

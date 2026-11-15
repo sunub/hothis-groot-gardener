@@ -10,7 +10,8 @@ import { PhaseGate } from '@/features/mission/phase-gate';
 import { ROUTES } from '@/features/mission/routes';
 import { useMission, type MissionActions } from '@/features/mission/use-mission';
 import type { MissionState } from '@/lib/contract/types';
-import { evidence } from '@/lib/evidence';
+import { useEvidence } from '@/lib/evidence/use-evidence';
+import type { EvidenceList } from '@/lib/contract/types';
 import { format, useDictionary } from '@/lib/i18n';
 import { GAME_DAYS, MICROBIAL, cultivationDayOf } from '@/lib/game/rules';
 import { GradeBadge, PageHeader, PlantStateList, StepEvidence, useFocusOnMount } from './parts';
@@ -45,12 +46,13 @@ function HarvestSteps({ mission, actions }: { mission: MissionState; actions: Mi
   );
 }
 
-function stepOf(id: 'harvest_sanitize' | 'freeze_return') {
+function stepOf(evidence: EvidenceList, id: 'harvest_sanitize' | 'freeze_return') {
   return evidence.harvest.steps.find((s) => s.step_id === id);
 }
 
 function HarvestStep({ mission, actions }: { mission: MissionState; actions: MissionActions }) {
   const t = useDictionary();
+  const evidence = useEvidence();
   const h = t.report.harvest;
   const health = mission.plant.plant_health;
   const grade = gradeForHealth(health);
@@ -96,7 +98,7 @@ function HarvestStep({ mission, actions }: { mission: MissionState; actions: Mis
         <CardTitle id="harvest-step" className="mb-3">
           {h.step_title}
         </CardTitle>
-        <StepEvidence step={stepOf('harvest_sanitize')} />
+        <StepEvidence step={stepOf(evidence, 'harvest_sanitize')} />
       </Card>
 
       <section
@@ -161,6 +163,7 @@ const FLOW_ICON = { harvest: 'pruner', freeze: 'earth', ground: 'scope' } as con
 function FreezeStep({ mission, actions, focus }: { mission: MissionState; actions: MissionActions; focus: boolean }) {
   const t = useDictionary();
   const f = t.report.freeze;
+  const evidence = useEvidence();
   const headingRef = useFocusOnMount<HTMLHeadingElement>(focus);
   const harvest = mission.harvest;
   const flow = [
@@ -205,7 +208,7 @@ function FreezeStep({ mission, actions, focus }: { mission: MissionState; action
         <CardTitle id="freeze-step" className="mb-3">
           {f.step_title}
         </CardTitle>
-        <StepEvidence step={stepOf('freeze_return')} />
+        <StepEvidence step={stepOf(evidence, 'freeze_return')} />
       </Card>
 
       <div>

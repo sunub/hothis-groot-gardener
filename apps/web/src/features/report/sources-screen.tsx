@@ -7,7 +7,7 @@ import { buttonVariants } from '@/components/ui/button';
 import { ValueTypeTag } from '@/components/value-type-tag';
 import { ZoneBadge } from '@/components/zone-badge';
 import type { EvidenceAction, EvidenceCrisis, Metric, ValueType } from '@/lib/contract/types';
-import { evidence } from '@/lib/evidence';
+import { useEvidence } from '@/lib/evidence/use-evidence';
 import { format, useDictionary } from '@/lib/i18n';
 import {
   CRISIS_PROBABILITY,
@@ -55,6 +55,7 @@ const VALUE_TYPES: readonly ValueType[] = ['measured', 'game_value'];
 /** The /sources screen: every piece of evidence and every game rule in one place. Needs no mission. */
 export function SourcesScreen() {
   const t = useDictionary();
+  const evidence = useEvidence();
   const s = t.report.sources;
   const contents: { id: string; title: string }[] = [
     { id: 'how', title: s.how_title },
@@ -311,6 +312,7 @@ function ActionRow({ action }: { action: EvidenceAction }) {
 
 function HarvestEvidenceSection() {
   const t = useDictionary();
+  const evidence = useEvidence();
   const s = sourcesOf(t);
   const h = evidence.harvest;
   return (
@@ -422,6 +424,7 @@ function RuleList({ items }: { items: string[] }) {
 
 function GameRules() {
   const t = useDictionary();
+  const evidence = useEvidence();
   const s = sourcesOf(t);
   const r = s.rules;
   const unit = evidence.harvest.microbial_range.unit;
