@@ -66,7 +66,7 @@ Reranker를 적용한 결과 평가:
 uv run --group rerank python evaluation.py --dataset ../../data/eval/evaluation.example.json --rerank
 ```
 
-두 명령은 같은 `Recall@5`, `MRR@5`, `nDCG@5`를 사용합니다. 화면과 저장된 보고서의 `datasets`에는 **평가 파일별 평균(`summary`)과 각 상황의 점수(`details`)**가 있고, `overall.summary`에는 **모든 평가 파일의 질문을 합친 평균**이 있습니다. 각 상황에는 검색된 chunk ID도 기록합니다.
+두 명령은 같은 `Recall@5`, `MRR@5`, `nDCG@5`를 사용합니다(`Precision@5`, `OffStage@5`도 함께 출력합니다. 아래 게임 평가 참고). 화면과 저장된 보고서의 `datasets`에는 **평가 파일별 평균(`summary`)과 각 상황의 점수(`details`)**가 있고, `overall.summary`에는 **모든 평가 파일의 질문을 합친 평균**이 있습니다. 각 상황에는 검색된 chunk ID도 기록합니다.
 
 평가 파일을 여러 개 한 번에 비교하려면 경로를 이어서 적습니다.
 
@@ -75,6 +75,20 @@ uv run python evaluation.py --dataset ../../data/eval/evaluation.example.json ..
 ```
 
 평가할 때마다 `result/weighted_rrf_날짜시간.json` 또는 `result/rerank_날짜시간.json`에 보고서를 새로 저장합니다. 저장 위치를 바꾸려면 `--output-dir 경로`를 추가합니다. Reranker 평가의 후보 수와 배치 크기는 각각 `--rerank-candidates`, `--rerank-batch-size`로 조절할 수 있습니다.
+
+### 게임이 실제로 쓰는 검색 평가 (`evaluation.app.json`)
+
+게임은 위기 글을 만들 때 `apps/web/src/server/ai/crisis/llm/retrieval.ts`가 만드는 영어 질의(작물, 위기 이름, 관찰 증상, 선택지)로 키워드 검색(`retriver.local.yaml`, API 키 불필요)을 하고, 상위 4개만 프롬프트에 넣습니다. `data/eval/evaluation.app.json`에는 그 질의 5개(물 부족 1·2단계, 과습 1·2·3단계)가 그대로 들어 있습니다.
+
+```bash
+uv run python evaluation.py --dataset ../../data/eval/evaluation.app.json --config retriver.local.yaml --top-n 4
+```
+
+- `relevant_ids`는 핵심 근거(2점), 선택 필드 `partial_ids`는 보조 근거(1점), `off_stage_ids`는 그 단계에 아직 없는 증상을 다룬 chunk입니다.
+- `Precision@N`은 상위 N개 중 핵심·보조 근거의 비율이고, `nDCG@N`은 2점과 1점을 구분해 계산합니다. `OffStage@N`은 상위 N개에 들어온 off-stage chunk 수이며 `OffStage@N total`은 그 합계입니다. Recall과 MRR은 핵심 근거만 셉니다.
+- `--top-n`의 기본값은 5입니다. 선택 필드가 없는 기존 평가 파일은 예전과 같은 Recall, MRR, nDCG가 나옵니다.
+
+2026-11-15 기준(76 chunks) 결과입니다. 상위 4개: Recall 0.87, MRR 1.00, nDCG 0.81, Precision 0.65, OffStage 0/20. 상위 5개로 넓히면 Precision이 0.60으로 내려가고, 물 부족 질의에 잎끝 마름 chunk(`VEG-03J-11`)가 들어와 OffStage가 2/25가 됩니다.
 
 ## 4. LLM 추천 붙이기 (`rag_llm.py`)
 

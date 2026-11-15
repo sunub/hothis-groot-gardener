@@ -239,15 +239,40 @@ describe('overnight change for the mission minimum (위기 최소 횟수)', () =
     }
   });
 
-  it('timeline missions are untouched', () => {
+  /** The night before `gameDay + 1` with a timeline that has reached that morning's cultivation day. */
+  function timelineNightOf(gameDay: number, seed: number, mode: MissionState['mode']): MissionState {
+    const started = createMission({ mission_id: 'timeline', mode, seed, timeline: true });
+    return {
+      ...nightOf(gameDay, seed, {}, {}, mode),
+      schema_version: 2,
+      timeline: {
+        ...started.timeline!,
+        cultivation_day: cultivationDayOf(gameDay + 1),
+        status: 'milestone',
+        pending_event: null,
+      },
+    };
+  }
+
+  it('applies to standard missions with the timeline (50 seeds)', () => {
     for (let seed = 1; seed <= 50; seed++) {
-      const started = createMission({ mission_id: 'timeline', mode: 'standard', seed, timeline: true });
-      const night: MissionState = {
-        ...nightOf(4, seed),
-        schema_version: 2,
-        timeline: { ...started.timeline!, cultivation_day: cultivationDayOf(5), status: 'milestone', pending_event: null },
-      };
+      // Day 5 with no crisis yet: two needed, two mornings left, so the change is forced.
+      const night = timelineNightOf(4, seed, 'standard');
       const after = nextDay(night, evidence);
+      const change = today(after).overnight_change!;
+      expect(change).toBeDefined();
+      expect(after.phase).toBe('crisis_pending');
+      expect(after.active_crisis?.candidates).toEqual([change.crisis_id]);
+      expect(after.plant).toEqual({ ...night.plant, [change.metric]: change.to });
+      expect(today(after).start).toEqual(after.plant);
+      // The timeline itself is not touched by the change.
+      expect(after.timeline).toEqual({ ...night.timeline, status: 'milestone' });
+    }
+  });
+
+  it('demo missions with the timeline are untouched', () => {
+    for (let gameDay = FIRST_CRISIS_DAY - 1; gameDay < LAST_CRISIS_DAY; gameDay++) {
+      const after = nextDay(timelineNightOf(gameDay, 1, 'demo'), evidence);
       expect(today(after).overnight_change).toBeUndefined();
       expect(after.phase).toBe('care');
     }
