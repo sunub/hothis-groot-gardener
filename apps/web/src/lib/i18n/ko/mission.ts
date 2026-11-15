@@ -30,7 +30,6 @@ export const mission: Dictionary['mission'] = {
       '식물 상태 수치와 그 변화는 측정값이 아니라 팀이 정한 게임 값입니다.',
       '이 앱은 사람의 건강 정보를 기록하지 않습니다.',
     ],
-    actions_title: '시작',
     start_standard: '임무 시작',
     start_demo: '시연 임무 시작',
     demo_note: '시연 모드는 난수 시드를 고정해서, 같은 돌봄을 하면 같은 위기가 나옵니다.',

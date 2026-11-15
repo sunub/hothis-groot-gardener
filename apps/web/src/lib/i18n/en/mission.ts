@@ -28,7 +28,6 @@ export const mission = {
       'Plant state numbers and their changes are game values set by the team, not measurements.',
       'The app records no health data about people.',
     ],
-    actions_title: 'Start',
     start_standard: 'Start mission',
     start_demo: 'Start demo mission',
     demo_note:
