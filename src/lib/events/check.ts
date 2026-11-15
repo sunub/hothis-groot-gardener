@@ -56,6 +56,7 @@ export function checkEventList(data: unknown, refs: EventCheckRefs): EventCheckR
   const flagsSet = new Set<string>();
   const flagsCleared = new Set<string>();
   const flagsWithEffect = new Set<string>();
+  const recordGroupDays = new Map<string, number>();
 
   list.events.forEach((event, i) => {
     const path = `events[${i}]`;
@@ -66,6 +67,26 @@ export function checkEventList(data: unknown, refs: EventCheckRefs): EventCheckR
     if (event.kind === 'crisis') {
       if (!refs.crisisIds.has(event.crisis_ref)) {
         error(`${path}.crisis_ref`, `Crisis "${event.crisis_ref}" is not in the evidence list.`);
+      }
+      return;
+    }
+
+    if (event.kind === 'record') {
+      // A record occurs on window.from only (judge.ts, recordsOn).
+      if (event.window.from !== event.window.to) {
+        error(`${path}.window`, 'A record event must have a one-day window.');
+      }
+      (event.foreshadows ?? []).forEach((crisisId, c) => {
+        if (!refs.crisisIds.has(crisisId)) {
+          error(`${path}.foreshadows[${c}]`, `Crisis "${crisisId}" is not in the evidence list.`);
+        }
+      });
+      if (event.group !== undefined) {
+        const day = recordGroupDays.get(event.group);
+        if (day !== undefined && day !== event.window.from) {
+          error(`${path}.group`, `Records of group "${event.group}" must share one day.`);
+        }
+        recordGroupDays.set(event.group, event.window.from);
       }
       return;
     }
@@ -128,6 +149,14 @@ export function checkEventList(data: unknown, refs: EventCheckRefs): EventCheckR
       const path = `parallel_tracks[${t}].entries[${e}]`;
       checkChunk(`${path}.source_chunk`, entry.source_chunk);
       if (entry.day === null && !entry.when) error(path, 'An entry needs a day or a "when" label.');
+      // Only a compared entry may be shown as measured, and the screen shows
+      // the sentence it was compared with (notes, entry T10).
+      if (entry.source_check === 'checked' && !entry.verified_source) {
+        error(`${path}.verified_source`, 'A checked entry needs the verified source it was compared with.');
+      }
+      if (entry.source_check === 'not_checked' && entry.verified_source) {
+        error(`${path}.verified_source`, 'An entry that was not checked must not carry a verified source.');
+      }
       if (entry.entry_id !== undefined) {
         if (seenEntryKeys.has(entry.entry_id)) error(path, `Duplicate entry_id "${entry.entry_id}".`);
         seenEntryKeys.add(entry.entry_id);

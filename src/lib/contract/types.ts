@@ -468,13 +468,15 @@ export interface EventWindow {
   to: number;
 }
 
-/** State a conditional event needs. Every given part must hold. An empty condition always holds. */
+/** State an event needs. Every given part must hold. An empty condition always holds. */
 export interface EventCondition {
   fan?: FanLevel;
   /** Plant health must be at least this. */
   min_health?: number;
   /** Each listed metric must be in one of the listed zones. */
   zones?: { metric: Metric; in: Zone[] }[];
+  /** At least one listed metric must be in one of its listed zones. */
+  any_zones?: { metric: Metric; in: Zone[] }[];
 }
 
 /** What one event action changes. All numbers are game values. */
@@ -548,10 +550,35 @@ export interface ConditionalTimelineEvent extends TimelineEventBase {
   scene_hint?: string;
 }
 
+/**
+ * A small happening with no choice and no effect: one line in the log, like
+ * the automatic records of '80억 분의 1' (plan, section 2.2). Occurs on
+ * `window.from` (notes, entry T12).
+ *
+ * `condition` is checked against the state the plant is heading to: the
+ * morning of the next game day. That lets the lines between two game days
+ * lead up to what the player then sees (a crisis or a calm morning).
+ */
+export interface RecordTimelineEvent extends TimelineEventBase {
+  kind: 'record';
+  /** Sign at the end of the line. Display only. */
+  tone: LogTone;
+  condition?: EventCondition;
+  /** Chance per mission, from the seed (notes, entry T2). Always occurs when omitted. */
+  probability?: number;
+  /** Of the records of one group on one day, only the first that occurs is written. */
+  group?: string;
+  /** Crises this line leads up to. For display and checks only. */
+  foreshadows?: string[];
+  /** Screen text. Moves to src/lib/i18n in S1, so it is optional here. */
+  text?: string;
+}
+
 export type TimelineEvent =
   | CrisisTimelineEvent
   | ScheduledTimelineEvent
-  | ConditionalTimelineEvent;
+  | ConditionalTimelineEvent
+  | RecordTimelineEvent;
 
 /** One dated line from a real experiment, shown beside the player's run. Never changes a number. */
 export interface ParallelTrackEntry {
@@ -566,9 +593,14 @@ export interface ParallelTrackEntry {
   /**
    * Whether the excerpt behind the entry was compared with the original
    * document. The screen may label only "checked" entries as measured
-   * (events.json meta.rules). Optional until every branch's data carries it.
+   * (events.json meta.rules).
    */
-  source_check?: 'checked' | 'not_checked';
+  source_check: 'checked' | 'not_checked';
+  /**
+   * The original sentence the entry was compared with. Present exactly when
+   * `source_check` is "checked" (checked by src/lib/events/check.ts).
+   */
+  verified_source?: SourceRef;
 }
 
 export interface ParallelTrack {
@@ -645,7 +677,15 @@ export interface MilestoneLogEntry {
   tone: 'neutral';
 }
 
-export type TimelineLogEntry = EventLogEntry | TrackLogEntry | MilestoneLogEntry;
+/** A record event happened. No choice, no effect. */
+export interface RecordLogEntry {
+  type: 'record';
+  cultivation_day: number;
+  event_id: string;
+  tone: LogTone;
+}
+
+export type TimelineLogEntry = EventLogEntry | TrackLogEntry | RecordLogEntry | MilestoneLogEntry;
 
 export type TimelineStatus =
   /** Cultivation days are passing between two game days. */

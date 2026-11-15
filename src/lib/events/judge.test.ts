@@ -6,6 +6,8 @@ import type {
   PlantState,
 } from '@/lib/contract/types';
 import { nextRandom } from '@/lib/game/rng';
+import { evidence } from '@/lib/evidence';
+import { selectCandidates } from '@/lib/evidence/select';
 import { DEMO_SEED, INITIAL_PLANT_STATE } from '@/lib/game/rules';
 import { eventList } from './index';
 import {
@@ -18,10 +20,15 @@ import {
   flagsAfterAction,
   flagsAfterOccur,
   gameDayOn,
+  isCardKind,
   nextEventOn,
+  offeredActionIds,
   planEvent,
   planEvents,
+  recordDrawn,
+  recordsOn,
   trackEntriesOn,
+  trackEntryKey,
   type CardEvent,
 } from './judge';
 
@@ -35,7 +42,7 @@ function conditional(id: string): ConditionalTimelineEvent {
 
 function card(id: string): CardEvent {
   const event = findTimelineEvent(eventList, id);
-  if (!event || event.kind === 'crisis') throw new Error(`${id} is not a card event`);
+  if (!event || !isCardKind(event)) throw new Error(`${id} is not a card event`);
   return event;
 }
 
@@ -199,6 +206,115 @@ describe('eventsDueOn', () => {
   });
 });
 
+describe('recordsOn', () => {
+  const recordIds = (day: number, heading: PlantState, seed = 1) =>
+    recordsOn(eventList, { cultivation_day: day, heading, seed }).map((e) => e.event_id);
+
+  /** Every state the heading can be in, by zone: 0-100 in steps of 5 for both metrics, both fan settings. */
+  const headings: PlantState[] = [];
+  for (let m = 0; m <= 100; m += 5) {
+    for (let h = 0; h <= 100; h += 5) {
+      for (const fan of ['low', 'high'] as const) headings.push(plant({ root_moisture: m, humidity: h, fan }));
+    }
+  }
+
+  it('writes at least one line on every day between game days 1 and 2 (days 2 to 5, except the wick card day)', () => {
+    for (const heading of headings) {
+      for (const day of [2, 4, 5]) expect(recordIds(day, heading).length, `day ${day}`).toBeGreaterThan(0);
+    }
+  });
+
+  it('writes one line per group per day', () => {
+    for (const heading of headings) {
+      for (let day = 0; day <= 33; day++) {
+        const groups = recordsOn(eventList, { cultivation_day: day, heading, seed: 1 })
+          .map((e) => e.group)
+          .filter((g): g is string => g !== undefined);
+        expect(new Set(groups).size).toBe(groups.length);
+      }
+    }
+  });
+
+  it('leads up to the crisis that the next game day can raise, and only to that', () => {
+    for (const heading of headings) {
+      const candidates = new Set(selectCandidates(evidence, heading).map((c) => c.crisis.crisis_id));
+      for (const day of [4, 5]) {
+        const foreshadowed = recordsOn(eventList, { cultivation_day: day, heading, seed: 1 }).flatMap(
+          (e) => e.foreshadows ?? [],
+        );
+        // No hint of a crisis that cannot occur, and a hint whenever one can.
+        for (const id of foreshadowed) expect(candidates.has(id), `day ${day}: ${id}`).toBe(true);
+        expect(foreshadowed.length > 0, `day ${day}, ${JSON.stringify(heading)}`).toBe(candidates.size > 0);
+      }
+    }
+  });
+
+  it('shows the dry hints before a water shortage and the wet hints before excess water', () => {
+    expect(recordIds(4, plant({ root_moisture: 35 }))).toContain('record_wicks_look_dry');
+    expect(recordIds(5, plant({ root_moisture: 35 }))).toContain('record_growth_slow');
+    expect(recordIds(4, plant({ root_moisture: 75, fan: 'low' }))).toContain('record_droplets_on_leaves');
+    expect(recordIds(5, plant({ humidity: 75, fan: 'low' }))).toContain('record_humidity_reading_high');
+    expect(recordIds(4, plant())).toContain('record_sprouts_even');
+    expect(recordIds(5, plant())).toContain('record_seedlings_growing');
+  });
+
+  it('falls back to a plain line when the state is off but no crisis can follow', () => {
+    // Excess water with the fan on high does not meet the overwater_mold trigger.
+    expect(recordIds(4, plant({ root_moisture: 75, fan: 'high' }))).toEqual(['record_seedlings_checked']);
+  });
+
+  it('draws a record with a probability from the seed, in about that share of missions', () => {
+    const event = eventList.events.find((e) => e.event_id === 'record_pillow_not_sprouting');
+    if (!event || event.kind !== 'record' || event.probability === undefined) throw new Error('missing record');
+    expect(recordDrawn(event, 42)).toBe(recordDrawn(event, 42));
+    let drawn = 0;
+    for (let seed = 1; seed <= 20000; seed++) if (recordDrawn(event, seed)) drawn++;
+    expect(Math.abs(drawn / 20000 - event.probability)).toBeLessThan(0.02);
+  });
+
+  it('never shows a record as a card', () => {
+    for (let day = 0; day <= 33; day++) {
+      const due = eventsDueOn(eventList, { cultivation_day: day, plant: plant(), plan: planOf(), occurred_event_ids: [] });
+      for (const event of due) expect(event.kind).not.toBe('record');
+    }
+  });
+});
+
+describe('offeredActionIds', () => {
+  it('offers every action when none is a no-op', () => {
+    const fan = card('fan_off_after_restart');
+    expect(offeredActionIds(fan, plant({ fan: 'low' }))).toEqual(fan.actions.map((a) => a.action_id));
+    const wicks = card('wick_opening');
+    expect(offeredActionIds(wicks, plant({ fan: 'high' }))).toEqual(wicks.actions.map((a) => a.action_id));
+  });
+
+  it('drops "fan high" from the tip-burn card when the fan is already high', () => {
+    const tip = card('mild_tip_burn');
+    const highOps = tip.actions.filter((a) => a.op === 'fan_high').map((a) => a.action_id);
+    expect(highOps.length).toBeGreaterThan(0);
+    const offered = offeredActionIds(tip, plant({ fan: 'high', plant_health: 80 }));
+    for (const id of highOps) expect(offered).not.toContain(id);
+    expect(offeredActionIds(tip, plant({ fan: 'low', plant_health: 80 }))).toEqual(tip.actions.map((a) => a.action_id));
+  });
+
+  it('keeps an appropriate action and at least two options', () => {
+    for (const event of eventList.events) {
+      if (!isCardKind(event) || event.actions.length === 0) continue;
+      for (const fan of ['low', 'high'] as const) {
+        const ids = offeredActionIds(event, plant({ fan }));
+        expect(ids.length, `${event.event_id} fan ${fan}`).toBeGreaterThanOrEqual(Math.min(2, event.actions.length));
+        expect(ids.some((id) => findEventAction(event, id)?.verdict === 'appropriate'), event.event_id).toBe(true);
+      }
+    }
+  });
+
+  it('keeps everything when dropping would leave too few options', () => {
+    const tip = card('mild_tip_burn');
+    const onlyTwo: CardEvent = { ...tip, actions: tip.actions.filter((a) => a.op === 'fan_high' || a.verdict === 'appropriate') };
+    expect(offeredActionIds(onlyTwo, plant({ fan: 'high' }))).toEqual(onlyTwo.actions.map((a) => a.action_id));
+  });
+});
+
 describe('flags', () => {
   it('has no effect when no flag is set', () => {
     expect(activeFlagEffects(eventList, [])).toEqual({
@@ -237,10 +353,26 @@ describe('flags', () => {
 });
 
 describe('records and lookups', () => {
-  it('returns the dated track entries of a day with stable keys', () => {
+  it('returns the dated track entries of a day, in list order', () => {
     const day7 = trackEntriesOn(eventList, 7);
-    expect(day7.map((e) => e.entry_key)).toEqual(['VEG-01A#1', 'VEG-03J#1']);
+    expect(day7.map((e) => e.experiment)).toEqual(['VEG-01A', 'VEG-03J']);
+    for (const found of day7) {
+      const track = eventList.parallel_tracks.find((t) => t.experiment === found.experiment)!;
+      const index = track.entries.indexOf(found.entry);
+      expect(found.entry_key).toBe(trackEntryKey(found.experiment, found.entry, index));
+    }
     expect(trackEntriesOn(eventList, 2)).toEqual([]);
+  });
+
+  it('keys a track entry by its entry_id, or by experiment and position without one', () => {
+    const entry = { day: 7, source_chunk: 'VEG-03J-06', source_check: 'not_checked' as const };
+    expect(trackEntryKey('VEG-03J', entry, 1)).toBe('VEG-03J#1');
+    expect(trackEntryKey('VEG-03J', { ...entry, entry_id: 'veg03j_d7' }, 1)).toBe('veg03j_d7');
+  });
+
+  it('gives every track entry of the list a different key', () => {
+    const keys = eventList.parallel_tracks.flatMap((t) => t.entries.map((e, i) => trackEntryKey(t.experiment, e, i)));
+    expect(new Set(keys).size).toBe(keys.length);
   });
 
   it('never returns an undated entry', () => {

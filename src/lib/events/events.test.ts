@@ -72,6 +72,41 @@ describe('checkEventList', () => {
     expect(errorsOf(list).some((m) => m.includes('clears the flag "fan_actually_off"'))).toBe(true);
   });
 
+  it('requires a verified source exactly on checked track entries', () => {
+    const checked = copy();
+    const entry = checked.parallel_tracks.flatMap((t) => t.entries).find((e) => e.source_check === 'checked')!;
+    delete (entry as Record<string, unknown>).verified_source;
+    expect(errorsOf(checked).some((m) => m.includes('needs the verified source'))).toBe(true);
+
+    const unchecked = copy();
+    const source = (
+      unchecked.parallel_tracks.flatMap((t) => t.entries).find((e) => e.source_check === 'checked') as Record<string, unknown>
+    ).verified_source;
+    const other = unchecked.parallel_tracks.flatMap((t) => t.entries).find((e) => e.source_check === 'not_checked')!;
+    (other as Record<string, unknown>).verified_source = source;
+    expect(errorsOf(unchecked).some((m) => m.includes('must not carry a verified source'))).toBe(true);
+  });
+
+  it('keeps the verified source when the list is read', () => {
+    const parsed = eventListSchema.parse(events);
+    const checked = parsed.parallel_tracks.flatMap((t) => t.entries).filter((e) => e.source_check === 'checked');
+    expect(checked.length).toBeGreaterThan(0);
+    for (const entry of checked) expect(entry.verified_source?.quote).toBeDefined();
+  });
+
+  it('reports a record that is longer than a day, points at an unknown crisis, or splits its group over days', () => {
+    const list = copy();
+    const records = list.events.filter((e) => e.kind === 'record') as Record<string, unknown>[];
+    (records[0].window as { to: number }).to = 3;
+    records[1].foreshadows = ['no_such_crisis'];
+    const grouped = records.filter((r) => r.group === 'lead_up_day_4');
+    grouped[1].window = { from: 5, to: 5 };
+    const errors = errorsOf(list);
+    expect(errors.some((m) => m.includes('record event must have a one-day window'))).toBe(true);
+    expect(errors.some((m) => m.includes('no_such_crisis'))).toBe(true);
+    expect(errors.some((m) => m.includes('must share one day'))).toBe(true);
+  });
+
   it('reports a scheduled event with a window longer than one day', () => {
     const list = copy();
     list.events[2].window.to = list.events[2].window.from + 1;
@@ -79,8 +114,16 @@ describe('checkEventList', () => {
   });
 
   it('warns about a flag that has no effect entry', () => {
+    // A test list, so the test does not depend on whether the shipped list has filled in its effects (T5).
+    const list = copy();
+    const fan = list.events.find((e) => e.event_id === 'fan_off_after_restart')!;
+    delete (fan as Record<string, unknown>).flag_effects;
+    const warnings = checkEventList(list, refs).issues.filter((issue) => issue.level === 'warning');
+    expect(warnings.map((w) => w.message).some((m) => m.includes('"fan_actually_off"'))).toBe(true);
+  });
+
+  it('does not warn about a flag that has an effect entry', () => {
     const warnings = checkEventList(events, refs).issues.filter((issue) => issue.level === 'warning');
-    // The draft list describes the effect of water_blocked only in a note (notes, entry T5).
-    expect(warnings.map((w) => w.message).some((m) => m.includes('"water_blocked"'))).toBe(true);
+    expect(warnings.map((w) => w.message).some((m) => m.includes('"fan_actually_off"'))).toBe(false);
   });
 });

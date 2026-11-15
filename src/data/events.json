@@ -9,7 +9,8 @@
       "Night drift still applies once per game day (milestones). Cultivation days between milestones only check events, so the current balance does not change.",
       "Every value marked draft needs a team answer before the engine uses it.",
       "parallel_tracks are dated records from real experiments, shown beside the player's run as measured records. They never change verdicts or numbers.",
-      "source_check on a parallel_tracks entry says whether the excerpt behind it was compared with the original document. Entries marked not_checked rest on excerpts the team could not compare (the article is not in the repository's source files); do not label them as measured on screen until they are checked. Licenses per source are in src/data/source-licenses.json."
+      "source_check on a parallel_tracks entry says whether the excerpt behind it was compared with the original document. Entries marked not_checked rest on excerpts the team could not compare (the article is not in the repository's source files); do not label them as measured on screen until they are checked. Licenses per source are in src/data/source-licenses.json.",
+      "Record events (kind record) add one log line with no choice and no effect. Their condition is checked against the state the plant is heading to on the next game day, so the lines lead up to what the player sees there. Text is written from the cited chunks in the team's words; no sentence is copied."
     ],
     "milestones": [
       {
@@ -409,6 +410,337 @@
       ],
       "source_chunks": [
         "VEG-03J-11"
+      ]
+    },
+    {
+      "event_id": "record_pillows_initiated",
+      "kind": "record",
+      "window": {
+        "from": 1,
+        "to": 1
+      },
+      "tone": "neutral",
+      "text": "The seed pillows came out of their sealed bags, were attached to the reservoir and filled with water.",
+      "summary": "When a run starts, the seed pillows come out of the sealed bags that kept them dry, are fixed to the reservoir and get drinking water from the station supply; then the reservoir is filled.",
+      "source_chunks": [
+        "veggie-seed-wicks-thinning",
+        "veg01-setup",
+        "VEG-03J-04"
+      ],
+      "draft": [
+        "Screen text. No effect on any number."
+      ]
+    },
+    {
+      "event_id": "record_lights_programmed",
+      "kind": "record",
+      "window": {
+        "from": 1,
+        "to": 1
+      },
+      "tone": "neutral",
+      "text": "The lights were set mostly to red and blue, on for 16 hours a day, and the fan speed was programmed.",
+      "summary": "When a run starts, the crew sets how bright the lights are, how long they stay on and how fast the fan runs. VEG-01 used mostly red and blue light with some green, 16 hours on and 8 hours off.",
+      "source_chunks": [
+        "veg01-setup",
+        "veg01-light"
+      ],
+      "draft": [
+        "Screen text. No effect on any number. The game's light control does not change numbers either (implementation notes, entry 5)."
+      ]
+    },
+    {
+      "event_id": "record_first_sprouts",
+      "kind": "record",
+      "window": {
+        "from": 2,
+        "to": 2
+      },
+      "tone": "positive",
+      "text": "The first sprouts are showing between the wicks.",
+      "summary": "Seeds sprouted in almost every pillow after the start (17 of 18 seeds in VEG-03J). On day 3 the crew opens the wicks so the seedlings can come up.",
+      "source_chunks": [
+        "veg01-early-a",
+        "VEG-03J-10",
+        "veg01-wick-thinning"
+      ],
+      "draft": [
+        "The day is a game value. The sources give the procedure, not a day for this observation."
+      ]
+    },
+    {
+      "event_id": "record_pillow_not_sprouting",
+      "kind": "record",
+      "window": {
+        "from": 2,
+        "to": 2
+      },
+      "tone": "negative",
+      "probability": 0.3,
+      "text": "One pillow shows no sprout yet.",
+      "summary": "In VEG-01A one pillow never sprouted, and in VEG-03J one seed out of 18 did not sprout.",
+      "source_chunks": [
+        "veg01-early-a",
+        "VEG-03J-10"
+      ],
+      "draft": [
+        "The day is a game value. The sources give the procedure, not a day for this observation.",
+        "probability (chance per mission). The line has no effect: the game has no per-pillow state."
+      ]
+    },
+    {
+      "event_id": "record_wicks_look_dry",
+      "kind": "record",
+      "window": {
+        "from": 4,
+        "to": 4
+      },
+      "tone": "negative",
+      "group": "lead_up_day_4",
+      "condition": {
+        "zones": [
+          {
+            "metric": "root_moisture",
+            "in": [
+              "caution_low",
+              "danger_low"
+            ]
+          }
+        ]
+      },
+      "foreshadows": [
+        "water_shortage"
+      ],
+      "text": "The wick tips look dry.",
+      "summary": "VEG-01A and VEG-01B plants had periods of low water early on (Khodadad et al. 2020). In VEG-01A the team thought the pillows were not getting enough water from the reservoir.",
+      "source_chunks": [
+        "veggie-manual-watering",
+        "veg01-stall-a"
+      ],
+      "draft": [
+        "The day is a game value. The sources give the procedure, not a day for this observation.",
+        "Shown when root moisture is heading to the low side on the next game day (notes, entry T12)."
+      ]
+    },
+    {
+      "event_id": "record_droplets_on_leaves",
+      "kind": "record",
+      "window": {
+        "from": 4,
+        "to": 4
+      },
+      "tone": "negative",
+      "group": "lead_up_day_4",
+      "condition": {
+        "fan": "low",
+        "any_zones": [
+          {
+            "metric": "root_moisture",
+            "in": [
+              "caution_high",
+              "danger_high"
+            ]
+          },
+          {
+            "metric": "humidity",
+            "in": [
+              "caution_high",
+              "danger_high"
+            ]
+          }
+        ]
+      },
+      "foreshadows": [
+        "overwater_mold"
+      ],
+      "text": "Droplets stay on the young leaves.",
+      "summary": "Poor air circulation can leave droplets of moisture on leaf surfaces, a micro environment favorable for microbes.",
+      "source_chunks": [
+        "veggie-leaf-moisture",
+        "veggie-fan-restart-moisture"
+      ],
+      "draft": [
+        "The day is a game value. The sources give the procedure, not a day for this observation.",
+        "Shown when root moisture or humidity is heading to the high side with the fan on low, the trigger of overwater_mold (notes, entry T12)."
+      ]
+    },
+    {
+      "event_id": "record_sprouts_even",
+      "kind": "record",
+      "window": {
+        "from": 4,
+        "to": 4
+      },
+      "tone": "positive",
+      "group": "lead_up_day_4",
+      "condition": {
+        "zones": [
+          {
+            "metric": "root_moisture",
+            "in": [
+              "normal"
+            ]
+          },
+          {
+            "metric": "humidity",
+            "in": [
+              "normal"
+            ]
+          }
+        ]
+      },
+      "text": "The sprouts are coming up evenly.",
+      "summary": "Almost all seeds sprouted on the ISS in VEG-03J (94%).",
+      "source_chunks": [
+        "VEG-03J-10"
+      ],
+      "draft": [
+        "The day is a game value. The sources give the procedure, not a day for this observation."
+      ]
+    },
+    {
+      "event_id": "record_seedlings_checked",
+      "kind": "record",
+      "window": {
+        "from": 4,
+        "to": 4
+      },
+      "tone": "neutral",
+      "group": "lead_up_day_4",
+      "text": "The crew looked over the seedlings during the daily checks.",
+      "summary": "Routine plant care on the ISS includes watering and taking photos of the plants.",
+      "source_chunks": [
+        "veg01-wick-thinning"
+      ],
+      "draft": [
+        "The day is a game value. Last in its group with no condition, so day 4 always has a line (notes, entry T12)."
+      ]
+    },
+    {
+      "event_id": "record_growth_slow",
+      "kind": "record",
+      "window": {
+        "from": 5,
+        "to": 5
+      },
+      "tone": "negative",
+      "group": "lead_up_day_5",
+      "condition": {
+        "zones": [
+          {
+            "metric": "root_moisture",
+            "in": [
+              "caution_low",
+              "danger_low"
+            ]
+          }
+        ]
+      },
+      "foreshadows": [
+        "water_shortage"
+      ],
+      "text": "The seedlings seem to be growing slowly.",
+      "summary": "In VEG-01A, weekly photos showed that some plants had stopped growing, and the team thought the pillows were short of water.",
+      "source_chunks": [
+        "veg01-stall-a",
+        "veggie-manual-watering"
+      ],
+      "draft": [
+        "The day is a game value. The sources give the procedure, not a day for this observation.",
+        "In VEG-01A this was seen at day 14, not day 5."
+      ]
+    },
+    {
+      "event_id": "record_humidity_reading_high",
+      "kind": "record",
+      "window": {
+        "from": 5,
+        "to": 5
+      },
+      "tone": "negative",
+      "group": "lead_up_day_5",
+      "condition": {
+        "fan": "low",
+        "any_zones": [
+          {
+            "metric": "root_moisture",
+            "in": [
+              "caution_high",
+              "danger_high"
+            ]
+          },
+          {
+            "metric": "humidity",
+            "in": [
+              "caution_high",
+              "danger_high"
+            ]
+          }
+        ]
+      },
+      "foreshadows": [
+        "overwater_mold"
+      ],
+      "text": "The data logger inside the chamber reads higher humidity than usual.",
+      "summary": "VEG-03J kept a data logger in the unit to record temperature and humidity. In the earlier ISS plantings, temperature and humidity were slightly higher inside the chamber than outside it (Khodadad et al. 2020).",
+      "source_chunks": [
+        "VEG-03J-09",
+        "veggie-fan-restart-moisture"
+      ],
+      "draft": [
+        "The day is a game value. The sources give the procedure, not a day for this observation."
+      ]
+    },
+    {
+      "event_id": "record_seedlings_growing",
+      "kind": "record",
+      "window": {
+        "from": 5,
+        "to": 5
+      },
+      "tone": "positive",
+      "group": "lead_up_day_5",
+      "condition": {
+        "zones": [
+          {
+            "metric": "root_moisture",
+            "in": [
+              "normal"
+            ]
+          },
+          {
+            "metric": "humidity",
+            "in": [
+              "normal"
+            ]
+          }
+        ]
+      },
+      "text": "The seedlings keep growing well.",
+      "summary": "VEG-03J reports that the plants grew well after sprouting.",
+      "source_chunks": [
+        "VEG-03J-11"
+      ],
+      "draft": [
+        "The day is a game value. The sources give the procedure, not a day for this observation."
+      ]
+    },
+    {
+      "event_id": "record_photos_sent",
+      "kind": "record",
+      "window": {
+        "from": 5,
+        "to": 5
+      },
+      "tone": "neutral",
+      "text": "Photos of the seedlings were taken and sent to the ground team.",
+      "summary": "Taking photos is one of the routine plant care tasks, next to watering; the ground team read how the plants were doing from the photos.",
+      "source_chunks": [
+        "veg01-wick-thinning",
+        "veg01-stall-a"
+      ],
+      "draft": [
+        "The day is a game value. The sources give the procedure, not a day for this observation."
       ]
     }
   ],
