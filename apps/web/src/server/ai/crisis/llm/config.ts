@@ -30,11 +30,20 @@ export interface LlmConfig {
   /** When set, every generation is appended to <dir>/generations.jsonl. */
   logDir?: string;
   /**
-   * Ollama only: how long the model stays loaded after a request ("30m", "-1"
-   * for always). Ollama's own default is 5 minutes; reloading the model took
+   * Ollama only: how long the model stays loaded after a request ("30m", or
+   * -1 for always). Ollama's own default is 5 minutes; reloading the model took
    * about 27 s on the development laptop, close to the 30 s attempt limit.
+   * A value of digits only is sent as a number of seconds: Ollama reads a
+   * string as a Go duration, which needs a unit ("-1m"), while the number -1
+   * means "keep it loaded".
    */
-  keepAlive?: string;
+  keepAlive?: string | number;
+  /**
+   * Rewrites asked for within one attempt when a reply breaks a rule (0 turns
+   * it off). Optional so that other generators can build a config without it
+   * (event-cards/llm-generator.ts); readLlmConfig always sets it.
+   */
+  repairs?: number;
 }
 
 type Env = Record<string, string | undefined>;
@@ -43,11 +52,12 @@ export const LLM_DEFAULTS = {
   provider: 'ollama' as LlmProvider,
   ollamaBaseUrl: 'http://127.0.0.1:11434',
   timeoutMs: 30_000,
-  temperature: 0.4,
+  temperature: 0.7,
   numCtx: 8192,
   ragTopN: 4,
   ragTimeoutMs: 3_000,
   keepAlive: '30m',
+  repairs: 1,
 };
 
 /** Read the settings. Returns null when LLM_MODEL is not set (generator off). */
@@ -84,11 +94,16 @@ export function readLlmConfig(env: Env = process.env): LlmConfig | null {
     ragTopN: numberIn(env.RAG_TOP_N, LLM_DEFAULTS.ragTopN, 1, 10, 'RAG_TOP_N'),
     ragTimeoutMs: positiveInt(env.RAG_TIMEOUT_MS, LLM_DEFAULTS.ragTimeoutMs, 'RAG_TIMEOUT_MS'),
     logDir: env.LLM_LOG_DIR?.trim() || undefined,
-    keepAlive:
-      env.LLM_KEEP_ALIVE?.trim().toLowerCase() === 'omit'
-        ? undefined
-        : env.LLM_KEEP_ALIVE?.trim() || LLM_DEFAULTS.keepAlive,
+    repairs: nonNegativeInt(env.LLM_REPAIRS, LLM_DEFAULTS.repairs, 'LLM_REPAIRS'),
+    keepAlive: keepAliveOf(env.LLM_KEEP_ALIVE),
   };
+}
+
+function keepAliveOf(raw: string | undefined): string | number | undefined {
+  const value = raw?.trim();
+  if (!value) return LLM_DEFAULTS.keepAlive;
+  if (value.toLowerCase() === 'omit') return undefined;
+  return /^-?\d+$/.test(value) ? Number(value) : value;
 }
 
 function trimSlash(url: string): string {
@@ -100,6 +115,15 @@ function positiveInt(raw: string | undefined, fallback: number, name: string): n
   const value = Number(raw);
   if (!Number.isInteger(value) || value <= 0) {
     throw new Error(`${name} must be a positive integer, got "${raw}".`);
+  }
+  return value;
+}
+
+function nonNegativeInt(raw: string | undefined, fallback: number, name: string): number {
+  if (raw === undefined || raw.trim() === '') return fallback;
+  const value = Number(raw);
+  if (!Number.isInteger(value) || value < 0) {
+    throw new Error(`${name} must be 0 or a positive integer, got "${raw}".`);
   }
   return value;
 }

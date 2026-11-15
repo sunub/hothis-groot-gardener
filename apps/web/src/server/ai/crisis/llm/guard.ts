@@ -1,5 +1,6 @@
 import type { AiCrisisOutput } from '@/lib/contract/types';
 import type { GenerationCandidate } from '../generator';
+import type { StyleExample } from './prompt';
 
 /**
  * Wording checks for generated text, on top of validateAiOutput.
@@ -9,28 +10,36 @@ import type { GenerationCandidate } from '../generator';
  * 1. Symptoms that are not allowed at this stage ("wilting" in a water
  *    shortage, whose recorded symptoms do not include wilting; "mold" at stage 1).
  * 2. Labels that hint at the answer ("the best option", "you should").
- * 3. A plant line that names the cause.
- * 4. Text far longer than the format asks for.
+ * 3. A scene, plant line or clue that names the cause, a setting or a reading.
+ * 4. Facts that are wrong for Veggie or microgravity (soil, dripping water).
+ * 5. Result lines that are too short, and text far longer than the format asks for.
+ * 6. Labels that no longer name their action or add another action's key word.
+ * 7. Style (checkStyle): a narrator instead of the lettuce, and a scene or plant
+ *    line copied from the style example. These ask for a rewrite but do not
+ *    reject the text.
  *
- * A failed check counts as a failed attempt: the pipeline retries once and
- * then shows the pre-made crisis.
+ * On a problem the model rewrites once (generator.ts); after that the attempt
+ * fails, the pipeline retries once and then shows the pre-made crisis.
  */
 
 interface SymptomGroup {
   name: string;
   pattern: RegExp;
+  /** Plain words for the prompt's "do not use" line. */
+  examples: string;
 }
 
 /** Symptom words a model may invent. A group is allowed only when an allowed symptom name matches it. */
 export const SYMPTOM_GROUPS: SymptomGroup[] = [
-  { name: 'wilting', pattern: /\b(wilt\w*|droop\w*|limp\w*|sag(s|ged|ging)?|flop\w*|floppy)\b/i },
-  { name: 'fungus', pattern: /\b(molds?|mouldy?|moldy|mildew\w*|fung\w*|mycel\w*|spores?)\b/i },
-  { name: 'rot', pattern: /\b(rot|rots|rotting|rotten|decay\w*|mush\w*)\b/i },
+  // "turgid"/"turgor": a run wrote "lack turgidity" for stressed plants, a technical word for wilting.
+  { name: 'wilting', pattern: /\b(wilt\w*|droop\w*|limp\w*|sag(s|ged|ging)?|flop\w*|floppy|turgid\w*|turgor\w*)\b/i, examples: 'wilting, wilted, drooping, limp, sagging, floppy, turgor, turgidity' },
+  { name: 'fungus', pattern: /\b(molds?|mouldy?|moldy|mildew\w*|fung\w*|mycel\w*|spores?)\b/i, examples: 'mold, mildew, fungus, fungal, mycelium, spores' },
+  { name: 'rot', pattern: /\b(rot|rots|rotting|rotten|decay\w*|mush\w*)\b/i, examples: 'rot, rotting, decay, mushy' },
   // "spots" is not listed: the reviewed rot text uses "soft spots".
-  { name: 'discoloration', pattern: /\b(yellow\w*|brown\w*|chloro\w*|necro\w*|blacken\w*|blotch\w*)\b/i },
-  { name: 'curling', pattern: /\b(curl\w*|epinast\w*)\b/i },
-  { name: 'burn', pattern: /\b(scorch\w*|burn\w*|sunburn\w*)\b/i },
-  { name: 'death', pattern: /\b(dies|died|dying|dead|death)\b/i },
+  { name: 'discoloration', pattern: /\b(yellow\w*|brown\w*|chloro\w*|necro\w*|blacken\w*|blotch\w*)\b/i, examples: 'yellowing, browning, chlorosis, necrosis, blackened, blotches' },
+  { name: 'curling', pattern: /\b(curl\w*|epinast\w*)\b/i, examples: 'curling, curled' },
+  { name: 'burn', pattern: /\b(scorch\w*|burn\w*|sunburn\w*)\b/i, examples: 'scorched, burned' },
+  { name: 'death', pattern: /\b(dies|died|dying|dead|death)\b/i, examples: 'dying, dead, died' },
 ];
 
 /** Words that make a label give the answer away. */
@@ -50,14 +59,88 @@ export const SAFETY_CLAIM = /\b(edible|safe|safely|safety|ok to eat|okay to eat|
  */
 export const SETTING_WORDS = /\b(fans?|settings?|sensors?|readings?|percent)\b/i;
 
+/**
+ * Wrong in microgravity: water does not drip or pool on the ISS (seen in a
+ * real Gemma run: "pooling around the base", "my leaves are dripping").
+ */
+export const GRAVITY_WATER = /\b(drip(s|ped|ping|py)?|pool(s|ed|ing)?|puddl\w*|run(s|ning)? down|trickl\w* down)\b/i;
+
 /** Wrong for Veggie: the plants grow in a calcined clay substrate (seen in a real Gemma run: "the soil around me"). */
 export const WRONG_SETTING_FACTS = /\b(soil|dirt|potting mix)\b/i;
 
-/** Per crisis: words in the plant line that would name the cause. */
-export const CAUSE_WORDS: Record<string, RegExp> = {
-  water_shortage: /\b(water(ing)?|thirst\w*|reservoir|drink\w*|dehydrat\w*)\b/i,
-  overwater_mold: /\b(overwater\w*|too much water|fan|air ?flow|ventilat\w*|stagnant)\b/i,
+/**
+ * Per crisis: words in the scene, the plant line or a clue that would name the
+ * cause (seen in a real Gemma run: "struggling with dehydration" in the scene).
+ */
+export const CAUSE_WORDS: Record<string, { pattern: RegExp; examples: string }> = {
+  // "lack ... moisture": "The unit seems to lack proper moisture circulation."
+  // (fifth log), "the substrate below me is lacking moisture" (fourth log),
+  // "I feel the lack of adequate dampness near my roots" (sixth log).
+  water_shortage: {
+    pattern:
+      /\b(water(ing)?|thirst\w*|reservoir|drink\w*|dehydrat\w*)\b|\b(lack\w*|insufficient|not enough|too little)\s+(\w+\s+){0,2}(moisture|dampness|wetness|hydration|liquid|fluid)\b/i,
+    examples: 'water, watering, thirsty, reservoir, dehydrated, lack of moisture',
+  },
+  overwater_mold: {
+    pattern: /\b(overwater\w*|too much water|fan|air ?flow|ventilat\w*|stagnant)\b/i,
+    examples: 'overwatered, too much water, air flow, ventilation, stagnant',
+  },
 };
+
+/** Shortest result line that still says what changed ("I feel worse." came out twice in one crisis). */
+export const MIN_RESULT_LINE = 25;
+
+/**
+ * Key words of an action. A label keeps at least one key word of its action's
+ * name, so it still names the same action. After the prompt banned "water" in
+ * the scene, a run carried the ban into the labels and wrote "Wait for the next
+ * scheduled nutrient cycle" for "Wait for the next scheduled watering" and
+ * "Increase the airflow rate in the chamber" for "Set the fan to high".
+ */
+export const ACTION_KEY_WORDS: { words: string[]; pattern: RegExp }[] = [
+  { words: ['water'], pattern: /\bwater(s|ed|ing)?\b/i },
+  { words: ['reservoir'], pattern: /\breservoirs?\b/i },
+  { words: ['fan'], pattern: /\bfans?\b/i },
+  { words: ['clean', 'wipe'], pattern: /\b(clean\w*|wip(e|es|ed|ing))\b/i },
+];
+
+/** The key words a label for this action must keep, or an empty list. */
+export function actionKeyWords(actionName: string): { words: string[]; pattern: RegExp }[] {
+  return ACTION_KEY_WORDS.filter((k) => k.pattern.test(actionName));
+}
+
+/**
+ * The lettuce speaks for itself in the plant line and the result lines. A run
+ * wrote 13 of 33 result lines as a narrator ("The wetness around the plants
+ * appears to diminish noticeably.").
+ */
+export const FIRST_PERSON = /\b(i|me|my|mine|myself)\b/i;
+
+/** Result lines per crisis that may go without I, me or my. */
+export const MAX_NARRATED_RESULT_LINES = 1;
+
+/**
+ * Consecutive words in one sentence shared with the style example that count as
+ * copying. 7 catches "My leaves stay wet, and the droplets on them never seem
+ * to go away." (one word changed); 6 also hit common phrases such as "on the
+ * leaf surfaces and the" (checked against 47 logged runs).
+ */
+export const COPY_RUN = 7;
+
+/**
+ * Words the model must not use for this candidate, for the prompt. The same
+ * lists are enforced by checkWording: `anywhere` in the scene, plant line,
+ * clues and result lines; `describing` only in the scene, plant line and clues.
+ */
+export function bannedWordsFor(candidate: GenerationCandidate): { anywhere: string[]; describing: string[] } {
+  const allowedText = candidate.symptoms.map((s) => s.name).join(' | ');
+  const anywhere = SYMPTOM_GROUPS.filter((g) => !g.pattern.test(allowedText)).map((g) => g.examples);
+  anywhere.push('dripping, pooling, puddles', 'soil, dirt');
+  const describing = ['fan, setting, reading'];
+  const cause = CAUSE_WORDS[candidate.crisis_id];
+  if (cause) describing.push(cause.examples);
+  return { anywhere, describing };
+}
 
 export const MAX_LENGTH = {
   scene: 420,
@@ -85,6 +168,8 @@ export function checkWording(output: AiCrisisOutput, candidate: GenerationCandid
       const hit = text.match(group.pattern);
       if (hit) issues.push(`${field}: "${hit[0]}" describes ${group.name}, which is not an allowed symptom at this stage.`);
     }
+    const gravity = text.match(GRAVITY_WATER);
+    if (gravity) issues.push(`${field}: "${gravity[0]}" cannot happen in microgravity; water clings to surfaces.`);
   }
 
   const seen: [string, string][] = [
@@ -92,14 +177,30 @@ export function checkWording(output: AiCrisisOutput, candidate: GenerationCandid
     ['plant_line', output.plant_line],
     ...output.clues.map((c, i): [string, string] => [`clues.${i}.text`, c.text]),
   ];
+  const cause = CAUSE_WORDS[candidate.crisis_id];
   for (const [field, text] of seen) {
     const setting = text.match(SETTING_WORDS);
     if (setting) issues.push(`${field}: "${setting[0]}" names a setting or reading, which hints at the answer.`);
+    const causeHit = cause && text.match(cause.pattern);
+    if (causeHit) issues.push(`${field}: "${causeHit[0]}" names the cause.`);
   }
 
   output.options.forEach((option, i) => {
     const hint = option.label.match(LABEL_HINT);
     if (hint) issues.push(`options.${i}.label: "${hint[0]}" hints at the answer.`);
+    const action = candidate.actions.find((a) => a.action_id === option.action_id);
+    const keys = action ? actionKeyWords(action.name) : [];
+    if (action && keys.length > 0 && !keys.some((k) => k.pattern.test(option.label))) {
+      const words = keys.flatMap((k) => k.words).map((w) => `"${w}"`).join(' or ');
+      issues.push(`options.${i}.label: "${option.label}" no longer names the action "${action.name}"; use the word ${words}.`);
+    }
+    // A key word of another action changes the action ("Add water to the
+    // reservoir" for "Add more water", fifth log).
+    const extra = action ? ACTION_KEY_WORDS.filter((k) => k.pattern.test(option.label) && !k.pattern.test(action.name)) : [];
+    if (action && extra.length > 0) {
+      const words = extra.map((k) => `"${k.words[0]}"`).join(', ');
+      issues.push(`options.${i}.label: "${option.label}" adds ${words}, which is not part of the action "${action.name}".`);
+    }
   });
 
   const allText: [string, string][] = [
@@ -116,9 +217,11 @@ export function checkWording(output: AiCrisisOutput, candidate: GenerationCandid
     if (wrong) issues.push(`${field}: "${wrong[0]}" is wrong for Veggie, where plants grow in a clay substrate.`);
   }
 
-  const cause = CAUSE_WORDS[candidate.crisis_id];
-  const causeHit = cause && output.plant_line.match(cause);
-  if (causeHit) issues.push(`plant_line: "${causeHit[0]}" names the cause.`);
+  output.options.forEach((o, i) => {
+    if (o.result_line.trim().length < MIN_RESULT_LINE) {
+      issues.push(`options.${i}.result_line is too short; say in one sentence what changed for the plant.`);
+    }
+  });
 
   const tooLong = (field: string, text: string, max: number) => {
     if (text.length > max) issues.push(`${field} is ${text.length} characters; at most ${max}.`);
@@ -132,5 +235,109 @@ export function checkWording(output: AiCrisisOutput, candidate: GenerationCandid
     tooLong(`options.${i}.why`, o.why, MAX_LENGTH.why);
   });
 
+  return issues;
+}
+
+/**
+ * Style problems: the model is asked to rewrite once, but the text is not
+ * rejected for them. They make the text read worse, not wrong, and a second
+ * failed rewrite cost a whole retry (fifth log: about 32 s for one crisis).
+ */
+export function checkStyle(output: AiCrisisOutput, example: StyleExample | undefined): string[] {
+  return [...checkVoice(output), ...checkCopying(output, example)];
+}
+
+/** The lettuce speaks for itself in the plant line and the result lines. */
+export function checkVoice(output: AiCrisisOutput): string[] {
+  const issues: string[] = [];
+  if (!FIRST_PERSON.test(output.plant_line)) {
+    issues.push('plant_line: the lettuce speaks for itself, with I, me or my.');
+  }
+  // One line without I, me or my is fine (the reviewed stage 3 text has "Nothing
+  // changed, and the soft spots feel worse."); two or more means a narrator.
+  const narrated = output.options
+    .map((o, i) => ({ i, line: o.result_line }))
+    .filter(({ line }) => !FIRST_PERSON.test(line));
+  if (narrated.length >= MAX_NARRATED_RESULT_LINES + 1) {
+    for (const { i, line } of narrated) {
+      issues.push(`options.${i}.result_line: "${line}" sounds like a narrator; the lettuce says it, with I, me or my.`);
+    }
+  }
+  return issues;
+}
+
+/**
+ * Scene and plant line copied from the style example. Copying is not wrong in
+ * content (the example is reviewed text), but every run then reads the same:
+ * two of three overwater stage 1 runs in the fourth log opened with the
+ * example's scene sentence.
+ */
+export function checkCopying(output: AiCrisisOutput, example: StyleExample | undefined): string[] {
+  if (!example) return [];
+  const source = new Set<string>();
+  // Clues are left out: "fuzzy growth covers parts of the leaves and stems" is
+  // simply how that symptom is said, and a scene may say it too.
+  for (const text of [example.scene, example.plant_line]) {
+    for (const run of wordRuns(text)) source.add(run);
+  }
+  const issues: string[] = [];
+  for (const [field, text] of [['scene', output.scene], ['plant_line', output.plant_line]] as const) {
+    const copied = wordRuns(text).find((run) => source.has(run));
+    if (copied) issues.push(`${field}: "${copied}" is copied from the example; write it in new words.`);
+  }
+  return issues;
+}
+
+/**
+ * Runs of COPY_RUN words within one sentence. Runs across a sentence end
+ * matched common words by chance: "on my leaves and stems and my leaves" from
+ * "... on my leaves and stems. And my leaves ..." (fifth log).
+ */
+function wordRuns(text: string): string[] {
+  const runs: string[] = [];
+  for (const sentence of text.toLowerCase().replace(/[’‘]/g, "'").split(/[.!?;]+/)) {
+    const words = sentence.replace(/[^a-z']+/g, ' ').trim().split(' ').filter(Boolean);
+    for (let i = 0; i + COPY_RUN <= words.length; i++) runs.push(words.slice(i, i + COPY_RUN).join(' '));
+  }
+  return runs;
+}
+
+/** Symptoms that first appear at the candidate's stage. */
+export function newestSymptoms(candidate: GenerationCandidate): GenerationCandidate['symptoms'] {
+  return candidate.symptoms.filter((s) => s.stage === candidate.stage);
+}
+
+/**
+ * Structure problems that validateAiOutput would also reject, checked here so
+ * the model can fix them in a rewrite instead of losing the attempt.
+ */
+export function checkStructure(output: AiCrisisOutput, candidate: GenerationCandidate): string[] {
+  const issues: string[] = [];
+  const symptomIds = output.clues.map((c) => c.symptom_id);
+  for (const id of new Set(symptomIds)) {
+    if (symptomIds.filter((s) => s === id).length > 1) issues.push(`clues: symptom_id "${id}" is used more than once.`);
+  }
+  const actionIds = output.options.map((o) => o.action_id);
+  for (const id of new Set(actionIds)) {
+    if (actionIds.filter((a) => a === id).length > 1) issues.push(`options: action_id "${id}" is used more than once.`);
+  }
+  const appropriate = candidate.actions.filter((a) => a.verdict === 'appropriate').map((a) => a.action_id);
+  if (!actionIds.some((id) => appropriate.includes(id))) {
+    issues.push(`options: include the appropriate action (${appropriate.join(', ')}).`);
+  }
+  const lines = output.options.map((o) => o.result_line.trim().toLowerCase().replace(/\s+/g, ' '));
+  if (new Set(lines).size < lines.length) {
+    issues.push('options: two result_line texts are the same; each option needs its own.');
+  }
+  if (output.clues.length < candidate.clues_min) {
+    issues.push(`clues: write at least ${candidate.clues_min}.`);
+  }
+  // The screen says "New symptoms appeared"; a stage 3 run left rot out of the
+  // clues (fifth log).
+  for (const symptom of newestSymptoms(candidate)) {
+    if (!symptomIds.includes(symptom.symptom_id)) {
+      issues.push(`clues: include a clue for ${symptom.symptom_id} (${symptom.name}), which is new at this stage.`);
+    }
+  }
   return issues;
 }
