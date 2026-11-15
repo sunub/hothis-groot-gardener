@@ -41,7 +41,7 @@
 .lp-main { left: 1050px; top: 122px; width: 508px; height: 394px; padding: 6px 14px; }
 .lp-strip {
   left: 1050px; top: 574px; width: 508px; height: 120px; padding: 6px 18px;
-  justify-content: center; gap: 5px;
+  justify-content: center; gap: 10px;
 }
 .lp-tabs { display: flex; gap: 4px; border-bottom: 2px solid var(--color-scene-glass-line); margin-bottom: 8px; }
 .lp-tabs button {
@@ -90,22 +90,32 @@ html:lang(ko) .lp-pane p { font-size: 20px; line-height: 1.5; }
 }
 .lp-info .lp-val { font-size: 17px; color: var(--color-scene-ink-soft); overflow: hidden; text-overflow: ellipsis; }
 .lp-info .lp-val.lp-muted { color: var(--color-scene-ink-muted); }
-.lp-row { display: flex; gap: 8px; }
+.lp-row { display: flex; gap: 4px; margin: 0 -3px; } /* + the 3px button margins = 10px apart */
 
 /* Buttons */
+/*
+ * Pixel frame like the design system's pixel-frame: four box-shadows, one per side,
+ * leave the corners empty, so the notch is drawn by the frame itself. (A border cut
+ * by clip-path lost its corners and looked chipped.) The 3px margin keeps room for
+ * the frame, which sits outside the box.
+ */
 .lp-btn {
-  display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 42px;
-  padding: 4px 12px; border: 3px solid var(--color-scene-glass-line);
+  --lp-frame: var(--color-scene-glass-line);
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 40px; margin: 3px;
+  padding: 0 14px; border: 0; line-height: 1;
   background: color-mix(in srgb, var(--color-scene-glass) 80%, transparent); color: var(--color-scene-ink);
-  font-size: 19px; box-shadow: var(--lp-bevel); cursor: pointer; white-space: nowrap; text-decoration: none;
-  clip-path: polygon(var(--lp-notch) 0, calc(100% - var(--lp-notch)) 0, 100% var(--lp-notch), 100% calc(100% - var(--lp-notch)), calc(100% - var(--lp-notch)) 100%, var(--lp-notch) 100%, 0 calc(100% - var(--lp-notch)), 0 var(--lp-notch));
+  font-size: 19px; cursor: pointer; white-space: nowrap; text-decoration: none;
+  box-shadow: 0 -3px 0 0 var(--lp-frame), 0 3px 0 0 var(--lp-frame), -3px 0 0 0 var(--lp-frame), 3px 0 0 0 var(--lp-frame),
+    var(--lp-bevel);
 }
-.lp-btn:hover { border-color: var(--color-scene-accent); background: var(--color-scene-panel-hi); }
+.lp-btn:hover { --lp-frame: var(--color-scene-accent); background: var(--color-scene-panel-hi); }
 .lp-btn.lp-primary {
-  background: var(--color-scene-accent); border-color: var(--color-scene-accent); color: var(--color-scene-accent-ink);
+  --lp-frame: var(--color-scene-accent);
+  background: var(--color-scene-accent); color: var(--color-scene-accent-ink);
 }
-.lp-btn.lp-primary:hover { border-color: var(--color-scene-ink); filter: brightness(1.08); }
-.lp-pulse { animation: lp-pulse 1.4s infinite; clip-path: none; }
+.lp-btn.lp-primary:hover { --lp-frame: var(--color-scene-ink); filter: brightness(1.08); }
+/* The call to action blinks its brightness in steps; the frame and corners stay as they are. */
+.lp-pulse { animation: lp-pulse 1.4s steps(2, jump-none) infinite; }
 
 .lp-help {
   position: absolute; left: 5%; bottom: 24px; display: inline-flex; gap: 8px; align-items: center;
@@ -133,10 +143,8 @@ html:lang(ko) .lp-pane p { font-size: 20px; line-height: 1.5; }
 
 /* Motion (all off under prefers-reduced-motion) */
 @keyframes lp-breathe { 0%, 100% { transform: scaleY(1); } 50% { transform: scaleY(1.014); } }
-@keyframes lp-pulse {
-  0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--color-scene-accent) 80%, transparent); }
-  50% { box-shadow: 0 0 0 8px color-mix(in srgb, var(--color-scene-accent) 0%, transparent); }
-}
+@keyframes lp-pulse { 0%, 100% { filter: brightness(1); } 50% { filter: brightness(1.15); } }
+
 .lp-screen.lp-boot { animation: lp-boot 0.45s steps(6) both; }
 @keyframes lp-boot {
   0% { opacity: 0; clip-path: inset(49% 0 49% 0); }
