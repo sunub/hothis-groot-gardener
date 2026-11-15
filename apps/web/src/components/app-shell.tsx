@@ -7,8 +7,11 @@ import { PixelIcon } from '@/components/ui/pixel-icon';
 import { ROUTES } from '@/features/mission/routes';
 import { useDictionary } from '@/lib/i18n';
 
-/** Page frame: header with the app name and navigation, main area, footer with the standing notices. */
-export function AppShell({ children }: { children: ReactNode }) {
+/**
+ * Page frame: header with the app name and navigation, main area, footer with the standing notices.
+ * `wide` gives the main area the full width (up to 1600px) with a thin margin, for the landing scene.
+ */
+export function AppShell({ children, wide = false }: { children: ReactNode; wide?: boolean }) {
   const t = useDictionary();
   return (
     <>
@@ -29,7 +32,15 @@ export function AppShell({ children }: { children: ReactNode }) {
           </nav>
         </div>
       </header>
-      <main className="mx-auto w-full max-w-[87rem] flex-1 px-4 py-6 sm:px-8 sm:py-8 lg:px-14">{children}</main>
+      <main
+        className={
+          wide
+            ? 'mx-auto w-full max-w-[1624px] flex-1 p-3'
+            : 'mx-auto w-full max-w-[87rem] flex-1 px-4 py-6 sm:px-8 sm:py-8 lg:px-14'
+        }
+      >
+        {children}
+      </main>
       <footer className="border-t-4 border-surface-2">
         <div className="mx-auto w-full max-w-[87rem] space-y-1 px-4 py-4 sm:px-8 lg:px-14 text-caption text-ink-muted">
           <p>{t.common.disclaimer.simulation}</p>

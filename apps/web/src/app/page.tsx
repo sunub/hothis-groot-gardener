@@ -1,10 +1,10 @@
 import { AppShell } from '@/components/app-shell';
-import { StartScreen } from '@/features/grow-room/start-screen';
+import { LandingScreen } from '@/features/grow-room/landing-screen';
 
 export default function HomePage() {
   return (
-    <AppShell>
-      <StartScreen />
+    <AppShell wide>
+      <LandingScreen />
     </AppShell>
   );
 }
