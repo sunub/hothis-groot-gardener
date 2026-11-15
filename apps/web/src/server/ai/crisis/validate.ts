@@ -17,7 +17,7 @@ export interface ValidationContext {
  * document: labels must not reveal the answer). Matched as whole words,
  * case-insensitive. Words with common innocent uses in a label ("correct the
  * level", "the right side", "best", "proper") appear only inside unambiguous
- * phrases. English only.
+ * phrases. English only; Korean phrases are in REVEAL_PHRASES_KO.
  */
 export const REVEAL_PHRASES: readonly string[] = [
   'appropriate',
@@ -43,10 +43,31 @@ export const REVEAL_PHRASES: readonly string[] = [
   'bad idea',
 ];
 
-/** REVEAL_PHRASES as whole-word, case-insensitive patterns. Also used for event card labels. */
-export const REVEAL_PATTERNS: readonly RegExp[] = REVEAL_PHRASES.map(
-  (phrase) => new RegExp(`\\b${phrase.split(' ').map(escapeRegExp).join('\\s+')}\\b`, 'i'),
-);
+/**
+ * Korean phrases that give the verdict away. Korean has no word boundary
+ * marks, so these are matched anywhere in the label.
+ */
+export const REVEAL_PHRASES_KO: readonly string[] = [
+  '부적절',
+  '적절한 선택',
+  '정답',
+  '오답',
+  '올바른',
+  '옳은',
+  '잘못된',
+  '추천',
+  '최선',
+  '최적',
+  '실수',
+];
+
+/** The English and Korean patterns above. Also used for event card labels. */
+export const REVEAL_PATTERNS: readonly RegExp[] = [
+  ...REVEAL_PHRASES.map(
+    (phrase) => new RegExp(`\\b${phrase.split(' ').map(escapeRegExp).join('\\s+')}\\b`, 'i'),
+  ),
+  ...REVEAL_PHRASES_KO.map((phrase) => new RegExp(escapeRegExp(phrase))),
+];
 
 /** The parsed output, or every rule it broke. */
 export type ValidationResult =

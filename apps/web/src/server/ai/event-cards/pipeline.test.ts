@@ -196,3 +196,17 @@ describe('createEventCard with a generator', () => {
     expect(calls).toHaveLength(2);
   });
 });
+
+describe('createEventCard in Korean', () => {
+  it('returns the Korean name and pre-made text, skipping the English-only generator', async () => {
+    const { generator, calls } = scripted(valid);
+    const ko = await createEventCard(request({ locale: 'ko' }), { generator });
+    const en = await createEventCard(request());
+    expect(calls).toHaveLength(0);
+    expect(ko.origin).toBe('fallback');
+    expect(ko.name).toMatch(/[가-힣]/);
+    expect(ko.scene).toMatch(/[가-힣]/);
+    const rule = (r: typeof en) => r.options.map((o) => [o.action_id, o.op, o.verdict, o.effect]);
+    expect(rule(ko)).toEqual(rule(en));
+  });
+});

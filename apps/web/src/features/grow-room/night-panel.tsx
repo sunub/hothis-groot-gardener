@@ -33,7 +33,7 @@ export function NightPanel({ mission, actions }: { mission: MissionState; action
             </h3>
             <ValueTypeTag type="game_value" />
           </div>
-          <dl className="grid gap-3 sm:grid-cols-2">
+          <dl className="grid gap-3 @md:grid-cols-2">
             {METRICS.map((metric) => (
               <div key={metric} className="bg-surface-2 p-3">
                 <dt className="text-body text-ink-muted">{t.common.metric[metric]}</dt>

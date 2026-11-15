@@ -5,7 +5,8 @@ import { Card } from '@/components/ui/card';
 import { LettuceScene } from '@/features/grow-room/lettuce-scene';
 import { HealthBar, ZoneGauge } from '@/features/grow-room/zone-gauge';
 import type { EventList, GrowthStage, TimelineLogEntry } from '@/lib/contract/types';
-import { useDictionary } from '@/lib/i18n';
+import { localizeEventList } from '@/lib/events/localize';
+import { useDictionary, useLocale } from '@/lib/i18n';
 import { METRICS } from '@/lib/game/rules';
 import { CultivationDiary } from './cultivation-diary';
 import { diaryLines } from './diary';
@@ -47,6 +48,7 @@ export function TimelineView({
   renderStop?: (stop: Stop) => ReactNode;
 }) {
   const t = useDictionary();
+  const { locale } = useLocale();
   const frame = frameOn(frames, state.day);
   const before = frameOn(frames, state.day - 1);
   const changed = new Set(
@@ -86,7 +88,7 @@ export function TimelineView({
           ) : null}
         </Card>
         <Card>
-          <CultivationDiary lines={diaryLines(log, frames, state.day, list)} />
+          <CultivationDiary lines={diaryLines(log, frames, state.day, localizeEventList(list, locale))} />
         </Card>
       </div>
     </div>

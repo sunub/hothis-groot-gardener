@@ -3,9 +3,11 @@ import type {
   CrisisResponse,
   EvidenceCrisis,
   EvidenceList,
+  Locale,
 } from '@/lib/contract/types';
 import { evidence as shippedEvidence } from '@/lib/evidence';
 import { checkEvidenceList } from '@/lib/evidence/check';
+import { localizeEvidence } from '@/lib/evidence/localize';
 import {
   computeStage,
   findAction,
@@ -62,6 +64,9 @@ export class GenerationTimeoutError extends Error {
   }
 }
 
+/** The only language the text generator writes. */
+const GENERATION_LOCALE: Locale = 'en';
+
 /** Replaceable parts of `createCrisis`, for wiring a generator and for tests. */
 export interface CreateCrisisDeps {
   /** Text generator. Without one, the pre-made crisis is returned directly. */
@@ -87,7 +92,9 @@ export async function createCrisis(
   const list = deps.evidence ?? shippedEvidence;
   assertEvidenceChecked(list);
   assertRequestIdsKnown(request, list);
-  const crises = candidateCrises(request, list);
+  // Checked as shipped; names and reasons shown to the player are in the request language.
+  const shown = localizeEvidence(list, request.locale);
+  const crises = candidateCrises(request, shown);
   const inappropriateCount = request.active?.chosen_action_ids.length ?? 0;
   const candidates: StagedCandidate[] = crises.map((crisis) => ({
     crisis,
@@ -102,7 +109,8 @@ export async function createCrisis(
     : [];
   const context: ValidationContext = { candidates, excludedActionIds };
 
-  if (deps.generator) {
+  // The generator writes English only. Other languages get the pre-made text.
+  if (deps.generator && request.locale === GENERATION_LOCALE) {
     const input = buildGenerationInput(request, candidates, excludedActionIds);
     const timeoutMs = deps.timeoutMs ?? DEFAULT_GENERATION_TIMEOUT_MS;
     for (let i = 0; i < GENERATION_ATTEMPTS; i++) {
@@ -133,7 +141,7 @@ export async function createCrisis(
     first.stage,
     request.locale,
     excludedActionIds,
-    list,
+    shown,
   );
   if (!output) {
     throw new Error(`No pre-made crisis for ${first.crisis.crisis_id} at stage ${first.stage}.`);

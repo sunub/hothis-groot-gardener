@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import type { ReactNode } from 'react';
+import { LanguageSwitch } from '@/components/language-switch';
 import { PixelIcon } from '@/components/ui/pixel-icon';
 import { ROUTES } from '@/features/mission/routes';
 import { useDictionary } from '@/lib/i18n';
@@ -24,6 +25,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             <Link href={ROUTES.sources} className="hover:text-ink">
               {t.common.nav.sources}
             </Link>
+            <LanguageSwitch />
           </nav>
         </div>
       </header>

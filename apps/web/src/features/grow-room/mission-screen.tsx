@@ -56,31 +56,42 @@ function GrowRoom({
     setPhaseChanged(true);
   }
 
+  // Crisis phases get a caution frame, so the panel that needs a decision stands out.
+  const tone = mission.phase === 'crisis' || mission.phase === 'crisis_pending' ? 'caution' : 'default';
+
   return (
     <div className="space-y-4 sm:space-y-6">
       <h1 className="sr-only">{t.mission.screen.title}</h1>
       <CultivationTimeline mission={mission} />
-      <div className="grid gap-4 sm:gap-6 lg:grid-cols-[minmax(0,1fr)_24rem]">
-        <section
-          aria-live="polite"
-          aria-label={t.mission.screen.title}
-          className="min-w-0 rounded-xl border border-line bg-surface p-4 sm:p-6"
-        >
-          <PhaseChangedContext value={phaseChanged}>
-            <PhasePanel mission={mission} crisisStatus={crisisStatus} actions={actions} />
-          </PhaseChangedContext>
-        </section>
-        <aside aria-label={t.mission.screen.side_label} className="min-w-0 space-y-4">
+      {/* The room is the main view; status and the phase panel sit beside it (stacked below on narrow screens). */}
+      <div className="grid gap-4 sm:gap-6 lg:grid-cols-[minmax(0,1fr)_26rem] lg:grid-rows-[auto_1fr] lg:items-start">
+        <div className="min-w-0 lg:col-start-1 lg:row-start-1">
           <PlantCharacter mission={mission} />
+        </div>
+        <aside
+          aria-label={t.mission.screen.side_label}
+          className="min-w-0 space-y-4 sm:space-y-6 lg:col-start-2 lg:row-span-2 lg:row-start-1"
+        >
           <PlantStatusPanel mission={mission} />
-          <Card aria-labelledby="history-title">
-            <div className="mb-3 flex items-center justify-between gap-2">
-              <CardTitle id="history-title">{t.mission.chart.title}</CardTitle>
-              <ValueTypeTag type="game_value" />
-            </div>
-            <StateHistoryChart days={mission.days} current={mission.plant} />
+          <Card
+            tone={tone}
+            padding="sm"
+            aria-live="polite"
+            aria-label={t.mission.screen.title}
+            className="@container sm:p-5"
+          >
+            <PhaseChangedContext value={phaseChanged}>
+              <PhasePanel mission={mission} crisisStatus={crisisStatus} actions={actions} />
+            </PhaseChangedContext>
           </Card>
         </aside>
+        <Card aria-labelledby="history-title" className="lg:col-start-1 lg:row-start-2">
+          <div className="mb-3 flex items-center justify-between gap-2">
+            <CardTitle id="history-title">{t.mission.chart.title}</CardTitle>
+            <ValueTypeTag type="game_value" />
+          </div>
+          <StateHistoryChart days={mission.days} current={mission.plant} />
+        </Card>
       </div>
     </div>
   );

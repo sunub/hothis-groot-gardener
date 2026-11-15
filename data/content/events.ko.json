@@ -1,0 +1,10 @@
+{
+  "names": {
+    "wick_opening": "발아 심지 열기",
+    "thinning": "필로우마다 한 포기만 남기기",
+    "harvest_procedure": "수확하고 시료 냉동하기",
+    "pillow_no_flow": "필로우에 물이 스며들지 않음",
+    "fan_off_after_restart": "팬이 약으로 표시되지만 꺼져 있음",
+    "mild_tip_burn": "잎끝이 약간 탄 것처럼 보임"
+  }
+}
