@@ -55,12 +55,12 @@ The game runs without it. To let a model write the crisis text:
    cd services/rag && python -m uvicorn rag_server:app --host 127.0.0.1 --port 8000
    ```
 3. Copy `apps/web/.env.example` to `apps/web/.env.local` and check the values (`LLM_MODEL`, `LLM_BASE_URL`, `RAG_URL`).
-4. `npm run dev`.
+4. `npm run dev`. The server starts loading the model in the background (`apps/web/src/instrumentation.ts`); the terminal shows `[llm] gemma4:e4b is loaded` when it is ready. For a demo, set `LLM_KEEP_ALIVE=-1` so the model stays loaded until the demo starts.
 
 What the model does and does not do:
 
 - It writes text only. The code picks the crisis and its symptom stage, the JSON schema sent with the request lists only that crisis's symptom and action ids, and verdicts, state changes and sources are attached from the evidence list after the text is checked.
-- Each reply is checked twice: `validateAiOutput` (ids, counts, one appropriate option, no duplicates) and `checkStructure`/`checkWording` in `apps/web/src/server/ai/crisis/llm/guard.ts` (no symptom that is not allowed at the current stage, no setting or reading in the scene, no label that hints at the answer, no plant line that names the cause, no safety or edibility claim, no soil, no water that drips or pools in microgravity, length limits). On a problem the model gets the list of broken rules and rewrites once; if the rewrite fails too, the attempt is retried once, and then the pre-made crisis is shown.
+- Each reply is checked twice: `validateAiOutput` (ids, counts, one appropriate option, no duplicates) and `checkStructure`/`checkWording` in `apps/web/src/server/ai/crisis/llm/guard.ts` (no symptom that is not allowed at the current stage, no setting or reading in the scene, no label that hints at the answer or no longer names its action, no plant line that names the cause, result lines spoken by the lettuce, no scene copied from the style example, no safety or edibility claim, no soil, no water that drips or pools in microgravity, length limits). On a problem the model gets the list of broken rules and rewrites once; if the rewrite fails too, the attempt is retried once, and then the pre-made crisis is shown.
 - Option order is shuffled after generation.
 - `LLM_PROVIDER=openai` switches to any OpenAI-compatible server (for example vLLM on RunPod) with the same checks.
 - `LLM_LOG_DIR` writes every generation (output, problems found, time taken) to `generations.jsonl` for quality checks.

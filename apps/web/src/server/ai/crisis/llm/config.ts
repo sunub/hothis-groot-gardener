@@ -30,11 +30,14 @@ export interface LlmConfig {
   /** When set, every generation is appended to <dir>/generations.jsonl. */
   logDir?: string;
   /**
-   * Ollama only: how long the model stays loaded after a request ("30m", "-1"
-   * for always). Ollama's own default is 5 minutes; reloading the model took
+   * Ollama only: how long the model stays loaded after a request ("30m", or
+   * -1 for always). Ollama's own default is 5 minutes; reloading the model took
    * about 27 s on the development laptop, close to the 30 s attempt limit.
+   * A value of digits only is sent as a number of seconds: Ollama reads a
+   * string as a Go duration, which needs a unit ("-1m"), while the number -1
+   * means "keep it loaded".
    */
-  keepAlive?: string;
+  keepAlive?: string | number;
   /** Rewrites asked for within one attempt when a reply breaks a rule (0 turns it off). */
   repairs: number;
 }
@@ -88,11 +91,15 @@ export function readLlmConfig(env: Env = process.env): LlmConfig | null {
     ragTimeoutMs: positiveInt(env.RAG_TIMEOUT_MS, LLM_DEFAULTS.ragTimeoutMs, 'RAG_TIMEOUT_MS'),
     logDir: env.LLM_LOG_DIR?.trim() || undefined,
     repairs: nonNegativeInt(env.LLM_REPAIRS, LLM_DEFAULTS.repairs, 'LLM_REPAIRS'),
-    keepAlive:
-      env.LLM_KEEP_ALIVE?.trim().toLowerCase() === 'omit'
-        ? undefined
-        : env.LLM_KEEP_ALIVE?.trim() || LLM_DEFAULTS.keepAlive,
+    keepAlive: keepAliveOf(env.LLM_KEEP_ALIVE),
   };
+}
+
+function keepAliveOf(raw: string | undefined): string | number | undefined {
+  const value = raw?.trim();
+  if (!value) return LLM_DEFAULTS.keepAlive;
+  if (value.toLowerCase() === 'omit') return undefined;
+  return /^-?\d+$/.test(value) ? Number(value) : value;
 }
 
 function trimSlash(url: string): string {

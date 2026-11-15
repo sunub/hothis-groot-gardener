@@ -71,9 +71,12 @@ export const WRONG_SETTING_FACTS = /\b(soil|dirt|potting mix)\b/i;
  * cause (seen in a real Gemma run: "struggling with dehydration" in the scene).
  */
 export const CAUSE_WORDS: Record<string, { pattern: RegExp; examples: string }> = {
+  // "lack ... moisture": "The unit seems to lack proper moisture circulation."
+  // (fifth log) and "the substrate below me is lacking moisture" (fourth log).
   water_shortage: {
-    pattern: /\b(water(ing)?|thirst\w*|reservoir|drink\w*|dehydrat\w*)\b/i,
-    examples: 'water, watering, thirsty, reservoir, dehydrated',
+    pattern:
+      /\b(water(ing)?|thirst\w*|reservoir|drink\w*|dehydrat\w*)\b|\b(lack\w*|insufficient|not enough|too little)\s+(\w+\s+){0,2}(moisture|hydration|liquid|fluid)\b/i,
+    examples: 'water, watering, thirsty, reservoir, dehydrated, lack of moisture',
   },
   overwater_mold: {
     pattern: /\b(overwater\w*|too much water|fan|air ?flow|ventilat\w*|stagnant)\b/i,
