@@ -36,7 +36,8 @@ export function CultivationTimeline({ mission }: { mission: MissionState }) {
   const t = useDictionary();
   const tl = t.mission.timeline;
   const today = mission.game_day;
-  const todayCultivation = cultivationDayOf(today);
+  // A mission with a timeline knows the cultivation day between two game days.
+  const todayCultivation = mission.timeline?.cultivation_day ?? cultivationDayOf(today);
   const gameDays = Array.from({ length: GAME_DAYS }, (_, i) => i + 1);
 
   return (
