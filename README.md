@@ -2,6 +2,62 @@
 
 **Live:** https://hothis-groot-gardener.vercel.app/ (no login)
 
+## Quick start
+
+> [!IMPORTANT]
+> **Web app.** Needs Node.js 20.9 or later and npm. No account, database or `.env` file is needed.
+>
+> ```bash
+> npm install                  # from the repository root
+> npm run dev                  # development server, http://localhost:3000
+> npm run build && npm start   # production build, http://localhost:3000
+> npm run check                # typecheck, lint, tests, build
+> ```
+>
+> **Cultivation timeline** (off by default, on at the live link). Add this line to `apps/web/.env.local`, then restart `npm run dev` or build again:
+>
+> ```dotenv
+> NEXT_PUBLIC_TIMELINE=1
+> ```
+>
+> It is read at build time. Only new missions use it; a saved mission keeps the mode it started with.
+>
+> **Language model (optional).** One script installs [Ollama](https://ollama.com) if it is missing (it asks first), downloads `gemma4:e4b` once (about 10 GB), writes `apps/web/.env.local`, then builds and starts the app at http://localhost:3000.
+>
+> ```bash
+> bash scripts/start-with-ai.sh
+> ```
+>
+> ```powershell
+> powershell -ExecutionPolicy Bypass -File scripts\start-with-ai.ps1
+> ```
+>
+> Wait for `[llm] gemma4:e4b is loaded` in the terminal. Options: `--yes` / `-Yes`, `--dev` / `-Dev`, `--port 3001` / `-Port 3001`. Without the script: run `ollama pull gemma4:e4b` and copy `apps/web/.env.example` to `apps/web/.env.local`. To run without the model again, delete `apps/web/.env.local`.
+>
+> **Evidence search (optional).** Keyword search over NASA plant research excerpts, added to the model's prompt. It needs [uv](https://docs.astral.sh/uv/) and no API key. The script above does not start it.
+>
+> ```bash
+> cd services/rag
+> uv sync --group server
+> uv run uvicorn rag_server:app --host 127.0.0.1 --port 8000
+> ```
+>
+> Then set `RAG_URL=http://127.0.0.1:8000` in `apps/web/.env.local`.
+>
+> **Settings** in `apps/web/.env.local`. All are optional; `apps/web/.env.example` lists every one with comments.
+>
+> | Variable | Effect |
+> |---|---|
+> | `NEXT_PUBLIC_TIMELINE` | `1` or `true` turns the cultivation timeline on (build time) |
+> | `LLM_MODEL` | Model name, e.g. `gemma4:e4b`. Unset: no model, every crisis uses pre-made text |
+> | `LLM_PROVIDER`, `LLM_BASE_URL`, `LLM_API_KEY` | `ollama` (default, `http://127.0.0.1:11434`) or `openai` for any OpenAI-compatible server, with its URL ending in `/v1` and a key if it needs one |
+> | `LLM_TIMEOUT_MS` | Limit per attempt in ms (default 30000); after two attempts the pre-made text is shown |
+> | `LLM_KEEP_ALIVE` | How long Ollama keeps the model loaded (default `30m`, `-1` = always) |
+> | `LLM_EVENT_CARDS` | `on` lets the model also write the timeline event cards (needs `LLM_MODEL`) |
+> | `RAG_URL` | Evidence search server. Unset: search off |
+>
+> Copying `.env.example` unchanged turns on both the model and `RAG_URL`. If no search server answers within 3 seconds, the model writes without excerpts.
+
 **Space Garden Simulator** is a web training simulation: you look after 'Outredgeous' red romaine lettuce in the ISS Veggie unit for 7 game days, from sowing to harvest.
 
 NASA Space Apps Challenge 2026 · *Create Health Monitoring Software for Astronauts on Space Missions* · Team Hothis
@@ -60,29 +116,11 @@ The screenshots show the app with the cultivation timeline on, as on the live li
 
 The plant and chamber art in the screenshots is AI-generated.
 
-## Run it locally
+## Data and checks
 
-Requires Node.js and npm (the setup scripts state Node.js 20.9 or later).
+Commands and settings are in [Quick start](#quick-start). At commit `b5662b8`, in a clean clone with Node.js v25.9.0, `npm run check` passed: 797 tests in 47 files.
 
-```bash
-npm install     # from the repository root
-npm run dev     # http://localhost:3000
-npm run check   # typecheck, lint, tests, build
-```
-
-At commit `b5662b8`, in a clean clone with Node.js v25.9.0, `npm run check` passed: 797 tests in 47 files.
-
-## Settings and data
-
-No environment variable, database or account is needed. Without `apps/web/.env.local` no model is called. For settings, copy `apps/web/.env.example` to `apps/web/.env.local`; as is, it turns the model on.
-
-| Variable | Effect |
-|---|---|
-| `LLM_MODEL` | Model name; unset means no model |
-| `RAG_URL` | Optional evidence search server; unset turns search off |
-| `NEXT_PUBLIC_TIMELINE` | `1` turns the cultivation timeline on at build time |
-
-The evidence list, pre-made crisis text and timeline events are JSON files in `data/content/`. `scripts/start-with-ai.sh` and `.ps1` set up Ollama and the model (about 10 GB). Model, search and code structure: [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md).
+The evidence list, pre-made crisis text and timeline events are JSON files in `data/content/`. Model, search and code structure: [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md).
 
 ## Not built and known limits
 
