@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, useMemo, useState, type ReactNode } from 'react';
+import { createContext, useCallback, useContext, useEffect, useMemo, useSyncExternalStore, type ReactNode } from 'react';
 import type { Locale } from '@/lib/contract/types';
 import { en } from './en';
 import { ko } from './ko';
@@ -25,11 +25,55 @@ interface LocaleContextValue {
 
 const LocaleContext = createContext<LocaleContextValue | null>(null);
 
+const LOCALE_STORAGE_KEY = 'space-garden:locale';
+const localeListeners = new Set<() => void>();
+
+function isLocale(value: unknown): value is Locale {
+  return value === 'en' || value === 'ko';
+}
+
+/** The saved language, or the default when nothing valid is saved or storage is blocked. */
+function readStoredLocale(): Locale {
+  try {
+    const saved = window.localStorage.getItem(LOCALE_STORAGE_KEY);
+    return isLocale(saved) ? saved : DEFAULT_LOCALE;
+  } catch {
+    return DEFAULT_LOCALE;
+  }
+}
+
+function subscribeLocale(listener: () => void): () => void {
+  localeListeners.add(listener);
+  window.addEventListener('storage', listener);
+  return () => {
+    localeListeners.delete(listener);
+    window.removeEventListener('storage', listener);
+  };
+}
+
+/**
+ * Holds the chosen language. The server and the first client render use the
+ * default language, then the saved choice takes over, so the markup matches.
+ */
 export function LocaleProvider({ children }: { children: ReactNode }) {
-  const [locale, setLocale] = useState<Locale>(DEFAULT_LOCALE);
+  const locale = useSyncExternalStore(subscribeLocale, readStoredLocale, () => DEFAULT_LOCALE);
+
+  const setLocale = useCallback((next: Locale) => {
+    try {
+      window.localStorage.setItem(LOCALE_STORAGE_KEY, next);
+    } catch {
+      // Storage is blocked: the choice lasts only until the page reloads.
+    }
+    localeListeners.forEach((listener) => listener());
+  }, []);
+
+  useEffect(() => {
+    document.documentElement.lang = locale;
+  }, [locale]);
+
   const value = useMemo<LocaleContextValue>(
     () => ({ locale, setLocale, dictionary: dictionaries[locale] }),
-    [locale],
+    [locale, setLocale],
   );
   return <LocaleContext value={value}>{children}</LocaleContext>;
 }

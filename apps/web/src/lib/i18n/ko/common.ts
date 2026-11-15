@@ -51,6 +51,7 @@ export const common: Dictionary['common'] = {
       '이 도구는 식물이나 사람을 진단하지 않으며, 사람의 건강 정보를 기록하지 않습니다.',
   },
   nav: { label: '주 메뉴', home: '처음으로', sources: '근거와 출처' },
+  language: { label: '언어', en: 'English', ko: '한국어' },
   day_label: '일차',
   cultivation_day_label: '재배일',
 };

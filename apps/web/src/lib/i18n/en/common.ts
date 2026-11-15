@@ -49,6 +49,7 @@ export const common = {
       'This tool does not diagnose plants or people, and it does not record any health data about people.',
   },
   nav: { label: 'Main', home: 'Home', sources: 'Evidence and sources' },
+  language: { label: 'Language', en: 'English', ko: '한국어' },
   day_label: 'Day',
   cultivation_day_label: 'Cultivation day',
 } as const;
