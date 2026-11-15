@@ -46,7 +46,15 @@ export function CrisisPanel({ view, onChoose }: { view: CrisisView; onChoose: (i
             {c.continues}
           </Badge>
         ) : null}
-        <PanelHeading>{c.title}</PanelHeading>
+        <div className="flex items-center gap-3">
+          <span
+            aria-hidden
+            className="flex size-7 shrink-0 items-center justify-center bg-caution font-data text-data leading-none text-bg"
+          >
+            △
+          </span>
+          <PanelHeading>{c.title}</PanelHeading>
+        </div>
         <p className="sr-only">{c.scene_label}</p>
         <p className="text-body">{view.scene}</p>
         {view.origin === 'generated' ? (
@@ -59,9 +67,9 @@ export function CrisisPanel({ view, onChoose }: { view: CrisisView; onChoose: (i
           <h3 id="crisis-clues" className="text-heading font-bold">
             {c.clues_title}
           </h3>
-          <ul className="grid gap-3 @md:grid-cols-2">
+          <ul className="grid gap-3">
             {view.clues.map((clue, i) => (
-              <li key={i} className="m-1 flex items-center gap-3 pixel-frame-flat pixel-tone-line bg-surface px-4 py-3">
+              <li key={i} className="m-1 flex items-center gap-3 pixel-frame-flat pixel-tone-line-hi bg-surface-3 px-4 py-3">
                 <PixelIcon name="scope" />
                 <span className="flex flex-col">
                   <span className="font-data text-data-sm text-accent">CLUE {i + 1}</span>

@@ -14,6 +14,12 @@
     --font-data: var(--font-vt323), var(--font-hahmlet), var(--font-sans);
   }
 
+  /* Hangul wraps between words, never inside one. */
+  html:lang(ko) body {
+    word-break: keep-all;
+    overflow-wrap: break-word;
+  }
+
   body {
     background: var(--color-bg);
     color: var(--color-ink);

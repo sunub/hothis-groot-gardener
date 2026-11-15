@@ -18,8 +18,8 @@ export const cardVariants = cva('m-1 min-w-0 pixel-frame bg-surface', {
     },
     padding: {
       none: 'p-0',
-      sm: 'p-4',
-      md: 'p-5 sm:p-6',
+      sm: 'p-3',
+      md: 'p-4 sm:p-5',
     },
   },
   defaultVariants: {

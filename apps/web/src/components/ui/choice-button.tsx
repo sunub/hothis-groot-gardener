@@ -13,7 +13,7 @@ export type ChoiceButtonProps = ComponentProps<'button'> & {
 };
 
 /**
- * One option of a crisis or event. Large, left-aligned, with a key box.
+ * One option of a crisis or event. Compact, left-aligned, with a key box.
  * It shows only the label: verdicts are never passed to this component.
  */
 export function ChoiceButton({
@@ -31,7 +31,7 @@ export function ChoiceButton({
       type={type}
       aria-pressed={selected}
       className={cn(
-        'm-1 flex min-h-14 w-full cursor-pointer items-center gap-4 pixel-frame bg-surface px-4 py-3 text-left font-title text-control text-ink',
+        'm-1 flex min-h-11 w-full cursor-pointer items-center gap-3 pixel-frame bg-surface px-3 py-2 text-left font-title text-control text-ink',
         selected ? 'pixel-tone-accent' : 'pixel-tone-line hover:pixel-tone-line-hi',
         dimmed && 'opacity-55',
         'disabled:cursor-default disabled:hover:pixel-tone-line',
@@ -43,7 +43,7 @@ export function ChoiceButton({
       <span
         aria-hidden
         className={cn(
-          'flex size-9 shrink-0 items-center justify-center font-data text-data',
+          'flex size-7 shrink-0 items-center justify-center font-data text-data',
           selected ? 'bg-accent text-accent-ink' : 'bg-surface-2 text-ink',
         )}
       >

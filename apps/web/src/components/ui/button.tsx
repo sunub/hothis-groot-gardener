@@ -12,7 +12,7 @@ import { cn } from '@/lib/utils/cn';
  * - toggle: one of a group; set `aria-pressed` to show the selected one.
  * - ghost: low-emphasis text action.
  *
- * Every variant keeps a 44px minimum touch target and carries 4px outer margin for the frame.
+ * Compact sizes (32 to 40px tall); every variant carries 4px outer margin for the frame.
  */
 export const buttonVariants = cva(
   [
@@ -46,9 +46,9 @@ export const buttonVariants = cva(
         ghost: ['text-ink-muted underline-offset-4 hover:text-ink hover:underline', 'disabled:text-ink-faint'],
       },
       size: {
-        sm: 'min-h-11 px-4 text-body',
-        md: 'min-h-12 px-6 text-control',
-        lg: 'min-h-13 px-8 text-control',
+        sm: 'min-h-8 px-3 text-body',
+        md: 'min-h-9 px-4 text-control',
+        lg: 'min-h-10 px-5 text-control',
       },
       block: {
         true: 'w-full',

@@ -44,7 +44,7 @@ export function StartScreen() {
             <p>{s.intro_second}</p>
           </div>
         </div>
-        <LettuceScene sprite="S0_sprout" label="" artNote={t.mission.character.art_note} />
+        <LettuceScene sprite="S0_sprout" label="" />
       </header>
 
       <section aria-labelledby="start-steps" className="space-y-4">
