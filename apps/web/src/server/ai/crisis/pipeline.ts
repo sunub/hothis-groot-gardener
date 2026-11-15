@@ -3,6 +3,7 @@ import type {
   CrisisResponse,
   EvidenceCrisis,
   EvidenceList,
+  Locale,
 } from '@/lib/contract/types';
 import { evidence as shippedEvidence } from '@/lib/evidence';
 import { checkEvidenceList } from '@/lib/evidence/check';
@@ -62,6 +63,9 @@ export class GenerationTimeoutError extends Error {
   }
 }
 
+/** The only language the text generator writes. */
+const GENERATION_LOCALE: Locale = 'en';
+
 /** Replaceable parts of `createCrisis`, for wiring a generator and for tests. */
 export interface CreateCrisisDeps {
   /** Text generator. Without one, the pre-made crisis is returned directly. */
@@ -102,7 +106,8 @@ export async function createCrisis(
     : [];
   const context: ValidationContext = { candidates, excludedActionIds };
 
-  if (deps.generator) {
+  // The generator writes English only. Other languages get the pre-made text.
+  if (deps.generator && request.locale === GENERATION_LOCALE) {
     const input = buildGenerationInput(request, candidates, excludedActionIds);
     const timeoutMs = deps.timeoutMs ?? DEFAULT_GENERATION_TIMEOUT_MS;
     for (let i = 0; i < GENERATION_ATTEMPTS; i++) {

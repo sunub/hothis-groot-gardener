@@ -92,6 +92,14 @@ describe('createCrisis with a generator', () => {
     expect(calls.every((c) => c.signal.aborted)).toBe(true);
   });
 
+  it('skips the English-only generator for Korean and shows the pre-made Korean text', async () => {
+    const { generator, calls } = scripted(valid);
+    const response = await createCrisis({ ...dry, locale: 'ko' }, { generator });
+    expect(calls).toHaveLength(0);
+    expect(response.origin).toBe('fallback');
+    expect(response.scene).toMatch(/[가-힣]/);
+  });
+
   it('rejects generated output that offers an excluded action', async () => {
     const out = getFallbackCrisis('overwater_mold', 2, 'en', [])!;
     const { generator } = scripted(() => Promise.resolve(out));
