@@ -87,6 +87,8 @@
   /* Motion: pixel UI moves in steps, never with easing curves. */
   --animate-sprite-pop: sprite-pop 320ms steps(5) both;
   --animate-blink: blink 1s steps(2, jump-none) infinite;
+  /* A metric moved into another zone while time passes. */
+  --animate-zone-flash: zone-flash 900ms steps(6) both;
 
 }
 
@@ -102,6 +104,17 @@
   100% {
     transform: scale(1);
     opacity: 1;
+  }
+}
+
+@keyframes zone-flash {
+  0%,
+  100% {
+    background-color: transparent;
+  }
+  30%,
+  70% {
+    background-color: color-mix(in srgb, var(--color-caution) 28%, transparent);
   }
 }
 
