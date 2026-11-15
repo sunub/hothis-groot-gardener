@@ -23,17 +23,6 @@
       "note": "Open access. The license is on the version of record."
     },
     {
-      "source_id": "haveman2023",
-      "citation": "Haveman et al. (2023). Advancing the automation of plant nucleic acid extraction for rapid diagnosis of plant diseases in space. Frontiers in Plant Science 14:1194753.",
-      "url": "https://doi.org/10.3389/fpls.2023.1194753",
-      "license": "CC BY 4.0",
-      "license_url": "https://creativecommons.org/licenses/by/4.0/",
-      "use": "quote",
-      "translation_may_be_published": true,
-      "public_nasa_copy": null,
-      "note": "Open access. The Frontiers version of record states CC BY; credit the authors and original publication, link the license, and indicate adaptations."
-    },
-    {
       "source_id": "veg01",
       "citation": "Massa et al. (2017). VEG-01: Veggie Hardware Validation Testing on the International Space Station. Open Agriculture 2(1).",
       "url": "https://doi.org/10.1515/opag-2017-0003",
@@ -97,7 +86,7 @@
       "use": "quote",
       "translation_may_be_published": true,
       "public_nasa_copy": null,
-      "note": "The publisher abstract describes a method developed for future spaceflight applications and reports no test in space. Open access. The license is on the version of record, and the article page states that it is distributed under the Creative Commons Attribution License (CC BY). The source_url written on its chunks ends with a period after the DOI; the DOI here is without it."
+      "note": "The publisher abstract describes a method developed for future spaceflight applications and reports no test in space. Open access. The license is on the version of record, and the article page states that it is distributed under the Creative Commons Attribution License (CC BY). The source_url written on its chunks ends with a period after the DOI; the DOI here is without it. Credit the authors and the original publication, link the license, and indicate adaptations."
     }
   ]
 }
