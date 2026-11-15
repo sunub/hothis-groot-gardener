@@ -33,6 +33,8 @@ export const common = {
     measured: 'Recorded',
     game_value: 'Game value',
   },
+  // Neutral on purpose: the cause and the crisis stay hidden until the player chooses.
+  overnight_change: 'Overnight change that was not in the forecast: {metric} {from} → {to}.',
   value_type_help: {
     measured: 'Taken from the cited source.',
     game_value: 'Set by the team for game balance. Not a NASA value.',

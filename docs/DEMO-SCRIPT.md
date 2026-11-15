@@ -33,5 +33,6 @@ Wait a moment after each screen change before you select the next button. The ap
 
 The seed fixes the random numbers, not the crises. A crisis occurs only when the plant state calls for one:
 
-- A value in a **danger** zone in the morning always causes a crisis (days 2 to 6).
+- On days 2 to 6, a value in a **danger** zone in the morning always causes a crisis when a crisis watches that value: low root moisture (water shortage), or high root moisture or high humidity with the fan on Low (excess water). Low humidity causes no crisis, and high values with the fan on High cause none.
+- Standard missions (not the demo) also get overnight changes, which move one watched value into its caution zone, until two crises have occurred.
 - A value in a **caution** zone causes a crisis with a 30% chance. With the demo seed, that roll succeeds on days 3 and 5 and fails on days 2, 4 and 6.

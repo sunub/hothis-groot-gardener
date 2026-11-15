@@ -21,6 +21,7 @@ import type {
   MissionMode,
   MissionState,
   NightRecord,
+  OvernightChange,
   PlantState,
   RangeClass,
   ReportMetrics,
@@ -62,8 +63,10 @@ import {
   INITIAL_PLANT_STATE,
   isCaution,
   isDanger,
+  cautionMidOf,
   LAST_CRISIS_DAY,
   MAX_CARE_OPS_PER_DAY,
+  MIN_CRISES_PER_MISSION,
   METRICS,
   MICROBIAL,
   MOLD_CRISIS_ID,
@@ -71,6 +74,7 @@ import {
   NIGHT_DRIFT,
   NIGHT_HEALTH,
   NORMAL_MID,
+  OVERNIGHT_CHANGE_PROBABILITY,
   SANITIZE_ACTION_ID,
   sideOf,
   WATER_AMOUNT,
@@ -337,6 +341,62 @@ export function endDay(state: MissionState): MissionState {
   return runNight(state);
 }
 
+// ---------------------------------------------------------------------------
+// Mission minimum of crises (MIN_CRISES_PER_MISSION)
+// ---------------------------------------------------------------------------
+
+/** The minimum applies to standard missions without a timeline only; demo and timeline missions keep the state-only rule. */
+function minimumApplies(state: MissionState): boolean {
+  return state.mode === 'standard' && !state.timeline && MIN_CRISES_PER_MISSION > 0;
+}
+
+/** Earlier game days whose record has a crisis. */
+function pastCrisisIds(state: MissionState): string[] {
+  return state.days.flatMap((day) => (day.crisis ? [day.crisis.crisis_id] : []));
+}
+
+/**
+ * A second number in [0, 1) derived from the day's draw. The day keeps a
+ * single draw, because the sequence of draws per day is relied on (note 6).
+ */
+export function derivedUnit(value: number): number {
+  return (value * 7919) % 1;
+}
+
+/**
+ * The overnight change that would raise a crisis from this state, or null.
+ * One value of a crisis's trigger moves to the middle of its caution band on
+ * the trigger's side. A crisis with a fan condition needs that fan setting.
+ * Crises that have not occurred yet in the mission come first; `pick` (0-1)
+ * chooses among the rest.
+ */
+export function planOvernightChange(
+  evidence: EvidenceList,
+  plant: PlantState,
+  pastIds: readonly string[],
+  pick: number,
+): OvernightChange | null {
+  const options: OvernightChange[] = [];
+  for (const crisis of evidence.crises) {
+    if (crisis.trigger.fan !== undefined && crisis.trigger.fan !== plant.fan) continue;
+    // A value already on the trigger's side would make the crisis a candidate, so it cannot be the one to move.
+    const condition = crisis.trigger.any_of.find(
+      (c) => sideOf(zoneOf(c.metric, plant[c.metric])) !== c.side,
+    );
+    if (!condition) continue;
+    options.push({
+      crisis_id: crisis.crisis_id,
+      metric: condition.metric,
+      from: plant[condition.metric],
+      to: cautionMidOf(condition.metric, condition.side),
+    });
+  }
+  const fresh = options.filter((o) => !pastIds.includes(o.crisis_id));
+  const pool = fresh.length > 0 ? fresh : options;
+  if (pool.length === 0) return null;
+  return pool[Math.min(pool.length - 1, Math.floor(pick * pool.length))];
+}
+
 /** Move from the night phase to the next game day and decide whether a crisis occurs. */
 export function nextDay(state: MissionState, evidence: EvidenceList): MissionState {
   requirePhase(state, 'night', 'Moving to the next day');
@@ -365,16 +425,48 @@ export function nextDay(state: MissionState, evidence: EvidenceList): MissionSta
   const draw = nextRandom(state.rng_state);
   const recurrenceId =
     state.recurrence && state.recurrence.game_day === gameDay ? state.recurrence.crisis_id : null;
-  const candidates = selectCandidates(evidence, state.plant, recurrenceId);
-  const probability = crisisProbability(candidates, recurrenceId);
-  const occurred = candidates.length > 0 && draw.value < probability;
+  let plant = state.plant;
+  let candidates = selectCandidates(evidence, plant, recurrenceId);
+  let probability = crisisProbability(candidates, recurrenceId);
+  let occurred = candidates.length > 0 && draw.value < probability;
+  let change: OvernightChange | null = null;
+
+  if (minimumApplies(state)) {
+    const pastIds = pastCrisisIds(state);
+    const needed = Math.max(0, MIN_CRISES_PER_MISSION - pastIds.length);
+    const remaining = LAST_CRISIS_DAY - gameDay + 1;
+    const mustOccur = needed > 0 && needed >= remaining;
+    if (candidates.length > 0) {
+      if (mustOccur) {
+        probability = 1;
+        occurred = true;
+      }
+    } else if (needed > 0) {
+      const chance = mustOccur ? 1 : OVERNIGHT_CHANGE_PROBABILITY;
+      if (draw.value < chance) {
+        change = planOvernightChange(evidence, plant, pastIds, derivedUnit(draw.value));
+      }
+      if (change) {
+        // The change is the cause of today's crisis, so there is no second roll.
+        plant = { ...copyPlant(plant), [change.metric]: change.to };
+        candidates = selectCandidates(evidence, plant, recurrenceId);
+        probability = chance;
+        occurred = candidates.length > 0;
+      }
+    }
+  }
+
   const ids = candidates.map((c) => c.crisis.crisis_id);
+  const days = change
+    ? [...state.days, { ...newDayRecord(gameDay, plant), overnight_change: change }]
+    : base.days;
 
   return {
     ...base,
+    plant: change ? plant : base.plant,
     rng_state: draw.state,
     recurrence: null,
-    days: updateToday(base.days, (day) => ({
+    days: updateToday(days, (day) => ({
       ...day,
       roll: { candidates: ids, probability, roll: draw.value, occurred },
     })),

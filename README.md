@@ -14,7 +14,7 @@ The simulator does not record or assess any health data about people. It trains 
 |---|---|
 | Plant state tracking (plant health, root moisture, chamber humidity, fan, lighting) with a history chart | Built |
 | Daily care (watering, fan, lighting) and overnight changes | Built |
-| Two crises: water shortage, and excess water with stagnant air leading to mold | Built |
+| Two crises: water shortage, and excess water with stagnant air leading to mold; a standard mission has at least two, raised by an overnight change when the state calls for none | Built |
 | Verdict, state change and source for every choice, taken from the evidence list | Built |
 | Harvest and sanitize, freeze samples for return, ground analysis report | Built |
 | Mission record saved in the browser | Built |

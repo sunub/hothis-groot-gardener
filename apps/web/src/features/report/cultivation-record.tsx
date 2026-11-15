@@ -2,6 +2,7 @@
 
 import type { ReactNode } from 'react';
 import { Badge } from '@/components/ui/badge';
+import { ValueTypeTag } from '@/components/value-type-tag';
 import { ZoneBadge } from '@/components/zone-badge';
 import { format, useDictionary } from '@/lib/i18n';
 import { METRICS } from '@/lib/game/rules';
@@ -60,6 +61,18 @@ function DayEntry({ row }: { row: DayRow }) {
 
       <div className="grid gap-4 md:grid-cols-3">
         <Block title={r.morning}>
+          {row.overnightChange ? (
+            <p className="flex flex-wrap items-center gap-2 text-body">
+              <ValueTypeTag type="game_value" />
+              <span>
+                {format(t.common.overnight_change, {
+                  metric: t.common.metric[row.overnightChange.metric],
+                  from: row.overnightChange.from,
+                  to: row.overnightChange.to,
+                })}
+              </span>
+            </p>
+          ) : null}
           <PlantStateList state={row.morning} compact />
         </Block>
 

@@ -63,6 +63,7 @@ The reader must do two tasks.
 | 36 | The microbial value cannot be "below the range" | Wrong |
 | 37 | The server checks the evidence list before it sends a crisis | Ambiguous |
 | 38 | Items in the planning document that were not built | Uncertain |
+| 39 | Minimum number of crises in a standard mission, and the overnight change | Uncertain |
 
 ---
 
@@ -521,3 +522,19 @@ The reader must do two tasks.
 - **Why**: Only two kinds of items were left out: items that the planning document itself marks as optional or not decided, and items that have meaning only with the AI connection.
 - **How to revert**: Not applicable. To add them: item 1 goes in `apps/web/src/lib/game/rules.ts` and the start screen, item 2 in `CrisisAttemptRecord` in `apps/web/src/lib/contract/types.ts` and the result screen, item 5 in `data/content/evidence.json` and `data/content/fallback-crises.json`.
 - **What the team must decide**: Whether to add any of these before submission.
+
+## 39. Minimum number of crises in a standard mission, and the overnight change
+
+- **Type**: Uncertain
+- **Planning document section**: "Game rules > Crisis occurrence". Original (translated from the Korean planning document): "If a related item is in a danger zone, a crisis always occurs; in a caution zone, it occurs with a 30% chance. At most once a day."
+- **What the problem is**: With this rule alone, a player who keeps the state in the normal zone never meets a crisis and never sees a NASA record. In 20 carefully played missions that were measured, all 20 had 0 crises.
+- **What was done**: A standard mode mission (not the demo, and without the cultivation timeline) has at least `MIN_CRISES_PER_MISSION` (2) crises.
+  1. On the morning of game days 2 to 6, when the state calls for no crisis and the minimum is not reached yet, an "overnight change" happens when the day's random number is below `OVERNIGHT_CHANGE_PROBABILITY` (0.3). It always happens when only as many crisis days remain as crises are still needed.
+  2. The overnight change moves one item of one crisis's trigger to the middle of the caution zone on the trigger's side (for example root moisture 45 → 33). With the fan on High and root moisture high, the move can be large, such as 85 → 33. Every other value stays. From there the existing crisis flow (candidate selection, the server, symptom stage 1) works from the state as before. The server code was not changed.
+  3. A crisis that has not occurred yet is chosen first. A crisis with a fan condition is chosen only when the fan matches (with the fan on High, only the water shortage).
+  4. A morning where the state already calls for a crisis is as before, except that on a day the minimum needs, the crisis occurs whatever the roll.
+  5. The mission screen and the report's cultivation record show one line with the game value badge, with no cause and no crisis name: "Overnight change that was not in the forecast: Root moisture 45 → 33." The day record keeps it as `overnight_change`; missions saved before this change have no such field and still continue.
+  6. The rule of one random draw per day is kept. The second number used to choose the crisis is calculated from the same draw.
+- **Why**: So that a careful player still sees NASA records at least twice per mission. In a run of 300 seeds, every mission that reached harvest had at least two crises, for a careful player and for a player who does nothing, and crises fall on all of days 2 to 6, though more of them on days 5 and 6 (`apps/web/src/lib/game/crisis-minimum.test.ts`).
+- **How to revert**: Set `MIN_CRISES_PER_MISSION` in `apps/web/src/lib/game/rules.ts` to 0 to return to the state-only rule. The code is `nextDay` and `planOvernightChange` in `apps/web/src/lib/game/engine.ts`.
+- **What the team must decide**: Whether the probability 0.3 and the minimum 2 are right, whether missions with the cultivation timeline get it, and whether the demo should (then the numbers in `docs/DEMO-SCRIPT.md` change).

@@ -93,6 +93,14 @@ function withPlant(state: MissionState, patch: Partial<PlantState>): MissionStat
   return { ...state, plant: { ...state.plant, ...patch } };
 }
 
+/**
+ * Demo missions keep the state-only crisis rule (no overnight change for
+ * MIN_CRISES_PER_MISSION), so tests about that rule run in demo mode.
+ */
+function stateOnly(state: MissionState): MissionState {
+  return { ...state, mode: 'demo' };
+}
+
 /** A night-phase mission on the given day whose next morning starts with this plant. */
 function nightBefore(
   patch: Partial<PlantState>,
@@ -288,9 +296,9 @@ describe('mission length and dates (임무 길이와 날짜)', () => {
   });
 
   it('records cultivation day and growth stage for each game day', () => {
-    let m = endDay(mission());
+    let m = endDay(stateOnly(mission()));
     for (let day = 2; day <= GAME_DAYS; day++) {
-      // Keep the plant normal so no crisis interrupts the walk.
+      // Keep the plant normal so no crisis interrupts the walk (state-only rule: demo mode).
       m = nextDay(withPlant(m, { root_moisture: 55, humidity: 55 }), evidence);
       expect(m.game_day).toBe(day);
       expect(today(m).cultivation_day).toBe(CULTIVATION_DAYS[day - 1]);
@@ -316,7 +324,8 @@ describe('mission length and dates (임무 길이와 날짜)', () => {
 
   it('draws exactly one number on each crisis day, even without candidates', () => {
     for (let day = FIRST_CRISIS_DAY - 1; day < LAST_CRISIS_DAY; day++) {
-      const before = { ...nightBefore({}), game_day: day };
+      // State-only rule (demo mode): a normal morning has no candidate and no overnight change.
+      const before = { ...stateOnly(nightBefore({})), game_day: day };
       const after = nextDay(before, evidence);
       const expected = nextRandom(before.rng_state);
       expect(after.rng_state).toBe(expected.state);
@@ -495,7 +504,8 @@ describe('crisis occurrence (위기 발생)', () => {
   it('overwater and mold needs high moisture or humidity and the fan on low', () => {
     expect(pending({ root_moisture: 85 }).active_crisis?.candidates).toEqual([MOLD]);
     expect(pending({ humidity: 85 }).active_crisis?.candidates).toEqual([MOLD]);
-    const fanHigh = nextDay(nightBefore({ root_moisture: 85, fan: 'high' }), evidence);
+    // State-only rule (demo mode), so no overnight change raises the water shortage instead.
+    const fanHigh = nextDay(stateOnly(nightBefore({ root_moisture: 85, fan: 'high' })), evidence);
     expect(fanHigh.phase).toBe('care');
     expect(today(fanHigh).roll?.candidates).toEqual([]);
   });
@@ -516,7 +526,8 @@ describe('crisis occurrence (위기 발생)', () => {
 
   it('the bonus does not create a crisis when the state is normal (note 8)', () => {
     const recurrence = { crisis_id: WATER, game_day: 2 };
-    const next = nextDay(nightBefore({}, { recurrence }), evidence);
+    // State-only rule (demo mode), so no overnight change can raise a crisis either.
+    const next = nextDay(stateOnly(nightBefore({}, { recurrence })), evidence);
     expect(today(next).roll?.probability).toBe(0);
     expect(next.phase).toBe('care');
   });

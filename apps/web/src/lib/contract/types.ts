@@ -309,6 +309,11 @@ export type CareOp =
 
 export interface CrisisRollRecord {
   candidates: string[];
+  /**
+   * Chance that today has a crisis. On a morning with an overnight change it
+   * is the chance of that change (1 when the mission minimum forces it), and
+   * 1 whenever the minimum forces a crisis; `roll < probability` then still holds.
+   */
   probability: number;
   roll: number;
   occurred: boolean;
@@ -357,6 +362,19 @@ export interface DayRecord {
   crisis: CrisisRecord | null;
   /** null until the day ends. Game day 7 has no night. */
   night: NightRecord | null;
+  /**
+   * A watched value that moved into its caution zone overnight, so this
+   * morning has a crisis (engine.ts, MIN_CRISES_PER_MISSION). `start` already
+   * holds the changed value. Absent on other days and in older saves.
+   */
+  overnight_change?: OvernightChange;
+}
+
+export interface OvernightChange {
+  crisis_id: string;
+  metric: Metric;
+  from: number;
+  to: number;
 }
 
 export type HarvestGrade = 'excellent' | 'success' | 'fail';
