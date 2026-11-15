@@ -22,7 +22,7 @@
 | `apps/web/src/styles/base.css` | 요소 기본값(바탕, 본문 서체, 포커스 표시, 움직임 줄이기) |
 | `apps/web/src/app/globals.css` | 위 세 파일을 순서대로 불러옵니다 |
 | `apps/web/src/lib/utils/cn.ts` | `clsx` + `tailwind-merge`. 이 프로젝트의 글자 크기 토큰과 `pixel-*` 그룹을 알도록 설정했습니다 |
-| `apps/web/src/components/ui/` | 화면에 무관한 기본 부품: `button`, `badge`, `card`(`Card`, `CardHeader`, `CardTitle`, `CardDescription`, `Well`), `callout`, `speech-bubble`, `meter`, `choice-button`, `stepper`, `disclosure`, `skeleton`, `pixel-icon` |
+| `apps/web/src/components/ui/` | 화면에 무관한 기본 부품: `button`, `badge`, `card`(`Card`, `CardHeader`, `CardTitle`, `CardDescription`, `Well`), `callout`, `speech-bubble`, `meter`, `choice-button`, `stepper`, `tabs`, `disclosure`, `skeleton`, `pixel-icon` |
 | `apps/web/src/components/` | 게임 용어를 아는 부품: `value-type-tag`, `zone-badge`, `verdict-banner`, `source-citation` |
 | `/design-system` | 모든 부품을 한 화면에서 보는 개발용 페이지(`apps/web/src/features/design-system/catalog.tsx`). 검색 엔진에 노출하지 않습니다 |
 
@@ -139,6 +139,11 @@
 - 로딩("Preparing today's situation…")과 오류("Could not load the situation", 근거 목록 점검 실패, "Try again")는 선택지 자리에 그립니다.
 
 **출처(`SourceCitation`).** 접기 버튼 한 줄 + 펼치면 제목, 인용문(왼쪽 4px 막대), 주소. "판정과 변화량은 게임 값"이라는 문구를 함께 둡니다.
+
+**탭(`Tabs`, `TabPanel`).** 한 패널 안에서 내용을 나눌 때 씁니다. 탭 단추는 `toggle` 단추와 같은 모양(납작한 프레임, 고른 탭은 `accent` 채움)입니다.
+- ARIA 탭 규칙을 따릅니다. 고른 탭만 Tab 순서에 들어가고, 왼쪽·오른쪽 화살표로 옮기며, Home·End로 끝으로 갑니다.
+- 패널은 숨기기만 하고 내리지 않습니다(`hidden`). 탭을 바꿔도 패널 안 상태가 남습니다.
+- 장면 모니터 안의 탭(`lp-tabs`)은 장면 토큰을 쓰는 별도 모양입니다. 장면 밖 페이지에서는 이 부품을 씁니다.
 
 **장면 위 UI.** 장면 이미지의 오른쪽 절반(빈 금속 패널) 위에만 말풍선과 상태 칩을 올립니다. 작물을 가리지 않습니다. AI 생성 이미지에는 `AI-generated art` 표시를 HTML로 고정합니다(오른쪽 아래, `font-data`).
 - 말풍선: 왼쪽 55%, 위 12%, 너비 38%.

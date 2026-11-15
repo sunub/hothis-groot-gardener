@@ -12,6 +12,7 @@ import { PIXEL_ICONS, PixelIcon } from '@/components/ui/pixel-icon';
 import { Skeleton } from '@/components/ui/skeleton';
 import { SpeechBubble } from '@/components/ui/speech-bubble';
 import { Stepper } from '@/components/ui/stepper';
+import { TabPanel, Tabs } from '@/components/ui/tabs';
 import { ValueTypeTag } from '@/components/value-type-tag';
 import { VerdictBanner } from '@/components/verdict-banner';
 import { ZoneBadge } from '@/components/zone-badge';
@@ -60,6 +61,7 @@ function Section({ id, title, children }: { id: string; title: string; children:
 export function DesignSystemCatalog() {
   const [picked, setPicked] = useState<number | null>(1);
   const [speed, setSpeed] = useState(1);
+  const [tab, setTab] = useState<'mission' | 'how' | 'before'>('mission');
   const options = ['Raise the fan to high', 'Add more water', 'Wipe the surface of the plant'];
 
   return (
@@ -210,7 +212,7 @@ export function DesignSystemCatalog() {
         </div>
       </Section>
 
-      <Section id="ds-flow" title="07 · STEPS · LOADING">
+      <Section id="ds-flow" title="07 · STEPS · TABS · LOADING">
         <Stepper
           aria-label="Closing steps"
           className="flex-wrap"
@@ -221,6 +223,24 @@ export function DesignSystemCatalog() {
             { id: 'g', index: '8', label: 'Ground report', state: 'upcoming', icon: <PixelIcon name="scope" size="sm" /> },
           ]}
         />
+        <Card>
+          <Tabs
+            label="Mission briefing"
+            idPrefix="ds-tabs"
+            value={tab}
+            onChange={setTab}
+            items={[
+              { value: 'mission', label: 'Mission' },
+              { value: 'how', label: 'How it works' },
+              { value: 'before', label: 'Before you start' },
+            ]}
+          />
+          {(['mission', 'how', 'before'] as const).map((key) => (
+            <TabPanel key={key} idPrefix="ds-tabs" value={key} selected={tab === key} className="mt-3 text-body text-ink-muted">
+              Panel for the {key} tab. Left/Right arrows move between tabs.
+            </TabPanel>
+          ))}
+        </Card>
         <Card className="space-y-3">
           <Skeleton className="w-full" />
           <Skeleton className="w-4/5" />
