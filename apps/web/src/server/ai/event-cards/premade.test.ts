@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { eventList } from '@/lib/events';
 import { isCardEvent } from './pipeline';
-import { getPremadeEventCard, premadeEventCards } from './premade';
+import { getPremadeEventCard, premadeEventCards, premadeEventCardsKo } from './premade';
 import { validateEventCardOutput } from './validate';
 
 const cardEvents = eventList.events.filter(isCardEvent);
@@ -45,5 +45,23 @@ describe('pre-made event cards', () => {
   it('returns null for an unknown event or an action without text', () => {
     expect(getPremadeEventCard('water_shortage', ['add_water_direct'])).toBeNull();
     expect(getPremadeEventCard('thinning', ['open_wicks'])).toBeNull();
+  });
+});
+
+describe('pre-made Korean event cards', () => {
+  it.each(cardEvents.map((e) => [e.event_id, e] as const))(
+    '%s has Korean text that passes validation, in list order',
+    (_, event) => {
+      const offeredActionIds = event.actions.map((a) => a.action_id);
+      const entry = premadeEventCardsKo.cards.find((c) => c.event_id === event.event_id);
+      expect(entry?.options.map((o) => o.action_id)).toEqual(offeredActionIds);
+      expect(validateEventCardOutput(entry, { event, offeredActionIds })).toEqual({ ok: true, value: entry });
+      expect([entry!.scene, entry!.plant_line, ...entry!.options.flatMap((o) => [o.label, o.result_line, o.why])].every((t) => /[가-힣]/.test(t))).toBe(true);
+    },
+  );
+
+  it('is chosen by the ko locale', () => {
+    expect(getPremadeEventCard('thinning', ['thin_to_one'], 'ko')?.options[0].label).toMatch(/[가-힣]/);
+    expect(getPremadeEventCard('thinning', ['thin_to_one'], 'en')?.options[0].label).not.toMatch(/[가-힣]/);
   });
 });

@@ -10,6 +10,7 @@ import {
   GENERATION_ATTEMPTS,
   GenerationTimeoutError,
 } from '@/server/ai/crisis/pipeline';
+import { eventNamesKo } from '@/lib/events/localize';
 import { eventList, findEventAction, findTimelineEvent, type CardEvent } from '@/lib/events';
 import {
   buildEventCardGenerationInput,
@@ -85,10 +86,11 @@ export async function createEventCard(
   if (event.name === undefined) {
     throw new Error(`Event ${event.event_id} has no name.`);
   }
-  const name = event.name;
+  const name = request.locale === 'ko' ? (eventNamesKo[event.event_id] ?? event.name) : event.name;
   const context: EventCardValidationContext = { event, offeredActionIds };
 
-  if (deps.generator) {
+  // The generator writes English only. Other languages get the pre-made text.
+  if (deps.generator && request.locale === 'en') {
     const input = buildEventCardGenerationInput(request, event, name, offeredActionIds);
     const timeoutMs = deps.timeoutMs ?? DEFAULT_GENERATION_TIMEOUT_MS;
     for (let i = 0; i < GENERATION_ATTEMPTS; i++) {
@@ -105,7 +107,7 @@ export async function createEventCard(
     }
   }
 
-  const output = getPremadeEventCard(event.event_id, offeredActionIds);
+  const output = getPremadeEventCard(event.event_id, offeredActionIds, request.locale);
   if (!output) {
     throw new Error(`No pre-made card text for ${event.event_id}.`);
   }
