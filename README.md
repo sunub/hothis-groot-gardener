@@ -26,10 +26,10 @@ The 7 game days cover cultivation days 1 to 33. The app does not record any heal
 | | On the live link | Default build from this repository |
 |---|---|---|
 | Cultivation timeline, cultivation diary, event cards | On | Off (`NEXT_PUBLIC_TIMELINE=1` turns them on at build time) |
-| At least two crises per standard mission | Does not apply | Applies |
+| At least two crises per standard mission | Applies | Applies |
 | Language model | None (pre-made text) | None unless `LLM_MODEL` is set |
 
-The two-crisis rule applies only to missions without the timeline. Event cards say on screen that their verdicts and numbers are draft game values.
+Event cards say on screen that their verdicts and numbers are draft game values.
 
 ## NASA data used
 
