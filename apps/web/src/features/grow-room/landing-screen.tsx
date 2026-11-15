@@ -97,9 +97,10 @@ interface Mote {
   delay: number;
 }
 
-function makeMotes(): Mote[] {
+/** Dust in the grow light, around the plant (which sits further right in the narrow scene). */
+function makeMotes(narrow: boolean): Mote[] {
   return Array.from({ length: 7 }, (_, i) => ({
-    left: 280 + Math.random() * 500,
+    left: (narrow ? 550 : 280) + Math.random() * 500,
     top: 470 + Math.random() * 180,
     size: i % 3 === 0 ? 4 : 6,
     duration: 6 + Math.random() * 5,
@@ -201,7 +202,7 @@ export function LandingScreen() {
     later(showBrief, BRIEF_FALLBACK_MS);
     later(() => {
       started.current = true;
-      setMotes(makeMotes());
+      setMotes(makeMotes(window.innerWidth < NARROW_MAX));
       if (reduced) {
         typeSpeech(s.speech, showBrief);
         return;
@@ -365,10 +366,15 @@ export function LandingScreen() {
         <div ref={stageRef} className="lp-stage" style={{ height: fit ? ART_H * fit.scale : undefined }}>
           <div
             aria-label={s.scene_label}
-            className={cn('lp-art', !fit && 'lp-measuring')}
+            className={cn('lp-art', narrow && 'lp-narrow', !fit && 'lp-measuring')}
             style={fit ? { transform: `scale(${fit.scale})`, left: fit.left } : undefined}
           >
-            <img className="lp-world" src="/bg/landing-growth-normal.webp" alt="" />
+            {/* Narrow windows have no monitors in the scene, so they use the chamber-only art. */}
+            <img
+              className="lp-world"
+              src={narrow ? '/bg/landing-chamber.webp' : '/bg/landing-growth-normal.webp'}
+              alt=""
+            />
             <div className="lp-glow" aria-hidden />
             <div className="lp-glow lp-side" aria-hidden />
             <div className="lp-glow lp-side lp-r" aria-hidden />
@@ -401,10 +407,12 @@ export function LandingScreen() {
             {narrow ? null : mainMonitor}
             {narrow ? null : stripMonitor}
 
-            <span className="lp-help">
-              <img src="/icons/info.png" alt="" />
-              <span>{s.notices[0]}</span>
-            </span>
+            {narrow ? null : (
+              <span className="lp-help">
+                <img src="/icons/info.png" alt="" />
+                <span>{s.notices[0]}</span>
+              </span>
+            )}
             <span className="lp-aimark">{s.ai_mark}</span>
           </div>
         </div>

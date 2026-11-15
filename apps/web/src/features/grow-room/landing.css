@@ -133,6 +133,23 @@ html:lang(ko) .lp-pane p { font-size: 20px; line-height: 1.5; }
   padding: 4px 8px; letter-spacing: 1px; z-index: 6;
 }
 
+/*
+ * Narrow windows: the scene shows only the chamber (landing-chamber.webp) with the
+ * plant in the middle; the monitor text moves under the scene as page UI
+ * (landing-panels.tsx). The artboard is scaled down a lot here, so the bubble and
+ * the AI mark are drawn larger to stay readable.
+ */
+.lp-narrow .lp-plant { left: 480px; }
+.lp-narrow .lp-speech {
+  left: 1040px; bottom: auto; top: 140px; width: 500px; font-size: 56px; padding: 22px 20px; border-width: 8px;
+}
+.lp-narrow .lp-speech::before { left: 24px; bottom: -48px; width: 56px; height: 48px; }
+.lp-narrow .lp-speech::after { left: 32px; bottom: -26px; width: 38px; height: 32px; }
+.lp-narrow .lp-glow { left: 200px; width: 1210px; }
+.lp-narrow .lp-glow.lp-side { left: 15px; width: 160px; }
+.lp-narrow .lp-glow.lp-side.lp-r { left: 1425px; }
+.lp-narrow .lp-aimark { font-size: 40px; padding: 8px 14px; bottom: 20px; right: 16px; }
+
 /* Motion (all off under prefers-reduced-motion) */
 @keyframes lp-breathe { 0%, 100% { transform: scaleY(1); } 50% { transform: scaleY(1.014); } }
 @keyframes lp-blink { 50% { opacity: 0; } }
