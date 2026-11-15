@@ -72,7 +72,10 @@ export async function warmUp(
 ): Promise<number | null> {
   if (config.provider !== 'ollama') return null;
   const started = Date.now();
-  const body: Record<string, unknown> = { model: config.model, messages: [] };
+  // Same context size as the crisis calls: Ollama reloads a model whose
+  // num_ctx changes, so a warm-up without it was followed by a second load on
+  // the first crisis (sixth log: 25.9 s for the first request).
+  const body: Record<string, unknown> = { model: config.model, messages: [], options: { num_ctx: config.numCtx } };
   if (config.keepAlive !== undefined) body.keep_alive = config.keepAlive;
   const res = await fetchImpl(`${config.baseUrl}/api/chat`, {
     method: 'POST',

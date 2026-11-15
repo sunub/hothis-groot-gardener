@@ -13,8 +13,10 @@ import type { StyleExample } from './prompt';
  * 3. A scene, plant line or clue that names the cause, a setting or a reading.
  * 4. Facts that are wrong for Veggie or microgravity (soil, dripping water).
  * 5. Result lines that are too short, and text far longer than the format asks for.
- * 6. Labels that no longer name their action, a narrator instead of the
- *    lettuce, and a scene or plant line copied from the style example.
+ * 6. Labels that no longer name their action or add another action's key word.
+ * 7. Style (checkStyle): a narrator instead of the lettuce, and a scene or plant
+ *    line copied from the style example. These ask for a rewrite but do not
+ *    reject the text.
  *
  * On a problem the model rewrites once (generator.ts); after that the attempt
  * fails, the pipeline retries once and then shows the pre-made crisis.
@@ -72,10 +74,11 @@ export const WRONG_SETTING_FACTS = /\b(soil|dirt|potting mix)\b/i;
  */
 export const CAUSE_WORDS: Record<string, { pattern: RegExp; examples: string }> = {
   // "lack ... moisture": "The unit seems to lack proper moisture circulation."
-  // (fifth log) and "the substrate below me is lacking moisture" (fourth log).
+  // (fifth log), "the substrate below me is lacking moisture" (fourth log),
+  // "I feel the lack of adequate dampness near my roots" (sixth log).
   water_shortage: {
     pattern:
-      /\b(water(ing)?|thirst\w*|reservoir|drink\w*|dehydrat\w*)\b|\b(lack\w*|insufficient|not enough|too little)\s+(\w+\s+){0,2}(moisture|hydration|liquid|fluid)\b/i,
+      /\b(water(ing)?|thirst\w*|reservoir|drink\w*|dehydrat\w*)\b|\b(lack\w*|insufficient|not enough|too little)\s+(\w+\s+){0,2}(moisture|dampness|wetness|hydration|liquid|fluid)\b/i,
     examples: 'water, watering, thirsty, reservoir, dehydrated, lack of moisture',
   },
   overwater_mold: {
@@ -116,8 +119,13 @@ export const FIRST_PERSON = /\b(i|me|my|mine|myself)\b/i;
 /** Result lines per crisis that may go without I, me or my. */
 export const MAX_NARRATED_RESULT_LINES = 1;
 
-/** Consecutive words shared with the style example that count as copying. */
-export const COPY_RUN = 8;
+/**
+ * Consecutive words in one sentence shared with the style example that count as
+ * copying. 7 catches "My leaves stay wet, and the droplets on them never seem
+ * to go away." (one word changed); 6 also hit common phrases such as "on the
+ * leaf surfaces and the" (checked against 47 logged runs).
+ */
+export const COPY_RUN = 7;
 
 /**
  * Words the model must not use for this candidate, for the prompt. The same
@@ -186,21 +194,14 @@ export function checkWording(output: AiCrisisOutput, candidate: GenerationCandid
       const words = keys.flatMap((k) => k.words).map((w) => `"${w}"`).join(' or ');
       issues.push(`options.${i}.label: "${option.label}" no longer names the action "${action.name}"; use the word ${words}.`);
     }
-  });
-
-  if (!FIRST_PERSON.test(output.plant_line)) {
-    issues.push('plant_line: the lettuce speaks for itself, with I, me or my.');
-  }
-  // One line without I, me or my is fine (the reviewed stage 3 text has "Nothing
-  // changed, and the soft spots feel worse."); two or more means a narrator.
-  const narrated = output.options
-    .map((o, i) => ({ i, line: o.result_line }))
-    .filter(({ line }) => !FIRST_PERSON.test(line));
-  if (narrated.length >= MAX_NARRATED_RESULT_LINES + 1) {
-    for (const { i, line } of narrated) {
-      issues.push(`options.${i}.result_line: "${line}" sounds like a narrator; the lettuce says it, with I, me or my.`);
+    // A key word of another action changes the action ("Add water to the
+    // reservoir" for "Add more water", fifth log).
+    const extra = action ? ACTION_KEY_WORDS.filter((k) => k.pattern.test(option.label) && !k.pattern.test(action.name)) : [];
+    if (action && extra.length > 0) {
+      const words = extra.map((k) => `"${k.words[0]}"`).join(', ');
+      issues.push(`options.${i}.label: "${option.label}" adds ${words}, which is not part of the action "${action.name}".`);
     }
-  }
+  });
 
   const allText: [string, string][] = [
     ...described,
@@ -238,6 +239,34 @@ export function checkWording(output: AiCrisisOutput, candidate: GenerationCandid
 }
 
 /**
+ * Style problems: the model is asked to rewrite once, but the text is not
+ * rejected for them. They make the text read worse, not wrong, and a second
+ * failed rewrite cost a whole retry (fifth log: about 32 s for one crisis).
+ */
+export function checkStyle(output: AiCrisisOutput, example: StyleExample | undefined): string[] {
+  return [...checkVoice(output), ...checkCopying(output, example)];
+}
+
+/** The lettuce speaks for itself in the plant line and the result lines. */
+export function checkVoice(output: AiCrisisOutput): string[] {
+  const issues: string[] = [];
+  if (!FIRST_PERSON.test(output.plant_line)) {
+    issues.push('plant_line: the lettuce speaks for itself, with I, me or my.');
+  }
+  // One line without I, me or my is fine (the reviewed stage 3 text has "Nothing
+  // changed, and the soft spots feel worse."); two or more means a narrator.
+  const narrated = output.options
+    .map((o, i) => ({ i, line: o.result_line }))
+    .filter(({ line }) => !FIRST_PERSON.test(line));
+  if (narrated.length >= MAX_NARRATED_RESULT_LINES + 1) {
+    for (const { i, line } of narrated) {
+      issues.push(`options.${i}.result_line: "${line}" sounds like a narrator; the lettuce says it, with I, me or my.`);
+    }
+  }
+  return issues;
+}
+
+/**
  * Scene and plant line copied from the style example. Copying is not wrong in
  * content (the example is reviewed text), but every run then reads the same:
  * two of three overwater stage 1 runs in the fourth log opened with the
@@ -259,11 +288,23 @@ export function checkCopying(output: AiCrisisOutput, example: StyleExample | und
   return issues;
 }
 
+/**
+ * Runs of COPY_RUN words within one sentence. Runs across a sentence end
+ * matched common words by chance: "on my leaves and stems and my leaves" from
+ * "... on my leaves and stems. And my leaves ..." (fifth log).
+ */
 function wordRuns(text: string): string[] {
-  const words = text.toLowerCase().replace(/[’‘]/g, "'").replace(/[^a-z']+/g, ' ').trim().split(' ').filter(Boolean);
   const runs: string[] = [];
-  for (let i = 0; i + COPY_RUN <= words.length; i++) runs.push(words.slice(i, i + COPY_RUN).join(' '));
+  for (const sentence of text.toLowerCase().replace(/[’‘]/g, "'").split(/[.!?;]+/)) {
+    const words = sentence.replace(/[^a-z']+/g, ' ').trim().split(' ').filter(Boolean);
+    for (let i = 0; i + COPY_RUN <= words.length; i++) runs.push(words.slice(i, i + COPY_RUN).join(' '));
+  }
   return runs;
+}
+
+/** Symptoms that first appear at the candidate's stage. */
+export function newestSymptoms(candidate: GenerationCandidate): GenerationCandidate['symptoms'] {
+  return candidate.symptoms.filter((s) => s.stage === candidate.stage);
 }
 
 /**
@@ -290,6 +331,13 @@ export function checkStructure(output: AiCrisisOutput, candidate: GenerationCand
   }
   if (output.clues.length < candidate.clues_min) {
     issues.push(`clues: write at least ${candidate.clues_min}.`);
+  }
+  // The screen says "New symptoms appeared"; a stage 3 run left rot out of the
+  // clues (fifth log).
+  for (const symptom of newestSymptoms(candidate)) {
+    if (!symptomIds.includes(symptom.symptom_id)) {
+      issues.push(`clues: include a clue for ${symptom.symptom_id} (${symptom.name}), which is new at this stage.`);
+    }
   }
   return issues;
 }
