@@ -368,7 +368,7 @@ export function LandingScreen() {
           className={cn('lp-art', !fit && 'lp-measuring')}
           style={fit ? { transform: `scale(${fit.scale})`, left: fit.left } : undefined}
         >
-          <img className="lp-world" src="/bg/growth-normal.png" alt="" />
+          <img className="lp-world" src="/bg/landing-growth-normal.webp" alt="" />
           <div className="lp-glow" aria-hidden />
           <div className="lp-glow lp-side" aria-hidden />
           <div className="lp-glow lp-side lp-r" aria-hidden />

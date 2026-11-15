@@ -5,7 +5,7 @@
  * - tokens.css colors the app's own panels, cards and buttons.
  * - These colors belong to things drawn inside the background art: the monitor
  *   glass and its bezel, the plant's speech bubble, the grow light. They are
- *   matched to the art (public/bg/growth-normal.jpg), so they stay brighter and
+ *   matched to the art (public/bg/landing-growth-normal.webp), so they stay brighter and
  *   warmer than the page UI and must not be swapped for page tokens.
  *
  * Rules:
