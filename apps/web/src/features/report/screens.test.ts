@@ -129,7 +129,14 @@ function makeMission(phase: MissionPhase): MissionState {
 }
 
 function render(screen: ComponentType, mission: MissionState | null): string {
-  hook.current = { ready: true, mission, crisisStatus: 'idle', actions: {} as UseMission['actions'] };
+  hook.current = {
+    ready: true,
+    mission,
+    crisisStatus: 'idle',
+    eventCard: null,
+    eventStatus: 'idle',
+    actions: {} as UseMission['actions'],
+  };
   return renderToStaticMarkup(createElement(LocaleProvider, null, createElement(screen)));
 }
 

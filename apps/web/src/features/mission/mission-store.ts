@@ -1,7 +1,8 @@
-import { crisisResponseSchema } from '@/lib/contract/schemas';
+import { crisisResponseSchema, eventCardResponseSchema, type EventCardResponse } from '@/lib/contract/schemas';
 import type { Locale, MissionState } from '@/lib/contract/types';
 import { evidence } from '@/lib/evidence';
 import {
+  advanceDay,
   applyCare,
   buildCrisisRequest,
   chooseOption,
@@ -11,8 +12,8 @@ import {
   endDay,
   GameRuleError,
   harvestCrop,
-  nextDay,
   receiveCrisis,
+  respondToEvent,
 } from '@/lib/game/engine';
 import {
   clearMission,
@@ -21,6 +22,7 @@ import {
   saveMission,
   type MissionStorage,
 } from '@/lib/game/storage';
+import { TIMELINE_ENABLED } from '@/lib/game/timeline-flag';
 import type { CrisisFetchStatus, MissionActions } from './use-mission';
 
 /**
@@ -34,16 +36,33 @@ export interface MissionSnapshot {
   ready: boolean;
   mission: MissionState | null;
   crisisStatus: CrisisFetchStatus;
+  /**
+   * Text of the event card that is shown (POST /api/event), or null. Kept in
+   * memory only: after a reload the card is asked for again. Verdicts and
+   * effects are applied from the event list, not from this response.
+   */
+  eventCard: EventCardResponse | null;
+  /** Status of the event card request while a card waits for its text. */
+  eventStatus: CrisisFetchStatus;
 }
 
 /** Crisis API route (POST, JSON CrisisRequest body). */
 export const CRISIS_ENDPOINT = '/api/crisis';
+/** Event card API route (POST, JSON EventCardRequest body). */
+export const EVENT_ENDPOINT = '/api/event';
 
 const SERVER_SNAPSHOT: MissionSnapshot = Object.freeze({
   ready: false,
   mission: null,
   crisisStatus: 'idle',
+  eventCard: null,
+  eventStatus: 'idle',
 });
+
+/** A fresh snapshot for a mission. The event card is dropped; it is asked for again when needed. */
+function snapshotOf(mission: MissionState | null): MissionSnapshot {
+  return { ready: true, mission, crisisStatus: 'idle', eventCard: null, eventStatus: 'idle' };
+}
 
 let snapshot: MissionSnapshot = SERVER_SNAPSHOT;
 let loaded = false;
@@ -53,6 +72,9 @@ let locale: Locale = 'en';
 /** Key of the last crisis request sent; the same key is never sent twice on its own. */
 let requestedKey: string | null = null;
 let inFlight: AbortController | null = null;
+/** Same for the event card request. */
+let requestedEventKey: string | null = null;
+let eventInFlight: AbortController | null = null;
 
 function browserStorage(): MissionStorage | null {
   try {
@@ -67,7 +89,7 @@ function ensureLoaded(): void {
   if (loaded || typeof window === 'undefined') return;
   loaded = true;
   const storage = browserStorage();
-  snapshot = { ready: true, mission: storage ? loadMission(storage) : null, crisisStatus: 'idle' };
+  snapshot = snapshotOf(storage ? loadMission(storage) : null);
   // Another tab changed the saved mission: follow it, so that an older screen
   // in this tab cannot overwrite newer progress.
   window.addEventListener('storage', (event) => {
@@ -75,7 +97,7 @@ function ensureLoaded(): void {
     const current = browserStorage();
     cancelRequest();
     markScreenChange(snapshot.mission, current ? loadMission(current) : null);
-    setSnapshot({ ready: true, mission: current ? loadMission(current) : null, crisisStatus: 'idle' });
+    setSnapshot(snapshotOf(current ? loadMission(current) : null));
   });
 }
 
@@ -89,7 +111,10 @@ let screenChangedAt = 0;
 /** The screen a mission state shows: one per phase, day and crisis presentation. */
 function screenKeyOf(mission: MissionState | null): string {
   if (!mission) return 'none';
-  return `${mission.mission_id}:${mission.game_day}:${mission.phase}:${mission.active_crisis?.attempt ?? 0}`;
+  const base = `${mission.mission_id}:${mission.game_day}:${mission.phase}:${mission.active_crisis?.attempt ?? 0}`;
+  // Missions without a timeline keep the key they always had.
+  if (!mission.timeline) return base;
+  return `${base}:${mission.timeline.cultivation_day}:${mission.timeline.pending_event?.event_id ?? ''}`;
 }
 
 function markScreenChange(before: MissionState | null, after: MissionState | null): void {
@@ -127,14 +152,77 @@ function requestKeyOf(mission: MissionState | null): string | null {
 function commit(mission: MissionState | null): void {
   markScreenChange(snapshot.mission, mission);
   persist(mission);
-  setSnapshot({ ready: true, mission, crisisStatus: 'idle' });
+  // Keep the card text while the same card is still shown; drop it otherwise.
+  const keepCard = eventKeyOf(mission) !== null && eventKeyOf(mission) === eventKeyOf(snapshot.mission);
+  setSnapshot({ ...snapshotOf(mission), eventCard: keepCard ? snapshot.eventCard : null });
   requestCrisisIfDue();
+  requestEventCardIfDue();
 }
 
 function cancelRequest(): void {
   inFlight?.abort();
   inFlight = null;
   requestedKey = null;
+  eventInFlight?.abort();
+  eventInFlight = null;
+  requestedEventKey = null;
+}
+
+// --- Event card API (missions with a timeline) ----------------------------------
+
+/** Identifies one shown event card; null when no card waits. */
+function eventKeyOf(mission: MissionState | null): string | null {
+  const pending = mission?.timeline?.pending_event;
+  if (!mission || !pending) return null;
+  return `${mission.mission_id}:${pending.cultivation_day}:${pending.event_id}:${pending.offered_action_ids.join(',')}`;
+}
+
+function requestEventCardIfDue(): void {
+  const mission = snapshot.mission;
+  const key = eventKeyOf(mission);
+  if (!mission || !key || key === requestedEventKey || snapshot.eventCard) return;
+  void sendEventCardRequest(mission, key);
+}
+
+async function sendEventCardRequest(mission: MissionState, key: string): Promise<void> {
+  const pending = mission.timeline?.pending_event;
+  if (!pending) return;
+  eventInFlight?.abort();
+  const controller = new AbortController();
+  eventInFlight = controller;
+  requestedEventKey = key;
+  setSnapshot({ ...snapshot, eventStatus: 'loading' });
+
+  const isCurrent = () => eventInFlight === controller && eventKeyOf(snapshot.mission) === key;
+  try {
+    const response = await fetch(EVENT_ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        locale,
+        cultivation_day: pending.cultivation_day,
+        state: mission.plant,
+        event_id: pending.event_id,
+        offered_action_ids: pending.offered_action_ids,
+      }),
+      signal: controller.signal,
+    });
+    if (!response.ok) throw new Error(`Event API answered ${response.status}`);
+    const card = eventCardResponseSchema.parse(await response.json());
+    // The card must be for the event that waits, with exactly the offered actions.
+    const ids = card.options.map((o) => o.action_id);
+    if (card.event_id !== pending.event_id || ids.join(',') !== pending.offered_action_ids.join(',')) {
+      throw new Error('Event API answered for another card');
+    }
+    if (!isCurrent()) return;
+    setSnapshot({ ...snapshot, eventCard: card, eventStatus: 'idle' });
+  } catch (error) {
+    if (controller.signal.aborted || !isCurrent()) return;
+    console.warn('Event card request failed', error);
+    setSnapshot({ ...snapshot, eventStatus: 'error' });
+  } finally {
+    if (eventInFlight === controller) eventInFlight = null;
+  }
 }
 
 // --- Crisis API ----------------------------------------------------------------
@@ -185,6 +273,7 @@ export function ensureCrisisRequest(nextLocale: Locale): void {
   locale = nextLocale;
   ensureLoaded();
   requestCrisisIfDue();
+  requestEventCardIfDue();
 }
 
 // --- useSyncExternalStore ------------------------------------------------------
@@ -239,7 +328,9 @@ const actions: MissionActions = {
     ensureLoaded();
     if (isGuarded('start')) return;
     cancelRequest();
-    commit(createMission({ mission_id: crypto.randomUUID(), mode, seed: randomSeed() }));
+    commit(
+      createMission({ mission_id: crypto.randomUUID(), mode, seed: randomSeed(), timeline: TIMELINE_ENABLED }),
+    );
   },
   applyCare(op) {
     act('applyCare', (m) => applyCare(m, op));
@@ -248,7 +339,17 @@ const actions: MissionActions = {
     act('endDay', endDay);
   },
   nextDay() {
-    act('nextDay', (m) => nextDay(m, evidence));
+    // Without a timeline this is the plain next day; with one it walks the days in between.
+    act('nextDay', (m) => advanceDay(m, evidence));
+  },
+  respondToEvent(actionId) {
+    act('respondToEvent', (m) => respondToEvent(m, actionId));
+  },
+  retryEvent() {
+    ensureLoaded();
+    if (eventInFlight) return;
+    requestedEventKey = null;
+    requestEventCardIfDue();
   },
   chooseOption(actionId) {
     act('chooseOption', (m) => chooseOption(m, actionId, evidence));
