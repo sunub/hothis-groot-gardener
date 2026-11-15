@@ -122,22 +122,6 @@ Commands and settings are in [Quick start](#quick-start). At commit `b5662b8`, i
 
 The evidence list, pre-made crisis text and timeline events are JSON files in `data/content/`. Model, search and code structure: [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md).
 
-## Not built and known limits
-
-Items 2 to 9 were found on a default build at commit `b5662b8`.
-
-1. The third crisis (ethylene build-up) is not built.
-2. After 2 inappropriate choices, ground control ends the crisis. The notice does not say that the watched items return to 55.
-3. The hint says you will be asked again, also on the second ask, after which the crisis ends.
-4. "Why" and "Basis for the verdict" can be the same sentence.
-5. In Korean, crisis names on the result screen and report, source quotes and notes stay English.
-6. Switching language during a crisis leaves that crisis's text in the earlier language.
-7. The microbial value counts only humidity, the mold crisis, cleaning and sanitizing.
-8. In Korean, pages overflow by 11px at 375px width (headless Chromium on macOS; a real phone can differ).
-9. Tags are per card or section, and some numbers have no tag.
-10. With the local model at commit `e485a17` on the development laptop (`LLM_TIMEOUT_MS=60000`), English crises took 39.6 to 120.3 s to appear.
-11. Tested in headless Chromium only. Not tested on phones, Safari or Firefox.
-
 ## Use of AI tools
 
 - **In the product:** when `LLM_MODEL` is set, Gemma 4 E4B (Google) through Ollama writes crisis text, and translates crisis text and diary lines into Korean. It never sets verdicts, state changes or sources. The crisis screen labels generated text.
