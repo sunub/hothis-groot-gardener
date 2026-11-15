@@ -83,7 +83,7 @@ cd services/rag && uv run --group server uvicorn rag_server:app --host 127.0.0.1
 
 ### D3. 검색 조각과 라이선스
 
-- 조각 81개 가운데 문장을 그대로 실을 수 있는 것은 Khodadad 2020(CC BY 4.0)의 25개입니다. 나머지 56개는 CC BY-NC-ND이거나 공개 라이선스가 없습니다. 출처별 기록은 `data/content/source-licenses.json`에 있습니다.
+- 조각 76개 가운데 문장을 그대로 실을 수 있는 것은 Khodadad 2020(CC BY 4.0)의 14개와 Haveman 2023(CC BY 4.0)의 6개입니다. 나머지 56개는 CC BY-NC-ND이거나 공개 라이선스가 없습니다. 출처별 기록은 `data/content/source-licenses.json`에 있습니다.
 - `data/sources/total_RAG.json`과 `data/vector_db/`는 이미 공개 브랜치에 올라가 있습니다.
 - 대회 약관은 NASA 것이 아닌 자료가 제한 없이 공개된 것이거나 오픈소스 라이선스일 것을 요구합니다.
 - 제안: 화면과 데이터 파일에는 문장을 옮기지 않고 사실만 우리 말로 적고 출처를 답니다. 조각 원문과 한국어 번역은 개발 기기에만 둡니다.
@@ -188,7 +188,7 @@ cd services/rag && uv run --group server uvicorn rag_server:app --host 127.0.0.1
 ### B1. 검색 DB에 공개 조각을 넣고 다시 만들기 (임베딩 키가 필요)
 
 - `data/sources/public_sources_RAG.json`의 26개는 원문에서 그대로 잘라 낸 것이고 스크립트로 대조했습니다 (확인함). 과습·곰팡이 위기의 백일홍 기록, VEG-01 물 부족 초록, 팬과 급수 지침, 수확과 냉동, 소독 물티슈가 들어 있습니다.
-- **주의**: `services/rag/build_vector_db.py`는 입력 파일에 없는 조각을 DB에서 지웁니다. 새 파일만 넣고 돌리면 기존 81개가 지워집니다. 두 파일을 합친 뒤 돌려야 합니다.
+- **주의**: `services/rag/build_vector_db.py`는 입력 파일에 없는 조각을 DB에서 지웁니다. 새 파일만 넣고 돌리면 기존 76개가 지워집니다. 두 파일을 합친 뒤 돌려야 합니다.
 - `data/sources/total_RAG.json`에 합치려면 새 출처 10종을 `data/content/source-licenses.json`에 더해야 합니다. 그 파일의 테스트는 문장 인용을 CC BY 4.0에만 허용하므로, NASA 문서의 사용 조건 표기를 허용 목록에 넣을지 정해야 합니다.
 - 새 조각에는 한국어 번역이 없습니다. 키워드 검색은 영어로만 찾습니다.
 

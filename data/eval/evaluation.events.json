@@ -5,7 +5,7 @@
   },
   {
     "query": "Red romaine lettuce in the ISS Veggie unit. Air is barely moving around the plants, water drops stay on the leaves for a long time, and the young plants look too wet. Microbes could start to grow. What should the crew do next?",
-    "relevant_ids": ["veggie-leaf-moisture", "veggie-fan-restart-moisture", "veggie-03a-fan-restart"]
+    "relevant_ids": ["veggie-fan-restart-moisture"]
   },
   {
     "query": "Day 3 after planting lettuce in the ISS Veggie unit. Small shoots are pushing against the germination wicks of each pillow and cannot come out. What should the crew do next?",
@@ -13,11 +13,11 @@
   },
   {
     "query": "Day 7 of growing lettuce in the ISS Veggie unit. Two seedlings are growing in the same pillow, and one pillow has not sprouted at all. What should the crew do next?",
-    "relevant_ids": ["veggie-day7-thinning", "veg01-wick-thinning", "VEG-03J-06", "veg01-early-a", "veggie-seed-wicks-thinning"]
+    "relevant_ids": ["veg01-wick-thinning", "VEG-03J-06", "veg01-early-a", "veggie-seed-wicks-thinning"]
   },
   {
     "query": "Day 33 of growing lettuce in the ISS Veggie unit. The plants are ready to be harvested, and some leaves must be kept as research samples for analysis back on Earth. How should the crew cut the leaves and store the samples?",
-    "relevant_ids": ["veggie-single-harvest", "VEG-03J-08", "veggie-harvest-method", "veggie-sequential-harvest-methods", "veggie-03a-sample-handling"]
+    "relevant_ids": ["veggie-single-harvest", "VEG-03J-08", "veggie-sequential-harvest-methods"]
   },
   {
     "query": "Day 1, starting a lettuce crop in the ISS Veggie unit. Water was added, but one plant pillow stays dry and light; the water seems to be blocked somewhere on its way into that pillow. What should the crew check or replace?",
@@ -25,7 +25,7 @@
   },
   {
     "query": "Lettuce in the ISS Veggie unit, just after the power was turned off and on again. The control panel shows the fan on LOW, but the leaves do not move and water drops stay on them. What should the crew do next?",
-    "relevant_ids": ["veggie-03a-fan-restart", "veggie-fan-restart-moisture"]
+    "relevant_ids": ["veggie-fan-restart-moisture"]
   },
   {
     "query": "Lettuce in the ISS Veggie unit, some days after the seeds sprouted. The plants look healthy and water and humidity are normal, but the tips of a few young leaves look slightly burnt and brown. What should the crew do next?",
@@ -41,10 +41,10 @@
   },
   {
     "query": "Red romaine lettuce in the ISS Veggie unit. Excess water and stagnant air leading to mold. Observed: Excess moisture around the plants; Droplets of moisture that stay on the leaves. Possible actions: Set the fan to high; Clean the plant surfaces; Add more water; Keep the settings and check again later.",
-    "relevant_ids": ["veggie-leaf-moisture", "veggie-fan-restart-moisture", "veggie-03a-fan-restart"]
+    "relevant_ids": ["veggie-fan-restart-moisture"]
   },
   {
     "query": "Red romaine lettuce in the ISS Veggie unit. Excess water and stagnant air leading to mold. Observed: Excess moisture around the plants; Droplets of moisture that stay on the leaves; Fungal growth on leaves and stems; Rot on leaves and stems. Possible actions: Set the fan to high; Clean the plant surfaces; Add more water; Keep the settings and check again later.",
-    "relevant_ids": ["veggie-leaf-moisture", "veggie-fan-restart-moisture", "veggie-03a-fan-restart"]
+    "relevant_ids": ["veggie-fan-restart-moisture"]
   }
 ]
