@@ -70,6 +70,7 @@ export function TimelineView({
         <LettuceScene
           sprite={STAGE_SPRITE[stage]}
           label={t.common.growth_stage[stage]}
+          artNote={t.mission.character.art_note}
         />
         {frame ? (
           <div className="space-y-4">
