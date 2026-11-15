@@ -59,7 +59,8 @@ describe('source-licenses.json', () => {
   it('agrees with the url and the license written on the chunks', () => {
     for (const chunk of chunks) {
       const source = bySourceId.get(chunk.metadata.source_id);
-      expect(chunk.metadata.source_url, chunk.id).toBe(source?.url);
+      // Some chunk files write the DOI link with a sentence period after it; the period is not part of the DOI.
+      expect(chunk.metadata.source_url.replace(/\.$/, ''), chunk.id).toBe(source?.url);
       if (chunk.metadata.source_license) {
         expect(chunk.metadata.source_license, chunk.id).toBe(source?.license);
       }

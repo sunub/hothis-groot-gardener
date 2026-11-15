@@ -37,7 +37,7 @@ const response = eventCardResponseSchema.parse({
     },
   ],
   summary: 'After a restart the fan read low but was off.',
-  source_chunks: ['veggie-03a-fan-restart'],
+  source_chunks: ['veggie-fan-restart-moisture'],
   draft: true,
   origin: 'generated',
 });
