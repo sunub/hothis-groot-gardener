@@ -15,9 +15,10 @@
  * - The bezel colors are the monitor frame in the art (a warm beige). They are the
  *   one exception to "no warm hues in the UI" and appear only around scene monitors.
  *
- * `static` keeps every token in the output even though no Tailwind utility uses it.
+ * Plain custom properties, not @theme: no Tailwind utility uses them, and the
+ * Tailwind build drops @theme variables that no utility uses.
  */
-@theme static {
+:root {
   /* Backdrop behind the artboard while the art loads */
   --color-scene-backdrop: #bed2cb;
 
