@@ -32,9 +32,9 @@
 > powershell -ExecutionPolicy Bypass -File scripts\start-with-ai.ps1
 > ```
 >
-> Wait for `[llm] gemma4:e4b is loaded` in the terminal. Options: `--yes` / `-Yes`, `--dev` / `-Dev`, `--port 3001` / `-Port 3001`. Without the script: run `ollama pull gemma4:e4b` and copy `apps/web/.env.example` to `apps/web/.env.local`. To run without the model again, delete `apps/web/.env.local`.
+> Wait for `[llm] gemma4:e4b is loaded` in the terminal. A reply that takes longer than the limit (30 seconds per attempt, two attempts) is replaced by the pre-made text; a GPU is recommended ([docs/DEVELOPMENT.md](docs/DEVELOPMENT.md)). Options: `--yes` / `-Yes`, `--dev` / `-Dev`, `--port 3001` / `-Port 3001`. Without the script: run `ollama pull gemma4:e4b` and copy `apps/web/.env.example` to `apps/web/.env.local`. To run without the model again, delete `apps/web/.env.local`.
 >
-> **Evidence search (optional).** Keyword search over NASA plant research excerpts, added to the model's prompt. It needs [uv](https://docs.astral.sh/uv/) and no API key. The script above does not start it.
+> **Evidence search (optional).** Keyword search over excerpts from published plant research papers (listed in [docs/SOURCES.md](docs/SOURCES.md)), added to the model's prompt. It needs [uv](https://docs.astral.sh/uv/) and no API key. The script above does not start it.
 >
 > ```bash
 > cd services/rag
@@ -118,7 +118,7 @@ The plant and chamber art in the screenshots is AI-generated.
 
 ## Data and checks
 
-Commands and settings are in [Quick start](#quick-start). At commit `b5662b8`, in a clean clone with Node.js v25.9.0, `npm run check` passed: 797 tests in 47 files.
+Commands and settings are in [Quick start](#quick-start). At commit `de3d13f`, in a clean clone with Node.js v25.9.0, `npm run check` passed: 811 tests in 48 files.
 
 The evidence list, pre-made crisis text and timeline events are JSON files in `data/content/`. Model, search and code structure: [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md).
 
