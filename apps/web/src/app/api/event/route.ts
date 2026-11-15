@@ -1,10 +1,13 @@
 import { eventCardRequestSchema, REQUEST_BODY_MAX_BYTES } from '@/lib/contract/schemas';
 import type { ApiError } from '@/lib/contract/types';
 import { readLlmConfig } from '@/server/ai/crisis/llm';
-import { createEventCard, InvalidEventRequestError, type EventCardGenerator } from '@/server/ai/event-cards';
-// Imported from their own files: the index does not re-export the generator or the switch.
-import { createEventCardLlmGenerator } from '@/server/ai/event-cards/llm-generator';
-import { eventCardGenerationEnabled } from '@/server/ai/event-cards/generation-switch';
+import {
+  createEventCard,
+  createEventCardLlmGenerator,
+  eventCardGenerationEnabled,
+  InvalidEventRequestError,
+  type EventCardGenerator,
+} from '@/server/ai/event-cards';
 
 /**
  * The text generator for event cards. It needs both a configured model
