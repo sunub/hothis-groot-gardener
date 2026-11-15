@@ -1,0 +1,109 @@
+[
+  {
+    "label": "water_shortage stage 1",
+    "query": "Red romaine lettuce in the ISS Veggie unit. Water shortage. Observed: Plants not growing well; Dry pillow wicks. Possible actions: Add water directly to the plant pillows; Refill the reservoir and let the wicks draw water; Wait for the next scheduled watering; Set the fan to high.",
+    "relevant_ids": [
+      "veg01-stall-a",
+      "veg01-stall-b",
+      "veggie-manual-watering"
+    ],
+    "partial_ids": [
+      "veg01-reservoir",
+      "veg01-setup",
+      "veggie-pillow-substrate",
+      "morsi2022-arcillite-wick-irrigation",
+      "veg01-no-flow-a"
+    ],
+    "off_stage_ids": [
+      "VEG-03J-11",
+      "veggie-sequential-harvest-microbial-outcomes",
+      "VEG-03J-12",
+      "haveman2023-pythium-root-symptoms"
+    ]
+  },
+  {
+    "label": "water_shortage stage 2",
+    "query": "Red romaine lettuce in the ISS Veggie unit. Water shortage. Observed: Plants not growing well; Dry pillow wicks; Stressed plants. Possible actions: Add water directly to the plant pillows; Refill the reservoir and let the wicks draw water; Wait for the next scheduled watering; Set the fan to high.",
+    "relevant_ids": [
+      "veg01-stall-a",
+      "veg01-stall-b",
+      "veggie-manual-watering"
+    ],
+    "partial_ids": [
+      "veg01-reservoir",
+      "veg01-setup",
+      "veggie-pillow-substrate",
+      "morsi2022-arcillite-wick-irrigation",
+      "veg01-no-flow-a"
+    ],
+    "off_stage_ids": [
+      "VEG-03J-11",
+      "veggie-sequential-harvest-microbial-outcomes",
+      "VEG-03J-12",
+      "haveman2023-pythium-root-symptoms"
+    ]
+  },
+  {
+    "label": "overwater_mold stage 1",
+    "query": "Red romaine lettuce in the ISS Veggie unit. Excess water and stagnant air leading to mold. Observed: Excess moisture around the plants; Droplets of moisture that stay on the leaves. Possible actions: Set the fan to high; Clean the plant surfaces; Add more water; Keep the settings and check again later.",
+    "relevant_ids": [
+      "veggie-fan-restart-moisture"
+    ],
+    "partial_ids": [
+      "veggie-cultivar-airflow",
+      "morsi2022-arcillite-wick-irrigation",
+      "VEG-03J-09",
+      "veg01-light-hardware",
+      "veggie-monitoring-location",
+      "veg01a-veggie-environment"
+    ],
+    "off_stage_ids": [
+      "VEG-03J-11",
+      "veggie-sequential-harvest-microbial-outcomes",
+      "VEG-03J-12",
+      "haveman2023-pythium-root-symptoms"
+    ]
+  },
+  {
+    "label": "overwater_mold stage 2",
+    "query": "Red romaine lettuce in the ISS Veggie unit. Excess water and stagnant air leading to mold. Observed: Excess moisture around the plants; Droplets of moisture that stay on the leaves; Fungal growth on leaves and stems. Possible actions: Set the fan to high; Clean the plant surfaces; Add more water; Keep the settings and check again later.",
+    "relevant_ids": [
+      "veggie-fan-restart-moisture"
+    ],
+    "partial_ids": [
+      "veggie-cultivar-airflow",
+      "morsi2022-arcillite-wick-irrigation",
+      "VEG-03J-09",
+      "veg01-light-hardware",
+      "veggie-monitoring-location",
+      "veg01a-veggie-environment",
+      "veggie-sequential-harvest-microbial-outcomes",
+      "VEG-03J-12"
+    ],
+    "off_stage_ids": [
+      "VEG-03J-11",
+      "haveman2023-pythium-root-symptoms"
+    ]
+  },
+  {
+    "label": "overwater_mold stage 3",
+    "query": "Red romaine lettuce in the ISS Veggie unit. Excess water and stagnant air leading to mold. Observed: Excess moisture around the plants; Droplets of moisture that stay on the leaves; Fungal growth on leaves and stems; Rot on leaves and stems. Possible actions: Set the fan to high; Clean the plant surfaces; Add more water; Keep the settings and check again later.",
+    "relevant_ids": [
+      "veggie-fan-restart-moisture"
+    ],
+    "partial_ids": [
+      "veggie-cultivar-airflow",
+      "morsi2022-arcillite-wick-irrigation",
+      "VEG-03J-09",
+      "veg01-light-hardware",
+      "veggie-monitoring-location",
+      "veg01a-veggie-environment",
+      "veggie-sequential-harvest-microbial-outcomes",
+      "VEG-03J-12",
+      "haveman2023-pythium-root-symptoms"
+    ],
+    "off_stage_ids": [
+      "VEG-03J-11"
+    ]
+  }
+]
