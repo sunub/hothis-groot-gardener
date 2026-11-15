@@ -1,6 +1,13 @@
 import { describe, expect, it } from 'vitest';
 import { eventList } from '@/lib/events';
-import { conditionHolds, findEventAction, findTimelineEvent, gameDayOn, trackEntriesOn } from '@/lib/events/judge';
+import {
+  conditionHolds,
+  findEventAction,
+  findTimelineEvent,
+  gameDayOn,
+  isCardKind,
+  trackEntriesOn,
+} from '@/lib/events/judge';
 import { plantStateSchema } from './schemas';
 import { TIMELINE_FIXTURES } from './fixtures';
 
@@ -45,7 +52,7 @@ describe('timeline fixtures', () => {
         if (pending) {
           const event = findTimelineEvent(eventList, pending.event_id);
           expect(event?.kind).toBe(pending.kind);
-          if (!event || event.kind === 'crisis') throw new Error('pending event is not a card event');
+          if (!event || !isCardKind(event)) throw new Error('pending event is not a card event');
           expect(pending.cultivation_day).toBe(timeline.cultivation_day);
           expect(timeline.occurred_event_ids).toContain(pending.event_id);
           for (const id of pending.offered_action_ids) expect(findEventAction(event, id), id).toBeDefined();
@@ -63,9 +70,15 @@ describe('timeline fixtures', () => {
             const keys = trackEntriesOn(eventList, entry.cultivation_day).map((e) => e.entry_key);
             expect(keys).toContain(entry.entry_key);
           }
+          if (entry.type === 'record') {
+            const event = findTimelineEvent(eventList, entry.event_id);
+            if (!event || event.kind !== 'record') throw new Error(`${entry.event_id} is not a record event`);
+            expect(entry.cultivation_day).toBe(event.window.from);
+            expect(entry.tone).toBe(event.tone);
+          }
           if (entry.type === 'event') {
             const event = findTimelineEvent(eventList, entry.event_id);
-            if (!event || event.kind === 'crisis') throw new Error(`${entry.event_id} is not a card event`);
+            if (!event || !isCardKind(event)) throw new Error(`${entry.event_id} is not a card event`);
             expect(entry.cultivation_day).toBeGreaterThanOrEqual(event.window.from);
             expect(entry.cultivation_day).toBeLessThanOrEqual(event.window.to);
             if (entry.response) {

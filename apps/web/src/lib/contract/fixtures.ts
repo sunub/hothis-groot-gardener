@@ -1,8 +1,11 @@
+import { eventList } from '@/lib/events';
+import { trackEntriesOn } from '@/lib/events/judge';
 import type {
   EventLogEntry,
   MilestoneLogEntry,
   PlannedEvent,
   PlantState,
+  RecordLogEntry,
   TimelineState,
   TrackLogEntry,
 } from './types';
@@ -45,19 +48,39 @@ function milestone(cultivationDay: number, gameDay: number): MilestoneLogEntry {
   return { type: 'milestone', cultivation_day: cultivationDay, game_day: gameDay, tone: 'neutral' };
 }
 
-function track(cultivationDay: number, experiment: string, index: number, chunk: string): TrackLogEntry {
+/**
+ * A log line for the track entry of `experiment` on the day. The key is read
+ * from the event list, so the fixtures follow the list whether or not its
+ * entries carry an `entry_id` yet (notes, entry T6).
+ */
+function track(cultivationDay: number, experiment: string): TrackLogEntry {
+  const found = trackEntriesOn(eventList, cultivationDay).find((e) => e.experiment === experiment);
+  if (!found) throw new Error(`No ${experiment} track entry on day ${cultivationDay} in events.json`);
   return {
     type: 'track',
     cultivation_day: cultivationDay,
     experiment,
-    entry_key: `${experiment}#${index}`,
-    source_chunk: chunk,
+    entry_key: found.entry_key,
+    source_chunk: found.entry.source_chunk,
     tone: 'neutral',
   };
 }
 
+/** A log line for a record event. Day and tone are read from the event list. */
+function record(eventId: string): RecordLogEntry {
+  const event = eventList.events.find((e) => e.event_id === eventId);
+  if (!event || event.kind !== 'record') throw new Error(`No record event "${eventId}" in events.json`);
+  return { type: 'record', cultivation_day: event.window.from, event_id: eventId, tone: event.tone };
+}
+
 const DAY_1 = milestone(1, 1);
-const VEG03J_DAY_3 = track(3, 'VEG-03J', 0, 'VEG-03J-05');
+/** Records of days 1 and 2. They hold for any heading state, so every fixture can show them. */
+const EARLY_RECORDS = [
+  record('record_pillows_initiated'),
+  record('record_lights_programmed'),
+  record('record_first_sprouts'),
+];
+const VEG03J_DAY_3 = track(3, 'VEG-03J');
 
 const WICKS_PENDING: EventLogEntry = {
   type: 'event',
@@ -83,6 +106,13 @@ const WICKS_DONE: EventLogEntry = {
   tone: 'positive',
 };
 
+/** Records of days 4 and 5 for a plant heading to a calm game day 2 (both metrics normal). */
+const LEAD_UP_RECORDS = [
+  record('record_sprouts_even'),
+  record('record_seedlings_growing'),
+  record('record_photos_sent'),
+];
+
 const DAY_6 = milestone(6, 2);
 
 const THINNING_DONE: EventLogEntry = {
@@ -103,8 +133,8 @@ const THINNING_DONE: EventLogEntry = {
   tone: 'mixed',
 };
 
-const VEG01A_DAY_7 = track(7, 'VEG-01A', 1, 'veg01-early-a');
-const VEG03J_DAY_7 = track(7, 'VEG-03J', 1, 'VEG-03J-06');
+const VEG01A_DAY_7 = track(7, 'VEG-01A');
+const VEG03J_DAY_7 = track(7, 'VEG-03J');
 
 const FAN_FAULT_PENDING: EventLogEntry = {
   type: 'event',
@@ -145,7 +175,7 @@ export const FIXTURE_RUNNING: TimelineFixture = {
     event_plan: PLAN,
     occurred_event_ids: ['wick_opening'],
     pending_event: null,
-    log: [DAY_1, VEG03J_DAY_3, WICKS_DONE],
+    log: [DAY_1, ...EARLY_RECORDS, VEG03J_DAY_3, WICKS_DONE],
   },
 };
 
@@ -166,7 +196,7 @@ export const FIXTURE_SCHEDULED_EVENT: TimelineFixture = {
       cultivation_day: 3,
       offered_action_ids: ['open_wicks', 'water_heavy_instead', 'do_nothing'],
     },
-    log: [DAY_1, VEG03J_DAY_3, WICKS_PENDING],
+    log: [DAY_1, ...EARLY_RECORDS, VEG03J_DAY_3, WICKS_PENDING],
   },
 };
 
@@ -189,8 +219,10 @@ export const FIXTURE_CONDITIONAL_EVENT: TimelineFixture = {
     },
     log: [
       DAY_1,
+      ...EARLY_RECORDS,
       VEG03J_DAY_3,
       WICKS_DONE,
+      ...LEAD_UP_RECORDS,
       DAY_6,
       VEG01A_DAY_7,
       VEG03J_DAY_7,
@@ -214,8 +246,10 @@ export const FIXTURE_FLAG_ACTIVE: TimelineFixture = {
     pending_event: null,
     log: [
       DAY_1,
+      ...EARLY_RECORDS,
       VEG03J_DAY_3,
       WICKS_DONE,
+      ...LEAD_UP_RECORDS,
       DAY_6,
       VEG01A_DAY_7,
       VEG03J_DAY_7,
@@ -242,8 +276,10 @@ export const FIXTURE_MILESTONE: TimelineFixture = {
     pending_event: null,
     log: [
       DAY_1,
+      ...EARLY_RECORDS,
       VEG03J_DAY_3,
       WICKS_DONE,
+      ...LEAD_UP_RECORDS,
       DAY_6,
       VEG01A_DAY_7,
       VEG03J_DAY_7,

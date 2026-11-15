@@ -2,6 +2,7 @@ import { z } from 'zod';
 import {
   fanLevelSchema,
   metricSchema,
+  sourceRefSchema,
   verdictSchema,
 } from '@/lib/contract/schemas';
 import type { EventList, MissionPhase, ResponseOp, Zone } from '@/lib/contract/types';
@@ -64,13 +65,16 @@ export const eventWindowSchema = z
   .strictObject({ from: day, to: day })
   .refine((w) => w.from <= w.to, { message: 'window.from must not be after window.to' });
 
+const zoneTestSchema = z.strictObject({ metric: metricSchema, in: z.array(z.enum(ZONES)).min(1) });
+
 export const eventConditionSchema = z.strictObject({
   fan: fanLevelSchema.optional(),
   min_health: z.number().min(0).max(100).optional(),
-  zones: z
-    .array(z.strictObject({ metric: metricSchema, in: z.array(z.enum(ZONES)).min(1) }))
-    .optional(),
+  zones: z.array(zoneTestSchema).optional(),
+  any_zones: z.array(zoneTestSchema).min(1).optional(),
 });
+
+export const LOG_TONES = ['positive', 'negative', 'mixed', 'neutral'] as const;
 
 export const eventEffectSchema = z.strictObject({
   root_moisture: z.number().optional(),
@@ -124,6 +128,16 @@ export const timelineEventSchema = z.discriminatedUnion('kind', [
     name: text.optional(),
     scene_hint: text.optional(),
   }),
+  z.object({
+    ...base,
+    kind: z.literal('record'),
+    tone: z.enum(LOG_TONES),
+    condition: eventConditionSchema.optional(),
+    probability: z.number().gt(0).max(1).optional(),
+    group: id.optional(),
+    foreshadows: z.array(id).optional(),
+    text: text.optional(),
+  }),
 ]);
 
 export const parallelTrackSchema = z.object({
@@ -136,7 +150,8 @@ export const parallelTrackSchema = z.object({
         when: text.optional(),
         text: text.optional(),
         source_chunk: text,
-        source_check: z.enum(['checked', 'not_checked']).optional(),
+        source_check: z.enum(['checked', 'not_checked']),
+        verified_source: sourceRefSchema.optional(),
       }),
     )
     .min(1),
