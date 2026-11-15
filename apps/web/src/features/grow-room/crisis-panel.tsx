@@ -1,11 +1,9 @@
 'use client';
 
-import { useState } from 'react';
 import type { AiClue, CrisisResponse } from '@/lib/contract/types';
+import { ChoiceList } from '@/components/choice-list';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import { Callout } from '@/components/ui/callout';
-import { ChoiceButton } from '@/components/ui/choice-button';
 import { PixelIcon } from '@/components/ui/pixel-icon';
 import { useDictionary } from '@/lib/i18n';
 import { PanelHeading } from './panel-heading';
@@ -33,24 +31,12 @@ export function toCrisisView(response: CrisisResponse): CrisisView {
   };
 }
 
-const LETTERS = 'ABCDEFGH';
-
 /**
- * Crisis scene, clues, record note and the options. Picking an option only marks it;
- * the choice is sent when the player confirms. Options are passed by position only,
- * so no verdict or action data reaches the DOM.
+ * Crisis scene, clues, record note and the options (ChoiceList: labels only,
+ * answered by position, so no verdict or action data reaches the DOM).
  */
 export function CrisisPanel({ view, onChoose }: { view: CrisisView; onChoose: (index: number) => void }) {
   const c = useDictionary().mission.crisis;
-  // Picked but not yet confirmed. Screen state only: it is not saved with the mission.
-  const [picked, setPicked] = useState<number | null>(null);
-  const [confirmed, setConfirmed] = useState(false);
-
-  const confirm = () => {
-    if (picked === null || confirmed) return;
-    setConfirmed(true);
-    onChoose(picked);
-  };
 
   return (
     <div className="space-y-6">
@@ -96,36 +82,18 @@ export function CrisisPanel({ view, onChoose }: { view: CrisisView; onChoose: (i
         </Callout>
       ) : null}
 
-      <section aria-labelledby="crisis-options" className="space-y-3">
-        <div className="flex flex-wrap items-baseline justify-between gap-2">
-          <h3 id="crisis-options" className="text-heading font-bold">
-            {c.options_title}
-          </h3>
-          <p className="text-caption text-ink-muted">{c.options_hint}</p>
-        </div>
-        <ul className="grid gap-2">
-          {view.labels.map((label, i) => (
-            <li key={i}>
-              <ChoiceButton
-                keyLabel={LETTERS[i] ?? String(i + 1)}
-                selected={picked === i}
-                dimmed={confirmed && picked !== i}
-                trailing={picked === i ? c.selected : null}
-                disabled={confirmed}
-                onClick={() => setPicked(i)}
-              >
-                {label}
-              </ChoiceButton>
-            </li>
-          ))}
-        </ul>
-        {picked !== null ? (
-          <Button variant="primary" block onClick={confirm} disabled={confirmed}>
-            {c.confirm}
-          </Button>
-        ) : null}
-        <p className="text-caption text-ink-muted">{c.confirm_hint}</p>
-      </section>
+      <ChoiceList
+        id="crisis-options"
+        labels={view.labels}
+        onChoose={onChoose}
+        text={{
+          title: c.options_title,
+          hint: c.options_hint,
+          selected: c.selected,
+          confirm: c.confirm,
+          confirmHint: c.confirm_hint,
+        }}
+      />
     </div>
   );
 }
