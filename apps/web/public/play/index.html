@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Space Garden Simulator — Playable Frontend v0.8.1</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&family=VT323&display=swap">
+<style>
+:root{
+  --panel:#202b3c;--panel-raised:#2c374a;--frame:#68768d;--header-rule:#596c7c;--text:#f1f3ed;--muted:#b0bbce;
+  --accent:#9de9c3;--on-accent:#12342b;--selected:#34534b;--warning:#f0c65c;--danger:#e88479;--link:#a8cdf1;
+  --measured-bg:#244662;--measured-ink:#a5d2f0;--measured-border:#7db8df;
+  --speech:#fff7e6;--speech-ink:#172022;--speech-border:#263132;--scene:#bed2cb;
+  --paper:#f5eedb;--ink:#273d43;--paper-muted:#486270;--paper-link:#315e78;--paper-rule:#8b9994;--paper-frame:#695b4c;
+  --paper-ok:#2f6b4f;--paper-caution:#8a5a00;--paper-danger:#a33a2c;--paper-measured-bg:#dce7e9;--paper-measured-ink:#315b78;
+  --chart-health:#9de9c3;--chart-root:#82b8ee;--chart-humidity:#d2a4e9;--chart-health-paper:#316b56;
+  --font-pixel:"Pixelify Sans","Courier New",monospace;--font-data:VT323,"Courier New",monospace;
+  --space-1:4px;--space-2:8px;--space-3:12px;--space-4:16px;--space-5:20px;--space-6:24px;--space-8:32px;
+  --notch:8px;--shadow-panel:5px 5px 0 #06132055;--shadow-bevel:inset 2px 2px 0 #ffffff1c,inset -3px -4px 0 #00000055;--shadow-paper:12px 12px 0 #08121b66;
+  --header-h:50px;--timeline-h:88px;--choice-h:44px;--icon:28px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:#111923;color:var(--text);font-family:var(--font-pixel)}
+body:not(.stacked){overflow:hidden}
+.page{margin:0;padding:0}
+#stage{position:relative;width:100%;overflow:hidden}
+#artboard{position:absolute;left:0;top:0;width:1600px;height:900px;transform-origin:0 0;font-size:22px;line-height:1.35;background:var(--scene);overflow:hidden}
+#artboard img,#below img{image-rendering:pixelated}
+button{font-family:inherit;font-size:inherit;color:inherit;touch-action:manipulation}
+:focus-visible{outline:4px solid var(--warning);outline-offset:4px}
+.notch,.sg-panel,.sg-button,.sg-badge,.sg-choice{clip-path:polygon(var(--notch) 0,calc(100% - var(--notch)) 0,100% var(--notch),100% calc(100% - var(--notch)),calc(100% - var(--notch)) 100%,var(--notch) 100%,0 calc(100% - var(--notch)),0 var(--notch))}
+.sg-panel{background:var(--panel);border:3px solid var(--frame);box-shadow:var(--shadow-panel);padding:var(--space-5)}
+.sg-title{font-size:26px;font-weight:500;letter-spacing:.6px;line-height:1.2;text-transform:uppercase;margin:0 0 var(--space-3);padding-bottom:var(--space-2);border-bottom:2px solid var(--frame);display:flex;align-items:center;gap:var(--space-3)}
+.sg-small{font-size:16px;line-height:1.4;color:var(--muted)}
+.sg-button{display:inline-flex;align-items:center;justify-content:center;gap:var(--space-2);min-height:42px;padding:6px var(--space-3);border:3px solid var(--frame);background:var(--panel);color:var(--text);font-size:22px;line-height:1.2;box-shadow:var(--shadow-bevel);cursor:pointer;white-space:nowrap}
+.sg-button:hover:not(:disabled){border-color:var(--accent);background:var(--panel-raised)}
+.sg-button:active:not(:disabled){transform:translateY(2px)}
+.sg-button.primary{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.sg-button.primary:hover:not(:disabled){background:var(--accent);border-color:var(--text);filter:brightness(1.08)}
+.sg-button.warning{border-color:var(--warning);color:var(--warning)}
+.sg-button[aria-pressed="true"]{border-color:var(--accent);background:var(--accent);color:var(--on-accent)}
+.sg-button:disabled{opacity:.45;cursor:not-allowed}
+.sg-button img{width:var(--icon);height:var(--icon)}
+.sg-link{color:var(--link);text-decoration:underline;text-underline-offset:3px;background:none;border:0;padding:0;cursor:pointer;font-size:18px;white-space:nowrap}
+.sg-badge{display:inline-flex;align-items:center;gap:4px;font-family:var(--font-data);font-size:15px;line-height:1;padding:3px 8px;border:2px solid var(--accent);color:var(--accent);white-space:nowrap}
+.sg-badge.game{border-style:dashed;border-color:var(--muted);color:var(--muted);clip-path:none}
+.sg-badge.measured{background:var(--measured-bg);color:var(--measured-ink);border-color:var(--measured-border)}
+.sg-badge.draft{border-style:dashed;border-color:var(--warning);color:var(--warning);clip-path:none}
+.sg-badge.origin{border-color:var(--frame);color:var(--muted)}
+.sg-badge.record{border-color:var(--link);color:var(--link)}
+
+/* pulse = "this is the next thing to press" */
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 #9de9c3cc}50%{box-shadow:0 0 0 8px #9de9c300}}
+.pulse{animation:pulse 1.4s infinite;clip-path:none!important}
+
+/* header */
+.sg-header{position:absolute;left:0;top:0;width:100%;display:flex;align-items:center;gap:16px;height:var(--header-h);padding:0 24px;background:var(--panel);border-bottom:4px solid var(--header-rule);box-shadow:inset 0 -4px #00000055;z-index:10}
+.sg-header .brand{display:flex;align-items:center;gap:14px;font-size:29px;font-weight:700;letter-spacing:1.5px}
+.sg-header .brand img{width:31px;height:31px}
+.sg-header .day{margin-left:auto;font-family:var(--font-data);font-size:25px;letter-spacing:.6px;display:flex;gap:8px;align-items:baseline}
+.sg-header .grow{color:var(--accent)} .sg-header .sep{color:var(--muted)}
+.sg-stage{font-family:var(--font-data);font-size:21px;padding:2px 10px;border:2px solid var(--accent);color:var(--accent);min-width:110px;text-align:center}
+.sg-stage.event{border-color:var(--warning);color:var(--warning)}
+
+/* readouts + neighbours */
+.sg-readouts{position:absolute;left:14%;top:12.5%;display:inline-flex;align-items:center;gap:16px;padding:4px 12px;background:var(--panel);border:3px solid var(--frame);box-shadow:0 4px 0 #00000033;z-index:6}
+.sg-readout{position:relative;display:flex;align-items:center;gap:6px;font-size:20px;white-space:nowrap}
+.sg-readout b{font:28px/1 var(--font-data);color:var(--accent)}
+.sg-readout img{width:22px;height:22px}
+.sg-readout .st{font:16px/1 var(--font-data);text-transform:uppercase;color:var(--accent)}
+.sg-readout.caution b,.sg-readout.caution .st{color:var(--warning)}
+.sg-readout.danger b,.sg-readout.danger .st{color:var(--danger)}
+.sg-readout.danger{padding:2px 6px;outline:2px solid var(--danger)}
+.float{position:absolute;left:50%;top:-6px;font:24px/1 var(--font-data);pointer-events:none;animation:floatup 1.6s ease-out forwards;text-shadow:2px 2px 0 #000}
+@keyframes floatup{from{opacity:1;transform:translate(-50%,0)}to{opacity:0;transform:translate(-50%,-34px)}}
+.hud{position:absolute;left:13%;top:11.5%;display:flex;gap:12px;align-items:stretch;z-index:6}
+.hp{position:relative;background:var(--panel);border:4px solid var(--accent);padding:8px 16px 10px;min-width:360px;box-shadow:0 5px 0 #00000044;color:var(--accent)}
+.hp.caution{border-color:var(--warning);color:var(--warning)} .hp.danger{border-color:var(--danger);color:var(--danger);animation:hpwarn 1.2s infinite}
+@keyframes hpwarn{50%{box-shadow:0 0 0 6px #e8847966}}
+.hp-top{display:flex;justify-content:space-between;align-items:center;font-size:18px;letter-spacing:1.5px;color:var(--text)}
+.hp-top .st{font:18px/1 var(--font-data);display:flex;gap:6px;align-items:center;color:inherit}
+.hp .hp-top .st{color:currentColor}
+.hp-top img{width:20px;height:20px}
+.hp-row{position:relative;display:flex;align-items:center;gap:14px;margin-top:2px}
+.hp-row b{font:60px/1 var(--font-data);min-width:78px}
+.seg{display:flex;gap:4px}
+.seg i{width:22px;height:30px;background:#0d1520;border:2px solid #00000088}
+.seg i.on{background:currentColor;box-shadow:inset 0 -5px 0 #00000033}
+.hp .float{left:calc(100% - 4px);top:-2px;font-size:30px}
+.env{background:var(--panel);border:3px solid var(--frame);padding:8px 12px;display:grid;gap:8px;align-content:center;font-size:17px;box-shadow:0 5px 0 #00000044}
+.envrow{position:relative;display:grid;grid-template-columns:84px 130px 40px 92px;gap:8px;align-items:center;white-space:nowrap}
+.envrow b{font:26px/1 var(--font-data);text-align:right}
+.mb{position:relative;height:14px;background:#0d1520;border:2px solid var(--frame)}
+.mb i{position:absolute;left:0;top:0;bottom:0}
+.mb .zone{position:absolute;top:-4px;bottom:-4px;border-left:2px solid var(--muted);border-right:2px solid var(--muted)}
+.envrow .st{font:15px/1 var(--font-data);text-transform:uppercase;display:flex;gap:4px;align-items:center}
+.envrow .st img{width:16px;height:16px}
+.envrow.caution b,.envrow.caution .st{color:var(--warning)} .envrow.danger b,.envrow.danger .st{color:var(--danger)}
+.envrow b,.envrow .st{color:var(--accent)}
+.envrow .float{left:calc(100% + 18px);top:-4px}
+.hud .gv{align-self:flex-start}
+
+/* scene */
+.world{position:absolute;inset:0;width:100%;height:100%;object-fit:fill}
+/* new chamber: back wall between pillars x 190–870 → centre 530; the pouch is centred in its 600px sprite */
+.plant{position:absolute;left:210px;bottom:16%;width:640px;z-index:3}
+.dim{position:absolute;inset:var(--header-h) 0 var(--timeline-h) 0;background:#08121b99;z-index:4;pointer-events:none}
+.sg-speech{position:absolute;left:784px;top:240px;width:240px;background:var(--speech);color:var(--speech-ink);font-size:22px;font-weight:600;line-height:1.3;padding:15px 12px;border:4px solid var(--speech-border);filter:drop-shadow(5px 5px 0 #00000044);text-align:center;z-index:5}
+/* tail = outline triangle + fill triangle that covers the bubble's bottom border, so the two read as one shape */
+.sg-speech::before{content:"";position:absolute;left:16px;bottom:-28px;width:32px;height:28px;background:var(--speech-border);clip-path:polygon(0 0,100% 0,0 100%)}
+.sg-speech::after{content:"";position:absolute;left:20px;bottom:-15px;width:22px;height:19px;background:var(--speech);clip-path:polygon(0 0,100% 0,0 100%)}
+.toast{position:absolute;left:14%;top:13%;max-width:480px;background:#0f1824ee;border:3px dashed var(--link);padding:10px 14px;font-size:19px;z-index:9;animation:toast 3.2s ease forwards}
+.toast b{color:var(--link);font-weight:500}
+@keyframes toast{0%{opacity:0;transform:translateY(-8px)}10%,80%{opacity:1;transform:none}100%{opacity:0}}
+.sg-help{position:absolute;left:5%;bottom:calc(var(--timeline-h) + 10px);display:inline-flex;gap:8px;align-items:center;font-size:16px;color:var(--muted);background:var(--panel);padding:4px 10px;z-index:6}
+.sg-help img{width:18px;height:18px}
+.sg-aimark{position:absolute;right:10px;bottom:calc(var(--timeline-h) + 8px);font:18px/1 var(--font-data);color:var(--text);background:#000000aa;padding:4px 8px;letter-spacing:1px;z-index:6}
+
+/* console */
+.console{position:absolute;left:65%;top:16%;width:32%;height:64%;z-index:7;display:flex;flex-direction:column}
+.console>.sg-panel{flex:1;min-height:0;overflow:auto;display:flex;flex-direction:column}
+.console>.sg-panel>*{flex-shrink:0}
+.console.glow>.sg-panel{border-color:var(--warning)}
+.status-line{font-size:20px;margin:0 0 8px;display:flex;gap:8px;align-items:center}
+.status-line img{width:24px;height:24px}
+.log{list-style:none;padding:0;margin:0;display:grid;gap:4px;font-size:17px}
+.log li{border-left:3px solid var(--frame);padding-left:8px}
+.log li.crisis{border-color:var(--danger)} .log li.event{border-color:var(--warning)} .log li.care{border-color:var(--accent)} .log li.record{border-color:var(--link)}
+.log time{font-family:var(--font-data);color:var(--muted);margin-right:6px}
+.focus{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.focus button{display:flex;gap:8px;align-items:center;text-align:left;padding:6px 8px;border:3px solid var(--frame);background:var(--panel);cursor:pointer;font-size:17px;line-height:1.15;min-height:48px}
+.focus button img{width:26px;height:26px;flex:none}
+.focus button[aria-pressed="true"]{border-color:var(--accent);background:var(--selected);color:var(--accent)}
+.hint{display:flex;gap:8px;align-items:flex-start;background:#0f1824;border:2px solid var(--accent);padding:8px 10px;font-size:17px;margin-top:10px}
+.hint b{color:var(--accent);font-weight:500}
+.scene-text{font-size:18px;margin:0 0 8px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.sg-clues{list-style:none;margin:0 0 10px;padding:0;display:grid;gap:3px}
+.sg-clues li{display:flex;gap:8px;align-items:center;font-size:18px}
+.sg-clues img{width:22px;height:22px}
+.sg-choices{display:grid;gap:8px;margin:0;padding:0;list-style:none}
+.sg-choice{display:flex;align-items:center;gap:8px;width:100%;min-height:var(--choice-h);padding:6px 10px;text-align:left;font-size:20px;line-height:1.2;border:3px solid var(--frame);background:var(--panel);color:var(--text);cursor:pointer}
+.sg-choice .letter{font-family:var(--font-data);font-size:20px;padding:2px 7px;border:2px solid var(--frame);flex:none}
+.sg-choice:hover:not(:disabled){border-color:var(--accent);background:var(--panel-raised)}
+.sg-choice[aria-pressed="true"]{border-color:var(--accent);background:var(--selected)}
+.sg-choice[aria-pressed="true"] .letter{border-color:var(--accent);color:var(--accent)}
+.sg-choice.tried{opacity:.55;cursor:not-allowed;text-decoration:line-through}
+.sg-choice.tried img{width:22px;height:22px;margin-left:auto}
+.foot{display:flex;align-items:center;gap:12px;margin-top:12px;flex-wrap:wrap}
+.sg-verdict{display:flex;align-items:center;gap:13px;padding:8px 16px;border:3px solid var(--accent);color:var(--accent);font-size:28px;text-transform:uppercase}
+.sg-verdict img{width:38px;height:38px}
+.sg-verdict.partial{border-color:var(--warning);color:var(--warning)} .sg-verdict.inappropriate{border-color:var(--danger);color:var(--danger)}
+.sg-reason{margin:12px 0 8px;font-size:19px}
+.sg-reason strong{color:var(--muted);font-weight:400;display:block;font-size:15px;text-transform:uppercase;letter-spacing:.5px}
+.sg-deltas{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0;align-items:center}
+.sg-delta{font:20px/1 var(--font-data);padding:4px 8px;background:#00000033}
+.sg-delta .up{color:var(--accent)} .sg-delta .down{color:var(--danger)} .sg-delta .mid{color:var(--link)}
+.sg-source{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;padding-top:8px;border-top:2px solid var(--frame);margin-top:8px}
+.sg-source img{width:26px;height:26px}
+.sg-source .t{color:var(--link);font-size:17px}
+.sg-source q,.sg-source .none{grid-column:2;font-size:16px;color:var(--muted)}
+.sg-step{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:2px solid var(--frame);font-size:20px}
+.sg-step img{width:34px;height:34px}
+.sg-step .sg-button,.sg-step .sg-badge{margin-left:auto}
+.sg-step .sg-button{font-size:19px;min-height:36px}
+.sg-step.done{color:var(--muted)}
+.pips{font-size:46px;color:var(--accent);letter-spacing:10px;text-align:center;margin:40px 0 10px}
+.pips span{animation:blink 1s infinite}.pips span:nth-child(2){animation-delay:.2s}.pips span:nth-child(3){animation-delay:.4s}
+@keyframes blink{50%{opacity:.2}}
+.err{border:3px solid var(--danger);padding:10px;color:var(--danger);font-size:18px}
+
+/* rail + drawer */
+.rail{position:absolute;left:1%;top:36%;display:grid;gap:8px;z-index:9}
+.rail button{width:68px;min-height:56px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:15px;padding:4px;background:var(--panel);border:3px solid var(--frame);cursor:pointer}
+.rail button img{width:24px;height:24px}
+.rail button[aria-pressed="true"]{border-color:var(--accent);color:var(--accent)}
+.drawer-shade{position:absolute;inset:var(--header-h) 0 var(--timeline-h);background:#08121b66;z-index:11}
+.drawer{position:absolute;left:7%;top:12%;width:56%;height:72%;z-index:12;display:flex;flex-direction:column}
+.drawer>.sg-panel{flex:1;overflow:auto;font-size:19px}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;font-size:18px}.kv dt{color:var(--muted)}.kv dd{margin:0}
+pre.json{font:14px/1.4 ui-monospace,Menlo,monospace;white-space:pre-wrap;background:#0e1520;color:#cfe3da;padding:10px;margin:6px 0 14px;max-height:260px;overflow:auto}
+.nbrow{display:grid;grid-template-columns:70px 1fr 60px;gap:10px;align-items:center;padding:6px 0;border-bottom:1px solid #ffffff14;font-size:18px}
+.nbrow svg{width:100%;height:28px}
+.nbrow .h{font:24px var(--font-data);text-align:right}
+.st-normal{color:var(--accent)} .st-caution{color:var(--warning)} .st-danger{color:var(--danger)}
+
+/* timeline with time controls */
+.sg-timeline{position:absolute;left:0;bottom:0;width:100%;display:flex;align-items:center;gap:12px;height:var(--timeline-h);padding:12px 20px;background:var(--panel);border-top:5px solid var(--frame);box-shadow:inset 0 4px #ffffff14;z-index:10}
+.tctl{display:flex;gap:6px;align-items:center}
+.tctl .sg-button{min-width:48px;padding:4px 10px;font-size:22px}
+.tctl .play{min-width:110px}
+.auto{display:flex;gap:6px;align-items:center;font-size:17px;color:var(--muted);cursor:pointer;margin-left:6px}
+.auto input{width:20px;height:20px;accent-color:#9de9c3}
+.sg-timeline .label{font-size:22px;white-space:nowrap;border-left:2px solid var(--frame);padding-left:14px}
+.sg-track{position:relative;flex:1;height:54px;margin:10px 18px 0}
+.sg-track .line{position:absolute;left:0;right:0;top:13px;height:3px;background:var(--muted)}
+.sg-track .fill{position:absolute;left:0;top:13px;height:3px;background:var(--accent);transition:width .3s}
+.sg-track .stop{position:absolute;top:27px;transform:translateX(-50%);font:22px var(--font-data);color:var(--muted)}
+.sg-track .stop.current{color:var(--accent)}
+.sg-track .marker{position:absolute;top:-6px;transform:translateX(-50%);width:20px;height:20px;border:4px solid var(--accent);border-radius:50%;background:var(--panel);transition:left .3s}
+.sg-track .marker.paused{border-color:var(--warning)}
+.sg-track .ev{position:absolute;top:7px;width:12px;height:12px;background:var(--warning);transform:translateX(-50%) rotate(45deg);border:2px solid var(--panel)}
+.sg-track .ev.crisis{background:var(--danger)} .sg-track .ev.record{background:var(--link)}
+
+/* paper */
+.sg-paper{position:absolute;left:12%;top:9%;width:76%;height:80%;background:var(--paper);color:var(--ink);border:12px solid var(--paper-frame);box-shadow:var(--shadow-paper);padding:36px 32px 18px;font-size:18px;line-height:1.4;z-index:8;display:flex;flex-direction:column}
+.sg-paper .clip{position:absolute;top:0;left:38%;width:24%;height:26px;background:#91a4ac;border:4px solid #485d63}
+.sg-paper header{display:flex;align-items:center;gap:14px;border-bottom:3px solid var(--paper-rule);padding-bottom:10px}
+.sg-paper header img{width:44px;height:44px}
+.sg-paper .kicker{font-size:13px;letter-spacing:2px;margin:0 0 4px;text-transform:uppercase}
+.sg-paper h1{font-size:29px;line-height:1.15;margin:0}
+.sg-paper h2{font-size:20px;margin:12px 0 6px}
+.sg-paper p{margin:6px 0}
+.sg-paper a{color:var(--paper-link)}
+.sg-paper .sg-badge.game{color:var(--paper-muted);border-color:var(--paper-muted);font-size:13px}
+.sg-paper .sg-badge.measured{color:var(--paper-measured-ink);background:var(--paper-measured-bg);border-color:var(--paper-measured-ink);font-size:13px}
+.sg-paper .cols{display:grid;grid-template-columns:1.1fr 1fr;gap:26px;flex:1;min-height:0}
+.sg-paper .cols>div{min-width:0;overflow:auto}
+.sg-paper .cols>div+div{border-left:2px solid var(--paper-rule);padding-left:22px}
+.sg-paper footer{display:flex;justify-content:space-between;align-items:center;gap:15px;border-top:2px solid var(--paper-rule);padding-top:10px;margin-top:10px;font-size:15px}
+.sg-paper table{width:100%;border-collapse:collapse;font-size:16px}.sg-paper td,.sg-paper th{text-align:left;padding:3px 6px;border-bottom:1px solid #8b999455}
+.sg-grade{margin-left:auto;font-size:26px;padding:6px 14px;border:3px solid var(--paper-ok);color:var(--paper-ok);text-transform:uppercase}
+.sg-grade.partial{border-color:var(--paper-caution);color:var(--paper-caution)}.sg-grade.failed{border-color:var(--paper-danger);color:var(--paper-danger)}.sg-grade.none{border-style:dashed;border-color:var(--paper-muted);color:var(--paper-muted);font-size:20px}
+.sg-empty{color:var(--paper-muted);font-size:16px}
+.moments{list-style:none;padding:0;margin:0;display:grid;gap:5px;font-size:16px}
+.moments li{display:grid;grid-template-columns:50px 1fr;gap:8px;border-left:4px solid var(--paper-ok);padding-left:8px}
+.moments li.bad{border-color:var(--paper-danger)} .moments li.mid{border-color:var(--paper-caution)}
+.moments time{font:18px var(--font-data);color:var(--paper-muted)}
+
+
+/* ===== v0.5: UI drawn inside the monitors painted in each background ===== */
+.screen{position:absolute;z-index:7;display:flex;flex-direction:column}
+.screen>.sg-panel{flex:1;min-height:0;overflow:auto;display:flex;flex-direction:column;background:none;border:0;box-shadow:none;clip-path:none;padding:12px 16px;text-shadow:0 0 6px #7ecfb833}
+.screen>.sg-panel>*{flex-shrink:0}
+.screen .sg-title{font-size:22px;color:var(--accent);border-bottom-color:#43877c;margin-bottom:8px;padding-bottom:6px}
+.screen .scene-text{font-size:17px;margin-bottom:6px}
+.screen .sg-choices{gap:6px}
+.screen .sg-choice{min-height:42px;font-size:18px;background:#0f1a2acc;border-color:#43877c}
+.screen .sg-choice:hover:not(:disabled){border-color:var(--accent)}
+.screen .sg-choice[aria-pressed="true"]{background:var(--selected);border-color:var(--accent)}
+.screen .sg-clues li{font-size:17px}
+.screen .foot{margin-top:8px}
+.screen .sg-button{font-size:19px;min-height:38px}
+.screen .status-line{font-size:18px;margin-bottom:6px}
+.screen .log{font-size:16px}
+.screen .focus button{min-height:42px;font-size:16px;background:#0f1a2acc;border-color:#43877c}
+.screen .focus button[aria-pressed="true"]{border-color:var(--accent);background:var(--selected)}
+.screen .hint{font-size:15px;padding:6px 8px;margin-top:6px;background:#0f1a2a}
+.screen .sg-verdict{font-size:24px;padding:6px 12px}
+.screen .sg-reason{font-size:17px;margin:8px 0 6px}
+.screen .sg-source{border-top-color:#43877c}
+.strip{position:absolute;z-index:7;display:grid;grid-template-columns:auto minmax(250px,1fr);gap:14px;align-items:center;padding:6px 18px;cursor:pointer;text-shadow:0 0 6px #7ecfb833}
+.strip.split{border-top:2px solid #43877c}
+.strip .hl{display:flex;justify-content:space-between;align-items:center;font-size:15px;letter-spacing:1.5px}
+.strip .hl .st{font:16px/1 var(--font-data);display:flex;gap:5px;align-items:center}
+.strip .hl img{width:16px;height:16px}
+.strip .hv{position:relative;display:flex;align-items:center;gap:10px}
+.strip .hv b{font:50px/1 var(--font-data);min-width:62px}
+.strip .seg{display:flex;gap:3px}
+.strip .seg i{width:13px;height:24px;background:#0b1422;border:2px solid #00000088}
+.strip .seg i.on{background:currentColor}
+.strip .hp{position:static;background:none;border:0;padding:0;min-width:0;box-shadow:none;animation:none;color:var(--accent)}
+.strip .env{background:none;border:0;box-shadow:none;border-left:2px solid #43877c;padding:0 0 0 14px} .strip .hp.caution{color:var(--warning)} .strip .hp.danger{color:var(--danger)}
+.strip .hp .hl>span:first-child{color:var(--text)}
+.strip .hp.danger b{animation:hpblink 1s infinite}
+@keyframes hpblink{50%{opacity:.35}}
+.strip .env{display:grid;gap:8px;border-left:2px solid #43877c;padding-left:14px}
+.strip .envrow{display:grid;grid-template-columns:72px 1fr 34px 18px;gap:7px;align-items:center;font-size:15px;position:relative;white-space:nowrap}
+.strip .envrow b{font:24px/1 var(--font-data);text-align:right;color:var(--accent)}
+.strip .envrow img{width:16px;height:16px}
+.strip .envrow.caution b{color:var(--warning)} .strip .envrow.danger b{color:var(--danger)}
+.strip .mb{position:relative;height:12px;background:#0b1422;border:2px solid #43877c}
+.strip .mb i{position:absolute;left:0;top:0;bottom:0}
+.strip .mb .zone{position:absolute;top:-4px;bottom:-4px;border-left:2px solid var(--muted);border-right:2px solid var(--muted)}
+.strip .gv{position:absolute;right:10px;top:-11px;font-size:12px;background:#1d293c}
+.strip .float{position:absolute;left:auto;right:-6px;top:-6px}
+/* floating panels (drawers, toast) wear the background's metal bezel */
+.bezel{background:#1d293c!important;border:10px solid #e0c4ba!important;outline:3px solid #1e1d27;box-shadow:inset 0 0 0 3px #958f96,8px 8px 0 #00000055!important;clip-path:none!important;position:relative}
+.bezel::before,.bezel::after{content:"";position:absolute;top:-7px;width:6px;height:6px;border-radius:50%;background:#6c6670;box-shadow:0 calc(100% + 0px) 0 #6c6670}
+.bezel::before{left:-7px} .bezel::after{right:-7px}
+.drawer .sg-title{color:var(--accent);border-bottom-color:#43877c}
+.screen .tight{padding-top:8px}
+.screen .tight .sg-title{margin-bottom:6px;padding-bottom:4px}
+.screen .tight .scene-text{-webkit-line-clamp:1;margin-bottom:4px}
+.screen .tight .sg-clues{margin-bottom:6px;gap:1px}
+.screen .tight .sg-clues li{font-size:16px}
+.screen .tight .sg-choice{min-height:38px;font-size:17px;padding:3px 10px}
+.screen .tight .foot{margin-top:6px}
+.strip .hp .float{right:auto;left:100%;top:6px}
+.screen .sg-badge.origin{font-size:12px;padding:2px 6px}
+.screen .foot{flex-wrap:nowrap}
+.screen>.sg-panel{scrollbar-width:none}
+.screen>.sg-panel::-webkit-scrollbar{display:none}
+.screen .fit-1{padding-top:8px;padding-bottom:8px}
+.screen .fit-1 .sg-title{font-size:20px;margin-bottom:5px;padding-bottom:4px}
+.screen .fit-1 .sg-choice{min-height:36px;font-size:17px;padding:3px 10px}
+.screen .fit-1 .sg-reason,.screen .fit-1 .scene-text{font-size:16px}
+.screen .fit-1 .sg-step{padding:7px 0;font-size:18px}
+.screen .fit-1 .sg-step img{width:28px;height:28px}
+.screen .fit-1 .hint{margin-top:4px}
+.screen .fit-2 .scene-text{-webkit-line-clamp:1}
+.screen .fit-2 .sg-clues{display:flex;flex-wrap:wrap;gap:2px 12px}
+.screen .fit-2 .sg-choices{gap:4px}
+.screen .fit-2 .sg-choice{min-height:32px;font-size:16px}
+.screen .fit-2 .sg-verdict{font-size:20px;padding:4px 10px}
+.screen .fit-2 .sg-verdict img{width:26px;height:26px}
+.screen .fit-2 .sg-source q{display:none}
+.screen .fit-2 .focus button{min-height:36px}
+.screen .fit-3 .sg-small,.screen .fit-3 .sg-clues img,.screen .fit-3 .log{display:none}
+.screen .fit-3 .sg-reason{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.screen .fit-4 .sg-choice{font-size:15px;min-height:30px;line-height:1.15}
+.screen .fit-4 .sg-choice .lbl,.screen .fit-4 .sg-clues li span{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.screen .fit-4 .sg-clues{display:grid}
+.screen .fit-4 .sg-clues li span{-webkit-line-clamp:1}
+.screen .fit-4 .sg-reason{-webkit-line-clamp:2}
+.screen .fit-4 .sg-source .t{display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden}
+.screen .fit-4 .rnote,.screen .fit-4 .sg-clues li:nth-child(n+3){display:none}
+.screen .fit-4 .sg-delta{font-size:17px}
+.dc .sg-title{margin-bottom:4px}
+.dc-sub{margin:0 0 6px;font-size:16px;color:var(--muted)}
+.dc-left{display:flex;align-items:center;gap:10px;background:#0f1a2a;padding:5px 10px;font-size:16px;margin-bottom:8px}
+.dc-left .blocks{display:flex;gap:4px}.dc-left i{width:16px;height:16px;background:#2b3a4d}.dc-left i.on{background:var(--accent)}
+.dc-row{display:grid;grid-template-columns:1fr 1fr;gap:4px 10px;align-items:stretch;margin-bottom:6px}
+.dc-lab{grid-column:1 / -1;font-size:17px;display:flex;justify-content:space-between;align-items:center}
+.dc-lab .sg-badge{font-size:12px}
+.dc-opt{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:1px;min-height:46px;padding:4px 10px;text-align:left;background:#0f1a2acc;border:3px solid #3d5065;cursor:pointer;color:var(--text)}
+.dc-opt b{font-weight:500;font-size:17px}.dc-opt small{font-size:13px;color:var(--muted)}
+.dc-opt:hover:not(:disabled){border-color:var(--accent)}
+.dc-opt:disabled{cursor:default}
+.dc-opt:disabled:not(.cur){opacity:.45}
+.dc-opt.cur{background:#7ec4b0;border-color:#7ec4b0;color:#12342b}.dc-opt.cur small{color:#12342b}
+.dc-done{display:flex;gap:10px;align-items:baseline;font-size:15px;margin:2px 0 6px;color:var(--muted)}
+.dc-done b{color:var(--text);font-weight:500;white-space:nowrap}
+.dc-foot{display:flex;align-items:center;gap:10px;margin-top:auto}
+.dc-foot .sg-small{font-size:13px;flex:1}
+.dc-foot .sg-badge{font-size:12px}
+.strip .tonight{font-size:14px;color:var(--muted);margin-top:-2px}
+.strip .tonight b{font:20px var(--font-data);color:var(--text)} .strip .tonight b.dn{color:var(--danger)} .strip .tonight b.up{color:var(--accent)}
+.strip .fch{font:13px var(--font-data);color:var(--muted);text-align:right;margin-bottom:-4px;letter-spacing:1px}
+.strip .envrow{grid-template-columns:66px minmax(56px,1fr) 30px 42px 18px}
+.strip .seg i{width:11px}
+.strip .hl{white-space:nowrap;gap:12px}
+.strip .envrow .fc{font:20px/1 var(--font-data);color:var(--muted)}
+.screen .fit-1 .dc-opt{min-height:40px}
+.screen .fit-2 .dc-sub{display:none}
+body.stacked #below .screen,body.stacked #below .strip{position:static;width:auto!important;height:auto!important;background:#1d293c;border:8px solid #e0c4ba;margin-bottom:10px}
+
+/* stacked below 768px */
+#below{display:none}
+body.stacked #below{display:block;margin-top:10px;font-size:20px;line-height:1.35}
+body.stacked #below .console,body.stacked #below .sg-paper,body.stacked #below .drawer{position:static;width:auto;height:auto;margin-bottom:10px}
+body.stacked #below .console>.sg-panel{overflow:visible}
+body.stacked #below .drawer-shade{display:none}
+body.stacked #below .sg-paper .cols{grid-template-columns:1fr}
+</style>
+</head>
+<body>
+<div class="page">
+  <div id="stage"><div id="artboard" aria-label="Space Garden scene"></div></div>
+  <div id="below"></div>
+</div>
+<script>
+/* =====================================================================
+   MOCK API — same request/response shapes as the team's API spec.
+   Replace mockCrisis / mockEvent with fetch('/api/crisis'|'/api/event').
+   Every string, verdict and delta below is PLACEHOLDER content.
+   ===================================================================== */
+const SRC={
+  massa:{title:"Massa, Dufour and Smith (2014) — Veggie plant pillows (NASA NTRS 20150001374)",url:"https://ntrs.nasa.gov/citations/20150001374",quote:"Direct watering of the pillows…",note:"Quote copied from the API spec example; full text to be checked."},
+  zinniaFan:{title:"NASA Johnson Space Center release on Veggie zinnia mold (via EurekAlert)",url:"https://www.eurekalert.org/news-releases/705170",quote:"the fans continued at a high speed in hopes of keeping the Veggie chamber dried out"},
+  zinniaWipe:{title:"NASA Johnson Space Center release on Veggie zinnia mold (via EurekAlert)",url:"https://www.eurekalert.org/news-releases/705170",quote:"The plant surfaces and plant pillow surfaces were sanitized with cleaning wipes"},
+  zinniaWet:{title:"NASA Johnson Space Center release on Veggie zinnia mold (via EurekAlert)",url:"https://www.eurekalert.org/news-releases/705170",quote:"When you have high humidity and wet surfaces, leaves start dying, and become prime real estate for mold to grow."}
+};
+const CRISES={
+ water_shortage:{name:"Water shortage",source:SRC.massa,record_note:"",
+  stages:{
+   1:{scene:"The lettuce looks smaller than at the last check. The wicks at the base of the pillow look pale and dry.",plant_line:"I'm not growing the way I should. I feel light and tired.",clues:[["poor_growth","Growth has slowed since the last check."],["dry_wicks","The wicks look pale and dry."]]},
+   2:{scene:"Outer leaves hang limp over the pillow edge. The rooting material has pulled away from the pillow wall.",plant_line:"I can't hold my leaves up anymore.",clues:[["wilting","Outer leaves are drooping."],["dry_wicks","The wicks look pale and dry."]]}},
+  actions:[
+   {action_id:"add_water_direct",label:"Add water directly to the plant pillows",result_line:"The pillow darkens as water soaks in.",why:"Gets water to the roots now.",verdict:"appropriate",reason:"Root moisture is below the normal band. Bringing it back to the middle of the band is the direct fix.",delta:{root_moisture:"to_mid",plant_health:5},source:SRC.massa},
+   {action_id:"fan_high",label:"Turn the fan to HIGH",result_line:"Air rushes past. The leaves flutter.",why:"Air movement feels refreshing.",verdict:"inappropriate",reason:"More airflow dries the chamber further. It does not reach the roots.",delta:{root_moisture:-5,plant_health:-5,fan:"high"},source:null},
+   {action_id:"trim_outer",label:"Trim the drooping outer leaves",result_line:"Fewer leaves, a little less demand.",why:"Fewer leaves need less water.",verdict:"partial",reason:"Removing leaves lowers water demand slightly but leaves the root zone dry.",delta:{plant_health:-2,root_moisture:"half_to_mid"},source:null},
+   {action_id:"keep_observing",label:"Keep observing until tomorrow",result_line:"Nothing changes tonight.",why:"It may recover on its own.",verdict:"inappropriate",reason:"Another night in the danger band adds stress.",delta:{root_moisture:-8,plant_health:-6},source:null}]},
+ overwater_mold:{name:"Overwatering and mold",source:SRC.zinniaWet,record_note:"This crisis is modeled on the 2015 ISS Veggie zinnia record, not lettuce.",
+  stages:{
+   1:{scene:"Droplets bead on the leaf tips. The air in the chamber feels still and damp.",plant_line:"My leaves feel heavy and wet.",clues:[["droplets","Water beads on the leaf tips."],["still_air","The air is barely moving."]]},
+   2:{scene:"Outer leaves curl downward and their edges are turning brown. Moisture lingers near the canopy.",plant_line:"My edges hurt and I'm curling in.",clues:[["curling","Outer leaves curl downward."],["brown_edges","Leaf edges are turning brown."]]},
+   3:{scene:"Fuzzy white growth has appeared on a dying leaf near the pillow.",plant_line:"Something is growing on me.",clues:[["fuzzy_growth","Fuzzy growth on a dying leaf."],["brown_edges","Leaf edges are brown."]]}},
+  actions:[
+   {action_id:"fan_high",label:"Turn the fan to HIGH",result_line:"Air starts moving across the leaves.",why:"Moving air can dry wet surfaces.",verdict:"appropriate",reason:"Wet leaf surfaces in still, humid air favour mold. Moving air dries them; NASA ran the Veggie fans high for this reason.",delta:{humidity:"to_mid",plant_health:3,fan:"high"},source:SRC.zinniaFan,stages:[1,2]},
+   {action_id:"remove_mold",label:"Remove moldy tissue and wipe surfaces",result_line:"The fuzzy patch is gone. Surfaces are wiped.",why:"Takes away the growing mold.",verdict:"appropriate",reason:"Visible mold has to be physically removed; the surrounding surfaces were sanitized in the ISS case.",delta:{plant_health:5,humidity:-10,fan:"high"},source:SRC.zinniaWipe,stages:[3]},
+   {action_id:"trim_damaged",label:"Trim the damaged leaf parts",result_line:"The brown edges are cut away.",why:"Damaged tissue looks unhealthy.",verdict:"partial",reason:"Trimming removes damaged tissue but the chamber stays humid.",delta:{plant_health:1},source:null,stages:[2,3]},
+   {action_id:"add_water",label:"Add more water",result_line:"The pillow gets wetter.",why:"Curling can mean thirst.",verdict:"inappropriate",reason:"The root zone is not dry. Extra water keeps the leaves wet.",delta:{root_moisture:20,plant_health:-10},source:null,stages:[1,2,3]},
+   {action_id:"wipe_surface",label:"Wipe the affected surface",result_line:"The droplets are wiped off.",why:"Removes water you can see.",verdict:"partial",reason:"Wiping helps for now, but the air is still damp.",delta:{humidity:-5,plant_health:1},source:null,stages:[1,2]}]}
+};
+const EVENTS={
+ wick_opening:{name:"Open the germination wicks",kind:"scheduled",window:[3,3],scene:"Small shoots press against the wicks…",plant_line:"I'm pushing up, but I can't get out…",
+  options:[{action_id:"open_wicks",op:"open_wicks",label:"Spread the wicks apart with forceps",result_line:"The shoots slip free.",why:"Gives the shoots room.",verdict:"appropriate",effect:{plant_health:0}},
+   {action_id:"water_heavy_instead",op:"water_heavy",label:"Add a lot of water instead",result_line:"The pillow is soaked.",why:"Water helps growth.",verdict:"inappropriate",effect:{root_moisture:20,plant_health:-3}},
+   {action_id:"do_nothing",op:"do_nothing",label:"Leave it for now",result_line:"The shoots stay pinned.",why:"They may push through.",verdict:"partial",effect:{plant_health:-3}}]},
+ thinning:{name:"Thin the seedlings",kind:"scheduled",window:[7,7],scene:"Two seedlings are crowding the same pillow.",plant_line:"There isn't room for both of us.",
+  options:[{action_id:"thin_to_one",op:"thin",label:"Keep the stronger seedling, remove the other",result_line:"One seedling stands alone.",why:"One plant per pillow.",verdict:"appropriate",effect:{plant_health:2}},
+   {action_id:"keep_both",op:"do_nothing",label:"Keep both seedlings",result_line:"Both keep competing.",why:"More plants, more food.",verdict:"partial",effect:{plant_health:-3}},
+   {action_id:"water_heavy_instead",op:"water_heavy",label:"Water heavily so both can grow",result_line:"The pillow is soaked.",why:"More water for two.",verdict:"inappropriate",effect:{root_moisture:20,plant_health:-2}}]},
+ fan_off_after_restart:{name:"Fan off after a restart",kind:"conditional",window:[2,17],scene:"After a system restart the chamber fan did not come back on. The air feels heavy.",plant_line:"It's so still in here.",pre:{humidity:15,fan:"low"},
+  options:[{action_id:"check_fan_running",op:"check_fan",label:"Check the fan and turn it back on",result_line:"The fan hums again.",why:"Restores normal airflow.",verdict:"appropriate",effect:{humidity:-10,fan:"low"}},
+   {action_id:"fan_high",op:"fan_high",label:"Turn the fan to HIGH",result_line:"Air roars through the chamber.",why:"Clears the damp air fast.",verdict:"partial",effect:{humidity:-20,fan:"high"}},
+   {action_id:"keep_observing",op:"do_nothing",label:"Keep observing",result_line:"The air stays heavy.",why:"Maybe it restarts by itself.",verdict:"inappropriate",effect:{humidity:10}}]},
+ mild_tip_burn:{name:"Mild tip burn",kind:"conditional",window:[6,22],scene:"A few inner leaf tips show small brown spots.",plant_line:"My tips look a little different today.",
+  options:[{action_id:"keep_observing",op:"do_nothing",label:"Keep observing",result_line:"You note it in the log.",why:"Mild tip burn can be watched.",verdict:"appropriate",effect:{plant_health:0}},
+   {action_id:"water_heavy",op:"water_heavy",label:"Water heavily",result_line:"The pillow is soaked.",why:"Brown can mean dry.",verdict:"inappropriate",effect:{root_moisture:20,plant_health:-3}},
+   {action_id:"fan_high",op:"fan_high",label:"Turn the fan to HIGH",result_line:"Air moves faster.",why:"Fresh air may help.",verdict:"partial",effect:{humidity:-10,plant_health:-1,fan:"high"}}]}
+};
+const BANDS={root_moisture:[25,40,70,80],humidity:[30,45,70,80]};
+function band(k,v){const b=BANDS[k];if(!b)return v>=60?'normal':v>=35?'caution':'danger';if(v<b[0]||v>b[3])return'danger';if(v<b[1]||v>b[2])return'caution';return'normal';}
+
+const ID_RE=/^[a-z0-9_]{1,64}$/;
+function err(status,code,message){return {status,body:{error:{code,message}}};}
+function strict(obj,allowed,required){if(!obj||typeof obj!=='object'||Array.isArray(obj))return false;for(const k of Object.keys(obj))if(!allowed.includes(k))return false;for(const k of required)if(!(k in obj))return false;return true;}
+function validState(s){return strict(s,['plant_health','root_moisture','humidity','fan','light'],['plant_health','root_moisture','humidity','fan','light'])&&['low','high'].includes(s.fan)&&['plant_health','root_moisture','humidity'].every(k=>typeof s[k]==='number'&&s[k]>=0&&s[k]<=100);}
+function pick(o,keys){const r={};keys.forEach(k=>r[k]=o[k]);return r;}
+
+function mockCrisis(req){
+  if(!strict(req,['locale','cultivation_day','state','danger_days','history','active'],['locale','cultivation_day','state','danger_days','history','active'])||!validState(req.state))return err(400,'bad_request','Request body does not match CrisisRequest.');
+  const s=req.state;let id=null,stage=1;
+  if(req.active){if(!CRISES[req.active.crisis_id]||!ID_RE.test(req.active.crisis_id))return err(400,'bad_request','Unknown crisis.');id=req.active.crisis_id;}
+  else if(s.root_moisture<40)id='water_shortage';
+  else if(s.humidity>70||s.root_moisture>80)id='overwater_mold';
+  if(!id)return err(422,'no_candidate','No crisis is a candidate for this state.');
+  if(id==='water_shortage')stage=(s.root_moisture<25||req.danger_days.root_moisture>=2)?2:1;
+  else{const d=req.danger_days.humidity;stage=d>=4?3:d>=2?2:(s.humidity>80?2:1);}
+  const c=CRISES[id],st=c.stages[stage],tried=req.active?req.active.chosen_action_ids:[];
+  let opts=c.actions.filter(a=>!a.stages||a.stages.includes(stage)).filter(a=>!tried.includes(a.action_id)).slice(0,4);
+  return {status:200,body:{crisis_id:id,name:c.name,stage,attempt:req.active?req.active.attempt:1,scene:st.scene,plant_line:st.plant_line,
+    clues:st.clues.map(([symptom_id,text])=>({symptom_id,text})),
+    options:opts.map(a=>({action_id:a.action_id,label:a.label,result_line:a.result_line,why:a.why,verdict:a.verdict,reason:a.reason,delta:a.delta,value_type:"game_value",source:a.source})),
+    record_note:c.record_note,crisis_source:c.source,origin:"fallback"}};
+}
+function mockEvent(req){
+  if(!strict(req,['locale','cultivation_day','state','event_id','offered_action_ids'],['locale','cultivation_day','state','event_id'])||!validState(req.state))return err(400,'bad_request','Request body does not match EventCardRequest.');
+  const e=EVENTS[req.event_id];
+  if(!e||req.cultivation_day<e.window[0]||req.cultivation_day>e.window[1])return err(400,'bad_request','Request refers to an event or action that cannot be shown.');
+  let opts=e.options;if(req.offered_action_ids)opts=req.offered_action_ids.map(id=>e.options.find(o=>o.action_id===id)).filter(Boolean);
+  return {status:200,body:{event_id:req.event_id,name:e.name,kind:e.kind,cultivation_day:req.cultivation_day,scene:e.scene,plant_line:e.plant_line,
+    options:opts.map(o=>({action_id:o.action_id,label:o.label,result_line:o.result_line,why:o.why,op:o.op,verdict:o.verdict,effect:o.effect,value_type:"game_value"})),
+    summary:"Mock summary — replace with the events.json record.",source_chunks:["mock_chunk_"+req.event_id],draft:true,origin:"fallback"}};
+}
+const API_LOG=[];
+async function api(path,req){
+  const t0=performance.now();
+  await new Promise(r=>setTimeout(r,450));
+  const res=path==='/api/crisis'?mockCrisis(req):mockEvent(req);
+  API_LOG.unshift({path,status:res.status,ms:Math.round(performance.now()-t0),req,res:res.body});
+  if(API_LOG.length>12)API_LOG.pop();
+  return res;
+}
+
+
+
+/* =====================================================================
+   ENGINE — day by day (rules and probabilities are GAME VALUES)
+   ===================================================================== */
+const STOPS=[1,6,12,17,22,28,33];
+const ICON=n=>`assets/icons/${n}.png`;
+const BG={normal:'assets/bg/BG_growth_normal.png',event:'assets/bg/BG_growth_event.png',result:'assets/bg/BG_growth_result.png',ret:'assets/bg/BG_sample_return.png',report:'assets/bg/BG_report_wall.png'};
+const FOCUS={
+  water:{icon:'action_water',label:'Keep roots moist',hint:'Roots dry slower, but too much water becomes more likely.'},
+  air:{icon:'action_fan',label:'Keep air moving',hint:'Air stays drier, but roots dry faster.'},
+  observe:{icon:'ui_magnifier',label:'Observe closely',hint:'Problems show up earlier, while they are still mild.'},
+  light:{icon:'ui_plant',label:'Light touch',hint:'Let the plant grow on its own.'}
+};
+const RECORDS=[{d:1,t:'Planting'},{d:10,t:'First true leaves'},{d:14,t:'Canopy check'},{d:20,t:'Mid-growth photo'},{d:25,t:'Leaf count'},{d:30,t:'Pre-harvest check'}];
+const SPEED={1:1300,4:330,16:90};
+let G,timer=null;
+function rnd(){G.seed=(G.seed*1664525+1013904223)%4294967296;return G.seed/4294967296;}
+function newGame(){
+  stop();
+  G={grow:1,state:{plant_health:70,root_moisture:60,humidity:58,fan:'low',light:{red:'medium',blue:'medium'}},danger:{root_moisture:0,humidity:0},
+     nightsInDanger:0,history:[],log:[],snap:[{d:1,h:70,r:60,u:58}],sources:[],moments:[],focus:'light',speed:0,lastSpeed:1,auto:false,
+     ops:[],pending:null,crisisTried:[],crisisChoices:[],cooldown:0,fired:{},harvested:false,wiped:false,frozen:false,sent:false,phase:'grow',dead:false,
+     seed:Math.floor(Math.random()*1e9),voice:'I was just planted. Look after me, then end the day.',sym:0,eventChoices:0,drawer:null,started:false,floats:[],toast:null};
+  addLog(1,'Seedlings planted in the plant pillow.','care');
+}
+const clamp=v=>Math.max(0,Math.min(100,Math.round(v)));
+function addLog(d,text,kind){G.log.unshift({d,text,kind});}
+function addSource(s){if(s&&!G.sources.find(x=>x.title===s.title&&x.quote===s.quote))G.sources.push(s);}
+function reqState(){const s=G.state;return {plant_health:s.plant_health,root_moisture:s.root_moisture,humidity:s.humidity,fan:s.fan,light:{...s.light}};}
+function applyDelta(d){
+  const out=[];
+  for(const [k,v] of Object.entries(d)){
+    if(k==='fan'){if(G.state.fan!==v)out.push(['Fan',v.toUpperCase(),'mid']);G.state.fan=v;continue;}
+    if(k==='clear_flags')continue;
+    const b=G.state[k];let a=b;
+    if(v==='to_mid'){if(band(k,b)!=='normal')a=55;}else if(v==='half_to_mid'){if(band(k,b)!=='normal')a=b+(55-b)/2;}else a=b+v;
+    a=clamp(a);G.state[k]=a;const L={plant_health:'Plant health',root_moisture:'Root',humidity:'Humidity'}[k],df=a-b;
+    if(df)G.floats.push([k,df]);
+    if(typeof v==='string')out.push([L,'→ '+a,'mid']);else if(df)out.push([L,(df>0?'+':'')+df,k==='plant_health'?(df>0?'up':'down'):'mid']);
+  }
+  if(G.state.plant_health<=0)G.dead=true;return out;
+}
+function dayNumber(){let i=0;STOPS.forEach((s,j)=>{if(G.grow>=s)i=j;});return i+1;}
+function statusWords(){
+  const s=G.state,r=band('root_moisture',s.root_moisture),h=band('humidity',s.humidity);
+  if(G.dead)return ['TEMP_status_danger','The plant did not survive.'];
+  if(r==='danger'&&s.root_moisture<40)return ['TEMP_status_danger','Roots are very dry.'];
+  if(r==='danger')return ['TEMP_status_danger','Roots are waterlogged.'];
+  if(h==='danger')return ['TEMP_status_danger','The air is far too damp.'];
+  if(r==='caution'&&s.root_moisture<40)return ['TEMP_status_caution','Roots are getting dry.'];
+  if(r==='caution')return ['TEMP_status_caution','Roots are getting too wet.'];
+  if(h==='caution')return ['TEMP_status_caution',s.humidity>70?'The air is getting damp.':'The air is getting dry.'];
+  return ['TEMP_status_normal','Growing normally.'];
+}
+async function step(){
+  if(G.pending||G.phase!=='grow'||G.busy)return;
+  G.started=true;
+  if(G.grow>=33){startHarvest();return;}
+  G.busy=true;G.grow++;G.ops=[];if(G.cooldown>0)G.cooldown--;else G.sym=0;
+  const s=G.state,f='none',before={...s};
+  const n=night(s);s.root_moisture=n.root;s.humidity=n.hum;
+  let dc=0;for(const k of ['root_moisture','humidity']){if(band(k,s[k])==='danger'){G.danger[k]++;dc++;}else G.danger[k]=0;}
+  if(dc)G.nightsInDanger++;s.plant_health=clamp(s.plant_health+n.dh);
+  if(G.speed!==16)['plant_health','root_moisture','humidity'].forEach(k=>{const d=s[k]-before[k];if(d)G.floats.push([k,d]);});
+  G.snap.push({d:G.grow,h:s.plant_health,r:s.root_moisture,u:s.humidity});
+  if(G.dead){G.busy=false;return endDead();}
+  const anyBad=statusWords()[0]!=='TEMP_status_normal';
+  G.voice=anyBad?(s.root_moisture<40?'I feel a little dry today.':s.root_moisture>80?'My roots feel soaked.':'The air feels heavy around me.'):pickVoice();
+  const rec=RECORDS.find(r=>r.d===G.grow);
+  if(rec){G.toast={d:G.grow,t:rec.t,key:Date.now()};addLog(G.grow,`Veggie record: ${rec.t}.`,'record');}
+  if(STOPS.includes(G.grow))G.moments.push({d:G.grow,t:`Reached grow day ${G.grow} with plant health ${s.plant_health}.`,k:s.plant_health>=60?'':'mid'});
+  let ev=null;
+  if(G.grow===3)ev='wick_opening';else if(G.grow===7)ev='thinning';
+  else if(!G.fired.fan_off_after_restart&&G.grow>=2&&G.grow<=17&&rnd()<0.06)ev='fan_off_after_restart';
+  else if(!G.fired.mild_tip_burn&&G.grow>=6&&G.grow<=22&&s.humidity>=65&&rnd()<0.12)ev='mild_tip_burn';
+  if(ev){G.busy=false;await openEvent(ev);return;}
+  if(G.cooldown===0){
+    const rb=band('root_moisture',s.root_moisture),hb=band('humidity',s.humidity);
+    const worst=rb==='danger'||hb==='danger'?'danger':(rb==='caution'||hb==='caution')?'caution':'normal';
+    let p=worst==='danger'?0.6:worst==='caution'?0.2:0;
+    if(p&&rnd()<p){/*f unused since v0.7*/G.busy=false;await openCrisis(null);return;}
+  }
+  G.busy=false;render();
+}
+/* one night of drift (GAME VALUES). Shared by the day step and the forecast so they always agree. */
+function night(s){
+  const root=clamp(s.root_moisture-(s.fan==='high'?3:2));
+  const hum=clamp(s.humidity+((s.fan==='high'?40:74)-s.humidity)*0.2);
+  const dc=(band('root_moisture',root)==='danger')+(band('humidity',hum)==='danger');
+  const dh=dc?-2*dc:(band('root_moisture',root)==='normal'&&band('humidity',hum)==='normal'?1:0);
+  return {root,hum,dh};
+}
+function careOp(kind){
+  if(G.pending||G.phase!=='grow'||G.ops.length>=2)return;
+  let label,d;
+  if(kind==='water10'){label='Watered (normal)';d={root_moisture:10};}
+  else if(kind==='water20'){label='Watered (heavy)';d={root_moisture:20};}
+  else if(kind==='fanhigh'){if(G.state.fan==='high')return;label='Fan set to High';d={fan:'high'};}
+  else if(kind==='fanlow'){if(G.state.fan==='low')return;label='Fan set to Low';d={fan:'low'};}
+  applyDelta(d);G.ops.push(label);addLog(G.grow,label+'.','care');G.started=true;render();
+}
+function pickVoice(){const v=['My leaves feel steady today.','The light is warm on my leaves.','I opened a little more today.','I feel strong.','Another quiet day in the chamber.'];return v[Math.floor(rnd()*v.length)];}
+async function openEvent(id){
+  const e=EVENTS[id];if(e.kind==='conditional')G.fired[id]=true;
+  if(e.pre)applyDelta(e.pre);
+  G.pending={type:'loading',path:'/api/event'};render();
+  const res=await api('/api/event',{locale:'en',cultivation_day:G.grow,state:reqState(),event_id:id});
+  if(res.status!==200){G.pending={type:'error',res};render();return;}
+  G.pending={type:'event',card:res.body,sel:null};G.voice=res.body.plant_line;
+  addLog(G.grow,`${res.body.name}.`,'event');render();autoPick();
+}
+async function openCrisis(active){
+  G.pending={type:'loading',path:'/api/crisis'};render();
+  const res=await api('/api/crisis',{locale:'en',cultivation_day:G.grow,state:reqState(),danger_days:{...G.danger},history:G.history,active});
+  if(res.status===422){G.pending=null;render();return;}
+  if(res.status!==200){G.pending={type:'error',res};render();return;}
+  const c=res.body;addSource(c.crisis_source);
+  if(c.attempt===1){G.crisisTried=[];G.crisisChoices=[];addLog(G.grow,'Something is wrong in the chamber.','crisis');}
+  G.sym=c.crisis_id==='water_shortage'?1:1+c.stage;G.cooldown=Math.max(G.cooldown,1);G.voice=c.plant_line;
+  G.pending={type:'crisis',card:c,sel:null};render();autoPick();
+}
+function autoPick(){
+  if(!G.auto||!G.pending||!['event','crisis'].includes(G.pending.type))return;
+  const w=Math.max(500,SPEED[G.speed]||900);
+  setTimeout(()=>{if(!G.pending||!G.pending.card)return;const o=G.pending.card.options;const good=o.filter(x=>x.verdict==='appropriate');
+    const pick=(good.length&&rnd()<0.7)?good[0]:o[Math.floor(rnd()*o.length)];G.pending.sel=pick.action_id;render();setTimeout(confirm,w);},w);
+}
+function confirm(){
+  const P=G.pending;if(!P||!P.sel)return;
+  const o=P.card.options.find(x=>x.action_id===P.sel);
+  if(P.type==='event'){
+    const ds=applyDelta(o.effect);G.eventChoices++;
+    addLog(G.grow,`${P.card.name}: “${o.label}” — ${o.verdict}.`,'event');
+    G.moments.push({d:G.grow,t:`${P.card.name}: ${o.label}`,k:o.verdict==='appropriate'?'':o.verdict==='partial'?'mid':'bad'});
+    G.pending={type:'eventResult',card:P.card,o,ds};G.voice=o.result_line;
+  }else{
+    const c=P.card,ds=applyDelta(o.delta);addSource(o.source);
+    G.crisisChoices.push({action_id:o.action_id,verdict:o.verdict});
+    addLog(G.grow,`${c.name}: “${o.label}” — ${o.verdict}.`,'crisis');
+    let ground=false,retry=false;
+    if(o.verdict==='inappropriate'){G.crisisTried.push(o.action_id);(G.triedLabels=G.triedLabels||{})[o.action_id]=o.label;if(c.attempt>=3)ground=true;else retry=true;}
+    if(!retry){const outcome=ground?'ground_support':o.verdict==='appropriate'?'resolved':'partial';
+      if(ground){applyDelta(c.crisis_id==='water_shortage'?{root_moisture:'to_mid'}:{humidity:'to_mid',fan:'high'});addLog(G.grow,'Ground support stepped in after three attempts (game rule).','crisis');}
+      G.history.push({crisis_id:c.crisis_id,cultivation_day:G.grow,choices:G.crisisChoices.slice(),outcome});G.cooldown=2;
+      if(outcome!=='partial')G.sym=0;
+      G.moments.push({d:G.grow,t:`${c.name} — ${outcome.replace('_',' ')} after ${G.crisisChoices.length} ${G.crisisChoices.length>1?'tries':'try'}.`,k:outcome==='resolved'?'':outcome==='partial'?'mid':'bad'});}
+    G.pending={type:'crisisResult',card:c,o,ds,retry,ground};G.voice=o.result_line;
+  }
+  render();
+  if(G.auto)setTimeout(resolveResult,Math.max(700,(SPEED[G.speed]||900)*1.6));
+}
+function resolveResult(){
+  const P=G.pending;if(!P||!/Result/.test(P.type))return;
+  if(G.dead){G.pending=null;return endDead();}
+  if(P.type==='crisisResult'&&P.retry){openCrisis({crisis_id:P.card.crisis_id,attempt:P.card.attempt+1,chosen_action_ids:G.crisisTried.slice()});return;}
+  G.pending=null;render();
+}
+function startHarvest(){G.phase='harvest';stop();G.speed=0;G.moments.push({d:33,t:'Harvest day reached.',k:''});addLog(33,'Harvest day. The leaves are ready.','care');G.voice='I am ready to be harvested.';render();}
+function endDead(){G.phase='dead';stop();G.speed=0;addLog(G.grow,'The plant did not survive.','crisis');G.moments.push({d:G.grow,t:'The plant was lost.',k:'bad'});render();}
+function microbial(){let v=3.0;const parts=[];const m=G.history.filter(h=>h.crisis_id==='overwater_mold').length;
+  if(m){parts.push(['Overwatering / mold crises ×'+m,+(0.4*m).toFixed(1)]);v+=0.4*m;}if(G.wiped){parts.push(['Citric-acid wipes',-0.5]);v-=0.5;}
+  return {v:Math.max(1.5,Math.min(6,+v.toFixed(1))),parts};}
+function grade(){if(G.phase==='dead'||G.dead)return['failed','Failed'];const n=G.history.length+G.eventChoices;if(!n)return['none','No grade yet'];const h=G.state.plant_health;return h>=70?['','Success']:h>=40?['partial','Partial']:['failed','Failed'];}
+function play(x){G.speed=x;G.lastSpeed=x;G.started=true;stop();timer=setInterval(()=>{if(!G.pending&&!G.busy&&G.phase==='grow')step();},SPEED[x]);render();}
+function pause(){G.speed=0;stop();render();}
+function stop(){if(timer){clearInterval(timer);timer=null;}}
+
+/* =====================================================================
+   RENDER
+   ===================================================================== */
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const VICON={appropriate:'verdict_appropriate',partial:'verdict_partial',inappropriate:'verdict_inappropriate'};
+const VLABEL={appropriate:'Appropriate',partial:'Partial',inappropriate:'Inappropriate'};
+function sprite(){if(G.phase==='dead'||G.dead)return'D0_dead';if(G.harvested)return'E0_empty_pouch';const g=G.grow,sy=G.sym;
+  if(g<=9)return['S0_sprout','S1_sprout_wilting','S2_sprout_droplets','S2_sprout_droplets','S2_sprout_droplets'][sy];
+  const pre=g>=31?'H':'G';if(g>=26&&g<31&&sy===0)return'P0_preharvest';
+  return pre+sy+'_'+['growing','wilting','droplets_curling','brown_edges','mold'][sy].replace('growing',pre==='H'?'harvest_ready':'growing');}
+function stageTag(){const P=G.pending;if(G.phase==='harvest')return'HARVEST';if(G.phase==='return')return'RETURN';if(G.phase==='lab')return'LAB';if(G.phase==='report')return'MISSION';if(G.phase==='dead')return'ENDED';
+  if(P&&['event','crisis','loading','error'].includes(P.type))return'EVENT';if(P)return'RESULT';return'NORMAL';}
+function stripHtml(rect,split){
+  const s=G.state,fl=G.floats;G.floats=[];
+  const sum=k=>fl.filter(x=>x[0]===k).reduce((a,x)=>a+x[1],0);
+  const icon=b=>({normal:'TEMP_status_normal',caution:'TEMP_status_caution',danger:'TEMP_status_danger'}[b]);
+  const hb=band('plant_health',s.plant_health),hf=sum('plant_health'),on=Math.round(s.plant_health/10);
+  const fc=night(s),showFc=G.phase==='grow'&&!G.pending,nx={root_moisture:fc.root,humidity:fc.hum};
+  const row=(lab,k)=>{const v=s[k],b=band(k,v),z=BANDS[k],f=sum(k),col={normal:'var(--accent)',caution:'var(--warning)',danger:'var(--danger)'}[b],nb=band(k,nx[k]);
+    return `<div class="envrow ${b==='normal'?'':b}" title="${lab}: ${b} (normal ${z[1]}–${z[2]})"><span>${lab}</span><span class="mb"><i style="width:${v}%;background:${col}"></i><span class="zone" style="left:${z[1]}%;width:${z[2]-z[1]}%"></span></span><b>${v}</b>${showFc?`<span class="fc">→ ${nx[k]}</span><img src="${ICON(icon(nb))}" alt="tomorrow ${nb}">`:`<span class="fc"></span><img src="${ICON(icon(b))}" alt="${b}">`}${f?`<span class="float" style="color:var(--link)">${f>0?'+':''}${f}</span>`:''}</div>`;};
+  return `<div class="strip ${split?'split':''}" data-stack data-drawer="state" title="Open plant state" style="${rect}">
+    <div class="hp ${hb==='normal'?'':hb}"><div class="hl"><span>PLANT HEALTH</span><span class="st"><img src="${ICON(icon(hb))}" alt="">${hb.toUpperCase()}</span></div>${showFc?`<div class="tonight">Tonight <b class="${fc.dh<0?'dn':fc.dh>0?'up':''}">${fc.dh>0?'+':''}${fc.dh}</b></div>`:''}
+      <div class="hv"><b>${s.plant_health}</b><span class="seg" aria-hidden="true">${Array.from({length:10},(_,i)=>`<i class="${i<on?'on':''}"></i>`).join('')}</span>${hf?`<span class="float" style="color:${hf>0?'var(--accent)':'var(--danger)'}">${hf>0?'+':''}${hf}</span>`:''}</div></div>
+    <div class="env">${showFc?'<div class="fch">NOW → TOMORROW</div>':''}${row('Root','root_moisture')}${row('Humidity','humidity')}</div><span class="sg-badge game gv">GAME VALUE</span></div>`;
+}
+function originBadge(o){return `<span class="sg-badge origin">${o==='generated'?'AI-WRITTEN · CHECKED':'PRE-WRITTEN · EVIDENCE-CHECKED'}</span>`;}
+function sourceRow(src){
+  if(!src)return `<div class="sg-source"><img src="${ICON('TEMP_ui_source')}" alt=""><span class="t" style="color:var(--muted)">No direct source — game rule</span></div>`;
+  return `<div class="sg-source"><img src="${ICON('TEMP_ui_source')}" alt=""><a class="t" href="${esc(src.url)}" target="_blank" rel="noopener">${esc(src.title)} ↗</a>${src.quote?`<q>${esc(src.quote)}</q>`:''}</div>`;
+}
+function choicesHtml(card,tried){
+  const L='ABCD',sel=G.pending.sel;
+  let rows=card.options.map((o,i)=>`<li><button class="sg-choice" data-pick="${o.action_id}" aria-pressed="${sel===o.action_id}" title="${esc(o.label)}"><span class="letter">${L[i]}</span><span class="lbl">${esc(o.label)}</span></button></li>`);
+  (tried||[]).forEach(id=>{const lbl=(G.triedLabels||{})[id]||id;rows.push(`<li><button class="sg-choice tried" disabled><span class="letter">✕</span>${esc(lbl)}<img src="${ICON('TEMP_ui_tried')}" alt="already tried"></button></li>`);});
+  return `<ul class="sg-choices">${rows.join('')}</ul>`;
+}
+function deltaChips(ds){return `<div class="sg-deltas">${ds.length?ds.map(([l,v,c])=>`<span class="sg-delta">${l} <span class="${c}">${esc(v)}</span></span>`).join(''):'<span class="sg-small">No state change.</span>'}<span class="sg-badge game">GAME VALUE</span></div>`;}
+function consoleHtml(){
+  const P=G.pending;
+  if(G.phase==='harvest')return `<div class="sg-panel"><div class="sg-title">Harvest · grow day 33</div><p class="sg-small" style="margin-top:0">Harvest the leaves, then choose whether to use citric-acid wipes.</p>
+    <div class="sg-step ${G.harvested?'done':''}"><img src="${ICON('action_trim')}" alt="">1. Harvest the leaves${G.harvested?'<span class="sg-badge">DONE</span>':'<button class="sg-button pulse" data-act="harvest">Harvest</button>'}</div>
+    <div class="sg-step ${G.wiped?'done':''}"><img src="${ICON('action_wipes')}" alt="">2. Citric-acid wipes (optional)${G.wiped?'<span class="sg-badge">DONE</span>':`<button class="sg-button" data-act="wipe" ${G.harvested?'':'disabled'}>Use wipes</button>`}</div>
+    <p class="sg-small">This procedure does not establish microbial safety.</p>
+    <div class="foot"><button class="sg-button primary ${G.harvested?'pulse':''}" data-act="toReturn" ${G.harvested?'':'disabled'}>Prepare sample return</button></div></div>`;
+  if(G.phase==='return')return `<div class="sg-panel"><div class="sg-title">Sample return</div><p class="sg-small" style="margin-top:0">A portion of the harvested leaves is frozen for return to Earth.</p>
+    <div class="sg-step ${G.frozen?'done':''}"><img src="${ICON('action_inject')}" alt="">1. Freeze the sample${G.frozen?'<span class="sg-badge">DONE</span>':'<button class="sg-button pulse" data-act="freeze">Freeze sample</button>'}</div>
+    <div class="sg-step ${G.sent?'done':''}"><img src="${ICON('ui_earth')}" alt="">2. Send to Earth${G.sent?'<span class="sg-badge">DONE</span>':`<button class="sg-button ${G.frozen?'pulse':''}" data-act="send" ${G.frozen?'':'disabled'}>Send to Earth</button>`}</div>
+    <div class="foot"><button class="sg-button primary ${G.sent?'pulse':''}" data-act="toLab" ${G.sent?'':'disabled'}>Receive ground report</button></div></div>`;
+  if(G.phase==='dead')return `<div class="sg-panel"><div class="sg-title">Mission ended</div><p>The plant did not survive.</p><div class="foot"><button class="sg-button primary pulse" data-act="toReport">View mission report</button></div></div>`;
+  if(P&&P.type==='loading')return `<div class="sg-panel"><div class="sg-title">Checking the chamber</div><div class="pips"><span>■</span><span>■</span><span>■</span></div><p class="sg-small" style="text-align:center">POST ${P.path}</p></div>`;
+  if(P&&P.type==='error')return `<div class="sg-panel"><div class="sg-title">Connection problem</div><div class="err">${P.res.status} · ${esc(P.res.body.error.code)}<br>${esc(P.res.body.error.message)}</div><div class="foot"><button class="sg-button primary pulse" data-act="dismiss">Continue</button></div></div>`;
+  if(P&&P.type==='event'){const e=P.card;return `<div class="sg-panel"><div class="sg-title">${esc(e.name)} <span class="sg-badge draft">DRAFT RULE</span></div><p class="scene-text">${esc(e.scene)}</p>${choicesHtml(e)}<div class="foot"><button class="sg-button primary ${P.sel?'pulse':''}" data-act="confirm" ${P.sel?'':'disabled'}>Confirm action</button>${originBadge(e.origin)}</div></div>`;}
+  if(P&&P.type==='crisis'){const c=P.card;return `<div class="sg-panel tight"><div class="sg-title">Observation · attempt ${c.attempt}</div><p class="scene-text" title="${esc(c.scene)}">${esc(c.scene)}</p><ul class="sg-clues">${c.clues.map(x=>`<li title="${esc(x.text)}"><img src="${ICON('ui_magnifier')}" alt=""><span>${esc(x.text)}</span></li>`).join('')}</ul>${choicesHtml(c,G.crisisTried)}<div class="foot"><button class="sg-button primary ${P.sel?'pulse':''}" data-act="confirm" ${P.sel?'':'disabled'}>Confirm action</button>${originBadge(c.origin)}</div></div>`;}
+  if(P&&P.type==='eventResult'){const o=P.o;return `<div class="sg-panel"><div class="sg-title">Response · grow day ${G.grow}</div><div class="sg-verdict ${o.verdict}"><img src="${ICON(VICON[o.verdict])}" alt="">${VLABEL[o.verdict]}</div><p class="sg-reason"><strong>Why</strong>${esc(o.why)} ${esc(o.result_line)}</p>${deltaChips(P.ds)}<p class="sg-small">Event verdicts are draft game rules.</p><div class="foot"><button class="sg-button primary pulse" data-act="resolve">Continue</button></div></div>`;}
+  if(P&&P.type==='crisisResult'){const o=P.o;return `<div class="sg-panel"><div class="sg-title">Response · grow day ${G.grow}</div><div class="sg-verdict ${o.verdict}"><img src="${ICON(VICON[o.verdict])}" alt="">${VLABEL[o.verdict]}</div><p class="sg-reason"><strong>Why</strong>${esc(o.reason)}</p>${deltaChips(P.ds)}${sourceRow(o.source)}${P.card.record_note?`<p class="sg-small rnote">${esc(P.card.record_note)}</p>`:''}${P.ground?'<p class="sg-small">Three attempts used. Ground support stepped in (game rule).</p>':''}<div class="foot">${P.retry?'<button class="sg-button warning pulse" data-act="resolve">Try another action</button>':'<button class="sg-button primary pulse" data-act="resolve">Continue</button>'}</div></div>`;}
+  // normal → Daily care
+  const left=2-G.ops.length,fan=G.state.fan,busy=G.speed>0;
+  const btn=(act,t,sub,cur)=>`<button class="dc-opt ${cur?'cur':''}" data-act="${act}" ${cur||!left||busy?'disabled':''}><b>${t}</b><small>${sub}</small></button>`;
+  return `<div class="sg-panel dc"><div class="sg-title">Daily care</div>
+    <p class="dc-sub">Choose up to 2 care operations, then end the day.</p>
+    <div class="dc-left"><span class="blocks">${[0,1].map(i=>`<i class="${i<left?'on':''}"></i>`).join('')}</span>${left} of 2 care operations left today</div>
+    <div class="dc-row"><span class="dc-lab">Water<span class="sg-badge game">GAME VALUE</span></span>${btn('water10','Normal','+10 root moisture',false)}${btn('water20','Heavy','+20 root moisture',false)}</div>
+    <div class="dc-row"><span class="dc-lab">Fan</span>${btn('fanlow','Low',fan==='low'?'Current setting':'Set fan to Low',fan==='low')}${btn('fanhigh','High',fan==='high'?'Current setting':'Set fan to High',fan==='high')}</div>
+    <div class="dc-done"><b>Done today</b><span>${G.ops.length?G.ops.map(esc).join(' · '):'No care yet today.'}</span></div>
+    <div class="dc-foot"><span class="sg-small">${busy?'Auto-run is on — days end by themselves.':'Forecast for tonight is on the screen below.'}</span><button class="sg-button primary ${busy?'':'pulse'}" data-act="endday" ${busy?'disabled':''}>End day</button></div>
+  </div>`;
+}
+function spark(arr,col){const w=100,h=28;return `<svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="none"><polyline fill="none" stroke="${col}" stroke-width="2" vector-effect="non-scaling-stroke" points="${arr.map((v,i)=>(i/32*w).toFixed(1)+','+(h-2-v/100*(h-4)).toFixed(1)).join(' ')}"/></svg>`;}
+function chartSvg(paper){
+  const W=520,H=170,px=d=>30+(d-1)/32*(W-40),py=v=>H-20-v/100*(H-36);
+  const line=(k,c)=>`<polyline fill="none" stroke="${c}" stroke-width="3" points="${G.snap.map(s=>px(s.d)+','+py(s[k])).join(' ')}"/>`;
+  const grid=[0,50,100].map(v=>`<line x1="30" x2="${W-10}" y1="${py(v)}" y2="${py(v)}" stroke="currentColor" stroke-opacity=".25"/><text x="0" y="${py(v)+4}" fill="currentColor" font-size="13">${v}</text>`).join('')+STOPS.map(d=>`<text x="${px(d)-6}" y="${H-2}" fill="currentColor" font-size="13">${d}</text>`).join('');
+  return `<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="Trend">${grid}${paper?line('h','var(--chart-health-paper)'):line('h','var(--chart-health)')+line('r','var(--chart-root)')+line('u','var(--chart-humidity)')}</svg>`;
+}
+function drawerHtml(){
+  const d=G.drawer;if(!d)return '';let title='',body='';
+  if(d==='state'){title='Plant state';const s=G.state;
+    body=`<dl class="kv"><dt>Plant health</dt><dd>${s.plant_health} · ${band('plant_health',s.plant_health)} <span class="sg-badge game">GAME VALUE</span></dd><dt>Root moisture</dt><dd>${s.root_moisture} · ${band('root_moisture',s.root_moisture)} (normal 40–70)</dd><dt>Humidity</dt><dd>${s.humidity} · ${band('humidity',s.humidity)} (normal 45–70)</dd><dt>Fan</dt><dd>${s.fan.toUpperCase()}</dd><dt>Nights in danger</dt><dd>${G.nightsInDanger}</dd></dl>
+    <h3 style="font-size:20px;margin:14px 0 4px">Trend</h3>${chartSvg(false)}<p class="sg-small"><span style="color:var(--chart-health)">■ Plant health</span> · <span style="color:var(--chart-root)">■ Root</span> · <span style="color:var(--chart-humidity)">■ Humidity</span></p>`;}
+  if(d==='record'){title='Record';body=`<ul class="log">${G.log.map(l=>`<li class="${l.kind}"><time>D${l.d}</time>${esc(l.text)}</li>`).join('')}</ul><p class="sg-small">Veggie record entries are placeholders for events.json records (kind: record).</p>`;}
+  if(d==='sources'){title='Sources';body=(G.sources.length?G.sources.map(sourceRow).join(''):'<p class="sg-small">Sources appear here as crises cite them.</p>')+'<p class="sg-small" style="margin-top:14px">Mock build: sources are placeholders until wired to evidence.json. The NASA Resources-tab item for this challenge still needs to be added.</p>';}
+  if(d==='api'){title='API log (mock)';body=API_LOG.length?API_LOG.map(a=>`<div><b style="color:${a.status===200?'var(--accent)':a.status===422?'var(--warning)':'var(--danger)'}">${a.status}</b> POST ${a.path} · day ${a.req.cultivation_day}<pre class="json">// request\n${esc(JSON.stringify(a.req,null,2))}\n\n// response\n${esc(JSON.stringify(a.res,null,2))}</pre></div>`).join(''):'<p class="sg-small">No calls yet.</p>';}
+  return `<div class="drawer-shade" data-drawer="close"></div><div class="drawer"><div class="sg-panel bezel"><div class="sg-title">${title}<button class="sg-link" style="margin-left:auto" data-drawer="close">Close ✕</button></div>${body}</div></div>`;
+}
+function paperHtml(){
+  if(G.phase==='lab'){const m=microbial(),x=v=>(v-1.5)/4.5*400;
+    return `<div class="sg-paper"><div class="clip"></div><header><img src="${ICON('ui_earth')}" alt=""><div><p class="kicker">Post-mission · Earth lab</p><h1>Ground lab report (simulation)</h1></div></header>
+    <div class="cols"><div><h2>Microbial level <span class="sg-badge game">GAME VALUE</span></h2><p style="font:44px var(--font-data);margin:4px 0">${m.v.toFixed(1)} <span style="font-size:20px">log10 CFU/g</span></p>
+      <svg viewBox="0 0 400 40" width="100%"><rect x="0" y="8" width="400" height="18" fill="#dfe6e0"/><rect x="${x(2.14)}" y="8" width="${x(4.86)-x(2.14)}" height="18" fill="#c0d4de"/><rect x="${x(m.v)-2}" y="2" width="4" height="30" fill="#273d43"/></svg>
+      <p class="sg-empty" style="margin:2px 0">1.5 · observed range 2.14–4.86 <span class="sg-badge measured">MEASURED</span> · 6.0</p><p style="border-left:3px solid var(--paper-rule);padding-left:10px;font-size:16px">Within the range does not mean safe. This range is observed data, not a safety limit.</p></div>
+    <div><h2>Choices that changed this value</h2>${m.parts.length?m.parts.map(([l,v])=>`<p>${esc(l)} <b>${v>0?'+':''}${v}</b> <span class="sg-badge game">GAME VALUE</span></p>`).join(''):'<p class="sg-empty">Baseline only — no choices changed this value.</p>'}<p>Baseline <b>3.0</b> <span class="sg-badge game">GAME VALUE</span></p><p class="sg-empty">Range carried over from design lab v0.2 (Khodadad et al. 2020); source to be confirmed.</p></div></div>
+    <footer><span>Simulation — not a measurement of this sample.</span><button class="sg-button primary pulse" data-act="toReport">View mission report</button></footer></div>`;}
+  if(G.phase==='report'){const [gc,gl]=grade(),cnt={appropriate:0,partial:0,inappropriate:0};G.history.forEach(h=>h.choices.forEach(c=>cnt[c.verdict]++));
+        return `<div class="sg-paper"><div class="clip"></div><header><img src="${ICON('ui_plant')}" alt=""><div><p class="kicker">Space Garden · cultivation record</p><h1>Mission report</h1></div><span class="sg-grade ${gc}">${gl}</span></header>
+    <p>Outredgeous red romaine · ${G.grow} cultivation days · final plant health <b>${G.state.plant_health}</b> <span class="sg-badge game">GAME VALUE</span></p>
+    <div class="cols"><div><h2>Moments that mattered</h2>${G.moments.length?`<ul class="moments">${G.moments.slice(-7).map(m=>`<li class="${m.k}"><time>D${m.d}</time><span>${esc(m.t)}</span></li>`).join('')}</ul>`:'<p class="sg-empty">No moments recorded.</p>'}
+      <h2>Plant health</h2><div style="color:var(--ink)">${chartSvg(true)}</div></div>
+    <div><h2>Your decisions</h2>${G.history.length?`<p style="font:30px var(--font-data);margin:0">${cnt.appropriate} / ${cnt.partial} / ${cnt.inappropriate}</p><p class="sg-empty" style="margin-top:0">Appropriate / Partial / Inappropriate</p>`:'<p class="sg-empty">No crises handled.</p>'}<p><b>${G.nightsInDanger}</b> nights in a danger zone</p>
+      <p class="sg-empty">Grade describes cultivation only, not food safety.</p></div></div>
+    <footer><span id="copied">Plant health does not indicate microbial safety.</span><span><button class="sg-button" data-act="copy">Copy mission record</button> <button class="sg-button primary" data-act="restart">Start new mission</button></span></footer></div>`;}
+  return '';
+}
+const SPRITE_BOX={"D0_dead":[98,282,501,500],"E0_empty_pouch":[98,329,501,500],"G0_growing":[98,215,502,501],"G1_wilting":[99,213,501,501],"G2_droplets_curling":[99,213,501,501],"G3_brown_edges":[99,212,502,501],"G4_mold":[99,214,501,502],"H0_harvest_ready":[81,90,529,501],"H1_wilting":[75,135,513,501],"H2_droplets_curling":[83,111,523,503],"H3_brown_edges":[78,114,518,501],"H4_mold":[79,118,518,501],"P0_preharvest":[99,162,503,501],"S0_sprout":[100,260,501,501],"S1_sprout_wilting":[100,285,501,501],"S2_sprout_droplets":[99,289,503,501]};
+const PLANT={left:210,width:640,bottom:756,canvas:[600,520]}; // artboard px; see .plant
+function bubbleStyle(name){ // tail tip sits just above the top of the visible plant, a little right of the stem
+  const k=PLANT.width/PLANT.canvas[0],top=PLANT.bottom-PLANT.canvas[1]*k+(SPRITE_BOX[name]||[0,215])[1]*k;
+  const tipX=530+70,tipY=Math.round(top-4);
+  return `left:${tipX-16}px;bottom:${900-(tipY-28)}px;top:auto`;
+}
+const SCREENS={ // measured on the new backgrounds (1600×900 artboard), glass inset by ~8px
+  normal:{main:[1050,122,1558,516],strip:[1050,574,1558,694],split:false},
+  event:{main:[1054,128,1546,562],strip:[1054,566,1546,682],split:true},
+  result:{main:[1050,126,1552,566],strip:[1050,570,1552,686],split:true},
+  ret:{main:[1040,116,1566,680]}
+};
+const rectCss=r=>`left:${r[0]}px;top:${r[1]}px;width:${r[2]-r[0]}px;height:${r[3]-r[1]}px`;
+function render(){
+  const P=G.pending,report=G.phase==='lab'||G.phase==='report',ret=G.phase==='return';
+  const deciding=P&&['event','crisis','loading','error'].includes(P.type);
+  const bgKey=report?'report':ret?'ret':deciding?'event':(P&&/Result/.test(P.type))?'result':'normal';const bg=BG[bgKey];const SC=SCREENS[bgKey];
+  const showPlant=!report&&!ret;const tag=stageTag();
+  const pos=d=>((d-1)/32*100).toFixed(2);
+  const growing=G.phase==='grow',running=G.speed>0;
+  const marks=[3,7].map(d=>`<span class="ev" style="left:${pos(d)}%"></span>`).join('')+RECORDS.map(r=>`<span class="ev record" style="left:${pos(r.d)}%"></span>`).join('')+G.history.map(h=>`<span class="ev crisis" style="left:${pos(h.cultivation_day)}%"></span>`).join('');
+  const playPulse='';
+  $('#artboard').innerHTML=`
+    <img class="world" src="${bg}" alt="">
+    <div class="sg-header"><span class="brand"><img src="${ICON('ui_plant')}" alt="">SPACE GARDEN</span><span class="day"><span>DAY ${dayNumber()} / 7</span><span class="sep">·</span><span class="grow">GROW DAY ${G.grow}</span></span><span class="sg-stage ${tag==='EVENT'?'event':''}">${tag}</span></div>
+    ${showPlant?`<img class="plant" src="assets/sprites/${sprite()}.png" alt="Lettuce: ${sprite().split('_').slice(1).join(' ')}">`:''}
+    ${deciding&&showPlant?'<div class="dim"></div>':''}
+    ${showPlant?`<div class="sg-speech" aria-live="polite" style="${bubbleStyle(sprite())}">${esc(G.voice)}</div>`:''}
+    ${G.toast&&Date.now()-G.toast.key<3200&&showPlant?`<div class="toast" key="${G.toast.key}"><b>VEGGIE RECORD · grow day ${G.toast.d}</b> — ${esc(G.toast.t)}<br><span class="sg-small">Placeholder for the events.json record.</span></div>`:''}
+    <nav class="rail" aria-label="Detail panels">${[['state','ui_info','State'],['record','ui_magnifier','Record'],['sources','TEMP_ui_source','Sources'],['api','ui_earth','API']].map(([k,i,l])=>`<button data-drawer="${k}" aria-pressed="${G.drawer===k}"><img src="${ICON(i)}" alt="">${l}</button>`).join('')}</nav>
+    ${!report&&SC?`<div class="screen" data-stack style="${rectCss(SC.main)}">${consoleHtml()}</div>`:''}
+    ${showPlant&&SC&&SC.strip?stripHtml(rectCss(SC.strip),SC.split):''}
+    <div data-stack>${paperHtml()}</div>
+    ${showPlant?`<span class="sg-help"><img src="${ICON('ui_info')}" alt="">Plant health does not indicate microbial safety.</span>`:''}
+    <span class="sg-aimark">AI-GENERATED ART</span>
+    <div class="sg-timeline">
+      <div class="tctl" role="group" aria-label="Time">
+        <button class="sg-button play ${running?'':'primary'} ${playPulse}" data-act="${running?'pause':'play'}" ${growing&&!P?'':'disabled'}>${running?'❚❚ Pause':'▶ Auto-run'}</button>
+        ${[1,4,16].map(x=>`<button class="sg-button" data-speed="${x}" aria-pressed="${running&&G.speed===x}" ${growing?'':'disabled'}>${x}×</button>`).join('')}
+        <label class="auto" title="Let the simulator choose for you"><input type="checkbox" id="auto" ${G.auto?'checked':''}>Auto</label>
+      </div>
+      <span class="label">GROW DAY ${G.grow}</span>
+      <div class="sg-track"><div class="line"></div><div class="fill" style="width:${pos(G.grow)}%"></div>${marks}<span class="marker ${deciding?'paused':''}" style="left:${pos(G.grow)}%"></span>${STOPS.map(d=>`<span class="stop ${d===G.grow?'current':''}" style="left:${pos(d)}%">${d}</span>`).join('')}</div>
+    </div>
+    <div data-stack>${drawerHtml()}</div>`;
+  layout();
+}
+function layout(){
+  const stage=$('#stage'),art=$('#artboard'),below=$('#below');
+  const w=stage.clientWidth,stacked=window.innerWidth<768;
+  document.body.classList.toggle('stacked',stacked);below.innerHTML='';
+  if(stacked)art.querySelectorAll('[data-stack]').forEach(el=>{if(el.innerHTML.trim())below.appendChild(el);});
+  if(!stacked)art.querySelectorAll('.screen>.sg-panel').forEach(pn=>{for(let lv=1;lv<=4&&pn.scrollHeight>pn.clientHeight+1;lv++)pn.classList.add('fit-'+lv);});
+  const vh=window.innerHeight,scale=stacked?w/1600:Math.min(w/1600,vh/900);
+  art.style.transform=`scale(${scale})`;
+  if(stacked){stage.style.height=(900*scale)+'px';art.style.left='0';art.style.top='0';}
+  else{stage.style.height=vh+'px';art.style.left=Math.max(0,(w-1600*scale)/2)+'px';art.style.top=Math.max(0,(vh-900*scale)/2)+'px';}
+}
+function recordText(){return [`SPACE GARDEN — mission record (simulation, game values)`,`Grow days: ${G.grow} · Final plant health: ${G.state.plant_health} · Grade: ${grade()[1]}`,'',...G.moments.map(m=>`D${m.d}  ${m.t}`)].join('\n');}
+document.addEventListener('click',e=>{
+  const t=e.target;
+  const sp=t.closest('[data-speed]');if(sp&&!sp.disabled){play(+sp.dataset.speed);return;}
+  const fo=t.closest('[data-focus]');if(fo){if(G.focus!==fo.dataset.focus){G.focus=fo.dataset.focus;addLog(G.grow,`Focus: ${FOCUS[G.focus].label}.`,'care');}render();return;}
+  const pk=t.closest('[data-pick]');if(pk&&G.pending){G.pending.sel=pk.dataset.pick;render();return;}
+  const dr=t.closest('[data-drawer]');if(dr){const k=dr.dataset.drawer;G.drawer=(k==='close'||G.drawer===k)?null:k;render();return;}
+  const a=t.closest('[data-act]');if(!a||a.disabled)return;
+  ({play:()=>play(G.lastSpeed||1),pause,step:()=>step(),endday:()=>step(),water10:()=>careOp('water10'),water20:()=>careOp('water20'),fanlow:()=>careOp('fanlow'),fanhigh:()=>careOp('fanhigh'),confirm,resolve:resolveResult,dismiss:()=>{G.pending=null;render();},
+    harvest:()=>{G.harvested=true;addLog(33,'Leaves harvested.','care');render();},wipe:()=>{G.wiped=true;addLog(33,'Citric-acid wipes used.','care');render();},
+    toReturn:()=>{G.phase='return';render();},freeze:()=>{G.frozen=true;render();},send:()=>{G.sent=true;addLog(33,'Sample sent to Earth.','care');render();},
+    toLab:()=>{G.phase='lab';render();},toReport:()=>{G.phase='report';render();},
+    copy:()=>{navigator.clipboard.writeText(recordText()).then(()=>{$('#copied').textContent='Mission record copied.';},()=>{$('#copied').textContent='Copy was blocked by the browser.';});},
+    restart:()=>{newGame();render();}})[a.dataset.act]?.();
+});
+document.addEventListener('change',e=>{if(e.target.id==='auto'){G.auto=e.target.checked;render();autoPick();}});
+window.addEventListener('resize',()=>render());
+newGame();render();
+</script>
+</body>
+</html>

@@ -2,7 +2,7 @@ import type { MissionPhase } from '@/lib/contract/types';
 
 /** Screens of the app. Each mission phase belongs to exactly one screen. */
 export const ROUTES = {
-  home: '/',
+  home: '/start',
   mission: '/mission',
   harvest: '/harvest',
   report: '/report',
