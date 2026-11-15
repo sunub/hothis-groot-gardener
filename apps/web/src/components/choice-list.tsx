@@ -49,6 +49,12 @@ export function ChoiceList({
         </h3>
         <p className="text-caption text-ink-muted">{text.hint}</p>
       </div>
+      <p className="border-2 border-caution bg-caution/10 px-3 py-2 text-body leading-snug">
+        <span aria-hidden className="font-bold text-caution">
+          △{' '}
+        </span>
+        {text.confirmHint}
+      </p>
       <ul className="grid gap-2">
         {labels.map((label, i) => (
           <li key={i}>
@@ -70,7 +76,6 @@ export function ChoiceList({
           {text.confirm}
         </Button>
       ) : null}
-      <p className="text-caption text-ink-muted">{text.confirmHint}</p>
     </section>
   );
 }

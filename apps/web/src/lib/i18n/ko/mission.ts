@@ -53,6 +53,14 @@ export const mission: Dictionary['mission'] = {
     title: '재배실',
     loading: '재배실을 여는 중…',
     side_label: '식물과 재배실',
+    alert_title: '재배실에 문제가 생겼습니다',
+    alert_lead: '위기 발생 · 재배 {cultivation_day}일',
+    alert_hint: '단서를 확인하고 행동 하나를 고르세요.',
+    alert_go: '조치하러 가기',
+    col_observe: '관찰 · 재배실',
+    col_status: '상태 · 계기판',
+    col_act: '조치 · 일일 돌봄',
+    col_decide: '조치 · 결정 필요',
   },
   timeline: {
     label: '임무 시간축',
@@ -83,6 +91,8 @@ export const mission: Dictionary['mission'] = {
     ops_left: '오늘 남은 돌봄 작업',
     ops_value: '{max}번 중 {left}번',
     ops_none_today: '이 단계에는 일일 돌봄이 없습니다',
+    compare_title: '재배 1일과 비교',
+    trend: '재배 {from}일 {a} → 지금 {b}',
   },
   character: {
     label: '식물',
@@ -160,6 +170,8 @@ export const mission: Dictionary['mission'] = {
   },
   diary: {
     title: '재배 일지',
+    open: '재배 일지 열기',
+    close: '닫기',
     empty: '아직 적힌 것이 없습니다. 날이 지나면 줄이 생깁니다.',
     day: '재배 {day}일',
     event_pending: '결정을 기다리는 사건이 있습니다.',

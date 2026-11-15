@@ -10,11 +10,12 @@ import { useMission, type CrisisFetchStatus, type MissionActions } from '@/featu
 import type { MissionState } from '@/lib/contract/types';
 import { CultivationDiary } from '@/features/timeline/cultivation-diary';
 import { diaryLines } from '@/features/timeline/diary';
+import { DiaryDrawer } from '@/features/timeline/diary-drawer';
 import { useDiaryTranslation } from '@/features/timeline/use-diary-translation';
 import type { EventCardResponse } from '@/lib/contract/schemas';
 import { eventList } from '@/lib/events';
 import { localizeEventList } from '@/lib/events/localize';
-import { useDictionary, useLocale } from '@/lib/i18n';
+import { format, useDictionary, useLocale } from '@/lib/i18n';
 import { CarePanel } from './care-panel';
 import { CrisisPanel, toCrisisView } from './crisis-panel';
 import { CrisisPendingPanel } from './crisis-pending-panel';
@@ -81,7 +82,7 @@ function GrowRoom({
     mission.phase === 'crisis' || mission.phase === 'crisis_pending' || mission.timeline?.pending_event
       ? 'caution'
       : 'default';
-  // Missions with a timeline: the cultivation diary lines, and an event card that stops time.
+  // Missions with a timeline: an event card stops time and takes the place of the day's panel.
   const sourceDiary = useMemo(
     () =>
       mission.timeline
@@ -93,26 +94,50 @@ function GrowRoom({
   const translatedDiary = useDiaryTranslation(sourceDiary ?? [], locale);
   const diary = sourceDiary ? translatedDiary : null;
 
+  const s = t.mission.screen;
+  const alerting = tone === 'caution';
+  const cultivationDay = mission.timeline?.cultivation_day ?? mission.days.find((d) => d.game_day === mission.game_day)?.cultivation_day ?? mission.game_day;
+
   return (
     <div className="space-y-4 sm:space-y-6">
-      <h1 className="sr-only">{t.mission.screen.title}</h1>
+      <h1 className="sr-only">{s.title}</h1>
+      {alerting ? <AlertBanner cultivationDay={cultivationDay} /> : null}
       <CultivationTimeline mission={mission} />
-      {/* The room is the main view; status and the phase panel sit beside it (stacked below on narrow screens). */}
-      <div className="grid gap-4 sm:gap-6 lg:grid-cols-[minmax(0,1fr)_26rem] lg:grid-rows-[auto_1fr] lg:items-start">
-        <div className="min-w-0 lg:col-start-1 lg:row-start-1">
+      {/* The cultivation diary: a tab on the right edge opens it as a drawer. */}
+      {diary ? (
+        <DiaryDrawer>
+          <CultivationDiary inDrawer lines={diary} />
+        </DiaryDrawer>
+      ) : null}
+      {/* Three columns: observe the room, read the gauges, act. They stack on narrow screens. */}
+      <div className="grid gap-6 lg:grid-cols-[minmax(0,5fr)_minmax(0,4fr)_minmax(0,4fr)] lg:items-stretch lg:gap-6">
+        <section aria-label={s.col_observe} className="flex min-w-0 flex-col gap-4">
+          <ColumnHeading n="01" label={s.col_observe} />
           <PlantCharacter mission={mission} />
-        </div>
-        <aside
-          aria-label={t.mission.screen.side_label}
-          className="min-w-0 space-y-4 sm:space-y-6 lg:col-start-2 lg:row-span-2 lg:row-start-1"
+          <Card aria-labelledby="history-title" className="flex-1">
+            <div className="mb-3 flex items-center justify-between gap-2">
+              <CardTitle id="history-title">{t.mission.chart.title}</CardTitle>
+              <ValueTypeTag type="game_value" />
+            </div>
+            <StateHistoryChart days={mission.days} current={mission.plant} />
+          </Card>
+        </section>
+        <section aria-label={s.col_status} className="flex min-w-0 flex-col gap-4">
+          <ColumnHeading n="02" label={s.col_status} />
+          <PlantStatusPanel mission={mission} className="flex-1" />
+        </section>
+        <section
+          id="act"
+          aria-label={alerting ? s.col_decide : s.col_act}
+          className="flex min-w-0 scroll-mt-4 flex-col gap-4"
         >
-          <PlantStatusPanel mission={mission} />
+          <ColumnHeading n="03" label={alerting ? s.col_decide : s.col_act} caution={alerting} />
           <Card
             tone={tone}
             padding="sm"
             aria-live="polite"
-            aria-label={t.mission.screen.title}
-            className="@container sm:p-5"
+            aria-label={s.title}
+            className="@container flex-1 sm:p-4"
           >
             <PhaseChangedContext value={phaseChanged}>
               <EventCardSection mission={mission} eventCard={eventCard} eventStatus={eventStatus} actions={actions}>
@@ -120,20 +145,60 @@ function GrowRoom({
               </EventCardSection>
             </PhaseChangedContext>
           </Card>
-        </aside>
-        <Card aria-labelledby="history-title" className="lg:col-start-1 lg:row-start-2">
-          <div className="mb-3 flex items-center justify-between gap-2">
-            <CardTitle id="history-title">{t.mission.chart.title}</CardTitle>
-            <ValueTypeTag type="game_value" />
-          </div>
-          <StateHistoryChart days={mission.days} current={mission.plant} />
-        </Card>
-        {diary ? (
-          <Card className="lg:col-start-1">
-            <CultivationDiary lines={diary} />
-          </Card>
-        ) : null}
+        </section>
       </div>
+    </div>
+  );
+}
+
+/** Numbered column title with a rule: 01, 02, 03 give the order to read the screen in. */
+function ColumnHeading({ n, label, caution = false }: { n: string; label: string; caution?: boolean }) {
+  return (
+    <div className="mb-1 flex items-center gap-3 pt-2">
+      <span
+        aria-hidden
+        className={`px-2 py-1 font-data text-data leading-none ${caution ? 'bg-caution text-bg' : 'bg-accent text-accent-ink'}`}
+      >
+        {n}
+      </span>
+      <h2 className="font-title text-heading font-bold leading-tight">{label}</h2>
+      <span aria-hidden className={`h-0.5 flex-1 ${caution ? 'bg-caution' : 'bg-line'}`} />
+    </div>
+  );
+}
+
+/** Crisis alert across the top: what happened, and a link that jumps to the decision column. */
+function AlertBanner({ cultivationDay }: { cultivationDay: number }) {
+  const s = useDictionary().mission.screen;
+  return (
+    <div role="alert" className="m-1 border-2 border-caution bg-caution/10">
+      <div className="flex flex-wrap items-center gap-x-5 gap-y-3 p-3">
+        <span
+          aria-hidden
+          className="flex size-9 shrink-0 items-center justify-center bg-caution font-data text-data-lg leading-none text-bg animate-pulse motion-reduce:animate-none"
+        >
+          △
+        </span>
+        <div className="min-w-0 flex-1 basis-72">
+          <h2 className="font-title text-heading font-bold leading-snug text-white">{s.alert_title}</h2>
+          <p className="text-body">
+            <span className="font-bold text-caution">{format(s.alert_lead, { cultivation_day: cultivationDay })}</span>
+            {' · '}
+            {s.alert_hint}
+          </p>
+        </div>
+        <a
+          href="#act"
+          className="inline-flex min-h-9 items-center gap-2 bg-caution px-4 font-bold text-bg hover:brightness-110"
+        >
+          {s.alert_go}
+          <span aria-hidden>↓</span>
+        </a>
+      </div>
+      <div
+        aria-hidden
+        className="h-1.5 bg-[repeating-linear-gradient(135deg,var(--color-caution)_0_14px,#1a1405_14px_28px)]"
+      />
     </div>
   );
 }

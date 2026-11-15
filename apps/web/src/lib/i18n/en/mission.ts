@@ -53,6 +53,14 @@ export const mission = {
     title: 'Grow room',
     loading: 'Opening the grow room…',
     side_label: 'Plant and chamber',
+    alert_title: 'Something is wrong in the grow room',
+    alert_lead: 'Crisis · cultivation day {cultivation_day}',
+    alert_hint: 'Check the clues, then pick one action.',
+    alert_go: 'Go to action',
+    col_observe: 'Observe · Grow room',
+    col_status: 'Status · Gauges',
+    col_act: 'Act · Daily care',
+    col_decide: 'Act · Decision needed',
   },
   timeline: {
     label: 'Mission timeline',
@@ -83,6 +91,8 @@ export const mission = {
     ops_left: 'Care operations left today',
     ops_value: '{left} of {max}',
     ops_none_today: 'No daily care in this phase',
+    compare_title: 'Compared with cultivation day 1',
+    trend: 'Day {from} {a} → now {b}',
   },
   character: {
     label: 'The plant',
@@ -160,6 +170,8 @@ export const mission = {
   },
   diary: {
     title: 'Cultivation diary',
+    open: 'Open the cultivation diary',
+    close: 'Close',
     empty: 'Nothing written yet. Lines appear as the days go by.',
     day: 'Day {day}',
     event_pending: 'An event is waiting for your decision.',

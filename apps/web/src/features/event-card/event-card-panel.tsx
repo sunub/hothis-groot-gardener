@@ -60,8 +60,9 @@ export function EventCardPanel({
 function StoppedBadge() {
   const e = useDictionary().mission.event_card;
   return (
-    <Badge tone="caution" appearance="solid">
-      ❚❚ {e.time_stopped}
+    <Badge tone="caution" appearance="solid" className="w-full items-start whitespace-normal px-3 py-1.5 leading-snug">
+      <span aria-hidden>❚❚</span>
+      {e.time_stopped}
     </Badge>
   );
 }
