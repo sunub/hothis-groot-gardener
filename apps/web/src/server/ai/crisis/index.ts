@@ -8,4 +8,5 @@ export * from './attach';
 export * from './fallback';
 export * from './generator';
 export * from './pipeline';
+export * from './translate';
 export * from './validate';

@@ -1,0 +1,16 @@
+@import url("https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&family=VT323&family=DotGothic16&family=Noto+Sans+KR:wght@400;700&display=swap");
+@import "tailwindcss";
+@source "../components";
+@source "../features/grow-room";
+@source "../../../../.design-sync/previews";
+@import "./tokens.css";
+@import "./utilities.css";
+@import "./base.css";
+
+/* next/font sets these variables in the app; here they name the loaded families. */
+:root {
+  --font-pixelify: "Pixelify Sans";
+  --font-dot: "DotGothic16";
+  --font-vt323: "VT323";
+  --font-noto-kr: "Noto Sans KR";
+}
