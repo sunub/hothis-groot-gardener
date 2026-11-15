@@ -19,7 +19,6 @@ const twMerge = extendTailwindMerge<'pixel-frame' | 'pixel-tone'>({
         'pixel-frame-thin',
         'pixel-raised',
         'pixel-pressed',
-        'pixel-bubble',
         'pixel-bar',
       ],
       'pixel-tone': [

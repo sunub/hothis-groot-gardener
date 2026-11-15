@@ -1,0 +1,87 @@
+/*
+ * The plant's speech bubble (landing concept v0.6.3), shared by the landing and
+ * mission screens. Every size is in em, so the bubble scales with the font size
+ * the caller sets: 25px on the 1600×900 landing artboard, a share of the scene
+ * width on the mission screen. Colors come only from the scene tokens.
+ */
+.plant-speech {
+  position: relative;
+  box-sizing: border-box;
+  min-height: 2.88em;
+  padding: 0.56em 0.48em;
+  border: 0.16em solid var(--color-scene-bubble-line);
+  background: var(--color-scene-bubble);
+  color: var(--color-scene-bubble-ink);
+  filter: drop-shadow(0.2em 0.2em 0 color-mix(in srgb, var(--color-scene-shadow) 27%, transparent));
+  font-family: var(--font-title);
+  font-weight: 600;
+  line-height: 1.3;
+  text-align: center;
+  /* Not a control: plain cursor, and the line can't be selected or dragged out. */
+  cursor: default;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-user-drag: none;
+  -webkit-touch-callout: none;
+}
+
+/* Tail: a dark triangle with a smaller light one on top. Down = below the bottom-left corner. */
+.plant-speech::before,
+.plant-speech::after {
+  content: "";
+  position: absolute;
+}
+.plant-speech::before {
+  left: 0.64em; bottom: -1.12em; width: 1.28em; height: 1.12em;
+  background: var(--color-scene-bubble-line);
+  clip-path: polygon(0 0, 100% 0, 0 100%);
+}
+.plant-speech::after {
+  left: 0.8em; bottom: -0.6em; width: 0.88em; height: 0.76em;
+  background: var(--color-scene-bubble);
+  clip-path: polygon(0 0, 100% 0, 0 100%);
+}
+/* Up = above the top-left corner, for a bubble placed under the picture. */
+.plant-speech[data-tail="up"] { margin-top: 1.1em; }
+.plant-speech[data-tail="up"]::before { top: -1.12em; bottom: auto; clip-path: polygon(0 0, 0 100%, 100% 100%); }
+.plant-speech[data-tail="up"]::after { top: -0.6em; bottom: auto; clip-path: polygon(0 0, 0 100%, 100% 100%); }
+
+/* Letters not typed yet keep their place, so the bubble never changes size while typing. */
+.plant-speech-rest { color: transparent; }
+.plant-speech-caret { position: relative; display: inline-block; width: 0; }
+.plant-speech-caret::after {
+  content: "▌";
+  position: absolute; left: 0; bottom: -0.15em;
+  animation: plant-speech-blink 0.6s steps(1) infinite;
+}
+
+/* Pops out of the tail when a new line starts. */
+.plant-speech-pop { transform-origin: 0.8em 100%; animation: plant-speech-pop 320ms steps(5) both; }
+.plant-speech[data-tail="up"].plant-speech-pop { transform-origin: 0.8em 0; }
+
+/*
+ * Over the lettuce scene: the tail tip sits just above the top leaf
+ * (--plant-top, --plant-x come from LettuceScene and follow the sprite), and
+ * the bubble runs to the right edge. It moves in steps when the plant grows.
+ */
+.plant-speech-anchor {
+  position: absolute;
+  left: calc(var(--plant-x, 50%) + 3% - 0.8em);
+  right: 3%;
+  bottom: calc(100% - var(--plant-top, 30%) + 1em + 1%);
+  font-size: clamp(0.8125rem, 2.5cqw, 1.25rem);
+  transition: left 320ms steps(5), bottom 320ms steps(5);
+}
+
+@keyframes plant-speech-blink { 50% { opacity: 0; } }
+@keyframes plant-speech-pop {
+  0% { transform: scale(0.4); opacity: 0; }
+  70% { transform: scale(1.06); opacity: 1; }
+  100% { transform: none; opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .plant-speech-pop, .plant-speech-caret::after { animation: none; }
+  .plant-speech-caret { display: none; }
+  .plant-speech-anchor { transition: none; }
+}

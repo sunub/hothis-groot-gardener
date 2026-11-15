@@ -1,11 +1,14 @@
 /*
  * Global stylesheet. Order matters: Tailwind first, then the design system layers.
  * - tokens.css:    @theme tokens (color, type, motion)
+ * - scene-tokens.css: in-world palette of the grow-room scene art (monitor glass, bubble)
  * - utilities.css: pixel-* utilities (frames, bubble, hatch)
  * - base.css:      element defaults
  * Spec: docs/DESIGN.md.
  */
 @import "tailwindcss";
 @import "../styles/tokens.css";
+@import "../styles/scene-tokens.css";
+@import "../styles/plant-speech.css";
 @import "../styles/utilities.css";
 @import "../styles/base.css";

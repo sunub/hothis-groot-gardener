@@ -7,7 +7,8 @@ import './globals.css';
 const pixelify = Pixelify_Sans({ subsets: ['latin'], variable: '--font-pixelify' });
 const dot = DotGothic16({ subsets: ['latin'], weight: '400', variable: '--font-dot' });
 // Hangul is not in the pixel typefaces. The browser fetches only the Hangul chunks it needs, when the page is Korean.
-const hahmlet = Hahmlet({ weight: ['400', '700'], variable: '--font-hahmlet', preload: false });
+// Variable font (no `weight`): the UI also uses 500 and 600, which snapped to 400/700 when only those two were loaded.
+const hahmlet = Hahmlet({ variable: '--font-hahmlet', preload: false });
 const vt323 = VT323({ subsets: ['latin'], weight: '400', variable: '--font-vt323' });
 
 export const metadata: Metadata = {

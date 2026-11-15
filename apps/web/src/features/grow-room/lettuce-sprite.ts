@@ -56,6 +56,35 @@ export function spriteFor(mission: MissionState): string {
   return TABLE[growthStageOf(mission.game_day)][symptomOf(crisisId, crisis?.stage ?? 1)];
 }
 
+/**
+ * Where the drawing starts in each 600×520 sprite: the first row with any opaque
+ * pixel, as a share of the height. The rest of the sprite is transparent, so a
+ * sprout's top is far lower than a harvest-size head's. Measured from public/sprites.
+ */
+const SPRITE_TOP: Record<string, number> = {
+  D0_dead: 0.542,
+  E0_empty_pouch: 0.633,
+  G0_growing: 0.413,
+  G1_wilting: 0.41,
+  G2_droplets_curling: 0.41,
+  G3_brown_edges: 0.408,
+  G4_mold: 0.412,
+  H0_harvest_ready: 0.173,
+  H1_wilting: 0.26,
+  H2_droplets_curling: 0.213,
+  H3_brown_edges: 0.219,
+  H4_mold: 0.227,
+  P0_preharvest: 0.312,
+  S0_sprout: 0.5,
+  S1_sprout_wilting: 0.548,
+  S2_sprout_droplets: 0.556,
+};
+
+/** Top of the drawn plant in the sprite, 0 (top edge) to 1 (bottom edge). */
+export function spriteTop(sprite: string): number {
+  return SPRITE_TOP[sprite] ?? 0.2;
+}
+
 export function spriteUrl(sprite: string): string {
   return `/sprites/${sprite}.png`;
 }

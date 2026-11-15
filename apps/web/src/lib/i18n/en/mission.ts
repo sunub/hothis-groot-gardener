@@ -28,7 +28,6 @@ export const mission = {
       'Plant state numbers and their changes are game values set by the team, not measurements.',
       'The app records no health data about people.',
     ],
-    actions_title: 'Start',
     start_standard: 'Start mission',
     start_demo: 'Start demo mission',
     demo_note:
@@ -48,6 +47,22 @@ export const mission = {
     confirm_no: 'Keep saved mission',
     sources_link: 'Evidence and sources',
     sources_note: 'Every crisis, symptom and action links to its source.',
+    // Landing scene (landing concept v0.6.3)
+    scene_label: 'Space Garden landing scene',
+    speech: 'Look after me from sowing to harvest.',
+    plant_alt: 'A full-grown red romaine lettuce in a Veggie plant pillow',
+    briefing_label: 'Mission briefing',
+    tab_mission: 'Mission',
+    tab_how: 'How it works',
+    saved_none: 'None yet',
+    new_mission: 'New mission',
+    demo_short: 'Demo',
+    brief_title: 'Mission briefing',
+    brief_lead:
+      'Read this once before your first mission. The same text stays in the How it works and Before you start tabs.',
+    hide_today: "Don't show this again today",
+    got_it: 'Got it',
+    ai_mark: 'AI-GENERATED ART',
   },
   screen: {
     title: 'Grow room',
@@ -65,6 +80,7 @@ export const mission = {
   timeline: {
     label: 'Mission timeline',
     summary: 'Day {day} of {days} · cultivation day {cultivation_day} · {stage}',
+    progress: 'Mission day {day} of {days}',
     day_short: 'D{day}',
     cultivation_short: 'C{day}',
     cultivation_mid: 'Cult. day {day}',

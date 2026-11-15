@@ -22,18 +22,47 @@ function segmentState(gameDay: number, today: number): SegmentState {
   return 'none';
 }
 
+const CRISIS_HATCH = 'bg-[repeating-linear-gradient(135deg,#e3b95b_0_3px,#3a3220_3px_6px)]';
+
 const segmentClass: Record<SegmentState, string> = {
   done: 'bg-accent-lo',
-  crisis: 'bg-[repeating-linear-gradient(135deg,#e3b95b_0_3px,#3a3220_3px_6px)]',
+  crisis: CRISIS_HATCH,
   none: 'bg-surface-2',
 };
 
+type DayState = 'done' | 'today' | 'alert' | 'upcoming';
+
 /**
- * The mission as one borderless line: the seven game days
- * as bare numbers on a thin line, each with its cultivation day (or "today") underneath.
- * The hatched stretch is the window in which a crisis can come.
- * No card and no boxes around the numbers: the state of a day is told by the number's
- * color and weight,. Read-only.
+ * Each day number sits in a square whose fill tells the state, so walked and
+ * coming days are told apart at a glance (and not by text color alone):
+ * walked days are filled, today is bright with a ring, coming days are hollow.
+ */
+const dayBoxClass: Record<DayState, string> = {
+  done: 'bg-accent-lo text-accent-ink',
+  today: 'bg-accent text-accent-ink outline-2 outline-offset-1 outline-accent',
+  alert: 'bg-caution text-accent-ink outline-2 outline-offset-1 outline-caution',
+  upcoming: 'border-2 border-line bg-bg text-ink-muted',
+};
+
+const dayLabelClass: Record<DayState, string> = {
+  done: 'text-ink-muted',
+  today: 'text-ink',
+  alert: 'text-caution',
+  upcoming: 'text-ink-faint',
+};
+
+/** Labels hang under their square; the first and last are pinned to the edge so they stay inside the line. */
+function labelAlign(gameDay: number): string {
+  if (gameDay === 1) return 'left-0';
+  if (gameDay === GAME_DAYS) return 'right-0';
+  return 'left-1/2 -translate-x-1/2';
+}
+
+/**
+ * The mission as one borderless line: the seven game days as numbered squares on a
+ * thin line, each with its cultivation day (or "today") underneath.
+ * A heading says which mission day it is, and a small legend says what the fills
+ * and the hatched stretch (the window in which a crisis can come) mean. Read-only.
  * The visual line is hidden from screen readers; a plain list below says the same.
  */
 export function CultivationTimeline({ mission }: { mission: MissionState }) {
@@ -55,30 +84,58 @@ export function CultivationTimeline({ mission }: { mission: MissionState }) {
         })}
       </p>
 
-      {/* Only the line: bare day numbers on a thin line, the cultivation day (or "today") under each. */}
-      <div aria-hidden className="flex items-start">
+      {/* Heading and legend: what the numbers are and what the fills mean. */}
+      <div aria-hidden className="mb-3 flex flex-wrap items-center justify-between gap-x-4 gap-y-1">
+        <p className="font-data text-data text-ink">
+          {format(tl.progress, { day: today, days: GAME_DAYS })}
+          <span className="ml-2 text-ink-muted">
+            · {format(tl.cultivation_mid, { day: todayCultivation })}
+          </span>
+        </p>
+        <ul className="flex flex-wrap items-center gap-x-3 gap-y-1 text-caption text-ink-muted">
+          <li className="flex items-center gap-1.5">
+            <span className="size-2.5 bg-accent-lo" />
+            {tl.legend_done}
+          </li>
+          <li className="flex items-center gap-1.5">
+            <span className={`size-2.5 ${alerting ? 'bg-caution' : 'bg-accent'}`} />
+            {tl.legend_today}
+          </li>
+          <li className="flex items-center gap-1.5">
+            <span className={`h-1.5 w-4 ${CRISIS_HATCH}`} />
+            {tl.legend_window}
+          </li>
+        </ul>
+      </div>
+
+      {/* The line: numbered squares on a thin line, the cultivation day (or "today") under each. */}
+      <div aria-hidden className="flex items-start pb-5">
         {GAME_DAY_LIST.map((gameDay) => {
+          const state: DayState =
+            gameDay === today ? (alerting ? 'alert' : 'today') : gameDay < today ? 'done' : 'upcoming';
           const isToday = gameDay === today;
-          const tone = isToday
-            ? alerting
-              ? 'text-caution'
-              : 'text-ink'
-            : gameDay < today
-              ? 'text-accent-hi'
-              : 'text-ink-muted';
           return (
             <div key={gameDay} className="contents">
               {gameDay > 1 ? (
-                <span className={`mt-2.5 h-1.5 min-w-2 flex-1 ${segmentClass[segmentState(gameDay, today)]}`} />
+                <span className={`mt-[9px] h-1.5 min-w-3 flex-1 ${segmentClass[segmentState(gameDay, today)]}`} />
               ) : null}
-              <div className="flex flex-col items-center">
-                <span className={`px-1.5 font-data text-data leading-none ${tone}`}>
+              <div className="relative">
+                <span
+                  className={`flex size-6 items-center justify-center font-data text-data leading-none ${dayBoxClass[state]}`}
+                >
                   {gameDay}
                 </span>
-                <span
-                  className="mt-0.5 whitespace-nowrap text-caption leading-tight text-ink-muted"
-                >
-                  {isToday ? tl.today : CULTIVATION_DAYS[gameDay - 1]}
+                <span className={`absolute top-full mt-1 whitespace-nowrap ${labelAlign(gameDay)} text-caption leading-tight ${dayLabelClass[state]}`}>
+                  {isToday ? (
+                    tl.today
+                  ) : (
+                    <>
+                      <span className="sm:hidden">{CULTIVATION_DAYS[gameDay - 1]}</span>
+                      <span className="hidden sm:inline">
+                        {format(tl.cultivation_mid, { day: CULTIVATION_DAYS[gameDay - 1] })}
+                      </span>
+                    </>
+                  )}
                 </span>
               </div>
             </div>

@@ -1,0 +1,254 @@
+/*
+ * Landing scene (landing concept v0.6.3). The scene is drawn on a 1600×900
+ * artboard and scaled to the window, like the concept. Every class starts with
+ * lp- so nothing here touches the other screens.
+ * Colors come only from the scene tokens (src/styles/scene-tokens.css), never
+ * from raw hex. Fonts come from the design system: --font-title (Pixelify Sans,
+ * Hahmlet in Korean) and --font-data (VT323).
+ */
+.lp {
+  --lp-notch: 8px;
+  --lp-bevel: inset 2px 2px 0 color-mix(in srgb, var(--color-scene-highlight) 11%, transparent),
+    inset -3px -4px 0 color-mix(in srgb, var(--color-scene-shadow) 33%, transparent);
+  color: var(--color-scene-ink);
+  font-family: var(--font-title);
+}
+.lp button { font-family: inherit; color: inherit; touch-action: manipulation; }
+.lp :focus-visible { outline: 3px solid var(--color-scene-focus); outline-offset: 3px; }
+
+/* Stage and artboard */
+.lp-stage { position: relative; width: 100%; overflow: hidden; }
+.lp-art {
+  position: absolute; left: 0; top: 0; width: 1600px; height: 900px; transform-origin: 0 0;
+  font-size: 20px; line-height: 1.4; background: var(--color-scene-backdrop); overflow: hidden;
+}
+.lp-art.lp-measuring { visibility: hidden; }
+.lp-art img { image-rendering: pixelated; }
+.lp-world { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: fill; }
+.lp-plant {
+  position: absolute; left: 210px; bottom: 16%; width: 640px; z-index: 3;
+  transform-origin: 50% 100%; animation: lp-breathe 2.8s steps(2, jump-none) infinite;
+}
+
+/* Speech bubble: looks come from PlantSpeech (styles/plant-speech.css); only its place and size here. */
+.lp-speech { position: absolute; left: 584px; bottom: 634px; width: 300px; z-index: 5; font-size: 25px; }
+
+/* Monitors (glass measured on BG_growth_normal) */
+.lp-screen {
+  position: absolute; z-index: 7; display: flex; flex-direction: column;
+  text-shadow: 0 0 6px color-mix(in srgb, var(--color-scene-glow-text) 20%, transparent);
+}
+.lp-main { left: 1050px; top: 122px; width: 508px; height: 394px; padding: 6px 14px; }
+.lp-strip {
+  left: 1050px; top: 574px; width: 508px; height: 120px; padding: 6px 18px;
+  justify-content: center; gap: 10px;
+}
+.lp-tabs { display: flex; gap: 4px; border-bottom: 2px solid var(--color-scene-glass-line); margin-bottom: 8px; }
+.lp-tabs button {
+  background: none; border: 0; border-bottom: 3px solid transparent; color: var(--color-scene-ink-muted);
+  font-size: 19px; padding: 2px 8px 6px; white-space: nowrap; cursor: pointer;
+}
+.lp-tabs button[aria-selected="true"] { color: var(--color-scene-accent); border-bottom-color: var(--color-scene-accent); }
+.lp-tabs button:hover { color: var(--color-scene-ink); }
+.lp-pane { display: flex; flex: 1; min-height: 0; flex-direction: column; }
+.lp-pane[hidden] { display: none; }
+.lp-kicker {
+  font: 20px/1.1 var(--font-data); letter-spacing: 3px; color: var(--color-scene-accent);
+  margin: 0; text-transform: uppercase;
+}
+.lp-title { font-size: 27px; font-weight: 600; line-height: 1.12; margin: 2px 0 6px; }
+.lp-pane p { margin: 0 0 6px; font-size: 19px; line-height: 1.3; color: var(--color-scene-ink-soft); }
+html:lang(ko) .lp-kicker { letter-spacing: 1px; font-size: 17px; }
+html:lang(ko) .lp-pane p { font-size: 20px; line-height: 1.5; }
+.lp-note { font-size: 16px; line-height: 1.3; color: var(--color-scene-ink-muted); margin: 6px 0 0; }
+
+.lp-steps { display: grid; gap: 5px; margin: 0; padding: 0; list-style: none; }
+.lp-step {
+  display: grid; grid-template-columns: 30px 1fr; gap: 8px; align-items: start; padding: 4px 8px;
+  border: 2px solid var(--color-scene-glass-edge);
+  background: color-mix(in srgb, var(--color-scene-glass) 60%, transparent);
+}
+.lp-step .lp-n {
+  font: 20px var(--font-data); width: 30px; height: 30px; display: grid; place-items: center;
+  background: var(--color-scene-glass-hi); color: var(--color-scene-accent);
+}
+.lp-step b { display: block; font-size: 19px; font-weight: 500; margin-bottom: 1px; }
+.lp-step span { display: block; font-size: 15.5px; line-height: 1.25; color: var(--color-scene-ink-soft); }
+.lp-bullets { margin: 0 0 4px; padding-left: 22px; font-size: 18px; line-height: 1.3; color: var(--color-scene-ink-soft); }
+.lp-bullets li { margin-bottom: 4px; }
+.lp-evid {
+  margin-top: auto; padding-top: 6px; border-top: 2px solid var(--color-scene-glass-line);
+  font-size: 17px; color: var(--color-scene-ink-muted);
+}
+.lp-evid a, .lp-ev a {
+  color: var(--color-scene-link); margin-right: 8px; text-decoration: underline; text-underline-offset: 3px;
+}
+
+.lp-info { display: flex; flex-direction: column; white-space: nowrap; overflow: hidden; line-height: 1.15; }
+.lp-info .lp-lab {
+  font: 18px/1 var(--font-data); letter-spacing: 2px; color: var(--color-scene-accent); text-transform: uppercase;
+}
+.lp-info .lp-val { font-size: 17px; color: var(--color-scene-ink-soft); overflow: hidden; text-overflow: ellipsis; }
+.lp-info .lp-val.lp-muted { color: var(--color-scene-ink-muted); }
+.lp-row { display: flex; gap: 4px; margin: 0 -3px; } /* + the 3px button margins = 10px apart */
+
+/* Buttons */
+/*
+ * Pixel frame like the design system's pixel-frame: four box-shadows, one per side,
+ * leave the corners empty, so the notch is drawn by the frame itself. (A border cut
+ * by clip-path lost its corners and looked chipped.) The 3px margin keeps room for
+ * the frame, which sits outside the box.
+ */
+.lp-btn {
+  --lp-frame: var(--color-scene-glass-line);
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 40px; margin: 3px;
+  padding: 0 14px; border: 0; line-height: 1;
+  background: color-mix(in srgb, var(--color-scene-glass) 80%, transparent); color: var(--color-scene-ink);
+  font-size: 19px; cursor: pointer; white-space: nowrap; text-decoration: none;
+  box-shadow: 0 -3px 0 0 var(--lp-frame), 0 3px 0 0 var(--lp-frame), -3px 0 0 0 var(--lp-frame), 3px 0 0 0 var(--lp-frame),
+    var(--lp-bevel);
+}
+.lp-btn:hover { --lp-frame: var(--color-scene-accent); background: var(--color-scene-panel-hi); }
+.lp-btn.lp-primary {
+  --lp-frame: var(--color-scene-accent);
+  background: var(--color-scene-accent); color: var(--color-scene-accent-ink);
+}
+.lp-btn.lp-primary:hover { --lp-frame: var(--color-scene-ink); filter: brightness(1.08); }
+/* The call to action blinks its brightness in steps; the frame and corners stay as they are. */
+.lp-pulse { animation: lp-pulse 1.4s steps(2, jump-none) infinite; }
+
+.lp-help {
+  position: absolute; left: 5%; bottom: 24px; display: inline-flex; gap: 8px; align-items: center;
+  font-size: 21px; color: var(--color-scene-ink-muted); background: var(--color-scene-panel); padding: 4px 10px; z-index: 6;
+}
+.lp-help img { width: 18px; height: 18px; }
+.lp-aimark {
+  position: absolute; right: 10px; bottom: 22px; font: 18px/1 var(--font-data); color: var(--color-scene-ink);
+  background: color-mix(in srgb, var(--color-scene-shadow) 67%, transparent);
+  padding: 4px 8px; letter-spacing: 1px; z-index: 6;
+}
+
+/*
+ * Narrow windows: the scene shows only the chamber (landing-chamber.webp) with the
+ * plant in the middle; the monitor text moves under the scene as page UI
+ * (landing-panels.tsx). The artboard is scaled down a lot here, so the bubble and
+ * the AI mark are drawn larger to stay readable.
+ */
+.lp-narrow .lp-plant { left: 480px; }
+.lp-narrow .lp-speech { left: 1040px; bottom: auto; top: 140px; width: 500px; font-size: 56px; }
+.lp-narrow .lp-glow { left: 200px; width: 1210px; }
+.lp-narrow .lp-glow.lp-side { left: 15px; width: 160px; }
+.lp-narrow .lp-glow.lp-side.lp-r { left: 1425px; }
+.lp-narrow .lp-aimark { font-size: 40px; padding: 8px 14px; bottom: 20px; right: 16px; }
+
+/* Motion (all off under prefers-reduced-motion) */
+@keyframes lp-breathe { 0%, 100% { transform: scaleY(1); } 50% { transform: scaleY(1.014); } }
+@keyframes lp-pulse { 0%, 100% { filter: brightness(1); } 50% { filter: brightness(1.15); } }
+
+.lp-screen.lp-boot { animation: lp-boot 0.45s steps(6) both; }
+@keyframes lp-boot {
+  0% { opacity: 0; clip-path: inset(49% 0 49% 0); }
+  40% { opacity: 1; clip-path: inset(46% 0 46% 0); }
+  100% { clip-path: inset(0 0 0 0); }
+}
+.lp-scan {
+  position: absolute; left: 0; right: 0; height: 6px; top: 0; pointer-events: none;
+  background: linear-gradient(
+    transparent,
+    color-mix(in srgb, var(--color-scene-accent) 53%, transparent),
+    transparent
+  );
+  animation: lp-scan 0.7s linear both;
+}
+@keyframes lp-scan { from { top: 0; opacity: 1; } to { top: calc(100% - 6px); opacity: 0; } }
+.lp-screen.lp-boot .lp-fade { opacity: 0; animation: lp-fadein 0.3s steps(3) forwards; }
+@keyframes lp-fadein { to { opacity: 1; } }
+.lp-glow {
+  position: absolute; left: 190px; top: 96px; width: 680px; height: 560px; z-index: 2; pointer-events: none;
+  mix-blend-mode: screen; animation: lp-shimmer 4.2s steps(4) infinite;
+  background: radial-gradient(ellipse 70% 22% at 50% 4%, color-mix(in srgb, var(--color-scene-glow-hi) 67%, transparent), transparent 70%),
+    linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--color-scene-glow) 33%, transparent),
+      transparent 9%,
+      transparent 91%,
+      color-mix(in srgb, var(--color-scene-glow) 33%, transparent)
+    );
+}
+.lp-glow.lp-side {
+  left: 20px; width: 150px; top: 120px; height: 600px;
+  background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--color-scene-glow) 27%, transparent), transparent);
+  animation-duration: 3.4s; animation-delay: -1.2s;
+}
+.lp-glow.lp-side.lp-r { left: 880px; animation-delay: -2.1s; }
+@keyframes lp-shimmer { 0%, 100% { opacity: 0.35; } 50% { opacity: 0.75; } }
+.lp-mote {
+  position: absolute; width: 6px; height: 6px; background: var(--color-scene-mote);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-scene-glow-text) 33%, transparent);
+  z-index: 4; pointer-events: none; opacity: 0; animation: lp-drift linear infinite;
+}
+@keyframes lp-drift {
+  0% { transform: translateY(0); opacity: 0; }
+  15% { opacity: 0.85; }
+  85% { opacity: 0.6; }
+  100% { transform: translateY(-260px); opacity: 0; }
+}
+
+/* Briefing popup and replace confirmation (page level, not scaled) */
+.lp-modal-bg {
+  position: fixed; inset: 0; z-index: 50; display: grid; place-items: center; padding: 16px;
+  background: color-mix(in srgb, var(--color-scene-overlay) 80%, transparent);
+  color: var(--color-scene-ink); font-family: var(--font-title);
+}
+.lp-modal {
+  width: min(800px, 100%); max-height: calc(100vh - 32px); overflow: auto; background: var(--color-scene-monitor);
+  border: 10px solid var(--color-scene-bezel); outline: 3px solid var(--color-scene-bezel-outline);
+  box-shadow: inset 0 0 0 3px var(--color-scene-bezel-inner),
+    10px 10px 0 color-mix(in srgb, var(--color-scene-shadow) 47%, transparent);
+  padding: 22px 26px 18px;
+}
+.lp-modal h2 {
+  margin: 0 0 4px; font-size: 28px; color: var(--color-scene-accent); display: flex; align-items: center; gap: 10px;
+}
+.lp-modal h2 img { width: 26px; height: 26px; image-rendering: pixelated; }
+.lp-modal .lp-lead { margin: 0 0 14px; color: var(--color-scene-ink-muted); font-size: 17px; line-height: 1.5; }
+.lp-modal h3 {
+  font-size: 20px; margin: 14px 0 8px; color: var(--color-scene-ink);
+  border-bottom: 2px solid var(--color-scene-glass-line); padding-bottom: 4px;
+}
+.lp-modal .lp-step span { font-size: 17px; }
+.lp-modal .lp-step b { font-size: 19px; }
+.lp-modal .lp-ev { font-size: 17px; color: var(--color-scene-ink-muted); }
+.lp-modal-foot {
+  display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+  margin-top: 16px; padding-top: 12px; border-top: 2px solid var(--color-scene-glass-line);
+}
+.lp-modal-foot label {
+  display: flex; gap: 8px; align-items: center; font-size: 17px; color: var(--color-scene-ink-soft); cursor: pointer;
+}
+.lp-modal-foot input { width: 18px; height: 18px; accent-color: var(--color-scene-accent); }
+.lp-modal-foot .lp-end { margin-left: auto; display: flex; gap: 10px; flex-wrap: wrap; }
+.lp-modal-bg.lp-in { animation: lp-bgin 0.25s ease-out both; }
+.lp-modal-bg.lp-in .lp-modal { animation: lp-swooshin 0.5s cubic-bezier(0.2, 1.5, 0.4, 1) both; }
+.lp-modal-bg.lp-out { animation: lp-bgout 0.3s ease-in both; }
+.lp-modal-bg.lp-out .lp-modal { animation: lp-swooshout 0.3s cubic-bezier(0.6, 0, 0.9, 0.4) both; }
+@keyframes lp-bgin { from { opacity: 0; } to { opacity: 1; } }
+@keyframes lp-bgout { from { opacity: 1; } to { opacity: 0; } }
+@keyframes lp-swooshin {
+  0% { opacity: 0; transform: translateY(60px) scale(0.55); }
+  60% { opacity: 1; }
+  100% { opacity: 1; transform: none; }
+}
+@keyframes lp-swooshout {
+  0% { opacity: 1; transform: none; }
+  100% { opacity: 0; transform: translateY(40px) scale(0.5); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lp-plant, .lp-glow, .lp-mote, .lp-screen.lp-boot, .lp-scan, .lp-screen.lp-boot .lp-fade, .lp-pulse,
+  .lp-modal-bg.lp-in, .lp-modal-bg.lp-in .lp-modal, .lp-modal-bg.lp-out, .lp-modal-bg.lp-out .lp-modal {
+    animation: none !important;
+  }
+  .lp-mote, .lp-scan { display: none; }
+  .lp-screen.lp-boot .lp-fade { opacity: 1; }
+}

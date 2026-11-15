@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { StateHistoryChart } from '@/components/state-history-chart';
 import { Card, CardTitle } from '@/components/ui/card';
 import { ValueTypeTag } from '@/components/value-type-tag';
@@ -26,6 +26,7 @@ import { NightPanel } from './night-panel';
 import { PhaseChangedContext } from './panel-heading';
 import { PlantCharacter } from './plant-character';
 import { PlantStatusPanel } from './plant-status-panel';
+import { scrollToPageTop } from './scroll-to-top';
 
 /** The /mission screen: gate to the mission phases that belong here, then the grow room. */
 export function MissionScreen() {
@@ -76,6 +77,18 @@ function GrowRoom({
     setLastPhase(mission.phase);
     setPhaseChanged(true);
   }
+
+  // A confirm or next button moves the mission to a new step (new phase, new day, or an
+  // event card opening or closing). The new panel starts at the top of the page, so scroll
+  // there. Care buttons only change values within the step and leave the scroll alone.
+  // (Closing an event result is local state of EventCardSection; it scrolls there.)
+  const step = `${mission.phase}|${mission.game_day}|${mission.timeline?.pending_event?.event_id ?? ''}`;
+  const lastStep = useRef(step);
+  useEffect(() => {
+    if (lastStep.current === step) return;
+    lastStep.current = step;
+    scrollToPageTop();
+  }, [step]);
 
   // Crisis phases get a caution frame, so the panel that needs a decision stands out.
   const tone =

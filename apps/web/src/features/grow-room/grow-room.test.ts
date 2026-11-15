@@ -13,7 +13,7 @@ vi.mock('@/features/mission/use-mission', () => ({ useMission: () => hook.curren
 vi.mock('next/navigation', () => ({ useRouter: () => ({ push: vi.fn(), replace: vi.fn() }) }));
 
 const { MissionScreen } = await import('./mission-screen');
-const { StartScreen } = await import('./start-screen');
+const { LandingScreen } = await import('./landing-screen');
 
 const SECRET = {
   reason: 'SECRET-REASON-TEXT',
@@ -138,7 +138,7 @@ function render(phase: MissionPhase | null, element: 'mission' | 'start' = 'miss
     eventStatus: 'idle',
     actions: {} as UseMission['actions'],
   };
-  const screen = element === 'mission' ? MissionScreen : StartScreen;
+  const screen = element === 'mission' ? MissionScreen : LandingScreen;
   return renderToStaticMarkup(createElement(LocaleProvider, null, createElement(screen)));
 }
 
@@ -162,7 +162,7 @@ describe('grow room screens', () => {
     }
   });
 
-  it('renders the start screen with and without a saved mission', () => {
+  it('renders the landing screen with and without a saved mission', () => {
     expect(render(null, 'start')).not.toContain('Continue mission');
     expect(render('care', 'start')).toContain('Continue mission');
   });

@@ -16,12 +16,14 @@
 
 | 위치 | 내용 |
 | --- | --- |
+| `apps/web/src/styles/scene-tokens.css` | 배경 그림 속 장면의 색(`--color-scene-*`). 아래 "장면 토큰" 참고 |
 | `apps/web/src/styles/tokens.css` | `@theme` 토큰: 색, 서체, 글자 크기(`text-caption`, `text-body`, `text-control`, `text-heading`, `text-display`, `text-data-sm`~`text-data-xl`), 움직임. `--radius-*`를 초기화해 `rounded-*` 클래스가 생기지 않습니다 |
-| `apps/web/src/styles/utilities.css` | `pixel-*` 유틸리티: 프레임(`pixel-frame`, `-flat`, `-thin`), 프레임 색(`pixel-tone-*`), `pixel-raised`, `pixel-pressed`, `pixel-bubble`, `pixel-dashed`, `pixel-bar`, `pixel-segments`, `pixel-hatch`, `pixel-art` |
+| `apps/web/src/styles/utilities.css` | `pixel-*` 유틸리티: 프레임(`pixel-frame`, `-flat`, `-thin`), 프레임 색(`pixel-tone-*`), `pixel-raised`, `pixel-pressed`, `pixel-dashed`, `pixel-bar`, `pixel-segments`, `pixel-hatch`, `pixel-art` |
+| `apps/web/src/styles/plant-speech.css` | 상추 말풍선(`PlantSpeech`)의 모양. 크기는 모두 `em`이라 글자 크기를 따라 커지고 작아집니다 |
 | `apps/web/src/styles/base.css` | 요소 기본값(바탕, 본문 서체, 포커스 표시, 움직임 줄이기) |
-| `apps/web/src/app/globals.css` | 위 세 파일을 순서대로 불러옵니다 |
+| `apps/web/src/app/globals.css` | 위 파일들을 순서대로 불러옵니다 |
 | `apps/web/src/lib/utils/cn.ts` | `clsx` + `tailwind-merge`. 이 프로젝트의 글자 크기 토큰과 `pixel-*` 그룹을 알도록 설정했습니다 |
-| `apps/web/src/components/ui/` | 화면에 무관한 기본 부품: `button`, `badge`, `card`(`Card`, `CardHeader`, `CardTitle`, `CardDescription`, `Well`), `callout`, `speech-bubble`, `meter`, `choice-button`, `stepper`, `disclosure`, `skeleton`, `pixel-icon` |
+| `apps/web/src/components/ui/` | 화면에 무관한 기본 부품: `button`, `badge`, `card`(`Card`, `CardHeader`, `CardTitle`, `CardDescription`, `Well`), `callout`, `plant-speech`, `meter`, `choice-button`, `stepper`, `tabs`, `disclosure`, `skeleton`, `pixel-icon` |
 | `apps/web/src/components/` | 게임 용어를 아는 부품: `value-type-tag`, `zone-badge`, `verdict-banner`, `source-citation` |
 | `/design-system` | 모든 부품을 한 화면에서 보는 개발용 페이지(`apps/web/src/features/design-system/catalog.tsx`). 검색 엔진에 노출하지 않습니다 |
 
@@ -38,7 +40,7 @@
 | --- | --- |
 | 토큰 | `globals.css` `@theme` 값 교체. 기존 이름(`bg`, `surface`, `line`, `ink`, `accent`, `normal`, `caution`, `danger`, `measured`, `game`, `led`)은 그대로라 기존 클래스는 깨지지 않고 색만 바뀝니다 |
 | 새 토큰 | `surface-3`, `line-hi`, `ink-faint`, `accent-hi`, `accent-lo`, `danger-fill`, `health`, `water`, `humidity`, `lamp`, `micro`, `--font-data` |
-| 유틸리티 | `pixel-frame`, `pixel-frame-flat`, `pixel-frame-{accent,normal,caution,danger,measured}`, `pixel-raised`, `pixel-bubble`, `pixel-dashed`, `pixel-segments`, `pixel-hatch` |
+| 유틸리티 | `pixel-frame`, `pixel-frame-flat`, `pixel-frame-{accent,normal,caution,danger,measured}`, `pixel-raised`, `pixel-dashed`, `pixel-segments`, `pixel-hatch` |
 | 서체 | `layout.tsx`에 VT323 추가 (`font-data`). Pixelify Sans와 DotGothic16은 그대로 |
 | 에셋 | `public/bg/bay-teal.jpg`, `public/bg/wall-teal.jpg`(분홍 조명을 청록으로 보정), `public/icons/*.png`(아이콘 12개) 추가. 기존 `bay.png`, `wall.png`는 그대로 |
 | 컴포넌트와 화면 | 위 "코드 구조"의 부품으로 옮겼습니다. 아래 "다음 단계"의 1~3번은 끝났고, 4번(화면 배치)과 5번(시간축 확장)이 남았습니다 |
@@ -59,6 +61,26 @@
 | `measured` / `game` | `#6baed6` / `#a9b9c0` | 실측 배지 / 게임 값 배지 |
 | `health` `water` `humidity` `lamp` `micro` | `#7bc68f` `#6baed6` `#9c8fd6` `#e3b95b` `#d49a6a` | 상태 항목별 색 (차트 선, 아이콘 점) |
 
+### 장면 토큰 (scene)
+
+배경 그림 안에 그려지는 것(모니터 유리와 테두리, 상추 말풍선, 재배 조명)은 페이지 UI와 다른 색 체계를 씁니다. 그림에 맞춘 색이라 페이지 토큰보다 밝고 따뜻합니다. 값은 `apps/web/src/styles/scene-tokens.css`에 `--color-scene-*`로 따로 모았습니다. Tailwind 유틸리티로 쓰지 않으므로 `@theme`이 아닌 `:root` 변수입니다(`@theme` 변수는 쓰는 유틸리티가 없으면 빌드에서 빠집니다).
+
+- 랜딩 장면(`landing.css`의 `lp-*` 클래스)은 장면 토큰만 씁니다. hex 값을 직접 쓰지 않고, 투명도는 `color-mix()`로 만듭니다.
+- 페이지 UI는 장면 토큰을 쓰지 않고, 장면은 페이지 토큰을 쓰지 않습니다.
+- `scene-bezel`(따뜻한 베이지)은 그림 속 모니터 테두리 색입니다. "따뜻한 색 금지" 규칙의 유일한 예외이며, 장면 모니터 둘레에만 씁니다.
+- 장면 전용 부품(브리핑 팝업, 단계 목록)은 `apps/web/src/features/grow-room/scene-ui.tsx`에 있습니다. 페이지용 부품은 계속 `components/ui`를 씁니다.
+
+| 토큰 | 쓰는 곳 |
+| --- | --- |
+| `scene-glass` `-hi` `-edge` `-line` | 모니터 화면 안의 칸, 번호 칸, 단계 테두리, 탭 줄과 구분선 |
+| `scene-monitor` `scene-bezel` `-inner` `-outline` | 팝업과 좁은 화면 모니터의 바탕과 테두리 |
+| `scene-panel` `-hi` | 그림 위 작은 라벨, 단추 hover |
+| `scene-ink` `-soft` `-muted` `scene-link` | 화면 글자, 읽는 글, 보조 글, 링크 |
+| `scene-accent` `-ink` `scene-focus` | 주 단추, 선택 탭, 포커스 표시 |
+| `scene-glow` `-hi` `-text` `scene-mote` | 재배 조명, 글자 발광, 떠다니는 먼지 |
+| `scene-bubble` `-ink` `-line` | 상추 말풍선 |
+| `scene-overlay` `scene-shadow` `scene-highlight` `scene-backdrop` | 팝업 뒤 어둠, 픽셀 그림자, 단추 하이라이트, 그림을 불러오는 동안의 바탕 |
+
 ## 픽셀 프레임
 
 `border-radius` 대신 4px 오프셋 그림자 네 개로 모서리를 한 칸씩 깎습니다. 그림자는 상자 바깥에 그려지므로 바깥에 4px 이상 여백이 필요합니다(`m-1` 또는 `gap-4` 이상).
@@ -67,13 +89,12 @@
 <section className="pixel-frame m-1 p-5">패널</section>
 <section className="pixel-frame pixel-frame-danger m-1 p-5">위험 강조</section>
 <button className="pixel-raised m-1 min-h-11 px-6 font-title">Continue</button>
-<div className="pixel-bubble m-1 p-3">식물 NPC의 말</div>
 <span className="pixel-dashed px-2 font-data text-lg">Game value</span>
 ```
 
 - `pixel-frame`: 기본 패널. 색은 `--pf`(기본 `line`) 또는 `pixel-frame-*`로 바꿉니다.
 - `pixel-raised`: 주 버튼만. 보조 버튼은 `pixel-frame`을 씁니다.
-- `pixel-bubble`: 식물 NPC의 말에만 씁니다.
+- 식물의 말은 `PlantSpeech` 부품으로만 씁니다(랜딩·임무 화면 공통). 글자가 한 자씩 타이핑되고, 커서는 기본 모양이며 글자를 선택하거나 끌 수 없습니다. 재배실 장면 위에서는 `plant-speech-anchor`로 감싸면 꼬리가 상추 맨 위 잎을 가리킵니다.
 - `pixel-segments`: 채워진 게이지를 8px 블록으로 끊습니다. `pixel-hatch`와 같은 요소에 함께 쓰면 `background-image`가 덮어써지므로, 위험 구간 칸에는 `pixel-hatch`를 쓰고 `pixel-segments`는 안쪽 요소에 둡니다.
 - 간격은 4px 단위(`1`, `2`, `3`, `4`, `6`, `8`, `12`)만 씁니다. 이미지는 `.pixel`(`image-rendering: pixelated`)에 정수 배율만 씁니다.
 
@@ -118,6 +139,11 @@
 - 로딩("Preparing today's situation…")과 오류("Could not load the situation", 근거 목록 점검 실패, "Try again")는 선택지 자리에 그립니다.
 
 **출처(`SourceCitation`).** 접기 버튼 한 줄 + 펼치면 제목, 인용문(왼쪽 4px 막대), 주소. "판정과 변화량은 게임 값"이라는 문구를 함께 둡니다.
+
+**탭(`Tabs`, `TabPanel`).** 한 패널 안에서 내용을 나눌 때 씁니다. 탭 단추는 `toggle` 단추와 같은 모양(납작한 프레임, 고른 탭은 `accent` 채움)입니다.
+- ARIA 탭 규칙을 따릅니다. 고른 탭만 Tab 순서에 들어가고, 왼쪽·오른쪽 화살표로 옮기며, Home·End로 끝으로 갑니다.
+- 패널은 숨기기만 하고 내리지 않습니다(`hidden`). 탭을 바꿔도 패널 안 상태가 남습니다.
+- 장면 모니터 안의 탭(`lp-tabs`)은 장면 토큰을 쓰는 별도 모양입니다. 장면 밖 페이지에서는 이 부품을 씁니다.
 
 **장면 위 UI.** 장면 이미지의 오른쪽 절반(빈 금속 패널) 위에만 말풍선과 상태 칩을 올립니다. 작물을 가리지 않습니다. AI 생성 이미지에는 `AI-generated art` 표시를 HTML로 고정합니다(오른쪽 아래, `font-data`).
 - 말풍선: 왼쪽 55%, 위 12%, 너비 38%.

@@ -1,7 +1,9 @@
+import { readdirSync } from 'node:fs';
+import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import type { ActiveCrisis, MissionState } from '@/lib/contract/types';
 import { createMission } from '@/lib/game/engine';
-import { DEAD_SPRITE, spriteFor, symptomOf } from './lettuce-sprite';
+import { DEAD_SPRITE, spriteFor, spriteTop, symptomOf } from './lettuce-sprite';
 
 const base = createMission({ mode: 'standard', seed: 1, mission_id: 'sprite-test' });
 
@@ -70,5 +72,23 @@ describe('spriteFor', () => {
 
   it('shows the dead plant after an early failure', () => {
     expect(spriteFor(at({ game_day: 4, phase: 'failed' }))).toBe(DEAD_SPRITE);
+  });
+});
+
+describe('spriteTop', () => {
+  const sprites = readdirSync(join(process.cwd(), 'public/sprites'))
+    .filter((f) => f.endsWith('.png'))
+    .map((f) => f.replace(/\.png$/, ''));
+
+  // The speech bubble points at this spot, so a new sprite needs its own measurement.
+  it('has a measured top for every sprite in public/sprites', () => {
+    expect(sprites.length).toBeGreaterThan(0);
+    for (const sprite of sprites) expect(spriteTop(sprite), sprite).not.toBe(spriteTop('__unknown__'));
+  });
+
+  it('rises as the lettuce grows', () => {
+    expect(spriteTop('S0_sprout')).toBeGreaterThan(spriteTop('G0_growing'));
+    expect(spriteTop('G0_growing')).toBeGreaterThan(spriteTop('P0_preharvest'));
+    expect(spriteTop('P0_preharvest')).toBeGreaterThan(spriteTop('H0_harvest_ready'));
   });
 });
