@@ -8,6 +8,7 @@ import type {
   CrisisRequest,
   CrisisResponse,
   DayRecord,
+  EventList,
   EvidenceCrisis,
   EvidenceList,
   HarvestGrade,
@@ -23,6 +24,7 @@ import type {
   PlantState,
   RangeClass,
   ReportMetrics,
+  TimelineState,
   Verdict,
   Zone,
 } from '@/lib/contract/types';
@@ -34,7 +36,18 @@ import {
   findCrisis,
   selectCandidates,
 } from '@/lib/evidence';
+import { eventList as defaultEvents, findEventAction, findTimelineEvent, isCardKind } from '@/lib/events';
 import { nextRandom, toRngState } from './rng';
+import {
+  applyEventEffect,
+  dueCard,
+  enterDay,
+  flagNightDrift,
+  initialTimeline,
+  openEvent,
+  TONE_OF_VERDICT,
+  wateringBlocked,
+} from './timeline';
 import {
   clampHealth,
   clampMetric,
@@ -89,6 +102,8 @@ export interface MissionConfig {
   mode: MissionMode;
   /** Ignored in demo mode, which always uses DEMO_SEED. */
   seed: number;
+  /** Start with the cultivation timeline (timeline-flag.ts). Off when omitted. */
+  timeline?: boolean;
 }
 
 // ---------------------------------------------------------------------------
@@ -179,8 +194,15 @@ export interface NightProjection {
  * Values after tonight, without changing the mission. The care screen uses it
  * to show the expected state; the night itself uses the same calculation.
  */
-export function projectNight(plant: PlantState): NightProjection {
-  const drift = { ...NIGHT_DRIFT[plant.fan] };
+export function projectNight(
+  plant: PlantState,
+  extraDrift: Record<Metric, number> = { root_moisture: 0, humidity: 0 },
+): NightProjection {
+  // `extraDrift` comes from timeline flags (T5); it is zero for missions without a timeline.
+  const drift = {
+    root_moisture: NIGHT_DRIFT[plant.fan].root_moisture + extraDrift.root_moisture,
+    humidity: NIGHT_DRIFT[plant.fan].humidity + extraDrift.humidity,
+  };
   const next = copyPlant(plant);
   for (const metric of METRICS) next[metric] = clampMetric(next[metric] + drift[metric]);
   const zones = {
@@ -199,8 +221,13 @@ export function projectNight(plant: PlantState): NightProjection {
   return { plant: next, drift, zones, health_change: healthChange };
 }
 
+/** Tonight for a mission: the plain night, plus the drift of any timeline flags. */
+export function projectMissionNight(state: MissionState): NightProjection {
+  return projectNight(state.plant, flagNightDrift(state.timeline, defaultEvents));
+}
+
 function runNight(state: MissionState): MissionState {
-  const projection = projectNight(state.plant);
+  const projection = projectMissionNight(state);
   // The record of the previous game day holds last night's zones.
   const previousNight = state.days.length >= 2 ? state.days[state.days.length - 2].night : null;
   const dangerDays = { ...state.danger_days };
@@ -237,7 +264,7 @@ function runNight(state: MissionState): MissionState {
 export function createMission(config: MissionConfig): MissionState {
   const seed = config.mode === 'demo' ? DEMO_SEED : toRngState(config.seed);
   const plant = copyPlant(INITIAL_PLANT_STATE);
-  return {
+  const base: MissionState = {
     schema_version: 1,
     mission_id: config.mission_id,
     mode: config.mode,
@@ -253,11 +280,21 @@ export function createMission(config: MissionConfig): MissionState {
     days: [newDayRecord(1, plant)],
     harvest: null,
   };
+  if (!config.timeline) return base;
+  return { ...base, schema_version: 2, timeline: initialTimeline(defaultEvents, plant, seed) };
+}
+
+/** Time is stopped while an event card waits for a response (T13). */
+function requireNoPendingEvent(state: MissionState, action: string): void {
+  if (state.timeline?.pending_event) {
+    throw new GameRuleError(`${action} waits until the event card has a response`);
+  }
 }
 
 /** Apply one daily care operation. Allowed in the care phase, up to MAX_CARE_OPS_PER_DAY per day. */
 export function applyCare(state: MissionState, op: CareOp): MissionState {
   requirePhase(state, 'care', 'Daily care');
+  requireNoPendingEvent(state, 'Daily care');
   if (state.care_ops_used >= MAX_CARE_OPS_PER_DAY) {
     throw new GameRuleError(`Only ${MAX_CARE_OPS_PER_DAY} care operations are allowed per day`);
   }
@@ -265,7 +302,10 @@ export function applyCare(state: MissionState, op: CareOp): MissionState {
   let recorded: CareOp;
   switch (op.kind) {
     case 'water':
-      plant.root_moisture = clampMetric(plant.root_moisture + WATER_AMOUNT[op.level]);
+      // A timeline flag (water_blocked) can make watering add nothing (T5). The operation still counts.
+      if (!wateringBlocked(state.timeline, defaultEvents)) {
+        plant.root_moisture = clampMetric(plant.root_moisture + WATER_AMOUNT[op.level]);
+      }
       recorded = { kind: 'water', level: op.level };
       break;
     case 'fan':
@@ -293,12 +333,18 @@ export function applyCare(state: MissionState, op: CareOp): MissionState {
 /** End the day from the care phase: overnight drift, zone check, plant health. */
 export function endDay(state: MissionState): MissionState {
   requirePhase(state, 'care', 'Ending the day');
+  requireNoPendingEvent(state, 'Ending the day');
   return runNight(state);
 }
 
 /** Move from the night phase to the next game day and decide whether a crisis occurs. */
 export function nextDay(state: MissionState, evidence: EvidenceList): MissionState {
   requirePhase(state, 'night', 'Moving to the next day');
+  // With a timeline the days in between are walked first (advanceDay); skipping them would lose their events.
+  if (state.timeline && state.timeline.cultivation_day !== cultivationDayOf(state.game_day + 1)) {
+    throw new GameRuleError('Moving to the next day goes through advanceDay when the mission has a timeline');
+  }
+  requireNoPendingEvent(state, 'Moving to the next day');
   const gameDay = state.game_day + 1;
   const base: MissionState = {
     ...state,
@@ -536,6 +582,105 @@ export function continueAfterResult(state: MissionState, evidence: EvidenceList)
     };
   }
   return runNight({ ...state, active_crisis: null });
+}
+
+// ---------------------------------------------------------------------------
+// Cultivation timeline (ROLE-TASKS A1). Only for missions with a timeline.
+// ---------------------------------------------------------------------------
+
+/**
+ * Leave the night: the next game day. With a timeline, the cultivation days
+ * up to that game day are walked one by one first; each writes its log lines
+ * and may show an event card, which stops time (T13). Without a timeline this
+ * is exactly `nextDay`.
+ *
+ * Call it again after responding to a card: it goes on from where it stopped.
+ */
+export function advanceDay(
+  state: MissionState,
+  evidence: EvidenceList = defaultEvidence,
+  events: EventList = defaultEvents,
+): MissionState {
+  if (!state.timeline) return nextDay(state, evidence);
+  requirePhase(state, 'night', 'Moving to the next day');
+  requireNoPendingEvent(state, 'Moving to the next day');
+  const target = cultivationDayOf(state.game_day + 1);
+  let timeline = state.timeline;
+  // "milestone": the cards of today's game day were handled in the morning, so start with tomorrow.
+  let checkToday = timeline.status !== 'milestone';
+  for (;;) {
+    if (checkToday) {
+      const card = dueCard(timeline, events, state.plant);
+      if (card) return { ...state, timeline: openEvent(timeline, card, state.plant) };
+    }
+    if (timeline.cultivation_day >= target) {
+      return nextDay({ ...state, timeline: { ...timeline, status: 'milestone' } }, evidence);
+    }
+    timeline = enterDay(timeline, events, timeline.cultivation_day + 1, state.plant, state.seed);
+    checkToday = true;
+  }
+}
+
+/**
+ * Respond to the event card that is shown. The verdict and the effect come
+ * from the event list, never from the card text. The response is written to
+ * the log, the action's flags are cleared, and time may go on.
+ */
+export function respondToEvent(
+  state: MissionState,
+  actionId: string,
+  events: EventList = defaultEvents,
+): MissionState {
+  const timeline = state.timeline;
+  const pending = timeline?.pending_event;
+  if (!timeline || !pending) throw new GameRuleError('No event card is shown');
+  if (!pending.offered_action_ids.includes(actionId)) {
+    throw new GameRuleError(`Action ${actionId} was not offered`);
+  }
+  const event = findTimelineEvent(events, pending.event_id);
+  if (!event || !isCardKind(event)) throw new GameRuleError(`Event ${pending.event_id} is not a card event`);
+  const action = findEventAction(event, actionId);
+  if (!action) throw new GameRuleError(`Action ${actionId} is not listed for ${event.event_id}`);
+
+  const before = copyPlant(state.plant);
+  const plant = applyEventEffect(before, action.effect);
+  const cleared = new Set(action.effect.clear_flags ?? []);
+  const flags = timeline.flags.filter((flag) => !cleared.has(flag));
+  const flagsCleared = timeline.flags.filter((flag) => cleared.has(flag));
+  const tone = TONE_OF_VERDICT[action.verdict];
+  // The open entry of this card is the last event entry with no response.
+  const index = timeline.log.findLastIndex(
+    (entry) => entry.type === 'event' && entry.event_id === pending.event_id && entry.response === null,
+  );
+  const log = timeline.log.map((entry, i) =>
+    i === index && entry.type === 'event'
+      ? {
+          ...entry,
+          response: {
+            action_id: action.action_id,
+            op: action.op,
+            verdict: action.verdict,
+            effect: { ...action.effect },
+            before,
+            after: copyPlant(plant),
+            flags_cleared: flagsCleared,
+          },
+          tone,
+        }
+      : entry,
+  );
+  let next: TimelineState = { ...timeline, flags, pending_event: null, status: 'running', log };
+
+  if (plant.plant_health <= 0) {
+    return { ...state, plant, timeline: next, active_crisis: null, phase: 'failed' };
+  }
+  // A card on the morning of a game day (only day 1 happens in the care phase): show the next
+  // card of the day, or hand back to the day's flow.
+  if (state.phase !== 'night') {
+    const card = dueCard(next, events, plant);
+    next = card ? openEvent(next, card, plant) : { ...next, status: 'milestone' };
+  }
+  return { ...state, plant, timeline: next };
 }
 
 function gradeOf(health: number): HarvestGrade {

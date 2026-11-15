@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useSyncExternalStore } from 'react';
+import type { EventCardResponse } from '@/lib/contract/schemas';
 import type { CareOp, MissionMode, MissionState } from '@/lib/contract/types';
 import { useLocale } from '@/lib/i18n';
 import {
@@ -31,6 +32,10 @@ export interface MissionActions {
   confirmFreeze(): void;
   /** Ask the crisis API again after a failed request. */
   retryCrisis(): void;
+  /** Respond to the event card that is shown (missions with a timeline). */
+  respondToEvent(actionId: string): void;
+  /** Ask the event card API again after a failed request. */
+  retryEvent(): void;
   /** Delete the saved mission. */
   reset(): void;
 }
@@ -42,6 +47,10 @@ export interface UseMission {
   mission: MissionState | null;
   /** Status of the crisis API request while the phase is crisis_pending. */
   crisisStatus: CrisisFetchStatus;
+  /** Text of the event card that is shown, or null (missions with a timeline). */
+  eventCard: EventCardResponse | null;
+  /** Status of the event card request while a card waits for its text. */
+  eventStatus: CrisisFetchStatus;
   actions: MissionActions;
 }
 
@@ -63,6 +72,8 @@ export function useMission(): UseMission {
       ready: snapshot.ready,
       mission: snapshot.mission,
       crisisStatus: snapshot.crisisStatus,
+      eventCard: snapshot.eventCard,
+      eventStatus: snapshot.eventStatus,
       actions: missionActions,
     }),
     [snapshot],

@@ -20,10 +20,12 @@ function crisis(partial: Partial<ActiveCrisis>): ActiveCrisis {
 const at = (patch: Partial<MissionState>): MissionState => ({ ...base, ...patch });
 
 describe('symptomOf', () => {
-  it('water shortage wilts; mold goes droplets → brown edges → mold by stage', () => {
-    expect(symptomOf('water_shortage', 3)).toBe('wilt');
+  // Only symptoms in the evidence list are drawn (ROLE-TASKS C4). Wilting and
+  // brown edges are not in it; stunting, dry wicks and rot have no drawing yet.
+  it('draws only evidence-backed symptoms: droplets at stage 1, mold from stage 2', () => {
+    expect(symptomOf('water_shortage', 3)).toBe('ok');
     expect(symptomOf('overwater_mold', 1)).toBe('drop');
-    expect(symptomOf('overwater_mold', 2)).toBe('brown');
+    expect(symptomOf('overwater_mold', 2)).toBe('mold');
     expect(symptomOf('overwater_mold', 3)).toBe('mold');
     expect(symptomOf(null, 1)).toBe('ok');
     expect(symptomOf('unknown_crisis', 2)).toBe('ok');
@@ -44,11 +46,26 @@ describe('spriteFor', () => {
 
   it('shows the crisis symptom, using the first candidate before the API answers', () => {
     expect(spriteFor(at({ game_day: 4, phase: 'crisis', active_crisis: crisis({ crisis_id: 'overwater_mold', stage: 2 }) }))).toBe(
-      'G3_brown_edges',
+      'G4_mold',
+    );
+    expect(spriteFor(at({ game_day: 4, phase: 'crisis_pending', active_crisis: crisis({ candidates: ['overwater_mold'] }) }))).toBe(
+      'G2_droplets_curling',
     );
     expect(spriteFor(at({ game_day: 2, phase: 'crisis_pending', active_crisis: crisis({ candidates: ['water_shortage'] }) }))).toBe(
-      'S1_sprout_wilting',
+      'S0_sprout',
     );
+  });
+
+  it('never picks a drawing of a symptom outside the evidence list', () => {
+    const crises = ['water_shortage', 'overwater_mold'];
+    for (const game_day of [1, 2, 3, 4, 5, 6, 7]) {
+      for (const crisis_id of crises) {
+        for (const stage of [1, 2, 3]) {
+          const sprite = spriteFor(at({ game_day, phase: 'crisis', active_crisis: crisis({ crisis_id, stage }) }));
+          expect(sprite).not.toMatch(/wilting|brown_edges/);
+        }
+      }
+    }
   });
 
   it('shows the dead plant after an early failure', () => {

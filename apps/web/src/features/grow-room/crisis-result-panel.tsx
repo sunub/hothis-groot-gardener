@@ -1,5 +1,6 @@
 'use client';
 
+import { ChangeList } from '@/components/change-list';
 import { SourceCitation } from '@/components/source-citation';
 import { Button } from '@/components/ui/button';
 import { Callout } from '@/components/ui/callout';
@@ -82,28 +83,21 @@ export function CrisisResultPanel({ mission, actions }: { mission: MissionState;
         </div>
       ) : null}
 
-      <section aria-labelledby="result-changes" className="space-y-2">
-        <div className="flex items-center justify-between gap-2">
-          <h3 id="result-changes" className="text-heading font-bold">
-            {r.changes_title}
-          </h3>
-          <ValueTypeTag type={option?.value_type ?? 'game_value'} />
-        </div>
-        <dl className="divide-y-4 divide-surface bg-surface-2 text-body">
-          {CHANGE_KEYS.map((key) => {
-            const before = fmt(key, attempt.before);
-            const after = fmt(key, attempt.after);
-            return (
-              <div key={key} className="flex items-center justify-between gap-3 px-3 py-2">
-                <dt className="text-ink-muted">{t.common.metric[key]}</dt>
-                <dd className={`font-data text-data tabular-nums ${before === after ? 'text-ink-muted' : ''}`}>
-                  {format(r.change_row, { before, after })}
-                </dd>
-              </div>
-            );
-          })}
-        </dl>
-      </section>
+      <ChangeList
+        id="result-changes"
+        title={r.changes_title}
+        valueType={option?.value_type ?? 'game_value'}
+        rows={CHANGE_KEYS.map((key) => {
+          const before = fmt(key, attempt.before);
+          const after = fmt(key, attempt.after);
+          return {
+            key,
+            label: t.common.metric[key],
+            value: format(r.change_row, { before, after }),
+            unchanged: before === after,
+          };
+        })}
+      />
 
       {option ? (
         <Disclosure summary={r.source_title} trailing={<ValueTypeTag type="measured" />}>

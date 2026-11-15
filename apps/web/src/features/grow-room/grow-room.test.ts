@@ -134,6 +134,8 @@ function render(phase: MissionPhase | null, element: 'mission' | 'start' = 'miss
     ready: true,
     mission: phase ? makeMission(phase) : null,
     crisisStatus: 'idle',
+    eventCard: null,
+    eventStatus: 'idle',
     actions: {} as UseMission['actions'],
   };
   const screen = element === 'mission' ? MissionScreen : StartScreen;
