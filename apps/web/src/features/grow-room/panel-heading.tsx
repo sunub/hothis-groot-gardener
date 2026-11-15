@@ -13,7 +13,8 @@ export function PanelHeading({ children }: { children: ReactNode }) {
   const ref = useRef<HTMLHeadingElement>(null);
   const phaseChanged = useContext(PhaseChangedContext);
   useEffect(() => {
-    if (phaseChanged && document.activeElement === document.body) ref.current?.focus();
+    // preventScroll: the grow room scrolls to the top of the page on a step change (mission-screen.tsx).
+    if (phaseChanged && document.activeElement === document.body) ref.current?.focus({ preventScroll: true });
   }, [phaseChanged]);
   return (
     <h2 ref={ref} tabIndex={-1} className="text-heading font-bold tracking-tight focus:outline-none sm:text-heading">

@@ -6,6 +6,7 @@ import { outcomeOf, toEventCardView, type EventCardOutcome } from '@/features/ev
 import type { CrisisFetchStatus, MissionActions } from '@/features/mission/use-mission';
 import type { EventCardResponse } from '@/lib/contract/schemas';
 import type { MissionState } from '@/lib/contract/types';
+import { scrollToPageTop } from './scroll-to-top';
 
 /**
  * The event card of a mission with a timeline. Time is stopped while a card
@@ -56,7 +57,10 @@ export function EventCardSection({
         onRetry: actions.retryEvent,
         onFold: () => setFolded(true),
         onUnfold: () => setFolded(false),
-        onContinue: () => setOutcome(null),
+        onContinue: () => {
+          setOutcome(null);
+          scrollToPageTop();
+        },
       }}
     />
   );
