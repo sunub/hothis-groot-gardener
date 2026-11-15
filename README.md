@@ -124,10 +124,15 @@ The evidence list, pre-made crisis text and timeline events are JSON files in `d
 
 ## Use of AI tools
 
-- **In the product:** when `LLM_MODEL` is set, Gemma 4 E4B (Google) through Ollama writes crisis text, and translates crisis text and diary lines into Korean. It never sets verdicts, state changes or sources. The crisis screen labels generated text.
-- **In development:** a team member used Claude Code (Anthropic) to write and test code, to search the downloaded NASA documents, and to draft the evidence list, pre-made crisis text, documents and this README. A team member used Codex (OpenAI, model recorded as GPT-6) for the search service, including its chunk files and vector database build script; that record was in the repository at commit `818a11b` and is no longer in the tree. The vector database was built with OpenAI `text-embedding-3-small`.
-- **Images:** the plant and chamber art in the app is AI-generated. The start screen labels it "AI-GENERATED ART". The tool that made the images is not recorded in this repository.
-- **Data files:** each file in `data/content/` has an `ai_disclosure` field, except `events.json` and `events.ko.json`. The relevance grades in `data/eval/evaluation.app.json` and the questions in `data/eval/evaluation.events.json` were drafted with an AI coding assistant; the excerpts in `data/sources/public_sources_RAG.json` were cut by a script written with one.
+| Tool | Used for |
+|---|---|
+| Gemma 4 E4B (Google), run through Ollama | In the app, optional: writes crisis text and translates crisis text and diary lines into Korean when `LLM_MODEL` is set. Not on the live link. |
+| Claude (Anthropic), including Claude Code | Writing and testing code; searching the downloaded NASA documents; drafts of the evidence list, the pre-made crisis text, the documents and this README. |
+| Codex (OpenAI, model recorded as GPT-6) | The search service: its chunk files and the vector database build script. |
+| OpenAI `text-embedding-3-small` | Building the vector database of the optional evidence search. |
+| Image generation tool (not recorded in this repository) | The plant and chamber art in the app. The start screen labels it "AI-GENERATED ART". |
+
+The model never sets verdicts, state changes or sources: they come from the evidence list. Per-file notes on AI use are in the `ai_disclosure` fields of `data/content/` and in [docs/SOURCES.md](docs/SOURCES.md#6-ai-tools).
 
 ## License
 
