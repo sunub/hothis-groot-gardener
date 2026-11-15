@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, type ReactNode } from 'react';
+import { useEffect, useLayoutEffect, useRef, type ReactNode } from 'react';
 import { cn } from '@/lib/utils/cn';
 import './landing.css';
 
@@ -29,7 +29,14 @@ export function SceneSteps({ steps }: { steps: { title: string; body: string }[]
   );
 }
 
-/** Popup framed like a scene monitor. Escape and a click on the backdrop close it. */
+const FOCUSABLE =
+  'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
+/**
+ * Popup framed like a scene monitor. Escape and a click on the backdrop close it.
+ * While it is open, Tab stays inside it and the page behind does not scroll; when
+ * it closes, focus goes back to where it was.
+ */
 export function SceneModal({
   labelledBy,
   state,
@@ -41,16 +48,49 @@ export function SceneModal({
   onClose: () => void;
   children: ReactNode;
 }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const closeRef = useRef(onClose);
   useEffect(() => {
+    closeRef.current = onClose;
+  });
+
+  // Layout effect: it runs before AutoFocusButton's effect moves focus into the
+  // popup, so `opener` is still the element that opened it.
+  useLayoutEffect(() => {
+    const opener = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    const overflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
+      if (e.key === 'Escape') {
+        closeRef.current();
+        return;
+      }
+      if (e.key !== 'Tab' || !ref.current) return;
+      const items = [...ref.current.querySelectorAll<HTMLElement>(FOCUSABLE)];
+      if (items.length === 0) return;
+      const first = items[0];
+      const last = items[items.length - 1];
+      const inside = ref.current.contains(document.activeElement);
+      if (e.shiftKey && (document.activeElement === first || !inside)) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && (document.activeElement === last || !inside)) {
+        e.preventDefault();
+        first.focus();
+      }
     };
     window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
-  }, [onClose]);
+    return () => {
+      window.removeEventListener('keydown', onKey);
+      document.body.style.overflow = overflow;
+      if (opener?.isConnected) opener.focus();
+    };
+  }, []);
 
   return (
     <div
+      ref={ref}
       role="dialog"
       aria-modal="true"
       aria-labelledby={labelledBy}
