@@ -3,15 +3,17 @@
 import { createContext, useContext, useMemo, useState, type ReactNode } from 'react';
 import type { Locale } from '@/lib/contract/types';
 import { en } from './en';
+import { ko } from './ko';
+import type { Dictionary } from './types';
+
+export type { Dictionary };
 
 /**
  * All text shown on screen lives in dictionaries under this folder, one
  * namespace per screen group. Components read text with useDictionary().
- * To add a language, add a dictionary with the same shape and register it here.
+ * To add a language, add a dictionary typed as Dictionary and register it here.
  */
-export type Dictionary = typeof en;
-
-const dictionaries: Partial<Record<Locale, Dictionary>> = { en };
+const dictionaries: Record<Locale, Dictionary> = { en, ko };
 
 export const DEFAULT_LOCALE: Locale = 'en';
 
@@ -26,7 +28,7 @@ const LocaleContext = createContext<LocaleContextValue | null>(null);
 export function LocaleProvider({ children }: { children: ReactNode }) {
   const [locale, setLocale] = useState<Locale>(DEFAULT_LOCALE);
   const value = useMemo<LocaleContextValue>(
-    () => ({ locale, setLocale, dictionary: dictionaries[locale] ?? en }),
+    () => ({ locale, setLocale, dictionary: dictionaries[locale] }),
     [locale],
   );
   return <LocaleContext value={value}>{children}</LocaleContext>;
