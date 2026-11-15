@@ -105,3 +105,5 @@ No code was copied from any of these.
 ## 6. AI tools
 
 See the "Use of AI tools" section of the README. The models used by the optional evidence search (embedding model, reranker) are described in `services/rag/MODEL_SELECT.md`.
+
+Each file in `data/content/` has an `ai_disclosure` field, except `events.json` and `events.ko.json`. The relevance grades in `data/eval/evaluation.app.json` and the questions in `data/eval/evaluation.events.json` were drafted with an AI coding assistant; the excerpts in `data/sources/public_sources_RAG.json` were cut by a script written with one.
