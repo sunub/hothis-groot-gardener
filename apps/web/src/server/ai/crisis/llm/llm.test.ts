@@ -10,7 +10,7 @@ import { validateAiOutput } from '../validate';
 import { chatJson, parseJsonText, warmUp } from './client';
 import { readLlmConfig, type LlmConfig } from './config';
 import { createLlmGenerator, GenerationRejectedError, shuffle, styleExample } from './generator';
-import { checkCopying, checkStructure, checkWording } from './guard';
+import { checkCopying, checkStructure, checkStyle, checkVoice, checkWording } from './guard';
 import { buildOutputSchema, buildUserPrompt } from './prompt';
 import { buildRetrievalQuery } from './retrieval';
 import { warmUpModel } from './warmup';
@@ -238,6 +238,8 @@ describe('checkWording', () => {
       const input = buildGenerationInput(req, candidates);
       const candidate = input.candidates.find((c) => c.crisis_id === entry.output.crisis_id)!;
       expect(checkWording(entry.output, candidate), `${entry.output.crisis_id} stage ${entry.stage}`).toEqual([]);
+      expect(checkStructure(entry.output, candidate), `${entry.output.crisis_id} stage ${entry.stage}`).toEqual([]);
+      expect(checkVoice(entry.output), `${entry.output.crisis_id} stage ${entry.stage}`).toEqual([]);
     }
   });
 
@@ -360,13 +362,12 @@ describe('checkWording', () => {
       'The moisture around the plants remains high, and the fuzzy growth seems to spread.',
     ];
     const narrator = { ...out, options: out.options.map((o, i) => (i < 2 ? { ...o, result_line: fromLog[i] } : o)) };
-    const issues = checkWording(narrator, input.candidates[0]).filter((i) => i.includes('narrator'));
-    expect(issues).toHaveLength(2);
+    expect(checkVoice(narrator).filter((i) => i.includes('narrator'))).toHaveLength(2);
+    // A style problem, not a wording problem: it asks for a rewrite but does not reject the text.
+    expect(checkWording(narrator, input.candidates[0]).join(' ')).not.toMatch(/narrator/);
     const one = { ...out, options: out.options.map((o, i) => (i === 0 ? { ...o, result_line: 'Nothing changed, and the soft spots feel worse.' } : o)) };
-    expect(checkWording(one, input.candidates[0]).join(' ')).not.toMatch(/narrator/);
-    expect(checkWording({ ...out, plant_line: 'The leaves stay wet all day.' }, input.candidates[0]).join(' ')).toMatch(
-      /plant_line: the lettuce speaks for itself/,
-    );
+    expect(checkVoice(one)).toEqual([]);
+    expect(checkVoice({ ...out, plant_line: 'The leaves stay wet all day.' }).join(' ')).toMatch(/plant_line: the lettuce speaks for itself/);
   });
 
   it('catches a scene or plant line copied from the style example (fourth logged run)', () => {
@@ -378,10 +379,40 @@ describe('checkWording', () => {
       plant_line: 'My leaves stay wet, and the droplets on them never seem to go away. Everything around me feels damp.',
     };
     const issues = checkCopying(out, example).join(' ');
-    expect(issues).toMatch(/scene: "the lettuce leaves and do not dry off" is copied/);
-    expect(issues).toMatch(/plant_line: .* is copied/);
+    expect(issues).toMatch(/scene: "small droplets of moisture sit on the" is copied/);
+    expect(issues).toMatch(/plant_line: "on them never seem to go away" is copied/);
     expect(checkCopying(goodWaterText(), styleExample(inputFor(dry).input.candidates[0]))).toEqual([]);
     expect(checkCopying(out, undefined)).toEqual([]);
+    expect(checkStyle(out, example)).toEqual(checkCopying(out, example));
+  });
+
+  it('does not count words across a sentence end as copying (fifth log)', () => {
+    const { input } = inputFor(wet);
+    const stage2 = { ...input.candidates[0], stage: 2 };
+    const example = styleExample(stage2)!;
+    expect(example.plant_line).toBe('Something fuzzy is growing on my leaves and stems. And my leaves still won\'t dry.');
+    const out = { ...getFallbackCrisis('overwater_mold', 2, 'en', [])!, scene: 'White fuzz covers several leaves and stems.' };
+    expect(checkCopying({ ...out, plant_line: 'Fuzz is appearing on my leaves and stems, and my leaves feel quite damp.' }, example)).toEqual([]);
+    expect(checkCopying({ ...out, plant_line: 'Fuzzy stuff is growing on my leaves and stems.' }, example).join(' ')).toMatch(/is copied/);
+  });
+
+  it('catches a label that adds another action\'s key word (fifth log)', () => {
+    const { input } = inputFor(wet);
+    const out = getFallbackCrisis('overwater_mold', 1, 'en', [])!;
+    const i = out.options.findIndex((o) => o.action_id === 'add_water');
+    const text = { ...out, options: out.options.map((o, k) => (k === i ? { ...o, label: 'Add water to the reservoir' } : o)) };
+    expect(checkWording(text, input.candidates[0]).join(' ')).toMatch(/adds "reservoir", which is not part of the action "Add more water"/);
+  });
+
+  it('asks for a clue for the symptom that is new at this stage (fifth log: rot left out)', () => {
+    const candidates = staged(wet).map((c) => ({ ...c, stage: 3 }));
+    const input = buildGenerationInput(wet, candidates);
+    const candidate = input.candidates.find((c) => c.crisis_id === 'overwater_mold')!;
+    const out = getFallbackCrisis('overwater_mold', 3, 'en', [])!;
+    const noRot = { ...out, clues: [...out.clues.filter((c) => c.symptom_id !== 'rot'), { symptom_id: 'excess_moisture', text: 'There is excess moisture around the plants.' }] };
+    expect(checkStructure(noRot, candidate).join(' ')).toMatch(/include a clue for rot \(Rot on leaves and stems\), which is new at this stage/);
+    expect(buildUserPrompt({ input, candidate, excerpts: [] })).toMatch(/NEW AT THIS STAGE: rot\. Describe it in the scene and give it a clue\./);
+    expect(buildUserPrompt({ input: inputFor(wet).input, candidate: inputFor(wet).input.candidates[0], excerpts: [] })).not.toMatch(/NEW AT THIS STAGE/);
   });
 
   it('keeps the banned describing words out of labels in the prompt, and names each key word', () => {
@@ -397,10 +428,15 @@ describe('checkWording', () => {
       ...goodWaterText(),
       scene: 'The plants look stressed. The unit seems to lack proper moisture circulation.',
       plant_line: 'I feel that the substrate below me is lacking moisture.',
+      clues: [
+        { symptom_id: 'poor_growth', text: 'I feel the lack of adequate dampness near my roots.' },
+        { symptom_id: 'dry_wicks', text: 'The pillow wicks look dry.' },
+      ],
     };
     const issues = checkWording(text, input.candidates[0]).join(' ');
     expect(issues).toMatch(/scene: "lack proper moisture" names the cause/);
     expect(issues).toMatch(/plant_line: "lacking moisture" names the cause/);
+    expect(issues).toMatch(/clues.0.text: "lack of adequate dampness" names the cause/);
   });
 });
 
@@ -450,7 +486,8 @@ describe('warmUp', () => {
     expect(ms).toBeGreaterThanOrEqual(0);
     expect(calls).toHaveLength(1);
     expect(calls[0].url).toBe('http://ollama.test/api/chat');
-    expect(calls[0].body).toEqual({ model: 'gemma4:e4b', messages: [], keep_alive: '30m' });
+    // Same num_ctx as the crisis calls, or Ollama loads the model a second time.
+    expect(calls[0].body).toEqual({ model: 'gemma4:e4b', messages: [], options: { num_ctx: 8192 }, keep_alive: '30m' });
   });
 
   it('does nothing for an OpenAI-compatible server or without a model, and never throws', async () => {
@@ -528,6 +565,15 @@ describe('rewrite within an attempt', () => {
     expect(out.scene).toBe(goodWaterText().scene);
     const second = calls.filter((c) => c.url.endsWith('/api/chat'))[1].body.messages as { content: string }[];
     expect(second[3].content).toMatch(/copied from the example/);
+  });
+
+  it('uses the text when only a style problem is left after the rewrite', async () => {
+    const copied = { ...goodWaterText(), scene: styleExample(inputFor(dry).input.candidates[0])!.scene };
+    const { impl, calls } = fakeFetch({ modelReplies: [copied, copied] });
+    const generator = createLlmGenerator({ ...baseConfig, repairs: 1 }, { fetchImpl: impl, random: inOrder });
+    const out = (await generator(inputFor(dry).input, new AbortController().signal)) as AiCrisisOutput;
+    expect(out.scene).toBe(copied.scene);
+    expect(calls.filter((c) => c.url.endsWith('/api/chat'))).toHaveLength(2);
   });
 
   it('still throws when the rewrite breaks a rule too', async () => {

@@ -1,6 +1,6 @@
 import type { AiCrisisOutput, Zone } from '@/lib/contract/types';
 import type { GenerationCandidate, GenerationInput } from '../generator';
-import { actionKeyWords, bannedWordsFor } from './guard';
+import { actionKeyWords, bannedWordsFor, newestSymptoms } from './guard';
 import type { EvidenceChunk } from './retrieval';
 
 /**
@@ -128,6 +128,10 @@ export function buildUserPrompt({ input, candidate, excerpts, example }: PromptP
   lines.push('ALLOWED SYMPTOMS (describe only these):');
   for (const symptom of candidate.symptoms) {
     lines.push(`- ${symptom.symptom_id}: ${symptom.name}`);
+  }
+  if (candidate.stage > 1) {
+    const newest = newestSymptoms(candidate).map((x) => x.symptom_id);
+    lines.push(`NEW AT THIS STAGE: ${newest.join(', ')}. Describe it in the scene and give it a clue.`);
   }
   const banned = bannedWordsFor(candidate);
   lines.push(`DO NOT USE these words in the scene, plant line, clues or result lines: ${banned.anywhere.join('; ')}.`);
