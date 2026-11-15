@@ -73,7 +73,7 @@ export function CrisisPanel({ view, onChoose }: { view: CrisisView; onChoose: (i
           <h3 id="crisis-clues" className="text-heading font-bold">
             {c.clues_title}
           </h3>
-          <ul className="grid gap-3 sm:grid-cols-2">
+          <ul className="grid gap-3 @md:grid-cols-2">
             {view.clues.map((clue, i) => (
               <li key={i} className="m-1 flex items-center gap-3 pixel-frame-flat pixel-tone-line bg-surface px-4 py-3">
                 <PixelIcon name="scope" />

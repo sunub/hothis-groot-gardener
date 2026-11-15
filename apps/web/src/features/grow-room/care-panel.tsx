@@ -101,7 +101,7 @@ export function CarePanel({ mission, actions }: { mission: MissionState; actions
         <h3 id="care-light" className="text-body font-semibold">
           {c.light_title}
         </h3>
-        <div className="grid gap-3 sm:grid-cols-2">
+        <div className="grid gap-3 @md:grid-cols-2">
           <LightPicker legend={c.light_red} value={red} onChange={setRed} disabled={noOps} />
           <LightPicker legend={c.light_blue} value={blue} onChange={setBlue} disabled={noOps} />
         </div>

@@ -40,7 +40,7 @@ export function CrisisPendingPanel({
         <Skeleton className="w-full" />
         <Skeleton className="w-4/5" />
         <Skeleton className="w-3/5" />
-        <div className="grid gap-2 pt-2 sm:grid-cols-2">
+        <div className="grid gap-2 pt-2 @md:grid-cols-2">
           <Skeleton className="h-14" />
           <Skeleton className="h-14" />
         </div>
