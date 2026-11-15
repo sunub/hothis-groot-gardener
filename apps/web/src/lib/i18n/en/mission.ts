@@ -158,6 +158,17 @@ export const mission = {
     map_event: 'Event',
     map_game_day: 'Game day',
   },
+  diary: {
+    title: 'Cultivation diary',
+    empty: 'Nothing written yet. Lines appear as the days go by.',
+    day: 'Day {day}',
+    event_pending: 'An event is waiting for your decision.',
+    event_done: 'Event: {name}',
+    game_day: 'Game day {game_day} reached.',
+    zone: '{metric}: {from} → {to}',
+    unchecked: 'Not yet checked against the original source',
+    tone: { positive: 'good', negative: 'bad', mixed: 'mixed', neutral: '' },
+  },
   pending: {
     title: 'Checking the grow chamber…',
     body: 'Reading the plant and the chamber. This takes a moment.',
