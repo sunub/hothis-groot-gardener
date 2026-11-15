@@ -1,0 +1,64 @@
+/*
+ * Scene tokens: the in-world palette of the grow-room scene (landing concept v0.6.3).
+ *
+ * The page UI (tokens.css) and the scene are two separate color languages:
+ * - tokens.css colors the app's own panels, cards and buttons.
+ * - These colors belong to things drawn inside the background art: the monitor
+ *   glass and its bezel, the plant's speech bubble, the grow light. They are
+ *   matched to the art (public/bg/growth-normal.jpg), so they stay brighter and
+ *   warmer than the page UI and must not be swapped for page tokens.
+ *
+ * Rules:
+ * - Scene styles (landing.css, lp-* classes) use only these tokens. No raw hex.
+ * - Page UI never uses --color-scene-*.
+ * - Alpha variants are made with color-mix() from these tokens, not new hex values.
+ * - The bezel colors are the monitor frame in the art (a warm beige). They are the
+ *   one exception to "no warm hues in the UI" and appear only around scene monitors.
+ *
+ * `static` keeps every token in the output even though no Tailwind utility uses it.
+ */
+@theme static {
+  /* Backdrop behind the artboard while the art loads */
+  --color-scene-backdrop: #bed2cb;
+
+  /* Monitor glass: content drawn on the in-scene screens */
+  --color-scene-glass: #0f1a2a;
+  --color-scene-glass-hi: #16222f; /* step number cell */
+  --color-scene-glass-edge: #2d4152; /* step card outline */
+  --color-scene-glass-line: #43877c; /* tab rule, dividers, idle button frame */
+
+  /* Monitor body: popups and the narrow-window monitors use the same frame as the art */
+  --color-scene-monitor: #1d293c;
+  --color-scene-panel: #202b3c; /* small labels on the art */
+  --color-scene-panel-hi: #2c374a; /* hovered button */
+  --color-scene-bezel: #e0c4ba;
+  --color-scene-bezel-inner: #958f96;
+  --color-scene-bezel-outline: #1e1d27;
+
+  /* Text on glass */
+  --color-scene-ink: #f1f3ed;
+  --color-scene-ink-soft: #e6ebef; /* reading text on glass */
+  --color-scene-ink-muted: #b0bbce;
+  --color-scene-link: #a8cdf1;
+
+  /* Accent: primary button, selected tab, phosphor glow */
+  --color-scene-accent: #9de9c3;
+  --color-scene-accent-ink: #12342b;
+  --color-scene-focus: #f0c65c;
+
+  /* Grow light and dust in the light */
+  --color-scene-glow: #9effe0;
+  --color-scene-glow-hi: #b9fff0;
+  --color-scene-glow-text: #7ecfb8;
+  --color-scene-mote: #dffff6;
+
+  /* Plant speech bubble */
+  --color-scene-bubble: #fff7e6;
+  --color-scene-bubble-ink: #172022;
+  --color-scene-bubble-line: #263132;
+
+  /* Popup backdrop and hard pixel shadows */
+  --color-scene-overlay: #05090e;
+  --color-scene-shadow: #000000;
+  --color-scene-highlight: #ffffff;
+}

@@ -16,6 +16,7 @@
 
 | 위치 | 내용 |
 | --- | --- |
+| `apps/web/src/styles/scene-tokens.css` | 배경 그림 속 장면의 색(`--color-scene-*`). 아래 "장면 토큰" 참고 |
 | `apps/web/src/styles/tokens.css` | `@theme` 토큰: 색, 서체, 글자 크기(`text-caption`, `text-body`, `text-control`, `text-heading`, `text-display`, `text-data-sm`~`text-data-xl`), 움직임. `--radius-*`를 초기화해 `rounded-*` 클래스가 생기지 않습니다 |
 | `apps/web/src/styles/utilities.css` | `pixel-*` 유틸리티: 프레임(`pixel-frame`, `-flat`, `-thin`), 프레임 색(`pixel-tone-*`), `pixel-raised`, `pixel-pressed`, `pixel-bubble`, `pixel-dashed`, `pixel-bar`, `pixel-segments`, `pixel-hatch`, `pixel-art` |
 | `apps/web/src/styles/base.css` | 요소 기본값(바탕, 본문 서체, 포커스 표시, 움직임 줄이기) |
@@ -58,6 +59,26 @@
 | `danger-fill` | `#c8654f` | 게이지의 위험 구간 채움 (빗금과 함께) |
 | `measured` / `game` | `#6baed6` / `#a9b9c0` | 실측 배지 / 게임 값 배지 |
 | `health` `water` `humidity` `lamp` `micro` | `#7bc68f` `#6baed6` `#9c8fd6` `#e3b95b` `#d49a6a` | 상태 항목별 색 (차트 선, 아이콘 점) |
+
+### 장면 토큰 (scene)
+
+배경 그림 안에 그려지는 것(모니터 유리와 테두리, 상추 말풍선, 재배 조명)은 페이지 UI와 다른 색 체계를 씁니다. 그림에 맞춘 색이라 페이지 토큰보다 밝고 따뜻합니다. 값은 `apps/web/src/styles/scene-tokens.css`에 `--color-scene-*`로 따로 모았습니다.
+
+- 랜딩 장면(`landing.css`의 `lp-*` 클래스)은 장면 토큰만 씁니다. hex 값을 직접 쓰지 않고, 투명도는 `color-mix()`로 만듭니다.
+- 페이지 UI는 장면 토큰을 쓰지 않고, 장면은 페이지 토큰을 쓰지 않습니다.
+- `scene-bezel`(따뜻한 베이지)은 그림 속 모니터 테두리 색입니다. "따뜻한 색 금지" 규칙의 유일한 예외이며, 장면 모니터 둘레에만 씁니다.
+- 장면 전용 부품(브리핑 팝업, 단계 목록)은 `apps/web/src/features/grow-room/scene-ui.tsx`에 있습니다. 페이지용 부품은 계속 `components/ui`를 씁니다.
+
+| 토큰 | 쓰는 곳 |
+| --- | --- |
+| `scene-glass` `-hi` `-edge` `-line` | 모니터 화면 안의 칸, 번호 칸, 단계 테두리, 탭 줄과 구분선 |
+| `scene-monitor` `scene-bezel` `-inner` `-outline` | 팝업과 좁은 화면 모니터의 바탕과 테두리 |
+| `scene-panel` `-hi` | 그림 위 작은 라벨, 단추 hover |
+| `scene-ink` `-soft` `-muted` `scene-link` | 화면 글자, 읽는 글, 보조 글, 링크 |
+| `scene-accent` `-ink` `scene-focus` | 주 단추, 선택 탭, 포커스 표시 |
+| `scene-glow` `-hi` `-text` `scene-mote` | 재배 조명, 글자 발광, 떠다니는 먼지 |
+| `scene-bubble` `-ink` `-line` | 상추 말풍선 |
+| `scene-overlay` `scene-shadow` `scene-highlight` `scene-backdrop` | 팝업 뒤 어둠, 픽셀 그림자, 단추 하이라이트, 그림을 불러오는 동안의 바탕 |
 
 ## 픽셀 프레임
 
