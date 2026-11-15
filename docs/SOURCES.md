@@ -76,7 +76,7 @@ All state values and their changes (zones, overnight change, watering amounts, c
 | PyYAML, FastAPI (Python, optional search) | 6.x, 0.x | Retriever settings, search server | MIT |
 | sentence-transformers (Python, optional reranker) | 5.x | Reranking model runner | License not checked here: the package was not installed when this table was written |
 
-The images in `apps/web/public/sprites`, `apps/web/public/bg` and `apps/web/public/icons` came with the design work. The screens label the plant and chamber images "AI-generated art". Which tool made the images, and its terms, are not recorded in this repository yet.
+The images in `apps/web/public/sprites`, `apps/web/public/bg` and `apps/web/public/icons` came with the design work. The start screen labels the plant and chamber images "AI-GENERATED ART". Which tool made the images, and its terms, are not recorded in this repository yet.
 
 The project was started from the `create-next-app` template (MIT). The random number generator in `apps/web/src/lib/game/rng.ts` is written for this project. It follows the published mulberry32 algorithm.
 

@@ -1,182 +1,114 @@
 # Hothis Groot Gardner
 
-**Space Garden Simulator** — a web simulation for practicing how to keep a space crop healthy.
+**Live:** https://hothis-groot-gardener.vercel.app/ (no login)
 
-NASA Space Apps Challenge 2026 · Challenge: *Create Health Monitoring Software for Astronauts on Space Missions* · Team Hothis
+**Space Garden Simulator** is a web training simulation: you look after 'Outredgeous' red romaine lettuce in the ISS Veggie unit for 7 game days, from sowing to harvest.
 
-You grow 'Outredgeous' red romaine lettuce in a simulated ISS Veggie unit for one mission (seven game days that cover cultivation days 1 to 33). You track the plant and chamber state, respond to crises that were actually recorded in NASA plant growth tests, harvest on day 33, and read a ground analysis report that compares the harvest with values measured on real ISS-grown lettuce.
+NASA Space Apps Challenge 2026 · *Create Health Monitoring Software for Astronauts on Space Missions* · Team Hothis
 
-The simulator does not record or assess any health data about people. It trains the step that comes before crew health: keeping the crop from failing and from being contaminated.
+The 7 game days cover cultivation days 1 to 33. The app does not record any health data about people.
 
-## What works now
+## What is implemented
 
-| Part | State |
+| Step | What the app does |
 |---|---|
-| Plant state tracking (plant health, root moisture, chamber humidity, fan, lighting) with a history chart | Built |
-| Daily care (watering, fan, lighting) and overnight changes | Built |
-| Two crises: water shortage, and excess water with stagnant air leading to mold; a standard mission has at least two, raised by an overnight change when the state calls for none | Built |
-| Verdict, state change and source for every choice, taken from the evidence list | Built |
-| Harvest and sanitize, freeze samples for return, ground analysis report | Built |
-| Mission record saved in the browser | Built |
-| Crisis text written by a language model | Built, **off by default**. With `LLM_MODEL` set, a local model (Gemma 4 E4B through Ollama in development) writes the scene, the plant's lines, the clues and the option text. Without it, or when generated text fails its checks twice, the pre-made crises are used. See [Language model](#language-model-optional). |
-| Third crisis (ethylene build-up) | Not built |
+| Check | Gauges for plant health, root moisture, chamber humidity, fan and lighting, and a history chart. Lighting is shown, not set. |
+| Care | Up to 2 care operations a day: water (+10 or +20 root moisture) or fan (Low, High). |
+| Crisis | "Water shortage", or "Excess water and stagnant air leading to mold". 4 actions to choose from, 3 when asked again. |
+| Decide | The result shows a verdict, "Why", "Basis for the verdict" and "What changed". The source quote and link are in sections you open. |
+| Harvest | Day 7: harvest with or without sanitized scissors, freeze samples, read the "Ground analysis report". |
 
-## Run it
+- The mold crisis record is from zinnia grown in the same Veggie hardware. The crisis screen says: "This record is from zinnia, not lettuce."
+- The report compares a calculated microbial value with an observed range on ISS-grown lettuce (2.14 to 4.86 log10 CFU/g). It says: "Being within the range does not mean the harvest is safe."
+- Cards with state numbers or source statements are tagged "Recorded" (from the cited source) or "Game value" (set by the team, not a NASA value). `/sources` lists the evidence and game rules.
+- English and Korean. The mission is saved in the browser.
 
-Requirements: Node.js 20.9 or later, npm.
+| | On the live link | Default build from this repository |
+|---|---|---|
+| Cultivation timeline, cultivation diary, event cards | On | Off (`NEXT_PUBLIC_TIMELINE=1` turns them on at build time) |
+| At least two crises per standard mission | Applies | Applies |
+| Language model | None (pre-made text) | None unless `LLM_MODEL` is set |
 
-```bash
-npm install        # installs the workspace from the repo root
-npm run dev        # http://localhost:3000 (runs apps/web)
-```
+Event cards say on screen that their verdicts and numbers are draft game values.
 
-Other commands:
+## NASA data used
 
-```bash
-npm run test       # unit tests and the full mission run-through
-npm run typecheck
-npm run lint
-npm run build
-npm run check      # all of the above
-```
+| Source | What the app takes from it |
+|---|---|
+| [Massa, Dufour and Smith (2014), *Veggie Hardware Validation Test*, NTRS 20150001374](https://ntrs.nasa.gov/citations/20150001374) | Water shortage crisis: record, symptoms, the corrective action |
+| [NASA (2017), *On-Orbit Gardening Guides*, NTRS 20170007815](https://ntrs.nasa.gov/citations/20170007815) | Fan settings and what the high setting does; watering by observation |
+| [Massa (2016), *Veggie: Space Vegetables for the International Space Station and Beyond*, NTRS 20160004060](https://ntrs.nasa.gov/citations/20160004060) | Harvest frozen and returned to Earth for analysis; the crop of the VEG-01 test |
+| [NASA, *Growing Plants in Space*](https://www.nasa.gov/exploration-research-and-technology/growing-plants-in-space/) | Excess water and mold crisis: record, the cleaning action |
+| NASA OSDR [OSD-358](https://osdr.nasa.gov/bio/repo/data/studies/OSD-358) and [OSD-177](https://osdr.nasa.gov/bio/repo/data/studies/OSD-177) | Fungal growth on zinnia leaves and stems; rot disease on the zinnia plants |
+| [Khodadad et al. (2020), *Frontiers in Plant Science* 11:199](https://doi.org/10.3389/fpls.2020.00199) | Bacterial count range on ISS-grown lettuce leaves, pathogen screening results, absence of standards, harvest and freezing steps |
+| [NASA (2021), *Researchers Put Space Garden Microbes Under the Microscope*](https://www.nasa.gov/missions/station/researchers-put-space-garden-microbes-under-the-microscope/) | Background: contaminated plant systems can make crops fail |
+| [NASA Human Research Program (2025), *Evidence Report: Risk of Adverse Cognitive or Behavioral Changes and Psychiatric Disorders …*](https://humanresearchroadmap.nasa.gov/evidence/reports/HRP-ER-BMED-HFBP-20250210.pdf) | Background: failing crops and crew well-being |
+| [Landon et al. (2025), *Behavioral Health Benefits of the ISS Pick-and-Eat Crop Growth System*, NTRS 20250000411](https://ntrs.nasa.gov/citations/20250000411) | Background: working with plants as a behavioral health countermeasure |
 
-No environment variables, database or account are needed. The language model is optional; to run with it in one step, use the setup script in [Language model](#language-model-optional).
+Every quote in the evidence list was compared by a script with the text of the downloaded source document and is a verbatim part of it. All state values and their changes are game values set by the team.
 
-## Language model (optional)
+## Screenshots
 
-The game runs without it. With no model configured, or when the model server does not answer, every crisis uses the reviewed pre-made text in `data/content/fallback-crises.json` (English and Korean) at once, and the Korean screen keeps the diary lines in English. Verdicts, state changes and sources are the same either way. The public demo link has no model server behind it, so it shows the pre-made crises.
+| | |
+|---|---|
+| ![Start screen with lettuce and mission buttons](docs/images/01-start.png) Start | ![Mission day 1 with gauges, chart and daily care](docs/images/02-mission-day.png) Mission day |
+| ![Cultivation diary drawer with day 1 entries](docs/images/03-cultivation-diary.png) Cultivation diary | ![Event on cultivation day 3 with actions to choose from](docs/images/04-event.png) Event |
+| ![Event result with verdict Appropriate](docs/images/05-event-result.png) Event result | ![Harvest screen with harvest grade and procedure](docs/images/06-harvest.png) Harvest |
+| ![Freeze samples step with the recorded procedure](docs/images/07-freeze.png) Freeze | ![Report with microbial value 2.70 in the observed range](docs/images/08-report.png) Report |
 
-### Run with the model: one script
+The screenshots show the app with the cultivation timeline on, as on the live link.
 
-The script checks Node.js, installs [Ollama](https://ollama.com) if it is missing (it asks first), downloads the model `gemma4:e4b` once (about 10 GB), installs the npm packages, writes `apps/web/.env.local`, then builds and starts the app at http://localhost:3000.
+The plant and chamber art in the screenshots is AI-generated.
 
-Windows (PowerShell, in the repository folder):
+## Run it locally
 
-```powershell
-powershell -ExecutionPolicy Bypass -File scripts\start-with-ai.ps1
-```
-
-macOS or Linux:
-
-```bash
-bash scripts/start-with-ai.sh
-```
-
-- Wait for `[llm] gemma4:e4b is loaded` in the terminal, then open http://localhost:3000. Crisis text written by the model is labelled on the crisis screen.
-- Options: `-Yes` / `--yes` installs and downloads without asking, `-Dev` / `--dev` runs the development server, `-Port 3001` / `--port 3001` uses another port.
-- A GPU is recommended. On a computer without one a reply can take longer than the 30-second limit, and the game then shows the pre-made text.
-- Stop with Ctrl+C. To run without the model again, delete `apps/web/.env.local`.
-- The script does not start the evidence search server; it is optional (step 2 below).
-
-### Manual setup
-
-1. Run a model server. Development used [Ollama](https://ollama.com) with `gemma4:e4b`:
-   ```bash
-   ollama pull gemma4:e4b
-   ```
-2. Optional: run the evidence search server from the RAG branch (`services/rag/rag_server.py`), which adds short excerpts from NASA plant research papers to the prompt:
-   ```bash
-   cd services/rag && python -m uvicorn rag_server:app --host 127.0.0.1 --port 8000
-   ```
-3. Copy `apps/web/.env.example` to `apps/web/.env.local` and check the values (`LLM_MODEL`, `LLM_BASE_URL`, `RAG_URL`).
-4. `npm run dev`. The server starts loading the model in the background (`apps/web/src/instrumentation.ts`); the terminal shows `[llm] gemma4:e4b is loaded` when it is ready. For a demo, set `LLM_KEEP_ALIVE=-1` so the model stays loaded until the demo starts.
-
-### What the model does and does not do
-
-- It writes text only. The code picks the crisis and its symptom stage, the JSON schema sent with the request lists only that crisis's symptom and action ids, and verdicts, state changes and sources are attached from the evidence list after the text is checked.
-- Each reply is checked twice: `validateAiOutput` (ids, counts, one appropriate option, no duplicates) and `checkStructure`/`checkWording` in `apps/web/src/server/ai/crisis/llm/guard.ts` (no symptom that is not allowed at the current stage, no setting or reading in the scene, no label that hints at the answer, no longer names its action or adds another action's key word, a clue for the symptom that is new at this stage, no plant line that names the cause, result lines spoken by the lettuce, no scene copied from the style example, no safety or edibility claim, no soil, no water that drips or pools in microgravity, length limits). On a problem the model gets the list of broken rules and rewrites once; if the rewrite fails too, the attempt is retried once, and then the pre-made crisis is shown. Style problems (a narrator instead of the lettuce, a scene copied from the style example) also ask for the rewrite, but do not reject the text.
-- Option order is shuffled after generation.
-- `LLM_PROVIDER=openai` switches to any OpenAI-compatible server (for example vLLM on RunPod) with the same checks.
-- `LLM_LOG_DIR` writes every generation (output, problems found, time taken) to `generations.jsonl` for quality checks.
-
-### Evidence search and how well it works
-
-When `RAG_URL` points at the search server (`services/rag/rag_server.py`), each crisis request first searches 76 excerpts from published sources and puts the top 4 into the prompt as background for the scene and the "why" lines. The default setting (`retriver.local.yaml`) is keyword search (BM25) only and needs no API key. The search never decides verdicts, state changes or the sources shown on screen; those come from the evidence list. Without `RAG_URL`, or when the server does not answer within 3 seconds, the model writes without excerpts. The one-step scripts do not start the search server.
-
-We measured the search with the five queries the game actually sends (`data/eval/evaluation.app.json`): water shortage at stages 1 and 2, overwatering and mold at stages 1 to 3. Before scoring, every candidate excerpt was graded as key evidence, supporting, unrelated, or off-stage (about a symptom the plant does not have yet at that stage, which could lead the model to write it).
-
-| Query | Precision@4 | Recall@4 | MRR@4 | nDCG@4 | Off-stage |
-|---|---|---|---|---|---|
-| Water shortage, stage 1 | 0.75 | 0.67 | 1.00 | 0.79 | 0 |
-| Water shortage, stage 2 | 0.75 | 0.67 | 1.00 | 0.79 | 0 |
-| Overwatering, stage 1 | 0.75 | 1.00 | 1.00 | 0.86 | 0 |
-| Overwatering, stage 2 | 0.50 | 1.00 | 1.00 | 0.80 | 0 |
-| Overwatering, stage 3 | 0.50 | 1.00 | 1.00 | 0.80 | 0 |
-| **Average, top 4 (what the game uses)** | **0.65** | **0.87** | **1.00** | **0.81** | **0 of 20** |
-| Average if the top 5 were used | 0.60 | 0.87 | 1.00 | 0.78 | 2 of 25 |
-
-- Precision is the share of the excerpts in the prompt that are key or supporting. Recall and MRR count key evidence only: Recall is the share of key excerpts that reach the prompt, MRR is 1 divided by the rank of the first one. nDCG weighs key and supporting excerpts by rank.
-- The first excerpt is key evidence for every query, and no off-stage excerpt reaches the prompt. A fifth excerpt would add a tip burn record to both water shortage prompts, which is why the game keeps 4.
-- Weak points: for water shortage, the excerpt on watering the pillows directly ranks 6th. At overwatering stages 2 and 3, a lighting excerpt and a harvest schedule excerpt take places 3 and 4, and at stage 3 the root rot record is not in the top 10. A stage's new symptom changes little: water shortage stages 1 and 2, and overwatering stages 2 and 3, return the same excerpts.
-- Five queries over two crises is a small set, and the grades are a judgement made by reading each excerpt (see Use of AI tools). Measured on 2026-11-15 with 76 excerpts.
-
-To repeat it (setup and the other evaluation sets: `services/rag/RETRIEVAL_USAGE.md`, in Korean):
+Requires Node.js and npm (the setup scripts state Node.js 20.9 or later).
 
 ```bash
-cd services/rag
-uv run python evaluation.py --dataset ../../data/eval/evaluation.app.json --config retriver.local.yaml --top-n 4
+npm install     # from the repository root
+npm run dev     # http://localhost:3000
+npm run check   # typecheck, lint, tests, build
 ```
 
-## How to read the numbers
+At commit `b5662b8`, in a clean clone with Node.js v25.9.0, `npm run check` passed: 797 tests in 47 files.
 
-Every number on screen carries one of two labels.
+## Settings and data
 
-- **Recorded**: taken from a cited source, with the source sentence shown next to it.
-- **Game value**: set by the team so that the game is balanced. NASA sources say which action is right, but not how much the plant state changes per day, so all state changes are game values.
+No environment variable, database or account is needed. Without `apps/web/.env.local` no model is called. For settings, copy `apps/web/.env.example` to `apps/web/.env.local`; as is, it turns the model on.
 
-The ground analysis report never says that the harvest is safe or can be eaten. The recorded range it shows is a range that was observed, not a safety limit.
+| Variable | Effect |
+|---|---|
+| `LLM_MODEL` | Model name; unset means no model |
+| `RAG_URL` | Optional evidence search server; unset turns search off |
+| `NEXT_PUBLIC_TIMELINE` | `1` turns the cultivation timeline on at build time |
 
-## Structure
+The evidence list, pre-made crisis text and timeline events are JSON files in `data/content/`. `scripts/start-with-ai.sh` and `.ps1` set up Ollama and the model (about 10 GB). Model, search and code structure: [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md).
 
-```
-apps/web/               Next.js app (npm workspace "web")
-  src/
-    app/                Routes: / (start), /mission, /harvest, /report, /sources, /api/crisis, /api/event
-    features/           Screen code by feature: mission (store), grow-room, report
-    components/         Shared UI pieces
-    server/ai/          Server-only code ("server-only"): crisis and event-card pipelines, LLM client
-    lib/
-      contract/         Shared type file and runtime schemas (the agreement between modules)
-      game/             Game rules and logic as pure TypeScript, with tests
-      evidence/         Evidence list loading, checks and selection
-      events/           Timeline event list, schema and judging
-      i18n/             All screen text
-services/rag/           Python evidence search server (FastAPI, Chroma, BM25), indexing and evaluation scripts
-scripts/                start-with-ai.ps1 (Windows) and start-with-ai.sh (macOS, Linux): run the app with the language model in one step
-data/
-  content/              JSON the app reads: evidence, events, event-cards, fallback-crises, ...
-  sources/              Source chunks for the search index (total_RAG.json, public_sources_RAG.json)
-  eval/                 Search evaluation sets
-  vector_db/            Chroma index
-docs/
-  IMPLEMENTATION-NOTES.en.md  Where the build differs from the planning document, and why
-  IMPLEMENTATION-NOTES.md     The same notes in Korean (original)
-  SOURCES.md                  Data, documents, open-source software and references, with licenses
-  DEMO-SCRIPT.md              Care steps that show both crises in demo mode
-  DESIGN.md                   Pixel UI design system (Korean)
-  TIMELINE-EVENTS-PLAN.md     Plan for the cultivation timeline and events (Korean)
-  TIMELINE-ENGINE-NOTES.md    Decisions made for the timeline types and event judgement (Korean)
-  ROLE-TASKS.md               Open tasks per role and the event card API contract (Korean)
-```
+## Not built and known limits
 
-### Where the language model plugs in
+Items 2 to 9 were found on a default build at commit `b5662b8`.
 
-The planning document gives the model one job: write the crisis scene, the plant's lines and the option text. Verdicts, state changes and sources always come from the evidence list.
-
-- `apps/web/src/server/ai/crisis/generator.ts`: the generator interface. Input: current state, candidate crises with their evidence, history. Output: the "AI output format" of the planning document.
-- `apps/web/src/server/ai/crisis/validate.ts`: checks the output (shape, ids exist in the evidence list, at least one appropriate option, no duplicate action).
-- `apps/web/src/server/ai/crisis/pipeline.ts`: generate, validate, retry once, then fall back to a pre-made crisis.
-- `apps/web/src/app/api/crisis/route.ts`: the one place where a generator is passed in. It connects `apps/web/src/server/ai/crisis/llm/` when `LLM_MODEL` is set.
-- `apps/web/src/server/ai/crisis/llm/`: settings, prompt, model client (Ollama or OpenAI-compatible), evidence search client and wording checks.
-- `apps/web/src/server/ai/event-cards/`: event cards for timeline events behind `POST /api/event`. Their text is pre-made by default. With a model configured and `LLM_EVENT_CARDS=on`, the model writes the scene, the plant's line and the option text; the explanations, verdicts and effects still come from the data files.
+1. The third crisis (ethylene build-up) is not built.
+2. After 2 inappropriate choices, ground control ends the crisis. The notice does not say that the watched items return to 55.
+3. The hint says you will be asked again, also on the second ask, after which the crisis ends.
+4. "Why" and "Basis for the verdict" can be the same sentence.
+5. In Korean, crisis names on the result screen and report, source quotes and notes stay English.
+6. Switching language during a crisis leaves that crisis's text in the earlier language.
+7. The microbial value counts only humidity, the mold crisis, cleaning and sanitizing.
+8. In Korean, pages overflow by 11px at 375px width (headless Chromium on macOS; a real phone can differ).
+9. Tags are per card or section, and some numbers have no tag.
+10. With the local model at commit `e485a17` on the development laptop (`LLM_TIMEOUT_MS=60000`), English crises took 39.6 to 120.3 s to appear.
+11. Tested in headless Chromium only. Not tested on phones, Safari or Firefox.
 
 ## Use of AI tools
 
-- **In the product:** when `LLM_MODEL` is set, a language model (Gemma 4 E4B by Google, run locally through Ollama during development) writes the crisis scene, the plant's lines, the clues and the option text. The crisis screen states this whenever the text is generated. Verdicts, state changes and sources never come from the model. Without `LLM_MODEL` no model is called and crisis text comes from `data/content/fallback-crises.json`. The optional evidence search uses keyword search over excerpts from published papers; no AI model is involved in that search by default.
-- **In development:** the team used an AI coding assistant (Claude Code by Anthropic) to write and test the code in this branch, to search the downloaded NASA source documents and draft the evidence list, to draft the English text of the pre-made crises, to draft the documents in `docs/`, and to write the language model connection in `apps/web/src/server/ai/crisis/llm/`. The team defined the idea, the rules and the scope in its planning document.
-- **Data files:** the files in `data/content/` carry an `ai_disclosure` field that says how AI tools were used for that file, except `events.json`, which has none yet. `data/eval/evaluation.events.json` and `data/sources/public_sources_RAG.json` are plain lists and cannot carry the field: the questions in the first were drafted with an AI coding assistant, and the excerpts in the second were cut from the source documents by a script written with one. In `data/eval/evaluation.app.json` the queries are the ones the game builds, and the relevance grades were drafted with an AI coding assistant after reading each excerpt. Every quote in the evidence list was compared by a script with the text of the downloaded source document and is a verbatim part of it. The script and the downloaded documents are not part of this repository.
-- The plant and chamber images in `apps/web/public/sprites` and `apps/web/public/bg` are AI-generated, and the screens label them "AI-generated art". No AI-generated video or audio is used.
+- **In the product:** when `LLM_MODEL` is set, Gemma 4 E4B (Google) through Ollama writes crisis text, and translates crisis text and diary lines into Korean. It never sets verdicts, state changes or sources. The crisis screen labels generated text.
+- **In development:** a team member used Claude Code (Anthropic) to write and test code, to search the downloaded NASA documents, and to draft the evidence list, pre-made crisis text, documents and this README. A team member used Codex (OpenAI, model recorded as GPT-6) for the search service, including its chunk files and vector database build script; that record was in the repository at commit `818a11b` and is no longer in the tree. The vector database was built with OpenAI `text-embedding-3-small`.
+- **Images:** the plant and chamber art in the app is AI-generated. The start screen labels it "AI-GENERATED ART". The tool that made the images is not recorded in this repository.
+- **Data files:** each file in `data/content/` has an `ai_disclosure` field, except `events.json` and `events.ko.json`. The relevance grades in `data/eval/evaluation.app.json` and the questions in `data/eval/evaluation.events.json` were drafted with an AI coding assistant; the excerpts in `data/sources/public_sources_RAG.json` were cut by a script written with one.
 
-## Sources and licenses
+## License
 
-See [`docs/SOURCES.md`](docs/SOURCES.md).
+The team's code and the text the team wrote are under the [Apache License 2.0](LICENSE). NASA documents, published papers, fonts and packages keep their own terms, listed in [docs/SOURCES.md](docs/SOURCES.md).
+
+The search excerpts in `data/sources/total_RAG.json`, `data/json/`, `data/json_ko/`, `data/vector_db/` and `vector_db/` include text from papers that are not openly licensed, and are not covered by the Apache license. Of the 76 excerpts, 20 are under CC BY 4.0, 41 under CC BY-NC-ND 4.0, and 15 have no open license.

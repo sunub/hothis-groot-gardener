@@ -345,9 +345,12 @@ export function endDay(state: MissionState): MissionState {
 // Mission minimum of crises (MIN_CRISES_PER_MISSION)
 // ---------------------------------------------------------------------------
 
-/** The minimum applies to standard missions without a timeline only; demo and timeline missions keep the state-only rule. */
+/**
+ * The minimum applies to standard missions, with or without a timeline (the
+ * public build runs with it). Demo missions keep the state-only rule.
+ */
 function minimumApplies(state: MissionState): boolean {
-  return state.mode === 'standard' && !state.timeline && MIN_CRISES_PER_MISSION > 0;
+  return state.mode === 'standard' && MIN_CRISES_PER_MISSION > 0;
 }
 
 /** Earlier game days whose record has a crisis. */

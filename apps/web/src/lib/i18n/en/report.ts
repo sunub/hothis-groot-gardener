@@ -294,7 +294,7 @@ export const report = {
       crisis_recurrence:
         'The day after a crisis ended partially, the same crisis gets {points} percentage points more.',
       crisis_minimum:
-        'A standard mode mission (not the demo, and without the cultivation timeline) has at least {count} crises. Until then, on a morning when the state calls for no crisis, one watched item may move overnight into its caution zone: {percent}% chance, and certain when only as many crisis days remain as crises are still needed.',
+        'A standard mode mission (not the demo) has at least {count} crises. Until then, on a morning when the state calls for no crisis, one watched item may move overnight into its caution zone: {percent}% chance, and certain when only as many crisis days remain as crises are still needed.',
       verdict_title: 'Verdict effects',
       verdict_caption: 'Default plant health change per verdict',
       verdict_note: 'Each action has its own change, shown in the actions tables above.',
