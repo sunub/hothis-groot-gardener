@@ -16,6 +16,7 @@ import { ValueTypeTag } from '@/components/value-type-tag';
 import { VerdictBanner } from '@/components/verdict-banner';
 import { ZoneBadge } from '@/components/zone-badge';
 import { HealthBar, ZoneGauge } from '@/features/grow-room/zone-gauge';
+import { TimelinePreview } from './timeline-preview';
 
 /**
  * Living catalog of the pixel design system (SG-DS v2). Developer page: the copy here is
@@ -234,6 +235,10 @@ export function DesignSystemCatalog() {
             </li>
           ))}
         </ul>
+      </Section>
+
+      <Section id="ds-timeline" title="10 · TIMELINE">
+        <TimelinePreview />
       </Section>
     </div>
   );
