@@ -11,26 +11,30 @@ import {
   growthStageOf,
 } from '@/lib/game/rules';
 
-const LAST_CULTIVATION_DAY: number = CULTIVATION_DAYS[CULTIVATION_DAYS.length - 1];
-const CULTIVATION_CELLS: readonly number[] = Array.from({ length: LAST_CULTIVATION_DAY + 1 }, (_, i) => i);
-/** Cultivation days in which a morning check can raise a crisis (game days 2 to 6). */
-const WINDOW_START: number = cultivationDayOf(FIRST_CRISIS_DAY);
-const WINDOW_END: number = cultivationDayOf(LAST_CRISIS_DAY);
+const GAME_DAY_LIST: readonly number[] = Array.from({ length: GAME_DAYS }, (_, i) => i + 1);
 
-type CellState = 'today' | 'done' | 'future';
+type SegmentState = 'done' | 'crisis' | 'none';
 
-function cellClass(state: CellState, isStop: boolean): string {
-  if (state === 'today') return 'border-ink bg-ink text-bg';
-  if (state === 'done') return `${isStop ? 'border-accent' : 'border-accent-lo'} bg-accent-lo/50 text-ink`;
-  return `${isStop ? 'border-accent' : 'border-line'} bg-surface ${isStop ? 'text-ink' : 'text-ink-muted'}`;
+/** The line from game day `gameDay - 1` to `gameDay`: walked, a possible-crisis stretch, or plain. */
+function segmentState(gameDay: number, today: number): SegmentState {
+  if (gameDay <= today) return 'done';
+  if (gameDay >= FIRST_CRISIS_DAY && gameDay <= LAST_CRISIS_DAY) return 'crisis';
+  return 'none';
 }
 
+const segmentClass: Record<SegmentState, string> = {
+  done: 'bg-accent-lo',
+  crisis: 'bg-[repeating-linear-gradient(135deg,#e3b95b_0_3px,#3a3220_3px_6px)]',
+  none: 'bg-surface-2',
+};
+
 /**
- * The mission as a map of cultivation days 0 to 33, one square cell per day.
- * The seven game-day stops carry a "D1" to "D7" label; today is filled, finished
- * days are tinted, and the crisis window and crisis days are marked with a symbol
- * and a word, never with color alone. Read-only: it never changes the mission.
- * The visual map is hidden from screen readers; a plain list below it says the same.
+ * The mission as one borderless line: the seven game days
+ * as bare numbers on a thin line, each with its cultivation day (or "today") underneath.
+ * The hatched stretch is the window in which a crisis can come.
+ * No card and no boxes around the numbers: the state of a day is told by the number's
+ * color and weight,. Read-only.
+ * The visual line is hidden from screen readers; a plain list below says the same.
  */
 export function CultivationTimeline({ mission }: { mission: MissionState }) {
   const t = useDictionary();
@@ -38,76 +42,59 @@ export function CultivationTimeline({ mission }: { mission: MissionState }) {
   const today = mission.game_day;
   // A mission with a timeline knows the cultivation day between two game days.
   const todayCultivation = mission.timeline?.cultivation_day ?? cultivationDayOf(today);
-  const gameDays = Array.from({ length: GAME_DAYS }, (_, i) => i + 1);
+  const alerting = Boolean(mission.timeline?.pending_event) || mission.phase.startsWith('crisis');
 
   return (
-    <section aria-label={tl.label} className="pixel-frame m-1 space-y-3 p-3 sm:p-4">
-      <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
-        <p className="font-title text-lg">
-          {format(tl.summary, {
-            day: today,
-            days: GAME_DAYS,
-            cultivation_day: todayCultivation,
-            stage: t.common.growth_stage[growthStageOf(today)],
-          })}
-        </p>
-        <p className="font-data text-lg text-ink-muted">{format(tl.map_hint, { last: LAST_CULTIVATION_DAY })}</p>
-      </div>
+    <section aria-label={tl.label} className="border-y border-dashed border-line py-3">
+      <p className="sr-only">
+        {format(tl.summary, {
+          day: today,
+          days: GAME_DAYS,
+          cultivation_day: todayCultivation,
+          stage: t.common.growth_stage[growthStageOf(today)],
+        })}
+      </p>
 
-      <div aria-hidden className="overflow-x-auto pb-1">
-        <div className="grid min-w-[44rem] grid-cols-[repeat(17,minmax(0,1fr))] gap-1.5">
-          {CULTIVATION_CELLS.map((day) => {
-            const gameDay = CULTIVATION_DAYS.indexOf(day) + 1;
-            const isStop = gameDay > 0;
-            const state: CellState = day === todayCultivation ? 'today' : day < todayCultivation ? 'done' : 'future';
-            const hadCrisis = isStop && mission.days.find((d) => d.game_day === gameDay)?.crisis != null;
-            const inWindow = day >= WINDOW_START && day <= WINDOW_END;
-            return (
-              <div
-                key={day}
-                className={`flex min-h-14 flex-col items-center justify-between border-2 py-1 text-center ${cellClass(state, isStop)}`}
-              >
-                <span className="font-data text-lg leading-none">{day}</span>
-                <span className="font-data text-base leading-none">{hadCrisis ? '△' : inWindow ? '≈' : ''}</span>
-                <span className="font-data text-sm leading-none">{isStop ? format(tl.day_short, { day: gameDay }) : ''}</span>
+      {/* Only the line: bare day numbers on a thin line, the cultivation day (or "today") under each. */}
+      <div aria-hidden className="flex items-start">
+        {GAME_DAY_LIST.map((gameDay) => {
+          const isToday = gameDay === today;
+          const tone = isToday
+            ? alerting
+              ? 'text-caution'
+              : 'text-ink'
+            : gameDay < today
+              ? 'text-accent-hi'
+              : 'text-ink-muted';
+          return (
+            <div key={gameDay} className="contents">
+              {gameDay > 1 ? (
+                <span className={`mt-2.5 h-1.5 min-w-2 flex-1 ${segmentClass[segmentState(gameDay, today)]}`} />
+              ) : null}
+              <div className="flex flex-col items-center">
+                <span className={`px-1.5 font-data text-data leading-none ${tone}`}>
+                  {gameDay}
+                </span>
+                <span
+                  className="mt-0.5 whitespace-nowrap text-caption leading-tight text-ink-muted"
+                >
+                  {isToday ? tl.today : CULTIVATION_DAYS[gameDay - 1]}
+                </span>
               </div>
-            );
-          })}
-        </div>
+            </div>
+          );
+        })}
       </div>
-
-      <ul aria-hidden className="flex flex-wrap gap-x-5 gap-y-1 text-sm text-ink-muted">
-        <li className="flex items-center gap-2">
-          <span className="font-data text-base text-ink">D1–D{GAME_DAYS}</span>
-          {tl.legend_stop}
-        </li>
-        <li className="flex items-center gap-2">
-          <span className="inline-block size-3.5 border-2 border-ink bg-ink" />
-          {tl.legend_today}
-        </li>
-        <li className="flex items-center gap-2">
-          <span className="inline-block size-3.5 border-2 border-accent-lo bg-accent-lo/50" />
-          {tl.legend_done}
-        </li>
-        <li className="flex items-center gap-2">
-          <span className="font-data text-base text-ink">≈</span>
-          {tl.legend_window}
-        </li>
-        <li className="flex items-center gap-2">
-          <span className="font-data text-base text-caution">△</span>
-          {tl.legend_crisis}
-        </li>
-      </ul>
 
       <ol className="sr-only">
-        {gameDays.map((day) => {
+        {GAME_DAY_LIST.map((day) => {
           const record = mission.days.find((d) => d.game_day === day);
           return (
             <li key={day} aria-current={day === today ? 'step' : undefined}>
               {[
                 format(tl.day_aria, {
                   day,
-                  cultivation_day: cultivationDayOf(day),
+                  cultivation_day: CULTIVATION_DAYS[day - 1],
                   stage: t.common.growth_stage[growthStageOf(day)],
                 }),
                 day === today ? tl.today : day < today ? tl.done : null,
