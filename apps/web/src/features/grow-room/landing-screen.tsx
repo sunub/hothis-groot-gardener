@@ -3,13 +3,14 @@
 /* eslint-disable @next/next/no-img-element -- pixel art on a scaled artboard; next/image adds nothing here */
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useCallback, useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore, type ReactNode } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore } from 'react';
 import { ROUTES, routeForPhase } from '@/features/mission/routes';
 import { useMission } from '@/features/mission/use-mission';
 import type { MissionMode, MissionState } from '@/lib/contract/types';
 import { CULTIVATION_DAYS, GAME_DAYS, MAX_CARE_OPS_PER_DAY, cultivationDayOf } from '@/lib/game/rules';
 import { format, useDictionary, useLocale } from '@/lib/i18n';
 import { cn } from '@/lib/utils/cn';
+import { AutoFocusButton, SceneModal, SceneSteps } from './scene-ui';
 import './landing.css';
 
 /**
@@ -284,7 +285,7 @@ export function LandingScreen() {
       </div>
 
       <div className="lp-pane" id="lp-pane-how" role="tabpanel" aria-labelledby="lp-tab-how" hidden={tab !== 'how'}>
-        <Steps steps={steps} />
+        <SceneSteps steps={steps} />
       </div>
 
       <div className="lp-pane" id="lp-pane-before" role="tabpanel" aria-labelledby="lp-tab-before" hidden={tab !== 'before'}>
@@ -416,7 +417,7 @@ export function LandingScreen() {
       ) : null}
 
       {brief !== 'closed' ? (
-        <Modal
+        <SceneModal
           labelledBy="lp-brief-title"
           state={brief}
           onClose={closeBrief}
@@ -427,7 +428,7 @@ export function LandingScreen() {
           </h2>
           <p className="lp-lead">{s.brief_lead}</p>
           <h3>{s.steps_title}</h3>
-          <Steps steps={steps} />
+          <SceneSteps steps={steps} />
           <h3>{s.notices_title}</h3>
           <ul className="lp-bullets">
             {s.notices.map((notice) => (
@@ -449,11 +450,11 @@ export function LandingScreen() {
               </AutoFocusButton>
             </div>
           </div>
-        </Modal>
+        </SceneModal>
       ) : null}
 
       {confirming && mission ? (
-        <Modal labelledBy="lp-confirm-title" state="open" onClose={() => setConfirming(null)}>
+        <SceneModal labelledBy="lp-confirm-title" state="open" onClose={() => setConfirming(null)}>
           <h2 id="lp-confirm-title">{s.confirm_title}</h2>
           <p className="lp-lead">{format(s.confirm_body, { mode: s.confirm_mode[confirming] })}</p>
           <p className="lp-lead">
@@ -476,78 +477,8 @@ export function LandingScreen() {
               </AutoFocusButton>
             </div>
           </div>
-        </Modal>
+        </SceneModal>
       ) : null}
     </div>
-  );
-}
-
-function Steps({ steps }: { steps: { title: string; body: string }[] }) {
-  return (
-    <ol className="lp-steps">
-      {steps.map((step, i) => (
-        <li key={step.title} className="lp-step">
-          <span className="lp-n" aria-hidden>
-            {i + 1}
-          </span>
-          <div>
-            <b>{step.title}</b>
-            <span>{step.body}</span>
-          </div>
-        </li>
-      ))}
-    </ol>
-  );
-}
-
-function Modal({
-  labelledBy,
-  state,
-  onClose,
-  children,
-}: {
-  labelledBy: string;
-  state: 'open' | 'closing';
-  onClose: () => void;
-  children: ReactNode;
-}) {
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
-    };
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
-  }, [onClose]);
-
-  return (
-    <div
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby={labelledBy}
-      className={cn('lp lp-modal-bg', state === 'open' ? 'lp-in' : 'lp-out')}
-      onClick={(e) => {
-        if (e.target === e.currentTarget) onClose();
-      }}
-    >
-      <div className="lp-modal">{children}</div>
-    </div>
-  );
-}
-
-function AutoFocusButton({
-  className,
-  onClick,
-  children,
-}: {
-  className: string;
-  onClick: () => void;
-  children: ReactNode;
-}) {
-  const ref = useRef<HTMLButtonElement>(null);
-  useEffect(() => ref.current?.focus(), []);
-  return (
-    <button ref={ref} type="button" className={className} onClick={onClick}>
-      {children}
-    </button>
   );
 }
