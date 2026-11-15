@@ -15,6 +15,7 @@ import { Stepper } from '@/components/ui/stepper';
 import { ValueTypeTag } from '@/components/value-type-tag';
 import { VerdictBanner } from '@/components/verdict-banner';
 import { ZoneBadge } from '@/components/zone-badge';
+import { EventCard } from '@/features/event-card/event-card';
 import { HealthBar, ZoneGauge } from '@/features/grow-room/zone-gauge';
 import { TimelinePreview } from './timeline-preview';
 
