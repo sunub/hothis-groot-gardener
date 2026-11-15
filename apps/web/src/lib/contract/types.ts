@@ -407,7 +407,8 @@ export interface ActiveCrisis {
 }
 
 export interface MissionState {
-  schema_version: 1;
+  /** 1 without a timeline, 2 with one (ROLE-TASKS A1). */
+  schema_version: 1 | 2;
   mission_id: string;
   mode: MissionMode;
   seed: number;
@@ -425,6 +426,11 @@ export interface MissionState {
   /** Cultivation record. One entry per game day, in order. */
   days: DayRecord[];
   harvest: HarvestRecord | null;
+  /**
+   * The cultivation timeline (days 0-33 with events and log lines). Present
+   * only in missions started with the timeline switch on; then schema_version is 2.
+   */
+  timeline?: TimelineState;
 }
 
 export interface ReportMetrics {
