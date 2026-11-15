@@ -1,0 +1,101 @@
+[
+  {
+    "id": "mickens2018-ground-conditions",
+    "text": "LED light recipes for Outredgeous red romaine lettuce\nBaseline conditions in the ground growth chamber\n\nNASA Kennedy Space Center tested seven fixed LED spectra on red romaine lettuce (*Lactuca sativa* cv. ‘Outredgeous’) in a ground growth chamber for 28 days. The study targeted future Advanced Plant Habitat (APH) experiments aboard the ISS. The chamber was held at 23 ± 0.4 °C, 65 ± 3% relative humidity, and 1,200 ± 60 ppm CO₂. Measured air speed ranged from about 0.5 to 1.0 m/s. The canopy PPFD target was about 180 µmol m⁻² s⁻¹ over 400–700 nm, with 18 h of light and 6 h of darkness daily (DLI ≈ 12 mol m⁻² day⁻¹).",
+    "metadata": {
+      "source_id": "mickens2018",
+      "section": "LED light recipes for Outredgeous red romaine lettuce",
+      "subsection": "Baseline conditions in the ground growth chamber",
+      "source_url": "https://doi.org/10.1016/j.lssr.2018.09.003",
+      "source_location": "Abstract, §§2.1 and 2.3",
+      "evidence_type": "experimental_setup"
+    }
+  },
+  {
+    "id": "mickens2018-sowing-and-thinning",
+    "text": "LED light recipes for Outredgeous red romaine lettuce\nSowing, germination, sub-irrigation, and thinning\n\nIn the ground chamber, four ‘Outredgeous’ seeds were surface-sown per pot on moist Arcillite. Each pot contained 500 mL of medium mixed with 18-6-8 controlled-release NPK fertilizer at 7.5 g per liter of dry medium. The pots sat in sub-irrigation trays containing about 1 cm of deionized water. For the first three days, the researchers used clear covers and misted with deionized water to promote germination. They measured tray water levels and logged the amount added daily. On day 7 they removed one plant per pot, choosing the weakest or an unsuccessfully germinated seedling. They harvested plants for growth measurements at 14, 21, and 28 DAS.",
+    "metadata": {
+      "source_id": "mickens2018",
+      "section": "LED light recipes for Outredgeous red romaine lettuce",
+      "subsection": "Sowing, germination, sub-irrigation, and thinning",
+      "source_url": "https://doi.org/10.1016/j.lssr.2018.09.003",
+      "source_location": "§§2.2 and 2.4",
+      "evidence_type": "experimental_protocol",
+      "simulator_application_ko": "저면관수, 분무, 솎기 수치는 지상 챔버 재현용 실험 절차에 해당한다."
+    }
+  },
+  {
+    "id": "mickens2018-led-spectra",
+    "text": "LED light recipes for Outredgeous red romaine lettuce\nSeven LED light recipes\n\nThe LED spectra tested on ‘Outredgeous’ red romaine lettuce were W (white control), RB (red + blue), WB (white + blue), WG (white + green), WR (white + red), WFR (white + far-red), and RGB + FR (red + green + blue + far-red, approximating natural sunlight). RB used 635 nm red and 460 nm blue. The supplemental peaks in WB, WG, WR, and WFR were about 460, 520, 635, and 745 nm, respectively. The custom RGB + FR recipe used peaks near 660/630 nm (red), 520 nm (green), 425 nm (blue), and 733 nm (far-red).\n\n| Recipe | Blue share | Green share | Red share | Mean PPFD (400–700 nm) | Far-red flux (700–800 nm) |\n| --- | ---: | ---: | ---: | ---: | ---: |\n| W | 20% | 48% | 32% | 180 ± 33 | 1 |\n| RB | 40% | 0% | 60% | 187 ± 34 | 0 |\n| WB | 43% | 34% | 23% | 178 ± 30 | 0.8 |\n| WG | 17% | 57% | 25% | 180 ± 35 | 0 |\n| WR | 16% | 38% | 46% | 178 ± 32 | 0 |\n| WFR | 20% | 48% | 32% | 185 ± 35 | 34 |\n| RGB + FR | 16% | 24% | 60% | 188 ± 28 | 36 |\n\nBoth flux columns use µmol m⁻² s⁻¹. Blue, green, and red shares are percentages within 400–700 nm, while far-red flux is reported separately. They describe the resulting spectrum.",
+    "metadata": {
+      "source_id": "mickens2018",
+      "section": "LED light recipes for Outredgeous red romaine lettuce",
+      "subsection": "Seven LED light recipes",
+      "source_url": "https://doi.org/10.1016/j.lssr.2018.09.003",
+      "source_location": "§2.3, Table 1 and Fig. 1",
+      "evidence_type": "experimental_setup"
+    }
+  },
+  {
+    "id": "mickens2018-early-growth",
+    "text": "LED light recipes for Outredgeous red romaine lettuce\nEarly growth at 7–14 days after sowing\n\nUnder white + green (WG), ‘Outredgeous’ seedlings showed earlier hypocotyl elongation and faster first true-leaf expansion by 7 DAS. At 14 DAS, WG shoot fresh mass was significantly above the white control, while red + blue (RB) was significantly below it. The other treatments showed no significant fresh-mass difference from the white control at 14 DAS.",
+    "metadata": {
+      "source_id": "mickens2018",
+      "section": "LED light recipes for Outredgeous red romaine lettuce",
+      "subsection": "Early growth at 7–14 days after sowing",
+      "source_url": "https://doi.org/10.1016/j.lssr.2018.09.003",
+      "source_location": "§3.1 and Fig. 3(a)",
+      "evidence_type": "measured_result"
+    }
+  },
+  {
+    "id": "mickens2018-late-growth-and-yield",
+    "text": "LED light recipes for Outredgeous red romaine lettuce\nLate growth and harvest biomass at 21–28 days after sowing\n\nIn ‘Outredgeous’ red romaine lettuce, early growth under white + green (WG) slowed after 21 DAS. Under white + red (WR), shoot dry mass rose more rapidly late in the cycle (21–28 DAS). At the 28 DAS harvest, both WG and WR dry mass were statistically comparable to the white control (W). RGB + FR gave the highest shoot fresh mass and dry mass. Of the tested spectra, only RGB + FR (higher) and RB (lower) differed significantly from W in final shoot dry mass. RGB + FR had the greatest mean leaf area, with WFR in the same statistical group for that comparison.\n\n| Recipe | Shoot fresh mass (g) | Shoot dry mass (g) | Leaf area (cm²) |\n| --- | ---: | ---: | ---: |\n| W | 22.8 | 1.79 | 731.7 |\n| RB | 19.1 | 1.47 | 620.2 |\n| WB | 21.1 | 1.52 | 667.4 |\n| WG | 25.6 | 1.79 | 822.0 |\n| WR | 27.3 | 2.08 | 858.4 |\n| WFR | 26.2 | 1.91 | 935.1 |\n| RGB + FR | 30.1 | 2.55 | 1006.0 |\n\nValues are day-28 treatment means (n = 30 per treatment). For example, WR and RGB + FR shared a Tukey group for fresh mass, while they differed for dry mass.",
+    "metadata": {
+      "source_id": "mickens2018",
+      "section": "LED light recipes for Outredgeous red romaine lettuce",
+      "subsection": "Late growth and harvest biomass at 21–28 days after sowing",
+      "source_url": "https://doi.org/10.1016/j.lssr.2018.09.003",
+      "source_location": "§3.1, Table 2 and Figs. 3–4",
+      "evidence_type": "measured_result"
+    }
+  },
+  {
+    "id": "mickens2018-pigmentation-and-nutrients",
+    "text": "LED light recipes for Outredgeous red romaine lettuce\nLeaf pigmentation and nutrient concentrations\n\nAt 14 DAS, ‘Outredgeous’ leaves looked darker under WB and RB, both of which supplied at least 40% blue light within the 400–700 nm band. The authors describe the color response visually. At 28 DAS, WB had the highest reported leaf potassium concentration, and RB had the highest measured lutein concentration. Lutein concentrations under WB, WG, and WR were statistically comparable to W. RGB + FR had lower concentrations of the four displayed minerals (Ca, K, Mg, and P), and both WFR and RGB + FR had lower lutein concentrations than W. The nutrient figures report concentration per gram of dry tissue.",
+    "metadata": {
+      "source_id": "mickens2018",
+      "section": "LED light recipes for Outredgeous red romaine lettuce",
+      "subsection": "Leaf pigmentation and nutrient concentrations",
+      "source_url": "https://doi.org/10.1016/j.lssr.2018.09.003",
+      "source_location": "§§3.1–3.3, Figs. 2, 5–7 and §4",
+      "evidence_type": "measured_result, visual_observation"
+    }
+  },
+  {
+    "id": "mickens2018-far-red-morphology",
+    "text": "LED light recipes for Outredgeous red romaine lettuce\nLeaf and petiole responses under far-red recipes\n\nIn ‘Outredgeous’ red romaine lettuce, both WFR and RGB + FR produced wider shoots than white at 21 DAS. At 28 DAS, WFR produced the tallest shoots (26.5 cm), with elongated petioles and shoot dry mass statistically comparable to white. RGB + FR produced a large leaf area and the highest dry mass. The far-red fluxes were similar for the two recipes (34 and 36 µmol m⁻² s⁻¹), while their red-to-far-red ratios were 1.7 and 3.1, respectively.",
+    "metadata": {
+      "source_id": "mickens2018",
+      "section": "LED light recipes for Outredgeous red romaine lettuce",
+      "subsection": "Leaf and petiole responses under far-red recipes",
+      "source_url": "https://doi.org/10.1016/j.lssr.2018.09.003",
+      "source_location": "§§2.3 and 3.1, Tables 1–2 and Figs. 3(b) and 5",
+      "evidence_type": "measured_result"
+    }
+  },
+  {
+    "id": "mickens2018-light-switch-hypothesis",
+    "text": "LED light recipes for Outredgeous red romaine lettuce\nProposed light-recipe switches during the crop cycle\n\nThe authors suggest testing a switch from white + green (WG) to white + red (WR) or RGB + FR at 21 days after sowing to see whether final ‘Outredgeous’ yield improves. They also propose testing a switch from WB or RB to WR to balance yield and nutrient concentration. The experiment compared fixed, full-cycle light recipes, so the effects of mid-cycle switching remain untested in this study.",
+    "metadata": {
+      "source_id": "mickens2018",
+      "section": "LED light recipes for Outredgeous red romaine lettuce",
+      "subsection": "Proposed light-recipe switches during the crop cycle",
+      "source_url": "https://doi.org/10.1016/j.lssr.2018.09.003",
+      "source_location": "§4, Conclusion (PDF p. 9)",
+      "evidence_type": "author_hypothesis",
+      "original_excerpt_en": "It would also be informative to see if the lighting strategy could be switched from WG to WR or RGB + FR at 21 DAS",
+      "simulator_application_ko": "21일차 전환을 선택했을 때는 효과가 미확인 상태임을 표시한다. RGB + FR을 처음부터 유지한 처리군의 30.1 g 또는 2.55 g을 중간 전환 결과로 그대로 적용할 근거는 없다."
+    }
+  }
+]

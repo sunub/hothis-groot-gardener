@@ -1,0 +1,119 @@
+[
+  {
+    "id": "morsi2022-study-setting",
+    "text": "Controlled-Release Fertilizer and Repeated Harvests in Outredgeous Red Romaine Lettuce\nStudy Setting and Evidence Scope\n\n*Paraphrase*\n\nThe researchers grew Outredgeous red romaine lettuce (*Lactuca sativa* L.) in six ground-based BPSe growth units. A walk-in chamber reproduced temperature, humidity, and LED-lighting conditions similar to those in the ISS Veggie system. The fertilizer and harvest findings therefore come from a terrestrial Veggie analogue.",
+    "metadata": {
+      "source_id": "morsi2022",
+      "section": "Controlled-Release Fertilizer and Repeated Harvests in Outredgeous Red Romaine Lettuce",
+      "subsection": "Study Setting and Evidence Scope",
+      "subsection_ko": "01. 실험 환경과 적용 범위",
+      "source_url": "https://doi.org/10.1016/j.lssr.2021.12.001",
+      "section_ko": "적로메인 상추 Outredgeous의 방출제어형 비료와 반복 수확",
+      "source_location": "Abstract",
+      "source_file": "Morsi_2022_Outredgeous_RAG.md",
+      "translation_ko": "연구진은 지상의 BPSe 재배 장치 6대에서 적로메인 상추 Outredgeous를 키웠다. 사람이 들어갈 수 있는 재배실에서 ISS Veggie와 유사한 온도·습도·LED 조명 조건을 구현했다. 아래 비료와 수확 결과는 이 지상 모사 실험에서 얻었다.",
+      "evidence_type": "ground_analog"
+    }
+  },
+  {
+    "id": "morsi2022-arcillite-wick-irrigation",
+    "text": "Controlled-Release Fertilizer and Repeated Harvests in Outredgeous Red Romaine Lettuce\nArcillite Root Substrate and Wick Irrigation\n\n*Paraphrase*\n\nIn both ISS Veggie and the ground-based BPSe analogue, a wick uses capillary action to move water in one direction into the arcillite clay around the roots. The two controlled-release fertilizer blends tested on Outredgeous were incorporated into that substrate.",
+    "metadata": {
+      "source_id": "morsi2022",
+      "section": "Controlled-Release Fertilizer and Repeated Harvests in Outredgeous Red Romaine Lettuce",
+      "subsection": "Arcillite Root Substrate and Wick Irrigation",
+      "subsection_ko": "02. 아실라이트 배지와 심지 관수",
+      "source_url": "https://doi.org/10.1016/j.lssr.2021.12.001",
+      "section_ko": "적로메인 상추 Outredgeous의 방출제어형 비료와 반복 수확",
+      "source_location": "Abstract",
+      "source_file": "Morsi_2022_Outredgeous_RAG.md",
+      "translation_ko": "ISS Veggie와 지상 모사 장치인 BPSe는 모두 심지의 모세관 작용으로 물을 뿌리 주변의 아실라이트(arcillite) 점토 배지에 한 방향으로 공급한다. Outredgeous 실험에서는 두 가지 방출제어형 비료 배합을 각각 이 배지에 섞었다.",
+      "evidence_type": "ground_analog"
+    }
+  },
+  {
+    "id": "morsi2022-harvest-schedule",
+    "text": "Controlled-Release Fertilizer and Repeated Harvests in Outredgeous Red Romaine Lettuce\nThree Cut-and-Come-Again Harvests from the Same Plants\n\n*Verbatim*\n\nPlants were grown for 56 days with three “cut-and-come again” leaf harvests from the same plants.\n\n*Paraphrase*\n\nIn this ground-based Veggie analogue experiment, Outredgeous leaves were collected on days 28, 48, and 56 after planting. This cut-and-come-again method lets the plant continue growing after a leaf harvest. The researchers compared growth, yield, and leaf mineral composition between the two fertilizer treatments.",
+    "metadata": {
+      "source_id": "morsi2022",
+      "section": "Controlled-Release Fertilizer and Repeated Harvests in Outredgeous Red Romaine Lettuce",
+      "subsection": "Three Cut-and-Come-Again Harvests from the Same Plants",
+      "subsection_ko": "03. 같은 개체의 잎을 세 차례 수확",
+      "source_url": "https://doi.org/10.1016/j.lssr.2021.12.001",
+      "section_ko": "적로메인 상추 Outredgeous의 방출제어형 비료와 반복 수확",
+      "source_location": "Abstract",
+      "source_file": "Morsi_2022_Outredgeous_RAG.md",
+      "translation_ko": "56일 동안 같은 개체에서 잎을 세 차례 수확했다. 이 지상 Veggie 모사 실험에서는 Outredgeous를 심은 뒤 28일, 48일, 56일에 수확했다. 이 방식은 잎을 수확한 뒤에도 개체를 계속 키워 다시 수확하는 방법이다. 연구진은 두 비료 처리군의 생장, 수확량, 잎의 무기영양 성분을 비교했다.",
+      "evidence_type": "ground_analog",
+      "simulator_application_ko": "- [실험 일정을 따르는 시나리오의 28일차 또는 48일차](#시뮬레이터-행동-후보-예시)"
+    }
+  },
+  {
+    "id": "morsi2022-fertilizer-growth-rate",
+    "text": "Controlled-Release Fertilizer and Repeated Harvests in Outredgeous Red Romaine Lettuce\nFertilizer Release Rates and Growth Between Harvests\n\n*Paraphrase*\n\nThe two fertilizer blends both included fast-release T70. One paired it with intermediate-release T100, and the other paired it with slower-release T180. Growth rates were comparable between treatments through the second harvest. Both treatments showed faster growth at the second harvest than at the first, followed by slower growth at the third. The late decline was more pronounced with the T180 blend.",
+    "metadata": {
+      "source_id": "morsi2022",
+      "section": "Controlled-Release Fertilizer and Repeated Harvests in Outredgeous Red Romaine Lettuce",
+      "subsection": "Fertilizer Release Rates and Growth Between Harvests",
+      "subsection_ko": "04. 비료 방출 속도와 수확 구간별 생장률",
+      "source_url": "https://doi.org/10.1016/j.lssr.2021.12.001",
+      "section_ko": "적로메인 상추 Outredgeous의 방출제어형 비료와 반복 수확",
+      "source_location": "Abstract",
+      "source_file": "Morsi_2022_Outredgeous_RAG.md",
+      "translation_ko": "두 비료 배합에 모두 빠르게 방출되는 T70이 들어갔다. 한 처리군은 T70에 중간 방출 속도의 T100을, 다른 처리군은 더 느리게 방출되는 T180을 섞었다. 두 번째 수확까지 두 처리군의 생장률은 비슷했다. 두 처리군 모두 첫 번째 수확에서 두 번째 수확으로 갈 때 생장률이 높아졌고, 세 번째 수확에서는 낮아졌다. 마지막 구간의 생장률 감소는 T180 배합에서 더 컸다.",
+      "evidence_type": "ground_analog",
+      "simulator_application_ko": "- [재배 시작 전, 배지에 섞을 비료를 고르는 중](#시뮬레이터-행동-후보-예시)\n- [재생장 후반에 생장이 둔화되고 pH·EC는 실험의 정상 범위로 표시됨](#시뮬레이터-행동-후보-예시)"
+    }
+  },
+  {
+    "id": "morsi2022-leaf-mineral-trends",
+    "text": "Controlled-Release Fertilizer and Repeated Harvests in Outredgeous Red Romaine Lettuce\nLeaf Mineral Trends Across Repeated Harvests\n\n*Paraphrase*\n\nWith either fertilizer blend, successive harvests of Outredgeous showed lower tissue levels of nitrogen (N), phosphorus (P), and potassium (K), and higher levels of boron (B), zinc (Zn), and manganese (Mn).",
+    "metadata": {
+      "source_id": "morsi2022",
+      "section": "Controlled-Release Fertilizer and Repeated Harvests in Outredgeous Red Romaine Lettuce",
+      "subsection": "Leaf Mineral Trends Across Repeated Harvests",
+      "subsection_ko": "05. 반복 수확에 따른 잎의 무기영양 성분",
+      "source_url": "https://doi.org/10.1016/j.lssr.2021.12.001",
+      "section_ko": "적로메인 상추 Outredgeous의 방출제어형 비료와 반복 수확",
+      "source_location": "Abstract",
+      "source_file": "Morsi_2022_Outredgeous_RAG.md",
+      "translation_ko": "두 방출제어형 비료(CRF) 처리군 모두에서 수확을 거듭할수록 식물 조직의 다량원소인 질소(N), 인(P), 칼륨(K) 함량은 감소했고, 미량원소인 붕소(B), 아연(Zn), 망간(Mn) 함량은 증가했다.",
+      "evidence_type": "ground_analog",
+      "simulator_application_ko": "- [재생장 후반에 생장이 둔화되고 pH·EC는 실험의 정상 범위로 표시됨](#시뮬레이터-행동-후보-예시)"
+    }
+  },
+  {
+    "id": "morsi2022-rootzone-ph-ec",
+    "text": "Controlled-Release Fertilizer and Repeated Harvests in Outredgeous Red Romaine Lettuce\nRoot-Zone pH, Electrical Conductivity, and Yield Decline\n\n*Paraphrase*\n\nDuring the ground-analogue trial, root-zone pH stayed within the expected range for nutrient availability. Electrical conductivity (EC) indicated neither an excess nor a depletion of salts in the root zone. The authors suggested that declines in macronutrients and increases in micronutrients within the plant tissue may have played a part in the decline in yield.",
+    "metadata": {
+      "source_id": "morsi2022",
+      "section": "Controlled-Release Fertilizer and Repeated Harvests in Outredgeous Red Romaine Lettuce",
+      "subsection": "Root-Zone pH, Electrical Conductivity, and Yield Decline",
+      "subsection_ko": "06. 뿌리 주변 pH·EC와 수확량 감소",
+      "source_url": "https://doi.org/10.1016/j.lssr.2021.12.001",
+      "section_ko": "적로메인 상추 Outredgeous의 방출제어형 비료와 반복 수확",
+      "source_location": "Abstract",
+      "source_file": "Morsi_2022_Outredgeous_RAG.md",
+      "translation_ko": "지상 모사 실험에서 뿌리 주변 pH는 뿌리가 무기영양소를 이용할 수 있는 범위에 머물렀다. EC(전기전도도)에서도 뿌리 주변 염류의 과잉이나 고갈이 나타나지 않았다. 저자들은 식물 조직의 다량원소 감소와 미량원소 축적이 수확량 감소에 영향을 주었을 가능성을 제시했다.",
+      "evidence_type": "ground_analog",
+      "simulator_application_ko": "- [재생장 후반에 생장이 둔화되고 pH·EC는 실험의 정상 범위로 표시됨](#시뮬레이터-행동-후보-예시)"
+    }
+  },
+  {
+    "id": "morsi2022-fertilizer-yield-comparison",
+    "text": "Controlled-Release Fertilizer and Repeated Harvests in Outredgeous Red Romaine Lettuce\nYield Over 56 Days and Final Regrowth Interval\n\n*Paraphrase*\n\nBoth controlled-release blends supported adequate Outredgeous yield over the 56-day ground-based trial. The blend containing intermediate-release T100 tended to produce a slightly greater yield, particularly in the final regrowth interval from day 48 to day 56. The authors described the mineral content associated with that formulation as adequate.",
+    "metadata": {
+      "source_id": "morsi2022",
+      "section": "Controlled-Release Fertilizer and Repeated Harvests in Outredgeous Red Romaine Lettuce",
+      "subsection": "Yield Over 56 Days and Final Regrowth Interval",
+      "subsection_ko": "07. 56일 수확량과 마지막 재생장 구간 비교",
+      "source_url": "https://doi.org/10.1016/j.lssr.2021.12.001",
+      "section_ko": "적로메인 상추 Outredgeous의 방출제어형 비료와 반복 수확",
+      "source_location": "Abstract",
+      "source_file": "Morsi_2022_Outredgeous_RAG.md",
+      "translation_ko": "56일간의 지상 실험에서 두 방출제어형 비료 배합 모두 Outredgeous 수확량을 확보했다. T100을 포함한 배합에서 수확량이 약간 높은 경향을 보였으며, 특히 48일차에서 56일차까지 이어지는 마지막 재생장 구간에서 그 경향이 두드러졌다. 저자들은 이 배합의 무기영양 성분 함량을 부족하지 않은 수준으로 설명했다.",
+      "evidence_type": "ground_analog",
+      "simulator_application_ko": "- [재배 시작 전, 배지에 섞을 비료를 고르는 중](#시뮬레이터-행동-후보-예시)"
+    }
+  }
+]

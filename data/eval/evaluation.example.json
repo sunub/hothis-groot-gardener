@@ -1,19 +1,19 @@
 [
   {
     "query": "현재 상태: 파종 7일차이고 재배 파우치 한 개에 상추 유묘가 두 포기 자랐습니다. 다음에 할 수 있는 관리 행동을 추천해 주세요.",
-    "relevant_ids": ["veggie-day7-thinning", "veggie-seed-wicks-thinning", "veg01-wick-thinning", "veg01-early-a", "VEG-03J-06"]
+    "relevant_ids": ["veggie-seed-wicks-thinning", "veg01-wick-thinning", "veg01-early-a", "VEG-03J-06"]
   },
   {
     "query": "현재 상태: 상추 잎 표면에 물방울이 오래 남아 있고, 전원을 다시 켠 뒤 팬의 동작이 불확실합니다. 다음에 확인하거나 조치할 행동을 추천해 주세요.",
-    "relevant_ids": ["veggie-leaf-moisture", "veggie-fan-restart-moisture", "veggie-03a-fan-restart"]
+    "relevant_ids": ["veggie-fan-restart-moisture", "veggie-cultivar-airflow", "veg01-light-hardware"]
   },
   {
     "query": "현재 상태: 파종 3일차이고 새싹이 나오기 시작했지만 발아 심지가 아직 닫혀 있습니다. 다음에 할 수 있는 행동을 추천해 주세요.",
     "relevant_ids": ["VEG-03J-05", "veg01-wick-thinning"]
   },
   {
-    "query": "현재 상태: 재배를 시작하며 물을 공급했는데 한 재배 파우치로 물이 들어가지 않습니다. 다음에 점검하거나 교체할 대상을 추천해 주세요.",
-    "relevant_ids": ["veg01-no-flow-a", "veg01-no-flow-b"]
+    "query": "현재 상태: 상추 뿌리가 검게 변하고 일부 조직이 손상돼 보이지만 원인은 아직 확인되지 않았습니다. 다음 관찰·검체 채취·검사 행동을 추천해 주세요.",
+    "relevant_ids": ["haveman2023-pythium-root-symptoms", "haveman2023-root-sample-extraction", "haveman2023-targeted-pcr"]
   },
   {
     "query": "현재 상태: 파종 14일차에 상추 생장이 정체됐고 재배 파우치가 건조해 보입니다. 다음에 확인하거나 급수할 행동을 추천해 주세요.",
@@ -37,26 +37,26 @@
   },
   {
     "query": "현재 상태: 상추에 성숙한 잎이 생겼고 한 번에 전부 수확하지 않고 재배를 이어가고 싶습니다. 가능한 수확 행동을 추천해 주세요.",
-    "relevant_ids": ["veggie-harvest-method", "veggie-sequential-harvest-methods", "veg01-repeat-harvest"]
+    "relevant_ids": ["veggie-sequential-harvest-methods", "veg01-repeat-harvest"]
   },
   {
     "query": "현재 상태: 상추 잎을 수확했고 일부를 나중에 분석할 시료로 보관해야 합니다. 다음 처리 행동을 추천해 주세요.",
-    "relevant_ids": ["veggie-03a-sample-handling", "veggie-sequential-harvest-methods", "VEG-03J-08", "veg01-harvest-b"]
+    "relevant_ids": ["veggie-sequential-harvest-methods", "VEG-03J-08", "veg01-harvest-b"]
   },
   {
-    "query": "현재 상태: 파종 7일차에 여러 재배 파우치 중 하나에서만 발아가 되지 않았습니다. 솎기와 관찰 기록을 어떻게 할지 추천해 주세요.",
-    "relevant_ids": ["veg01-early-a", "veggie-day7-thinning"]
+    "query": "현재 상태: 병든 것으로 의심되는 상추에서 두껍고 질긴 뿌리 검체를 채취했습니다. DNA 추출 전에 어떤 시료 처리 과정을 확인해야 하나요?",
+    "relevant_ids": ["haveman2023-root-sample-extraction"]
   },
   {
     "query": "현재 상태: Veggie 재배를 시작하려는데 LED 광주기와 빛의 세기가 아직 설정되지 않았습니다. 초기 조명 설정을 확인할 근거를 추천해 주세요.",
-    "relevant_ids": ["veg01-light", "veggie-light-setting", "veggie-light-photoperiod"]
+    "relevant_ids": ["veg01-light", "veggie-light-setting"]
   },
   {
     "query": "현재 상태: 급수 커넥터를 바꾼 뒤에도 재배 파우치로 물이 흐르지 않습니다. 다음에 점검할 부품을 추천해 주세요.",
     "relevant_ids": ["veg01-no-flow-b", "veg01-no-flow-a"]
   },
   {
-    "query": "현재 상태: 파종 전에 재배 파우치의 배지와 비료 및 씨앗 위치를 준비해야 합니다. 다음 준비 행동의 근거를 추천해 주세요.",
-    "relevant_ids": ["veggie-seeds-substrate", "veggie-pillow-substrate", "veg01-substrate", "veg01-setup"]
+    "query": "현재 상태: 병원체가 의심되는 뿌리 검체의 염기서열 분석 결과에서 Pythium이 검출되지 않았습니다. 다음에 확인할 분석 조건을 추천해 주세요.",
+    "relevant_ids": ["haveman2023-sequencing-reference-limit", "haveman2023-targeted-pcr"]
   }
 ]

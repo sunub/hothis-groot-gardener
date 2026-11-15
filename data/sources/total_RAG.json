@@ -1,156 +1,86 @@
 [
   {
-    "id": "veggie-03a-fan-restart",
-    "text": "ISS Red Romaine Lettuce Growth and Harvest Evidence\nFan Shutdown After Power Cycling and Excess Moisture\n\nAdditionally, germinating seedlings in the VEG-03A test had excess moisture in the early period of growth, likely due to a fan malfunction, when compared to the VEG-01A and VEG-01B plants. It was during this experiment that our team identified a consistent anomaly with the Veggie hardware – specifically that when power is cycled to the hardware, upon restarting the fan will read “low” but it will actually be off.",
+    "id": "haveman2023-scope",
+    "text": "Outredgeous Lettuce Root Disease Diagnosis for Future Spaceflight\nEvidence scope for space crop disease diagnosis\n\nHaveman et al. developed a plant nucleic acid extraction workflow for future in situ disease diagnosis in space. They tested it at Kennedy Space Center using experimentally inoculated lettuce, tomato, and pepper. The study establishes a ground-based proof of concept for extracting plant and pathogen nucleic acids. Full automation and operation in a spaceflight environment remain future work.",
     "metadata": {
-      "source_id": "khodadad2020",
-      "section": "ISS Red Romaine Lettuce Growth and Harvest Evidence",
-      "subsection": "Fan Shutdown After Power Cycling and Excess Moisture",
-      "source_url": "https://doi.org/10.3389/fpls.2020.00199",
-      "source_location": "VEG-03A · Discussion · pp. 9–10",
-      "source_file": "ISS_Outredgeous_Lettuce_RAG.md",
+      "source_id": "haveman2023",
+      "section": "Outredgeous Lettuce Root Disease Diagnosis for Future Spaceflight",
+      "subsection": "Evidence scope for space crop disease diagnosis",
+      "source_url": "https://doi.org/10.3389/fpls.2023.1194753.",
+      "source_location": "Abstract, p. 1; §2.2, p. 3; §4, p. 11",
+      "source_file": "Haveman_2023_Lettuce_Disease_Diagnosis_RAG(3).md",
       "source_license": "CC BY 4.0",
-      "simulator_application_ko": "전원을 재시작한 뒤 표시가 ‘low’이거나 유묘에 물기가 많으면, **팬이 실제로 도는지 확인한다**는 선택지를 제시할 수 있다. 초기 과습의 원인과 미생물 수에 미친 영향은 별도로 판단한다."
+      "simulator_application_ko": "진단 장비를 쓰는 선택지에는 지상 실험 근거임을 표시한다."
     }
   },
   {
-    "id": "veggie-leaf-moisture",
-    "text": "ISS Red Romaine Lettuce Growth and Harvest Evidence\nLeaf Surface Moisture and Air Circulation\n\nPoor air circulation can cause persistent droplets of moisture on the surface of a leaf due to transpiration producing a micro environment favorable for microbial proliferation.",
+    "id": "haveman2023-pythium-root-symptoms",
+    "text": "Outredgeous Lettuce Root Disease Diagnosis for Future Spaceflight\nRoot symptoms in Pythium-inoculated Outredgeous lettuce\n\nPythium aphanidermatum is associated with root rot in hydroponically grown lettuce. In the inoculated Outredgeous plants, the authors observed dark, deteriorating roots and extensive tissue necrosis. They grew healthy controls at the same time and kept them in a separate incubator to limit cross-contamination.",
     "metadata": {
-      "source_id": "khodadad2020",
-      "section": "ISS Red Romaine Lettuce Growth and Harvest Evidence",
-      "subsection": "Leaf Surface Moisture and Air Circulation",
-      "source_url": "https://doi.org/10.3389/fpls.2020.00199",
-      "source_location": "Discussion · p. 9",
-      "source_file": "ISS_Outredgeous_Lettuce_RAG.md",
+      "source_id": "haveman2023",
+      "section": "Outredgeous Lettuce Root Disease Diagnosis for Future Spaceflight",
+      "subsection": "Root symptoms in Pythium-inoculated Outredgeous lettuce",
+      "source_url": "https://doi.org/10.3389/fpls.2023.1194753.",
+      "source_location": "§3.2, p. 6; Figure 4A, p. 8",
+      "source_file": "Haveman_2023_Lettuce_Disease_Diagnosis_RAG(3).md",
       "source_license": "CC BY 4.0",
-      "simulator_application_ko": "잎에 물방울이 계속 남아 있으면 **공기 순환을 점검한다**는 선택지를 제시할 수 있다. 관찰만으로 오염 여부나 급수량 변경을 결정할 수는 없다."
+      "simulator_application_ko": "뿌리 변색과 손상을 관찰하면 뿌리 상태를 기록하고 검체를 채취하는 선택지의 근거로 쓸 수 있다. 병원체 확인에는 검사 결과가 필요하다."
     }
   },
   {
-    "id": "veggie-harvest-method",
-    "text": "ISS Red Romaine Lettuce Growth and Harvest Evidence\nSingle Final Harvest and Sequential Harvest of Mature Leaves\n\nMultiple plantings were grown on ISS and harvested using either a single, final harvest, or sequential harvests in which several mature leaves were removed from the plants at weekly intervals.\n\nVEG-01A and B were harvested after 33 days of growth using sanitized scissors to remove the leaves (Table 1). VEG-03A leaves were harvested sequentially starting at 33 days followed by 3 weekly harvests.",
+    "id": "haveman2023-inoculation-timing",
+    "text": "Outredgeous Lettuce Root Disease Diagnosis for Future Spaceflight\nExperimental inoculation and inconsistent sampling timing\n\nThe investigators inoculated 21-day-old Outredgeous lettuce roots with Pythium aphanidermatum in a silica-sand growth system. Section 2.3 reports harvesting infected roots 21 days after inoculation. Section 3.2 describes symptom development for 14 days after inoculation, and Figure 4A labels the pictured roots as 14 days postinoculation. These are experimental timings, and the source gives different timings for root harvest and the illustrated observations.",
     "metadata": {
-      "source_id": "khodadad2020",
-      "section": "ISS Red Romaine Lettuce Growth and Harvest Evidence",
-      "subsection": "Single Final Harvest and Sequential Harvest of Mature Leaves",
-      "source_url": "https://doi.org/10.3389/fpls.2020.00199",
-      "source_location": "Abstract · p. 1 / Materials and Methods · pp. 3–4",
-      "source_file": "ISS_Outredgeous_Lettuce_RAG.md",
+      "source_id": "haveman2023",
+      "section": "Outredgeous Lettuce Root Disease Diagnosis for Future Spaceflight",
+      "subsection": "Experimental inoculation and inconsistent sampling timing",
+      "source_url": "https://doi.org/10.3389/fpls.2023.1194753.",
+      "source_location": "§2.3, p. 3; §3.2, p. 6; Figure 4A, p. 8",
+      "source_file": "Haveman_2023_Lettuce_Disease_Diagnosis_RAG(3).md",
       "source_license": "CC BY 4.0",
-      "simulator_application_ko": "VEG-01A/B에서는 **33일차에 소독한 가위로 한 번 수확**, VEG-03A에서는 **성숙한 잎 일부를 수확하고 나머지 재배를 이어가기**를 제시할 수 있다. VEG-03A에서 실제 날짜를 재현하려면 아래 일정의 원문 불일치를 함께 참고한다."
+      "simulator_application_ko": "증상 관찰과 검체 채취의 연구 기록을 구분하고, 이 시점을 게임의 고정 발병일로 쓰지 않는다."
     }
   },
   {
-    "id": "veggie-03a-harvest-timing",
-    "text": "ISS Red Romaine Lettuce Growth and Harvest Evidence\nVEG-03A Harvest Timing and Conflicting Schedule Statements\n\nAs described in section “Materials and Methods,” there were four repeated harvests (38, 45, 59, and 64 days after initiation) of this experiment and only two (day 45 and day 64) were returned to earth.\n\nTable 1 (transcription): initiation 25 October 2016, 2nd harvest 9 December 2016, 4th harvest 28 December 2016 (elapsed days 45 and 64). The Methods paragraph reports the first harvest on day 33 and three weekly follow-ups. Discussion lists days 38, 45, 59 and 64. The first and third dates should be treated as uncertain for historical simulation.",
+    "id": "haveman2023-root-sample-extraction",
+    "text": "Outredgeous Lettuce Root Disease Diagnosis for Future Spaceflight\nRoot sampling and DNA extraction limits\n\nThe researchers used approximately 1.2 g fresh weight of root material for DNA extraction from both healthy and inoculated lettuce. They ground the thick root tissue to powder with liquid nitrogen before processing it in the microHomogenizer. Softer material such as leaves did not need this extra step in the study. The authors identified improved homogenization of fibrous tissue as a design need for future use in microgravity.",
     "metadata": {
-      "source_id": "khodadad2020",
-      "section": "ISS Red Romaine Lettuce Growth and Harvest Evidence",
-      "subsection": "VEG-03A Harvest Timing and Conflicting Schedule Statements",
-      "source_url": "https://doi.org/10.3389/fpls.2020.00199",
-      "source_location": "VEG-03A · Table 1 · p. 3 / Materials and Methods · p. 4 / Discussion · p. 12",
-      "source_file": "ISS_Outredgeous_Lettuce_RAG.md",
+      "source_id": "haveman2023",
+      "section": "Outredgeous Lettuce Root Disease Diagnosis for Future Spaceflight",
+      "subsection": "Root sampling and DNA extraction limits",
+      "source_url": "https://doi.org/10.3389/fpls.2023.1194753.",
+      "source_location": "§2.6, p. 3; §3.2, p. 6; Figure 4B, p. 8",
+      "source_file": "Haveman_2023_Lettuce_Disease_Diagnosis_RAG(3).md",
       "source_license": "CC BY 4.0",
-      "simulator_application_ko": "2차·4차 날짜는 표 1과 Discussion의 경과 일수가 일치한다. 1차 수확일은 Methods(33일차)와 Discussion(38일차)이 다르고, Discussion의 일수 간격도 Methods의 ‘weekly’와 일치하지 않는다. **실험 일정을 재현할 때는 출처가 일치하는 2차·4차 일정을 사용**하고, 1·3차의 확정 일정은 보류한다. 이 청크에는 원문에서 충돌하는 설명이 있다는 문맥도 함께 넣는다."
+      "simulator_application_ko": "뿌리 검체는 잎과 처리 과정이 다를 수 있다는 설명에 쓴다."
     }
   },
   {
-    "id": "veggie-03a-sample-handling",
-    "text": "ISS Red Romaine Lettuce Growth and Harvest Evidence\nCrew Consumption and Sample Return After Sequential Harvest\n\nHarvested leaves from each plant were wrapped in foil and placed into a −80°C freezer. The first, third, and half of the fourth harvests were consumed by the crew. Only the 2nd harvest and the remaining leaves (approximately half of the total leaves) of the final harvest from VEG-03A were stored for sample return.",
+    "id": "haveman2023-targeted-pcr",
+    "text": "Outredgeous Lettuce Root Disease Diagnosis for Future Spaceflight\nTargeted PCR detection of the lettuce root pathogen\n\nUsing semi-specific PCR primers, the researchers observed the expected 656 bp amplification product in the inoculated lettuce roots and in the cultured Pythium aphanidermatum positive control. The healthy-root sample did not show the same product. The result demonstrates detection of the target in the study's controlled samples.",
     "metadata": {
-      "source_id": "khodadad2020",
-      "section": "ISS Red Romaine Lettuce Growth and Harvest Evidence",
-      "subsection": "Crew Consumption and Sample Return After Sequential Harvest",
-      "source_url": "https://doi.org/10.3389/fpls.2020.00199",
-      "source_location": "VEG-03A · Materials and Methods · p. 4",
-      "source_file": "ISS_Outredgeous_Lettuce_RAG.md",
+      "source_id": "haveman2023",
+      "section": "Outredgeous Lettuce Root Disease Diagnosis for Future Spaceflight",
+      "subsection": "Targeted PCR detection of the lettuce root pathogen",
+      "source_url": "https://doi.org/10.3389/fpls.2023.1194753.",
+      "source_location": "§3.2, p. 6; Figure 4C, p. 8",
+      "source_file": "Haveman_2023_Lettuce_Disease_Diagnosis_RAG(3).md",
       "source_license": "CC BY 4.0",
-      "simulator_application_ko": "수확 뒤 **분석용 잎을 따로 포장해 냉동 보관한다**는 선택지의 근거. −80°C는 이 논문의 분석 시료 보존 조건이다."
+      "simulator_application_ko": "Pythium이 의심되는 뿌리 검체에 표적 검사를 요청하는 선택지의 근거로 쓸 수 있다."
     }
   },
   {
-    "id": "veggie-03a-late-harvest-microbes",
-    "text": "ISS Red Romaine Lettuce Growth and Harvest Evidence\nMicrobial Counts on the Second and Fourth Harvests\n\nAn increase between the 2nd and 4th harvests was not seen in bacterial counts on the leaves, however, fungal counts in the flight leaves were significantly higher in the 4th harvest when compared to the 2nd harvest (P = 0.0002).\n\nThe comparison covers two sampled harvests. Chamber records were incomplete. The study does not establish that the harvest schedule, fan malfunction or excess moisture caused the difference in fungal counts.",
+    "id": "haveman2023-sequencing-reference-limit",
+    "text": "Outredgeous Lettuce Root Disease Diagnosis for Future Spaceflight\nReference database limitations for pathogen sequencing\n\nThe study's standard Kraken2 workflow did not identify Pythium aphanidermatum in inoculated lettuce roots because the relevant genome was missing from the curated RefSeq database used by the pipeline. Alignment against the target genome alone produced hits in inoculated roots and the pure culture. In a broader comparison with 420 oomycete genomes, the species was identified in the pure culture, with no species-level identification in inoculated roots.",
     "metadata": {
-      "source_id": "khodadad2020",
-      "section": "ISS Red Romaine Lettuce Growth and Harvest Evidence",
-      "subsection": "Microbial Counts on the Second and Fourth Harvests",
-      "source_url": "https://doi.org/10.3389/fpls.2020.00199",
-      "source_location": "VEG-03A · Results · p. 6 / Discussion · p. 9",
-      "source_file": "ISS_Outredgeous_Lettuce_RAG.md",
+      "source_id": "haveman2023",
+      "section": "Outredgeous Lettuce Root Disease Diagnosis for Future Spaceflight",
+      "subsection": "Reference database limitations for pathogen sequencing",
+      "source_url": "https://doi.org/10.3389/fpls.2023.1194753.",
+      "source_location": "§3.3, pp. 8–9; Supplementary Tables S3–S4",
+      "source_file": "Haveman_2023_Lettuce_Disease_Diagnosis_RAG(3).md",
       "source_license": "CC BY 4.0",
-      "simulator_application_ko": "반복 수확 시 **회차별 미생물 검사 결과를 비교한다**는 선택지의 근거. p. 9에 따르면 VEG-03A의 장치 환경 데이터는 64일 전체에 걸쳐 수집되지 않았다. 수확 횟수, 과습, 팬 고장을 진균 증가의 원인으로 확정할 수 없다."
-    }
-  },
-  {
-    "id": "veggie-pathogen-screening",
-    "text": "ISS Red Romaine Lettuce Growth and Harvest Evidence\nTargeted Pathogen Screening of Harvested Leaves\n\nScreening for potential food borne pathogens, E. coli, Salmonella sp., and S. aureus on the leaf tissue yielded negative results. These screening results were corroborated by NGS data.\n\nThe negative findings apply to the sampled leaves and the listed targets. The paper describes case-by-case assessment of fresh ISS produce. Packaged-food limits do not define a safety threshold for fresh lettuce.",
-    "metadata": {
-      "source_id": "khodadad2020",
-      "section": "ISS Red Romaine Lettuce Growth and Harvest Evidence",
-      "subsection": "Targeted Pathogen Screening of Harvested Leaves",
-      "source_url": "https://doi.org/10.3389/fpls.2020.00199",
-      "source_location": "Results · p. 6 / Introduction · pp. 2–3",
-      "source_file": "ISS_Outredgeous_Lettuce_RAG.md",
-      "source_license": "CC BY 4.0",
-      "simulator_application_ko": "이 연구에서 검사한 잎 시료의 결과로 표시한다. 논문 발행 당시 우주 재배 신선 농산물의 미생물 기준은 없었으며, ISS 신선 작물의 적합성은 유사한 지상 재배의 미생물 분석을 참고해 사례별로 판단했다고 설명한다. 측정 전 상태에 ‘섭취 가능’을 자동 부여할 근거는 없다."
-    }
-  },
-  {
-    "id": "veggie-day7-thinning",
-    "text": "ISS Red Romaine Lettuce Growth and Harvest Evidence\nThinning to One Plant per Pillow on Day 7\n\nEach experiment began with six rooting pillows. Germinated seeds were thinned to one plant per pillow at day 7.",
-    "metadata": {
-      "source_id": "khodadad2020",
-      "section": "ISS Red Romaine Lettuce Growth and Harvest Evidence",
-      "subsection": "Thinning to One Plant per Pillow on Day 7",
-      "source_url": "https://doi.org/10.3389/fpls.2020.00199",
-      "source_location": "Materials and Methods · p. 3",
-      "source_file": "ISS_Outredgeous_Lettuce_RAG.md",
-      "source_license": "CC BY 4.0",
-      "simulator_application_ko": "7일차에 한 패드에서 두 포기가 자랐다면 **한 포기만 남겨 솎는다**. 기존 VEG-01 자료에도 같은 조치가 있다."
-    }
-  },
-  {
-    "id": "veggie-light-photoperiod",
-    "text": "ISS Red Romaine Lettuce Growth and Harvest Evidence\nLED Distance, Spectral Ratio, and Photoperiod\n\nThe Veggie baseplate was positioned 30.5–31.75 cm below the LED light array to provide approximately 200 µmol·m²·s⁻¹ of photosynthetically active radiation at the surface of the pillows in the center of the Veggie unit at a ratio of 12 red (630 nm): 3 Blue (455 nm): 1 green (530 nm). A photoperiod was set to 16 h light/8 h dark.",
-    "metadata": {
-      "source_id": "khodadad2020",
-      "section": "ISS Red Romaine Lettuce Growth and Harvest Evidence",
-      "subsection": "LED Distance, Spectral Ratio, and Photoperiod",
-      "source_url": "https://doi.org/10.3389/fpls.2020.00199",
-      "source_location": "Materials and Methods · p. 4",
-      "source_file": "ISS_Outredgeous_Lettuce_RAG.md",
-      "source_license": "CC BY 4.0",
-      "simulator_application_ko": "초기 조명 상태에 활용할 실험 설정이다. 영어 인용문의 면적 단위에는 논문 인쇄 표기(m²)를 유지했고, 한국어에는 광양자속 밀도의 표준 단위(m⁻²)를 썼다."
-    }
-  },
-  {
-    "id": "veggie-seeds-substrate",
-    "text": "ISS Red Romaine Lettuce Growth and Harvest Evidence\nSeed Placement, Substrate, and Fertilizer\n\nBriefly, plants were grown in Veggie pillows containing solid, porous, arcillite (calcined clay) substrate in two different blends, either 100% sized to 600 µ–1 mm or a 1:1 ratio of that size to 1–2 mm (Turface Proleague, Profile Products, LLC) and controlled release fertilizer (Nutricote 18-6-8, type 180, Florikan, Sarasota, FL, United States). Procedures for detailed substrate and pillow preparation are outlined in Massa et al. (2017b). Two surface sanitized seeds were attached with guar in each plant pillow between paired germination wicks.",
-    "metadata": {
-      "source_id": "khodadad2020",
-      "section": "ISS Red Romaine Lettuce Growth and Harvest Evidence",
-      "subsection": "Seed Placement, Substrate, and Fertilizer",
-      "source_url": "https://doi.org/10.3389/fpls.2020.00199",
-      "source_location": "Materials and Methods · p. 3",
-      "source_file": "ISS_Outredgeous_Lettuce_RAG.md",
-      "source_license": "CC BY 4.0",
-      "simulator_application_ko": "초기 패드 구성에 활용한다. 이 대목에는 배지의 우열이나 비료를 추가할 시점·용량이 제시되지 않는다."
-    }
-  },
-  {
-    "id": "veggie-nutritional-results",
-    "text": "ISS Red Romaine Lettuce Growth and Harvest Evidence\nLeaf Mineral and Antioxidant Outcomes\n\nComparing total phenolics, VEG-03A with 15.0 (ground) and 19.6 (flight) mg/g of dry weight (gallic acid equivalents) had the statistically lowest amounts when compared to either VEG-01A or VEG-01B (P ≤ 0.001). Anthocyanins measured as cyanidin-3-glucoside equivalents showed no difference among all three experiments compared. \n\nSimilarly, ORAC units measured among all three experiments did not exhibit any observable variance.\n\nWithin each experiment, the Results section reports no significant ground–flight difference in elemental composition. The authors found insufficient evidence to attribute between-experiment differences in minerals or phenolics to sequential harvesting.",
-    "metadata": {
-      "source_id": "khodadad2020",
-      "section": "ISS Red Romaine Lettuce Growth and Harvest Evidence",
-      "subsection": "Leaf Mineral and Antioxidant Outcomes",
-      "source_url": "https://doi.org/10.3389/fpls.2020.00199",
-      "source_location": "Results · p. 8, Table 7 and Table 8 · p. 12 / Discussion · p. 13",
-      "source_file": "ISS_Outredgeous_Lettuce_RAG.md",
-      "source_license": "CC BY 4.0",
-      "simulator_application_ko": "수확 결과 화면의 배경 정보로 활용할 수 있다. 같은 실험 내 지상과 ISS 간 무기 원소 함량에는 유의한 차이가 관찰되지 않았다(Results p. 8). 세 실험을 비교하면 VEG-03A의 Fe와 K가 낮았지만, 반복 수확 때문에 원소나 페놀 함량이 떨어진다고 결론 내릴 데이터는 부족하다(Discussion p. 13). 급수량·비료량 조절이나 점수 증감의 근거로 해석하지 않는다."
+      "simulator_application_ko": "염기서열 분석의 미검출 결과를 해석할 때 참조 데이터베이스 범위를 확인하도록 안내한다."
     }
   },
   {

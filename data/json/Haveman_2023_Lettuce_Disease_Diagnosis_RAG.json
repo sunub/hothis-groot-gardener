@@ -1,0 +1,86 @@
+[
+  {
+    "id": "haveman2023-scope",
+    "text": "Outredgeous Lettuce Root Disease Diagnosis for Future Spaceflight\nEvidence scope for space crop disease diagnosis\n\nHaveman et al. developed a plant nucleic acid extraction workflow for future in situ disease diagnosis in space. They tested it at Kennedy Space Center using experimentally inoculated lettuce, tomato, and pepper. The study establishes a ground-based proof of concept for extracting plant and pathogen nucleic acids. Full automation and operation in a spaceflight environment remain future work.",
+    "metadata": {
+      "source_id": "haveman2023",
+      "section": "Outredgeous Lettuce Root Disease Diagnosis for Future Spaceflight",
+      "subsection": "Evidence scope for space crop disease diagnosis",
+      "source_url": "https://doi.org/10.3389/fpls.2023.1194753.",
+      "source_location": "Abstract, p. 1; §2.2, p. 3; §4, p. 11",
+      "source_file": "Haveman_2023_Lettuce_Disease_Diagnosis_RAG(3).md",
+      "source_license": "CC BY 4.0",
+      "simulator_application_ko": "진단 장비를 쓰는 선택지에는 지상 실험 근거임을 표시한다."
+    }
+  },
+  {
+    "id": "haveman2023-pythium-root-symptoms",
+    "text": "Outredgeous Lettuce Root Disease Diagnosis for Future Spaceflight\nRoot symptoms in Pythium-inoculated Outredgeous lettuce\n\nPythium aphanidermatum is associated with root rot in hydroponically grown lettuce. In the inoculated Outredgeous plants, the authors observed dark, deteriorating roots and extensive tissue necrosis. They grew healthy controls at the same time and kept them in a separate incubator to limit cross-contamination.",
+    "metadata": {
+      "source_id": "haveman2023",
+      "section": "Outredgeous Lettuce Root Disease Diagnosis for Future Spaceflight",
+      "subsection": "Root symptoms in Pythium-inoculated Outredgeous lettuce",
+      "source_url": "https://doi.org/10.3389/fpls.2023.1194753.",
+      "source_location": "§3.2, p. 6; Figure 4A, p. 8",
+      "source_file": "Haveman_2023_Lettuce_Disease_Diagnosis_RAG(3).md",
+      "source_license": "CC BY 4.0",
+      "simulator_application_ko": "뿌리 변색과 손상을 관찰하면 뿌리 상태를 기록하고 검체를 채취하는 선택지의 근거로 쓸 수 있다. 병원체 확인에는 검사 결과가 필요하다."
+    }
+  },
+  {
+    "id": "haveman2023-inoculation-timing",
+    "text": "Outredgeous Lettuce Root Disease Diagnosis for Future Spaceflight\nExperimental inoculation and inconsistent sampling timing\n\nThe investigators inoculated 21-day-old Outredgeous lettuce roots with Pythium aphanidermatum in a silica-sand growth system. Section 2.3 reports harvesting infected roots 21 days after inoculation. Section 3.2 describes symptom development for 14 days after inoculation, and Figure 4A labels the pictured roots as 14 days postinoculation. These are experimental timings, and the source gives different timings for root harvest and the illustrated observations.",
+    "metadata": {
+      "source_id": "haveman2023",
+      "section": "Outredgeous Lettuce Root Disease Diagnosis for Future Spaceflight",
+      "subsection": "Experimental inoculation and inconsistent sampling timing",
+      "source_url": "https://doi.org/10.3389/fpls.2023.1194753.",
+      "source_location": "§2.3, p. 3; §3.2, p. 6; Figure 4A, p. 8",
+      "source_file": "Haveman_2023_Lettuce_Disease_Diagnosis_RAG(3).md",
+      "source_license": "CC BY 4.0",
+      "simulator_application_ko": "증상 관찰과 검체 채취의 연구 기록을 구분하고, 이 시점을 게임의 고정 발병일로 쓰지 않는다."
+    }
+  },
+  {
+    "id": "haveman2023-root-sample-extraction",
+    "text": "Outredgeous Lettuce Root Disease Diagnosis for Future Spaceflight\nRoot sampling and DNA extraction limits\n\nThe researchers used approximately 1.2 g fresh weight of root material for DNA extraction from both healthy and inoculated lettuce. They ground the thick root tissue to powder with liquid nitrogen before processing it in the microHomogenizer. Softer material such as leaves did not need this extra step in the study. The authors identified improved homogenization of fibrous tissue as a design need for future use in microgravity.",
+    "metadata": {
+      "source_id": "haveman2023",
+      "section": "Outredgeous Lettuce Root Disease Diagnosis for Future Spaceflight",
+      "subsection": "Root sampling and DNA extraction limits",
+      "source_url": "https://doi.org/10.3389/fpls.2023.1194753.",
+      "source_location": "§2.6, p. 3; §3.2, p. 6; Figure 4B, p. 8",
+      "source_file": "Haveman_2023_Lettuce_Disease_Diagnosis_RAG(3).md",
+      "source_license": "CC BY 4.0",
+      "simulator_application_ko": "뿌리 검체는 잎과 처리 과정이 다를 수 있다는 설명에 쓴다."
+    }
+  },
+  {
+    "id": "haveman2023-targeted-pcr",
+    "text": "Outredgeous Lettuce Root Disease Diagnosis for Future Spaceflight\nTargeted PCR detection of the lettuce root pathogen\n\nUsing semi-specific PCR primers, the researchers observed the expected 656 bp amplification product in the inoculated lettuce roots and in the cultured Pythium aphanidermatum positive control. The healthy-root sample did not show the same product. The result demonstrates detection of the target in the study's controlled samples.",
+    "metadata": {
+      "source_id": "haveman2023",
+      "section": "Outredgeous Lettuce Root Disease Diagnosis for Future Spaceflight",
+      "subsection": "Targeted PCR detection of the lettuce root pathogen",
+      "source_url": "https://doi.org/10.3389/fpls.2023.1194753.",
+      "source_location": "§3.2, p. 6; Figure 4C, p. 8",
+      "source_file": "Haveman_2023_Lettuce_Disease_Diagnosis_RAG(3).md",
+      "source_license": "CC BY 4.0",
+      "simulator_application_ko": "Pythium이 의심되는 뿌리 검체에 표적 검사를 요청하는 선택지의 근거로 쓸 수 있다."
+    }
+  },
+  {
+    "id": "haveman2023-sequencing-reference-limit",
+    "text": "Outredgeous Lettuce Root Disease Diagnosis for Future Spaceflight\nReference database limitations for pathogen sequencing\n\nThe study's standard Kraken2 workflow did not identify Pythium aphanidermatum in inoculated lettuce roots because the relevant genome was missing from the curated RefSeq database used by the pipeline. Alignment against the target genome alone produced hits in inoculated roots and the pure culture. In a broader comparison with 420 oomycete genomes, the species was identified in the pure culture, with no species-level identification in inoculated roots.",
+    "metadata": {
+      "source_id": "haveman2023",
+      "section": "Outredgeous Lettuce Root Disease Diagnosis for Future Spaceflight",
+      "subsection": "Reference database limitations for pathogen sequencing",
+      "source_url": "https://doi.org/10.3389/fpls.2023.1194753.",
+      "source_location": "§3.3, pp. 8–9; Supplementary Tables S3–S4",
+      "source_file": "Haveman_2023_Lettuce_Disease_Diagnosis_RAG(3).md",
+      "source_license": "CC BY 4.0",
+      "simulator_application_ko": "염기서열 분석의 미검출 결과를 해석할 때 참조 데이터베이스 범위를 확인하도록 안내한다."
+    }
+  }
+]
