@@ -5,8 +5,9 @@ import {
   InvalidRequestError,
   NoCandidateError,
   type CrisisGenerator,
+  type CrisisTranslator,
 } from '@/server/ai/crisis';
-import { createLlmGenerator, readLlmConfig } from '@/server/ai/crisis/llm';
+import { createLlmGenerator, createLlmTranslator, readLlmConfig } from '@/server/ai/crisis/llm';
 
 /**
  * The text generator for crises (implementation notes, entry 22).
@@ -17,6 +18,8 @@ import { createLlmGenerator, readLlmConfig } from '@/server/ai/crisis/llm';
  */
 const llmConfig = readLlmConfig();
 const generator: CrisisGenerator | undefined = llmConfig ? createLlmGenerator(llmConfig) : undefined;
+// Korean requests: the generated English text is translated by the same model.
+const translator: CrisisTranslator | undefined = llmConfig ? createLlmTranslator(llmConfig) : undefined;
 const timeoutMs = llmConfig?.timeoutMs;
 
 // Responses are per request and contain the hidden verdicts, so no layer may store them.
@@ -54,7 +57,7 @@ export async function POST(request: Request): Promise<Response> {
   }
 
   try {
-    const crisis = await createCrisis(parsed.data, { generator, timeoutMs });
+    const crisis = await createCrisis(parsed.data, { generator, translator, timeoutMs });
     return Response.json(crisis, { status: 200, headers: NO_STORE });
   } catch (error) {
     if (error instanceof InvalidRequestError) {
