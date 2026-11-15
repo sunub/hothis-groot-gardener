@@ -39,7 +39,14 @@ function isCount(value: unknown): value is number {
  */
 export function isMissionState(value: unknown): value is MissionState {
   if (!isRecord(value)) return false;
-  if (value.schema_version !== 1) return false;
+  // Version 1: no timeline. Version 2: a timeline (ROLE-TASKS A1). A version-1 save stays version 1.
+  if (value.schema_version === 1) {
+    if (value.timeline !== undefined) return false;
+  } else if (value.schema_version === 2) {
+    if (!isTimelineState(value.timeline)) return false;
+  } else {
+    return false;
+  }
   if (typeof value.mission_id !== 'string' || value.mission_id === '') return false;
   if (value.mode !== 'standard' && value.mode !== 'demo') return false;
   if (!isCount(value.seed) || !isCount(value.rng_state)) return false;
@@ -59,6 +66,27 @@ export function isMissionState(value: unknown): value is MissionState {
   const days = value.days;
   if (!Array.isArray(days) || days.length !== gameDay) return false;
   return days.every((day, i) => isRecord(day) && day.game_day === i + 1 && isRecord(day.start));
+}
+
+const TIMELINE_STATUSES = ['running', 'event', 'milestone'];
+
+/** Shape check of the timeline part, for the same reason as isMissionState. */
+function isTimelineState(value: unknown): boolean {
+  if (!isRecord(value)) return false;
+  const day = value.cultivation_day;
+  if (!isCount(day) || day > 33) return false;
+  if (!TIMELINE_STATUSES.includes(value.status as string)) return false;
+  if (!Array.isArray(value.flags) || !value.flags.every((f) => typeof f === 'string')) return false;
+  if (!Array.isArray(value.event_plan) || !value.event_plan.every(isRecord)) return false;
+  if (!Array.isArray(value.occurred_event_ids)) return false;
+  if (!Array.isArray(value.log) || !value.log.every(isRecord)) return false;
+  const pending = value.pending_event;
+  if (pending !== null) {
+    if (!isRecord(pending) || typeof pending.event_id !== 'string') return false;
+    if (!Array.isArray(pending.offered_action_ids)) return false;
+  }
+  // "event" exactly when a card waits.
+  return (value.status === 'event') === (pending !== null);
 }
 
 /** Save the mission. Returns false when the storage refused the write (full, blocked). */
