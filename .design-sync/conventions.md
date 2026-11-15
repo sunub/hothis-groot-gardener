@@ -31,7 +31,7 @@ Utility classes on tokens, not raw hex. Layout glue uses ordinary Tailwind (`fle
 
 - Color utilities: `bg-bg`, `bg-surface`, `bg-surface-2`, `text-ink`, `text-ink-muted`, `text-ink-faint`, `text-accent`, `text-normal`, `text-caution`, `text-danger`, `text-measured`, `text-game`. Meter and data hues: `health`, `water`, `humidity`, `micro`.
 - Type: `font-title` (Pixelify, headings and body), `font-data` (VT323, numbers and tags). Sizes: `text-caption`, `text-body`, `text-control`, `text-heading`, `text-display`, and `text-data-sm`, `text-data`, `text-data-lg`, `text-data-xl` for VT323. Never go below `text-data-sm` on VT323.
-- Frames are not borders. Use `pixel-frame` (notched), `pixel-frame-flat`, `pixel-frame-thin` with a tone: `pixel-tone-line`, `pixel-tone-accent`, `pixel-tone-normal`, `pixel-tone-caution`, `pixel-tone-danger`, `pixel-tone-measured`. Other pieces: `pixel-raised`, `pixel-bubble`, `pixel-bar`, `pixel-dashed`, `pixel-segments`, `pixel-hatch`, `pixel-art` (crisp image scaling).
+- Frames are not borders. Use `pixel-frame` (notched), `pixel-frame-flat`, `pixel-frame-thin` with a tone: `pixel-tone-line`, `pixel-tone-accent`, `pixel-tone-normal`, `pixel-tone-caution`, `pixel-tone-danger`, `pixel-tone-measured`. Other pieces: `pixel-raised`, `pixel-bar`, `pixel-dashed`, `pixel-segments`, `pixel-hatch`, `pixel-art` (crisp image scaling).
 - Panels carry a 4px outer margin for the frame (`m-1`); keep it, or frames get clipped.
 - A state is never told by color alone: pair zone and verdict colors with a symbol and words (`✓ △ ✕`), as `ZoneBadge` and `VerdictBanner` do.
 

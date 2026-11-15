@@ -5,6 +5,7 @@
 @source "../../../../.design-sync/previews";
 @import "./tokens.css";
 @import "./scene-tokens.css";
+@import "./plant-speech.css";
 @import "./utilities.css";
 @import "./base.css";
 

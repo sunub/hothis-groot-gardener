@@ -103,17 +103,6 @@
     inset 0 4px 0 0 var(--color-accent-lo);
 }
 
-/* Speech bubble for the plant NPC only: light fill, dark frame. */
-@utility pixel-bubble {
-  background-color: var(--color-ink);
-  color: var(--color-bg);
-  box-shadow:
-    0 -4px 0 0 var(--color-bg),
-    0 4px 0 0 var(--color-bg),
-    -4px 0 0 0 var(--color-bg),
-    4px 0 0 0 var(--color-bg);
-}
-
 /* Game-value badge: dashed frame. Recorded values use a filled badge instead. */
 @utility pixel-dashed {
   border: 4px dashed var(--color-line-hi);

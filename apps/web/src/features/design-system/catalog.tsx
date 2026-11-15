@@ -10,7 +10,7 @@ import { Disclosure } from '@/components/ui/disclosure';
 import { Meter } from '@/components/ui/meter';
 import { PIXEL_ICONS, PixelIcon } from '@/components/ui/pixel-icon';
 import { Skeleton } from '@/components/ui/skeleton';
-import { SpeechBubble } from '@/components/ui/speech-bubble';
+import { PlantSpeech } from '@/components/ui/plant-speech';
 import { Stepper } from '@/components/ui/stepper';
 import { TabPanel, Tabs } from '@/components/ui/tabs';
 import { ValueTypeTag } from '@/components/value-type-tag';
@@ -185,7 +185,7 @@ export function DesignSystemCatalog() {
       <Section id="ds-crisis" title="06 · CRISIS · VERDICT">
         <div className="grid gap-6 md:grid-cols-2">
           <div className="space-y-4">
-            <SpeechBubble>My leaf tips keep getting wet drops on them.</SpeechBubble>
+            <PlantSpeech text="My leaf tips keep getting wet drops on them." tail="up" className="text-body" />
             <ul className="space-y-2">
               {options.map((label, i) => (
                 <li key={label}>

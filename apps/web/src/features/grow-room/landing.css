@@ -30,23 +30,8 @@
   transform-origin: 50% 100%; animation: lp-breathe 2.8s steps(2, jump-none) infinite;
 }
 
-/* Speech bubble */
-.lp-speech {
-  position: absolute; left: 584px; bottom: 634px; width: 300px; z-index: 5; cursor: pointer;
-  background: var(--color-scene-bubble); color: var(--color-scene-bubble-ink); font-size: 25px; font-weight: 600;
-  line-height: 1.3; padding: 14px 12px; border: 4px solid var(--color-scene-bubble-line);
-  filter: drop-shadow(5px 5px 0 color-mix(in srgb, var(--color-scene-shadow) 27%, transparent));
-  text-align: center; min-height: 72px;
-}
-.lp-speech::before {
-  content: ""; position: absolute; left: 16px; bottom: -28px; width: 32px; height: 28px;
-  background: var(--color-scene-bubble-line); clip-path: polygon(0 0, 100% 0, 0 100%);
-}
-.lp-speech::after {
-  content: ""; position: absolute; left: 20px; bottom: -15px; width: 22px; height: 19px;
-  background: var(--color-scene-bubble); clip-path: polygon(0 0, 100% 0, 0 100%);
-}
-.lp-caret { display: inline-block; width: 0.5em; animation: lp-blink 0.6s steps(1) infinite; }
+/* Speech bubble: looks come from PlantSpeech (styles/plant-speech.css); only its place and size here. */
+.lp-speech { position: absolute; left: 584px; bottom: 634px; width: 300px; z-index: 5; font-size: 25px; }
 
 /* Monitors (glass measured on BG_growth_normal) */
 .lp-screen {
@@ -140,11 +125,7 @@ html:lang(ko) .lp-pane p { font-size: 20px; line-height: 1.5; }
  * the AI mark are drawn larger to stay readable.
  */
 .lp-narrow .lp-plant { left: 480px; }
-.lp-narrow .lp-speech {
-  left: 1040px; bottom: auto; top: 140px; width: 500px; font-size: 56px; padding: 22px 20px; border-width: 8px;
-}
-.lp-narrow .lp-speech::before { left: 24px; bottom: -48px; width: 56px; height: 48px; }
-.lp-narrow .lp-speech::after { left: 32px; bottom: -26px; width: 38px; height: 32px; }
+.lp-narrow .lp-speech { left: 1040px; bottom: auto; top: 140px; width: 500px; font-size: 56px; }
 .lp-narrow .lp-glow { left: 200px; width: 1210px; }
 .lp-narrow .lp-glow.lp-side { left: 15px; width: 160px; }
 .lp-narrow .lp-glow.lp-side.lp-r { left: 1425px; }
@@ -152,7 +133,6 @@ html:lang(ko) .lp-pane p { font-size: 20px; line-height: 1.5; }
 
 /* Motion (all off under prefers-reduced-motion) */
 @keyframes lp-breathe { 0%, 100% { transform: scaleY(1); } 50% { transform: scaleY(1.014); } }
-@keyframes lp-blink { 50% { opacity: 0; } }
 @keyframes lp-pulse {
   0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--color-scene-accent) 80%, transparent); }
   50% { box-shadow: 0 0 0 8px color-mix(in srgb, var(--color-scene-accent) 0%, transparent); }
@@ -257,10 +237,10 @@ html:lang(ko) .lp-pane p { font-size: 20px; line-height: 1.5; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .lp-plant, .lp-glow, .lp-mote, .lp-screen.lp-boot, .lp-scan, .lp-screen.lp-boot .lp-fade, .lp-caret, .lp-pulse,
+  .lp-plant, .lp-glow, .lp-mote, .lp-screen.lp-boot, .lp-scan, .lp-screen.lp-boot .lp-fade, .lp-pulse,
   .lp-modal-bg.lp-in, .lp-modal-bg.lp-in .lp-modal, .lp-modal-bg.lp-out, .lp-modal-bg.lp-out .lp-modal {
     animation: none !important;
   }
-  .lp-mote, .lp-scan, .lp-caret { display: none; }
+  .lp-mote, .lp-scan { display: none; }
   .lp-screen.lp-boot .lp-fade { opacity: 1; }
 }

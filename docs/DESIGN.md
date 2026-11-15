@@ -18,11 +18,12 @@
 | --- | --- |
 | `apps/web/src/styles/scene-tokens.css` | 배경 그림 속 장면의 색(`--color-scene-*`). 아래 "장면 토큰" 참고 |
 | `apps/web/src/styles/tokens.css` | `@theme` 토큰: 색, 서체, 글자 크기(`text-caption`, `text-body`, `text-control`, `text-heading`, `text-display`, `text-data-sm`~`text-data-xl`), 움직임. `--radius-*`를 초기화해 `rounded-*` 클래스가 생기지 않습니다 |
-| `apps/web/src/styles/utilities.css` | `pixel-*` 유틸리티: 프레임(`pixel-frame`, `-flat`, `-thin`), 프레임 색(`pixel-tone-*`), `pixel-raised`, `pixel-pressed`, `pixel-bubble`, `pixel-dashed`, `pixel-bar`, `pixel-segments`, `pixel-hatch`, `pixel-art` |
+| `apps/web/src/styles/utilities.css` | `pixel-*` 유틸리티: 프레임(`pixel-frame`, `-flat`, `-thin`), 프레임 색(`pixel-tone-*`), `pixel-raised`, `pixel-pressed`, `pixel-dashed`, `pixel-bar`, `pixel-segments`, `pixel-hatch`, `pixel-art` |
+| `apps/web/src/styles/plant-speech.css` | 상추 말풍선(`PlantSpeech`)의 모양. 크기는 모두 `em`이라 글자 크기를 따라 커지고 작아집니다 |
 | `apps/web/src/styles/base.css` | 요소 기본값(바탕, 본문 서체, 포커스 표시, 움직임 줄이기) |
-| `apps/web/src/app/globals.css` | 위 세 파일을 순서대로 불러옵니다 |
+| `apps/web/src/app/globals.css` | 위 파일들을 순서대로 불러옵니다 |
 | `apps/web/src/lib/utils/cn.ts` | `clsx` + `tailwind-merge`. 이 프로젝트의 글자 크기 토큰과 `pixel-*` 그룹을 알도록 설정했습니다 |
-| `apps/web/src/components/ui/` | 화면에 무관한 기본 부품: `button`, `badge`, `card`(`Card`, `CardHeader`, `CardTitle`, `CardDescription`, `Well`), `callout`, `speech-bubble`, `meter`, `choice-button`, `stepper`, `tabs`, `disclosure`, `skeleton`, `pixel-icon` |
+| `apps/web/src/components/ui/` | 화면에 무관한 기본 부품: `button`, `badge`, `card`(`Card`, `CardHeader`, `CardTitle`, `CardDescription`, `Well`), `callout`, `plant-speech`, `meter`, `choice-button`, `stepper`, `tabs`, `disclosure`, `skeleton`, `pixel-icon` |
 | `apps/web/src/components/` | 게임 용어를 아는 부품: `value-type-tag`, `zone-badge`, `verdict-banner`, `source-citation` |
 | `/design-system` | 모든 부품을 한 화면에서 보는 개발용 페이지(`apps/web/src/features/design-system/catalog.tsx`). 검색 엔진에 노출하지 않습니다 |
 
@@ -39,7 +40,7 @@
 | --- | --- |
 | 토큰 | `globals.css` `@theme` 값 교체. 기존 이름(`bg`, `surface`, `line`, `ink`, `accent`, `normal`, `caution`, `danger`, `measured`, `game`, `led`)은 그대로라 기존 클래스는 깨지지 않고 색만 바뀝니다 |
 | 새 토큰 | `surface-3`, `line-hi`, `ink-faint`, `accent-hi`, `accent-lo`, `danger-fill`, `health`, `water`, `humidity`, `lamp`, `micro`, `--font-data` |
-| 유틸리티 | `pixel-frame`, `pixel-frame-flat`, `pixel-frame-{accent,normal,caution,danger,measured}`, `pixel-raised`, `pixel-bubble`, `pixel-dashed`, `pixel-segments`, `pixel-hatch` |
+| 유틸리티 | `pixel-frame`, `pixel-frame-flat`, `pixel-frame-{accent,normal,caution,danger,measured}`, `pixel-raised`, `pixel-dashed`, `pixel-segments`, `pixel-hatch` |
 | 서체 | `layout.tsx`에 VT323 추가 (`font-data`). Pixelify Sans와 DotGothic16은 그대로 |
 | 에셋 | `public/bg/bay-teal.jpg`, `public/bg/wall-teal.jpg`(분홍 조명을 청록으로 보정), `public/icons/*.png`(아이콘 12개) 추가. 기존 `bay.png`, `wall.png`는 그대로 |
 | 컴포넌트와 화면 | 위 "코드 구조"의 부품으로 옮겼습니다. 아래 "다음 단계"의 1~3번은 끝났고, 4번(화면 배치)과 5번(시간축 확장)이 남았습니다 |
@@ -88,13 +89,12 @@
 <section className="pixel-frame m-1 p-5">패널</section>
 <section className="pixel-frame pixel-frame-danger m-1 p-5">위험 강조</section>
 <button className="pixel-raised m-1 min-h-11 px-6 font-title">Continue</button>
-<div className="pixel-bubble m-1 p-3">식물 NPC의 말</div>
 <span className="pixel-dashed px-2 font-data text-lg">Game value</span>
 ```
 
 - `pixel-frame`: 기본 패널. 색은 `--pf`(기본 `line`) 또는 `pixel-frame-*`로 바꿉니다.
 - `pixel-raised`: 주 버튼만. 보조 버튼은 `pixel-frame`을 씁니다.
-- `pixel-bubble`: 식물 NPC의 말에만 씁니다.
+- 식물의 말은 `PlantSpeech` 부품으로만 씁니다(랜딩·임무 화면 공통). 글자가 한 자씩 타이핑되고, 커서는 기본 모양이며 글자를 선택하거나 끌 수 없습니다. 재배실 장면 위에서는 `plant-speech-anchor`로 감싸면 꼬리가 상추 맨 위 잎을 가리킵니다.
 - `pixel-segments`: 채워진 게이지를 8px 블록으로 끊습니다. `pixel-hatch`와 같은 요소에 함께 쓰면 `background-image`가 덮어써지므로, 위험 구간 칸에는 `pixel-hatch`를 쓰고 `pixel-segments`는 안쪽 요소에 둡니다.
 - 간격은 4px 단위(`1`, `2`, `3`, `4`, `6`, `8`, `12`)만 씁니다. 이미지는 `.pixel`(`image-rendering: pixelated`)에 정수 배율만 씁니다.
 

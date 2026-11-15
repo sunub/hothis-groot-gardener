@@ -9,7 +9,7 @@ import { Well } from '@/components/ui/card';
 import { Disclosure } from '@/components/ui/disclosure';
 import { PixelIcon } from '@/components/ui/pixel-icon';
 import { Skeleton } from '@/components/ui/skeleton';
-import { SpeechBubble } from '@/components/ui/speech-bubble';
+import { PlantSpeech } from '@/components/ui/plant-speech';
 import { VerdictBanner } from '@/components/verdict-banner';
 import { PanelHeading } from '@/features/grow-room/panel-heading';
 import { format, useDictionary } from '@/lib/i18n';
@@ -146,9 +146,7 @@ function Choosing({
 
       <figure>
         <figcaption className="font-data text-data-sm text-ink-muted">{e.plant_says}</figcaption>
-        <SpeechBubble tail="top" className="mt-4">
-          <blockquote>“{view.plant_line}”</blockquote>
-        </SpeechBubble>
+        <PlantSpeech text={view.plant_line} tail="up" className="text-body" />
       </figure>
 
       <ChoiceList
@@ -188,7 +186,7 @@ function Outcome({ outcome, onContinue }: { outcome: EventCardOutcome; onContinu
       <Well>
         <figure>
           <figcaption className="font-data text-data-sm text-ink-muted">{e.plant_says}</figcaption>
-          <blockquote className="mt-1 text-body">“{outcome.result_line}”</blockquote>
+          <PlantSpeech text={outcome.result_line} tail="up" className="text-body" />
         </figure>
       </Well>
 

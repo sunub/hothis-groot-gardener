@@ -1,7 +1,7 @@
 'use client';
 
 import { Badge } from '@/components/ui/badge';
-import { SpeechBubble } from '@/components/ui/speech-bubble';
+import { PlantSpeech } from '@/components/ui/plant-speech';
 import type { MissionState } from '@/lib/contract/types';
 import { format, useDictionary, type Dictionary } from '@/lib/i18n';
 import { HEALTH_MAX, METRICS, growthStageOf, isCaution, isDanger, zoneOf } from '@/lib/game/rules';
@@ -69,9 +69,7 @@ export function PlantCharacter({ mission }: { mission: MissionState }) {
         })}
       >
         <div className="absolute top-[8%] left-[55%] hidden w-[42%] flex-col items-start gap-3 sm:flex">
-          <SpeechBubble tail="left" className="text-caption leading-snug lg:text-body">
-            <blockquote>{line}</blockquote>
-          </SpeechBubble>
+          <PlantSpeech text={line} tail="down" aria-live="polite" className="text-caption lg:text-body" />
           <Badge tone={overall} appearance="solid" className="m-1 px-3 py-1 text-data">
             <span aria-hidden>{OVERALL_SYMBOL[overall]}</span>
             {c.overall[overall]}
@@ -79,9 +77,7 @@ export function PlantCharacter({ mission }: { mission: MissionState }) {
         </div>
       </LettuceScene>
       <div className="mt-3 sm:hidden">
-        <SpeechBubble tail="top">
-          <blockquote>{line}</blockquote>
-        </SpeechBubble>
+        <PlantSpeech text={line} tail="up" className="text-body" />
         <Badge tone={overall} appearance="solid" className="mt-3 px-3 py-1 text-data">
           <span aria-hidden>{OVERALL_SYMBOL[overall]}</span>
           {c.overall[overall]}

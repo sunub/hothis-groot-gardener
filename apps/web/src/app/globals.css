@@ -9,5 +9,6 @@
 @import "tailwindcss";
 @import "../styles/tokens.css";
 @import "../styles/scene-tokens.css";
+@import "../styles/plant-speech.css";
 @import "../styles/utilities.css";
 @import "../styles/base.css";

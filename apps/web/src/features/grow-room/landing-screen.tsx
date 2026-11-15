@@ -3,13 +3,15 @@
 /* eslint-disable @next/next/no-img-element -- pixel art on a scaled artboard; next/image adds nothing here */
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useCallback, useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { PlantSpeech } from '@/components/ui/plant-speech';
 import { ROUTES, routeForPhase } from '@/features/mission/routes';
 import { useMission } from '@/features/mission/use-mission';
 import type { MissionMode, MissionState } from '@/lib/contract/types';
 import { CULTIVATION_DAYS, GAME_DAYS, MAX_CARE_OPS_PER_DAY, cultivationDayOf } from '@/lib/game/rules';
 import { format, useDictionary, useLocale } from '@/lib/i18n';
 import { cn } from '@/lib/utils/cn';
+import { useReducedMotion } from '@/lib/utils/use-reduced-motion';
 import { LandingBriefingPanel, LandingSavedPanel, type LandingTab } from './landing-panels';
 import { AutoFocusButton, SceneModal, SceneSteps } from './scene-ui';
 import './landing.css';
@@ -50,20 +52,6 @@ function writeStore(key: string, value: string): void {
   } catch {
     // Storage is blocked: the popup simply opens again next time.
   }
-}
-
-const REDUCED_QUERY = '(prefers-reduced-motion: reduce)';
-function subscribeReduced(listener: () => void): () => void {
-  const query = window.matchMedia(REDUCED_QUERY);
-  query.addEventListener('change', listener);
-  return () => query.removeEventListener('change', listener);
-}
-function useReducedMotion(): boolean {
-  return useSyncExternalStore(
-    subscribeReduced,
-    () => window.matchMedia(REDUCED_QUERY).matches,
-    () => false,
-  );
 }
 
 /** Scale of the 1600×900 artboard so it fits the stage width and the window height. */
@@ -146,48 +134,9 @@ export function LandingScreen() {
     return () => window.clearTimeout(id);
   }, [brief, hideToday, reduced]);
 
-  // --- Speech typewriter -----------------------------------------------------
-  const [typing, setTyping] = useState<{ text: string; shown: number; caret: boolean } | null>(null);
-  const typeTimer = useRef<number | undefined>(undefined);
-  const afterTyped = useRef<(() => void) | null>(null);
-  const finishTyping = useCallback(() => {
-    const done = afterTyped.current;
-    afterTyped.current = null;
-    done?.();
-  }, []);
-
-  const typeSpeech = useCallback(
-    (text: string, done?: () => void) => {
-      window.clearInterval(typeTimer.current);
-      if (done) afterTyped.current = done;
-      const chars = [...text];
-      if (reduced) {
-        setTyping({ text, shown: chars.length, caret: false });
-        finishTyping();
-        return;
-      }
-      const step = Math.min(35, Math.max(12, 900 / chars.length));
-      let i = 0;
-      setTyping({ text, shown: 0, caret: true });
-      typeTimer.current = window.setInterval(() => {
-        i += 1;
-        setTyping({ text, shown: i, caret: true });
-        if (i >= chars.length) {
-          window.clearInterval(typeTimer.current);
-          window.setTimeout(() => setTyping((cur) => (cur && cur.text === text ? { ...cur, caret: false } : cur)), 700);
-          window.setTimeout(finishTyping, 450);
-        }
-      }, step);
-    },
-    [reduced, finishTyping],
-  );
-
-  const skipTyping = () => {
-    if (!typing) return;
-    window.clearInterval(typeTimer.current);
-    setTyping({ ...typing, shown: [...typing.text].length, caret: false });
-    finishTyping();
-  };
+  // --- Speech --------------------------------------------------------------
+  // The line types itself once the sequence reaches it, and again when the language changes.
+  const [speaking, setSpeaking] = useState(false);
 
   // First visit order: monitors power on -> speech types -> popup swooshes in.
   const started = useRef(false);
@@ -204,27 +153,17 @@ export function LandingScreen() {
       started.current = true;
       setMotes(makeMotes(window.innerWidth < NARROW_MAX));
       if (reduced) {
-        typeSpeech(s.speech, showBrief);
+        setSpeaking(true);
         return;
       }
       setBooting(true);
       later(() => setBooting(false), 2200);
-      later(() => typeSpeech(s.speech, showBrief), 500);
+      later(() => setSpeaking(true), 500);
     }, 0);
     return () => timers.forEach((id) => window.clearTimeout(id));
     // Runs once, when the artboard has been measured.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [measured]);
-
-  // Retype the line when the language changes (after the first typing started).
-  const lastSpeech = useRef(s.speech);
-  useEffect(() => {
-    if (lastSpeech.current === s.speech) return;
-    lastSpeech.current = s.speech;
-    if (started.current) typeSpeech(s.speech);
-  }, [s.speech, typeSpeech]);
-
-  useEffect(() => () => window.clearInterval(typeTimer.current), []);
 
   // --- Mission actions -------------------------------------------------------
   const begin = (mode: MissionMode) => {
@@ -358,8 +297,6 @@ export function LandingScreen() {
     </section>
   );
 
-  const chars = typing ? [...typing.text] : [];
-
   return (
     <>
       <div className="lp" lang={locale}>
@@ -395,14 +332,12 @@ export function LandingScreen() {
               ))}
             </div>
             <img className="lp-plant" src="/sprites/H0_harvest_ready.png" alt={s.plant_alt} />
-            <div className="lp-speech" aria-live="polite" onClick={skipTyping}>
-              {typing ? (
-                <>
-                  <span>{chars.slice(0, typing.shown).join('')}</span>
-                  {typing.caret ? <span className="lp-caret" aria-hidden>▌</span> : null}
-                </>
-              ) : null}
-            </div>
+            <PlantSpeech
+              className="lp-speech"
+              aria-live="polite"
+              text={speaking ? s.speech : null}
+              onTyped={showBrief}
+            />
 
             {narrow ? null : mainMonitor}
             {narrow ? null : stripMonitor}
