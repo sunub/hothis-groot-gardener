@@ -34,9 +34,11 @@ bash scripts/start-with-ai.sh
    ```bash
    ollama pull gemma4:e4b
    ```
-2. Optional: run the evidence search server from the RAG branch (`services/rag/rag_server.py`), which adds short excerpts from NASA plant research papers to the prompt:
+2. Optional: run the evidence search server (`services/rag/rag_server.py`, needs [uv](https://docs.astral.sh/uv/)), which adds short excerpts from NASA plant research papers to the prompt:
    ```bash
-   cd services/rag && python -m uvicorn rag_server:app --host 127.0.0.1 --port 8000
+   cd services/rag
+   uv sync --group server
+   uv run uvicorn rag_server:app --host 127.0.0.1 --port 8000
    ```
 3. Copy `apps/web/.env.example` to `apps/web/.env.local` and check the values (`LLM_MODEL`, `LLM_BASE_URL`, `RAG_URL`).
 4. `npm run dev`. The server starts loading the model in the background (`apps/web/src/instrumentation.ts`); the terminal shows `[llm] gemma4:e4b is loaded` when it is ready. For a demo, set `LLM_KEEP_ALIVE=-1` so the model stays loaded until the demo starts.
