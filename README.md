@@ -151,4 +151,4 @@ The planning document gives the model one job: write the crisis scene, the plant
 
 ## Sources and licenses
 
-See [`docs/SOURCES.md`](docs/SOURCES.md).
+See [`docs/SOURCES.md`](docs/SOURCES.md). 
