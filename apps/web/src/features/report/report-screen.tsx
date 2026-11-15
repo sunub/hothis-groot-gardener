@@ -55,7 +55,7 @@ function Report({ mission, actions }: { mission: MissionState; actions: MissionA
   const unit = evidence.harvest.microbial_range.unit;
 
   return (
-    <div className="mx-auto max-w-5xl space-y-6 print:bg-bg print:[print-color-adjust:exact]">
+    <div className="mx-auto flex max-w-5xl flex-col gap-8 print:bg-bg print:[print-color-adjust:exact]">
       {harvest ? (
         <PageHeader
           eyebrow={format(t.report.report.eyebrow, { crop: t.common.crop_name })}
