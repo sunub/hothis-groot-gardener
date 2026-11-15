@@ -80,6 +80,7 @@ export const mission = {
   timeline: {
     label: 'Mission timeline',
     summary: 'Day {day} of {days} · cultivation day {cultivation_day} · {stage}',
+    progress: 'Mission day {day} of {days}',
     day_short: 'D{day}',
     cultivation_short: 'C{day}',
     cultivation_mid: 'Cult. day {day}',

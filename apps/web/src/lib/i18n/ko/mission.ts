@@ -79,6 +79,7 @@ export const mission: Dictionary['mission'] = {
   timeline: {
     label: '임무 시간축',
     summary: '{days}일 중 {day}일째 · 재배 {cultivation_day}일째 · {stage}',
+    progress: '임무 {day}일째 / 총 {days}일',
     day_short: '{day}일',
     cultivation_short: '재배 {day}',
     cultivation_mid: '재배 {day}일',
