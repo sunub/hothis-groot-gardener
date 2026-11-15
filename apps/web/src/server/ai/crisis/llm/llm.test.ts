@@ -231,8 +231,9 @@ describe('prompt and output schema', () => {
 // --- wording guard -------------------------------------------------------------
 
 describe('checkWording', () => {
-  it('passes every reviewed pre-made crisis', () => {
-    for (const entry of fallbackCrises.crises) {
+  it('passes every reviewed English pre-made crisis', () => {
+    // The guard judges English replies only; the Korean texts are not generated.
+    for (const entry of fallbackCrises.crises.filter((e) => e.locale === 'en')) {
       const req = entry.output.crisis_id === 'water_shortage' ? dry : wet;
       const candidates = staged(req).map((c) => ({ ...c, stage: entry.stage }));
       const input = buildGenerationInput(req, candidates);
