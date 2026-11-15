@@ -2,8 +2,7 @@ import { describe, expect, it } from 'vitest';
 import evidence from '@content/evidence.json';
 import {
   FORBIDDEN_CLAIM_PATTERNS,
-  SAFE_DENIAL_PATTERN,
-  SAFE_PATTERN,
+  hasUndeniedSafe,
 } from '@/lib/contract/claims';
 import { en } from './en';
 
@@ -27,8 +26,6 @@ function collectStrings(value: unknown, path: string, out: [string, string][]): 
 
 // Shared with the generated-text check, so screen text and generated text follow one list.
 const FORBIDDEN = FORBIDDEN_CLAIM_PATTERNS;
-const SAFE = SAFE_PATTERN;
-const SAFE_DENIAL = SAFE_DENIAL_PATTERN;
 
 function violations(strings: [string, string][]): string[] {
   const found: string[] = [];
@@ -36,7 +33,7 @@ function violations(strings: [string, string][]): string[] {
     for (const pattern of FORBIDDEN) {
       if (pattern.test(text)) found.push(`${path}: ${pattern} in "${text}"`);
     }
-    if (SAFE.test(text) && !SAFE_DENIAL.test(text)) {
+    if (hasUndeniedSafe(text)) {
       found.push(`${path}: "safe" without a denial in "${text}"`);
     }
   }
