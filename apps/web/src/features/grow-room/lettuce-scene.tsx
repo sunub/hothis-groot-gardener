@@ -11,14 +11,12 @@ import { spriteUrl } from './lettuce-sprite';
 export function LettuceScene({
   sprite,
   label,
-  artNote,
   className = '',
   dimLabel,
   children,
 }: {
   sprite: string;
   label: string;
-  artNote: string;
   className?: string;
   /** When set, the lights are dimmed and this label names why (the night phase). */
   dimLabel?: string;
@@ -54,9 +52,6 @@ export function LettuceScene({
         </div>
       ) : null}
       {children}
-      <span className="absolute right-2 bottom-1.5 bg-bg px-2 font-data text-data-sm text-ink-muted">
-        {artNote}
-      </span>
     </div>
   );
 }

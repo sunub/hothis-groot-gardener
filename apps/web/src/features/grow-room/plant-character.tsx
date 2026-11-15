@@ -61,7 +61,6 @@ export function PlantCharacter({ mission }: { mission: MissionState }) {
     <section aria-label={c.label}>
       <LettuceScene
         sprite={spriteFor(mission)}
-        artNote={c.art_note}
         dimLabel={mission.phase === 'night' ? c.night_label : undefined}
         label={format(c.svg_label, {
           stage: t.common.growth_stage[stage],
@@ -69,12 +68,10 @@ export function PlantCharacter({ mission }: { mission: MissionState }) {
           max: HEALTH_MAX,
         })}
       >
-        <div className="absolute top-[10%] left-[55%] hidden w-[40%] sm:block">
+        <div className="absolute top-[8%] left-[55%] hidden w-[42%] flex-col items-start gap-3 sm:flex">
           <SpeechBubble tail="left" className="text-caption leading-snug lg:text-body">
             <blockquote>{line}</blockquote>
           </SpeechBubble>
-        </div>
-        <div className="absolute top-[48%] left-[55%] hidden sm:block">
           <Badge tone={overall} appearance="solid" className="m-1 px-3 py-1 text-data">
             <span aria-hidden>{OVERALL_SYMBOL[overall]}</span>
             {c.overall[overall]}
