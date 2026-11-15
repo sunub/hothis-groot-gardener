@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { DotGothic16, Noto_Sans_KR, Pixelify_Sans, VT323 } from 'next/font/google';
+import { DotGothic16, Hahmlet, Pixelify_Sans, VT323 } from 'next/font/google';
 import type { ReactNode } from 'react';
 import { LocaleProvider } from '@/lib/i18n';
 import './globals.css';
@@ -7,7 +7,7 @@ import './globals.css';
 const pixelify = Pixelify_Sans({ subsets: ['latin'], variable: '--font-pixelify' });
 const dot = DotGothic16({ subsets: ['latin'], weight: '400', variable: '--font-dot' });
 // Hangul is not in the pixel typefaces. The browser fetches only the Hangul chunks it needs, when the page is Korean.
-const notoKr = Noto_Sans_KR({ weight: ['400', '700'], variable: '--font-noto-kr', preload: false });
+const hahmlet = Hahmlet({ weight: ['400', '700'], variable: '--font-hahmlet', preload: false });
 const vt323 = VT323({ subsets: ['latin'], weight: '400', variable: '--font-vt323' });
 
 export const metadata: Metadata = {
@@ -18,7 +18,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" className={`${pixelify.variable} ${dot.variable} ${vt323.variable} ${notoKr.variable} h-full antialiased`}>
+    <html lang="en" className={`${pixelify.variable} ${dot.variable} ${vt323.variable} ${hahmlet.variable} h-full antialiased`}>
       <body className="flex min-h-full flex-col">
         <LocaleProvider>{children}</LocaleProvider>
       </body>

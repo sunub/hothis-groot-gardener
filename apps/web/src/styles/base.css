@@ -1,6 +1,6 @@
 /*
  * Base element styles: SG-DS v2 · Pixel UI.
- * Screen copy is set in the pixel typefaces. Korean screen copy (html lang="ko") swaps in Noto Sans KR,
+ * Screen copy is set in the pixel typefaces. Korean screen copy (html lang="ko") swaps in Hahmlet,
  * because the pixel typefaces have no Hangul. Digits and tags keep VT323.
  */
 @layer base {
@@ -9,9 +9,9 @@
   }
 
   html:lang(ko) {
-    --font-title: var(--font-noto-kr), var(--font-sans);
-    --font-pixel: var(--font-noto-kr), var(--font-sans);
-    --font-data: var(--font-vt323), var(--font-noto-kr), var(--font-sans);
+    --font-title: var(--font-hahmlet), var(--font-sans);
+    --font-pixel: var(--font-hahmlet), var(--font-sans);
+    --font-data: var(--font-vt323), var(--font-hahmlet), var(--font-sans);
   }
 
   body {
