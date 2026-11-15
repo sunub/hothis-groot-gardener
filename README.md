@@ -89,6 +89,34 @@ bash scripts/start-with-ai.sh
 - `LLM_PROVIDER=openai` switches to any OpenAI-compatible server (for example vLLM on RunPod) with the same checks.
 - `LLM_LOG_DIR` writes every generation (output, problems found, time taken) to `generations.jsonl` for quality checks.
 
+### Evidence search and how well it works
+
+When `RAG_URL` points at the search server (`services/rag/rag_server.py`), each crisis request first searches 76 excerpts from published sources and puts the top 4 into the prompt as background for the scene and the "why" lines. The default setting (`retriver.local.yaml`) is keyword search (BM25) only and needs no API key. The search never decides verdicts, state changes or the sources shown on screen; those come from the evidence list. Without `RAG_URL`, or when the server does not answer within 3 seconds, the model writes without excerpts. The one-step scripts do not start the search server.
+
+We measured the search with the five queries the game actually sends (`data/eval/evaluation.app.json`): water shortage at stages 1 and 2, overwatering and mold at stages 1 to 3. Before scoring, every candidate excerpt was graded as key evidence, supporting, unrelated, or off-stage (about a symptom the plant does not have yet at that stage, which could lead the model to write it).
+
+| Query | Precision@4 | Recall@4 | MRR@4 | nDCG@4 | Off-stage |
+|---|---|---|---|---|---|
+| Water shortage, stage 1 | 0.75 | 0.67 | 1.00 | 0.79 | 0 |
+| Water shortage, stage 2 | 0.75 | 0.67 | 1.00 | 0.79 | 0 |
+| Overwatering, stage 1 | 0.75 | 1.00 | 1.00 | 0.86 | 0 |
+| Overwatering, stage 2 | 0.50 | 1.00 | 1.00 | 0.80 | 0 |
+| Overwatering, stage 3 | 0.50 | 1.00 | 1.00 | 0.80 | 0 |
+| **Average, top 4 (what the game uses)** | **0.65** | **0.87** | **1.00** | **0.81** | **0 of 20** |
+| Average if the top 5 were used | 0.60 | 0.87 | 1.00 | 0.78 | 2 of 25 |
+
+- Precision is the share of the excerpts in the prompt that are key or supporting. Recall and MRR count key evidence only: Recall is the share of key excerpts that reach the prompt, MRR is 1 divided by the rank of the first one. nDCG weighs key and supporting excerpts by rank.
+- The first excerpt is key evidence for every query, and no off-stage excerpt reaches the prompt. A fifth excerpt would add a tip burn record to both water shortage prompts, which is why the game keeps 4.
+- Weak points: for water shortage, the excerpt on watering the pillows directly ranks 6th. At overwatering stages 2 and 3, a lighting excerpt and a harvest schedule excerpt take places 3 and 4, and at stage 3 the root rot record is not in the top 10. A stage's new symptom changes little: water shortage stages 1 and 2, and overwatering stages 2 and 3, return the same excerpts.
+- Five queries over two crises is a small set, and the grades are a judgement made by reading each excerpt (see Use of AI tools). Measured on 2026-11-15 with 76 excerpts.
+
+To repeat it (setup and the other evaluation sets: `services/rag/RETRIEVAL_USAGE.md`, in Korean):
+
+```bash
+cd services/rag
+uv run python evaluation.py --dataset ../../data/eval/evaluation.app.json --config retriver.local.yaml --top-n 4
+```
+
 ## How to read the numbers
 
 Every number on screen carries one of two labels.
@@ -146,7 +174,7 @@ The planning document gives the model one job: write the crisis scene, the plant
 
 - **In the product:** when `LLM_MODEL` is set, a language model (Gemma 4 E4B by Google, run locally through Ollama during development) writes the crisis scene, the plant's lines, the clues and the option text. The crisis screen states this whenever the text is generated. Verdicts, state changes and sources never come from the model. Without `LLM_MODEL` no model is called and crisis text comes from `data/content/fallback-crises.json`. The optional evidence search uses keyword search over excerpts from published papers; no AI model is involved in that search by default.
 - **In development:** the team used an AI coding assistant (Claude Code by Anthropic) to write and test the code in this branch, to search the downloaded NASA source documents and draft the evidence list, to draft the English text of the pre-made crises, to draft the documents in `docs/`, and to write the language model connection in `apps/web/src/server/ai/crisis/llm/`. The team defined the idea, the rules and the scope in its planning document.
-- **Data files:** the files in `data/content/` carry an `ai_disclosure` field that says how AI tools were used for that file, except `events.json`, which has none yet. `data/eval/evaluation.events.json` and `data/sources/public_sources_RAG.json` are plain lists and cannot carry the field: the questions in the first were drafted with an AI coding assistant, and the excerpts in the second were cut from the source documents by a script written with one. Every quote in the evidence list was compared by a script with the text of the downloaded source document and is a verbatim part of it. The script and the downloaded documents are not part of this repository.
+- **Data files:** the files in `data/content/` carry an `ai_disclosure` field that says how AI tools were used for that file, except `events.json`, which has none yet. `data/eval/evaluation.events.json` and `data/sources/public_sources_RAG.json` are plain lists and cannot carry the field: the questions in the first were drafted with an AI coding assistant, and the excerpts in the second were cut from the source documents by a script written with one. In `data/eval/evaluation.app.json` the queries are the ones the game builds, and the relevance grades were drafted with an AI coding assistant after reading each excerpt. Every quote in the evidence list was compared by a script with the text of the downloaded source document and is a verbatim part of it. The script and the downloaded documents are not part of this repository.
 - The plant and chamber images in `apps/web/public/sprites` and `apps/web/public/bg` are AI-generated, and the screens label them "AI-generated art". No AI-generated video or audio is used.
 
 ## Sources and licenses
