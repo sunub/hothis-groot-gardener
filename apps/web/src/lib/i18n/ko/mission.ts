@@ -167,6 +167,7 @@ export const mission: Dictionary['mission'] = {
     game_day: '게임 {game_day}일째에 도착했습니다.',
     zone: '{metric}: {from} → {to}',
     unchecked: '아직 원문 출처와 대조하지 않았습니다',
+    ai_translated: 'AI 번역',
     tone: { positive: '좋음', negative: '나쁨', mixed: '엇갈림', neutral: '' },
   },
   pending: {

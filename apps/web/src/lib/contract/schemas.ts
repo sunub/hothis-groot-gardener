@@ -412,3 +412,15 @@ export type EventCardRequest = z.infer<typeof eventCardRequestSchema>;
 export type EventCardOutput = z.infer<typeof eventCardOutputSchema>;
 export type EventCardResponse = z.infer<typeof eventCardResponseSchema>;
 export type EventCardOption = EventCardResponse['options'][number];
+
+/** Body of POST /api/diary-translate: English diary lines to put into Korean. */
+export const diaryTranslateRequestSchema = z.object({
+  locale: z.literal('ko'),
+  texts: z.array(z.string().min(1).max(600)).min(1).max(24),
+});
+export type DiaryTranslateRequest = z.infer<typeof diaryTranslateRequestSchema>;
+
+/** One entry per requested text, in order; null means "keep the English". */
+export interface DiaryTranslateResponse {
+  translations: (string | null)[];
+}

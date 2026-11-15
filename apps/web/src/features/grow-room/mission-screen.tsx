@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { StateHistoryChart } from '@/components/state-history-chart';
 import { Card, CardTitle } from '@/components/ui/card';
 import { ValueTypeTag } from '@/components/value-type-tag';
@@ -10,6 +10,7 @@ import { useMission, type CrisisFetchStatus, type MissionActions } from '@/featu
 import type { MissionState } from '@/lib/contract/types';
 import { CultivationDiary } from '@/features/timeline/cultivation-diary';
 import { diaryLines } from '@/features/timeline/diary';
+import { useDiaryTranslation } from '@/features/timeline/use-diary-translation';
 import type { EventCardResponse } from '@/lib/contract/schemas';
 import { eventList } from '@/lib/events';
 import { localizeEventList } from '@/lib/events/localize';
@@ -81,9 +82,16 @@ function GrowRoom({
       ? 'caution'
       : 'default';
   // Missions with a timeline: the cultivation diary lines, and an event card that stops time.
-  const diary = mission.timeline
-    ? diaryLines(mission.timeline.log, [], mission.timeline.cultivation_day, localizeEventList(eventList, locale))
-    : null;
+  const sourceDiary = useMemo(
+    () =>
+      mission.timeline
+        ? diaryLines(mission.timeline.log, [], mission.timeline.cultivation_day, localizeEventList(eventList, locale))
+        : null,
+    [mission.timeline, locale],
+  );
+  // Korean screen: the English experiment and observation lines are translated by the language model.
+  const translatedDiary = useDiaryTranslation(sourceDiary ?? [], locale);
+  const diary = sourceDiary ? translatedDiary : null;
 
   return (
     <div className="space-y-4 sm:space-y-6">
