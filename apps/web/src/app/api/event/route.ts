@@ -1,14 +1,31 @@
 import { eventCardRequestSchema, REQUEST_BODY_MAX_BYTES } from '@/lib/contract/schemas';
 import type { ApiError } from '@/lib/contract/types';
-import { createEventCard, InvalidEventRequestError } from '@/server/ai/event-cards';
+import { readLlmConfig } from '@/server/ai/crisis/llm';
+import {
+  createEventCard,
+  createEventCardLlmGenerator,
+  eventCardGenerationEnabled,
+  InvalidEventRequestError,
+  type EventCardGenerator,
+} from '@/server/ai/event-cards';
+
+/**
+ * The text generator for event cards. It needs both a configured model
+ * (LLM_MODEL, as in the crisis route) and LLM_EVENT_CARDS switched on.
+ * Off by default: for event cards the generated text adds little over the
+ * pre-made text and makes the player wait a long time for each card.
+ * Otherwise every card uses the pre-made text and no model is called.
+ */
+const llmConfig = eventCardGenerationEnabled(process.env.LLM_EVENT_CARDS) ? readLlmConfig() : undefined;
+const generator: EventCardGenerator | undefined = llmConfig ? createEventCardLlmGenerator(llmConfig) : undefined;
+const timeoutMs = llmConfig?.timeoutMs;
 
 // Responses carry the hidden verdicts, so no layer may store them.
 const NO_STORE = { 'Cache-Control': 'no-store' } as const;
 
 /**
  * POST /api/event: return the card for a scheduled or conditional timeline
- * event. No generator is connected, so every card uses the pre-made text.
- * 200 EventCardResponse, 400 bad_request, 500 internal.
+ * event. 200 EventCardResponse, 400 bad_request, 500 internal.
  */
 export async function POST(request: Request): Promise<Response> {
   let raw: string | null;
@@ -38,7 +55,7 @@ export async function POST(request: Request): Promise<Response> {
   }
 
   try {
-    const card = await createEventCard(parsed.data);
+    const card = await createEventCard(parsed.data, { generator, timeoutMs });
     return Response.json(card, { status: 200, headers: NO_STORE });
   } catch (error) {
     if (error instanceof InvalidEventRequestError) {

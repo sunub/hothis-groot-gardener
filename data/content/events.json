@@ -2,14 +2,14 @@
   "meta": {
     "schema_version": 1,
     "status": "draft",
-    "description": "Events that can happen on the cultivation timeline (day 0-33). Each event is written from chunks in vector_db (data/json/total_RAG.json). The engine does not read this file yet.",
+    "description": "Events that can happen on the cultivation timeline (day 0-33). Each event is written from chunks in data/vector_db (data/sources/total_RAG.json). The engine does not read this file yet.",
     "rules": [
       "Verdicts, probabilities and numeric effects are game values set by the team, not measurements. The chunks only say what happened.",
       "Crisis events point to evidence.json with crisis_ref. Their trigger, symptoms, actions and numbers stay in evidence.json; this file adds only the timeline window and DB chunks.",
       "Night drift still applies once per game day (milestones). Cultivation days between milestones only check events, so the current balance does not change.",
       "Every value marked draft needs a team answer before the engine uses it.",
       "parallel_tracks are dated records from real experiments, shown beside the player's run as measured records. They never change verdicts or numbers.",
-      "source_check on a parallel_tracks entry says whether the excerpt behind it was compared with the original document. Entries marked not_checked rest on excerpts the team could not compare (the article is not in the repository's source files); do not label them as measured on screen until they are checked. Licenses per source are in src/data/source-licenses.json.",
+      "source_check on a parallel_tracks entry says whether the excerpt behind it was compared with the original document. Entries marked not_checked rest on excerpts the team could not compare (the article is not in the repository's source files); do not label them as measured on screen until they are checked. Licenses per source are in data/content/source-licenses.json.",
       "Record events (kind record) add one log line with no choice and no effect. Their condition is checked against the state the plant is heading to on the next game day, so the lines lead up to what the player sees there. Text is written from the cited chunks in the team's words; no sentence is copied."
     ],
     "milestones": [
@@ -89,8 +89,8 @@
       "summary": "Poor air circulation leaves droplets on leaves, a micro environment favorable for microbes. In VEG-03A the fan read 'low' after a power cycle but was off, and early seedlings had excess moisture.",
       "source_chunks": [
         "veggie-leaf-moisture",
-        "veggie-cultivar-airflow",
-        "veggie-fan-restart-moisture"
+        "veggie-fan-restart-moisture",
+        "veggie-03a-fan-restart"
       ],
       "open_questions": [
         "The DB has no chunk for the zinnia mold record (VEG-01C) that evidence.json uses for the symptom stages. Keep the zinnia sources, or rewrite the crisis around the fan and droplet chunks?"
@@ -191,7 +191,8 @@
         "veggie-day7-thinning",
         "veg01-wick-thinning",
         "VEG-03J-06",
-        "veg01-early-a"
+        "veg01-early-a",
+        "veggie-seed-wicks-thinning"
       ]
     },
     {
@@ -211,7 +212,9 @@
       "source_chunks": [
         "veggie-single-harvest",
         "VEG-03J-08",
-        "veggie-harvest-method"
+        "veggie-harvest-method",
+        "veggie-sequential-harvest-methods",
+        "veggie-03a-sample-handling"
       ]
     },
     {
@@ -231,6 +234,11 @@
           "water_blocked"
         ],
         "note": "While water_blocked is set, water care ops add nothing to root moisture, so the night drift can lead to water_shortage."
+      },
+      "flag_effects": {
+        "water_blocked": {
+          "blocks_watering": true
+        }
       },
       "actions": [
         {
@@ -343,8 +351,7 @@
       ],
       "source_chunks": [
         "veggie-03a-fan-restart",
-        "veggie-fan-restart-moisture",
-        "veg01-light-hardware"
+        "veggie-fan-restart-moisture"
       ]
     },
     {
@@ -749,24 +756,28 @@
       "experiment": "VEG-01A",
       "entries": [
         {
+          "entry_id": "veg01a_d0",
           "day": 0,
           "text": "Pillow A could not be hydrated and was swapped with a spare pillow.",
           "source_chunk": "veg01-no-flow-a",
           "source_check": "not_checked"
         },
         {
+          "entry_id": "veg01a_d7",
           "day": 7,
           "text": "Pillow B never germinated; the other pillows were thinned to one seedling each.",
           "source_chunk": "veg01-early-a",
           "source_check": "not_checked"
         },
         {
+          "entry_id": "veg01a_d14",
           "day": 14,
           "text": "Three of five plants were stunted; the crew added water directly to the pillows. One recovered and two died.",
           "source_chunk": "veg01-stall-a",
           "source_check": "not_checked"
         },
         {
+          "entry_id": "veg01a_d33",
           "day": 33,
           "text": "Harvest planned for day 28 was moved to day 33 because of the low-water growth.",
           "source_chunk": "veg01-harvest-a",
@@ -778,18 +789,21 @@
       "experiment": "VEG-01B",
       "entries": [
         {
+          "entry_id": "veg01b_d15",
           "day": 15,
           "text": "Plant growth appeared to stop.",
           "source_chunk": "veg01-stall-b",
           "source_check": "not_checked"
         },
         {
+          "entry_id": "veg01b_d16",
           "day": 16,
           "text": "Pillows and reservoir were watered; after that, water was added directly to the pillows at every scheduled watering.",
           "source_chunk": "veg01-stall-b",
           "source_check": "not_checked"
         },
         {
+          "entry_id": "veg01b_d33",
           "day": 33,
           "text": "The plants recovered and were harvested.",
           "source_chunk": "veg01-stall-b",
@@ -801,6 +815,7 @@
       "experiment": "VEG-03A",
       "entries": [
         {
+          "entry_id": "veg03a_early_growth",
           "day": null,
           "when": "early growth",
           "text": "The fan read 'low' after a power cycle but was off; seedlings had excess moisture.",
@@ -819,18 +834,21 @@
       "experiment": "VEG-03J",
       "entries": [
         {
+          "entry_id": "veg03j_d3",
           "day": 3,
           "text": "Astronauts spread the wicks apart with forceps to help seedlings emerge.",
           "source_chunk": "VEG-03J-05",
           "source_check": "not_checked"
         },
         {
+          "entry_id": "veg03j_d7",
           "day": 7,
           "text": "Seedlings were thinned so each pillow kept one viable seedling.",
           "source_chunk": "VEG-03J-06",
           "source_check": "not_checked"
         },
         {
+          "entry_id": "veg03j_after_germination",
           "day": null,
           "when": "after germination",
           "text": "Some plants showed mild tip burn, a sign of rapid growth.",
@@ -838,6 +856,7 @@
           "source_check": "not_checked"
         },
         {
+          "entry_id": "veg03j_d29",
           "day": 29,
           "text": "Plants were harvested; tissue was wrapped, bagged and frozen at -80 °C until return.",
           "source_chunk": "VEG-03J-08",

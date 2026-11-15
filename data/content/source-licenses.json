@@ -1,6 +1,6 @@
 {
   "meta": {
-    "description": "License of each source that the retrieval chunks (data/json/total_RAG.json) are cut from, and what the license allows this project to do with the text.",
+    "description": "License of each source that the retrieval chunks (data/sources/total_RAG.json) are cut from, and what the license allows this project to do with the text.",
     "checked_on": "2026-11-15",
     "method": "The license field of the publisher record of each DOI (Crossref REST API). The NASA Technical Reports Server and PubMed Central were searched for a public copy of each article that is not openly licensed; none was found (two or three search phrases per article, not an exhaustive search).",
     "use_rules": {

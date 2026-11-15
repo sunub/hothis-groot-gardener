@@ -102,6 +102,10 @@ docs/
   IMPLEMENTATION-NOTES.md     The same notes in Korean (original)
   SOURCES.md                  Data, documents, open-source software and references, with licenses
   DEMO-SCRIPT.md              Care steps that show both crises in demo mode
+  DESIGN.md                   Pixel UI design system (Korean)
+  TIMELINE-EVENTS-PLAN.md     Plan for the cultivation timeline and events (Korean)
+  TIMELINE-ENGINE-NOTES.md    Decisions made for the timeline types and event judgement (Korean)
+  ROLE-TASKS.md               Open tasks per role and the event card API contract (Korean)
 ```
 
 ### Where the language model plugs in
@@ -113,13 +117,14 @@ The planning document gives the model one job: write the crisis scene, the plant
 - `apps/web/src/server/ai/crisis/pipeline.ts`: generate, validate, retry once, then fall back to a pre-made crisis.
 - `apps/web/src/app/api/crisis/route.ts`: the one place where a generator is passed in. It connects `apps/web/src/server/ai/crisis/llm/` when `LLM_MODEL` is set.
 - `apps/web/src/server/ai/crisis/llm/`: settings, prompt, model client (Ollama or OpenAI-compatible), evidence search client and wording checks.
+- `apps/web/src/server/ai/event-cards/`: event cards for timeline events behind `POST /api/event`. Their text is pre-made by default. With a model configured and `LLM_EVENT_CARDS=on`, the model writes the scene, the plant's line and the option text; the explanations, verdicts and effects still come from the data files.
 
 ## Use of AI tools
 
 - **In the product:** when `LLM_MODEL` is set, a language model (Gemma 4 E4B by Google, run locally through Ollama during development) writes the crisis scene, the plant's lines, the clues and the option text. The crisis screen states this whenever the text is generated. Verdicts, state changes and sources never come from the model. Without `LLM_MODEL` no model is called and crisis text comes from `data/content/fallback-crises.json`. The optional evidence search uses keyword search over excerpts from published papers; no AI model is involved in that search by default.
 - **In development:** the team used an AI coding assistant (Claude Code by Anthropic) to write and test the code in this branch, to search the downloaded NASA source documents and draft the evidence list, to draft the English text of the pre-made crises, to draft the documents in `docs/`, and to write the language model connection in `apps/web/src/server/ai/crisis/llm/`. The team defined the idea, the rules and the scope in its planning document.
-- **Data files:** `data/content/*.json` each carry an `ai_disclosure` field that says how AI tools were used for that file. Every quote in the evidence list was compared by a script with the text of the downloaded source document and is a verbatim part of it. The script and the downloaded documents are not part of this repository.
-- No AI-generated images, video or audio are used. The plant drawing is an inline SVG written as code.
+- **Data files:** the files in `data/content/` carry an `ai_disclosure` field that says how AI tools were used for that file, except `events.json`, which has none yet. `data/eval/evaluation.events.json` and `data/sources/public_sources_RAG.json` are plain lists and cannot carry the field: the questions in the first were drafted with an AI coding assistant, and the excerpts in the second were cut from the source documents by a script written with one. Every quote in the evidence list was compared by a script with the text of the downloaded source document and is a verbatim part of it. The script and the downloaded documents are not part of this repository.
+- The plant and chamber images in `apps/web/public/sprites` and `apps/web/public/bg` are AI-generated, and the screens label them "AI-generated art". No AI-generated video or audio is used.
 
 ## Sources and licenses
 
