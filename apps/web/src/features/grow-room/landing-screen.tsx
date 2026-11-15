@@ -10,6 +10,7 @@ import type { MissionMode, MissionState } from '@/lib/contract/types';
 import { CULTIVATION_DAYS, GAME_DAYS, MAX_CARE_OPS_PER_DAY, cultivationDayOf } from '@/lib/game/rules';
 import { format, useDictionary, useLocale } from '@/lib/i18n';
 import { cn } from '@/lib/utils/cn';
+import { LandingBriefingPanel, LandingSavedPanel, type LandingTab } from './landing-panels';
 import { AutoFocusButton, SceneModal, SceneSteps } from './scene-ui';
 import './landing.css';
 
@@ -29,8 +30,6 @@ const NARROW_MAX = 768;
 const BRIEF_KEY = 'sg_brief_hidden';
 const BRIEF_FALLBACK_MS = 3500;
 const FINISHED = new Set<MissionState['phase']>(['report', 'failed']);
-
-type Tab = 'mission' | 'how' | 'before';
 
 function today(): string {
   const d = new Date();
@@ -117,7 +116,7 @@ export function LandingScreen() {
   const reduced = useReducedMotion();
   const { stageRef, fit } = useArtboardScale();
 
-  const [tab, setTab] = useState<Tab>('mission');
+  const [tab, setTab] = useState<LandingTab>('mission');
   const [confirming, setConfirming] = useState<MissionMode | null>(null);
   const [motes, setMotes] = useState<Mote[]>([]);
   const [booting, setBooting] = useState(false);
@@ -361,124 +360,127 @@ export function LandingScreen() {
   const chars = typing ? [...typing.text] : [];
 
   return (
-    <div className="lp" lang={locale}>
-      <div ref={stageRef} className="lp-stage" style={{ height: fit ? ART_H * fit.scale : undefined }}>
-        <div
-          aria-label={s.scene_label}
-          className={cn('lp-art', !fit && 'lp-measuring')}
-          style={fit ? { transform: `scale(${fit.scale})`, left: fit.left } : undefined}
-        >
-          <img className="lp-world" src="/bg/landing-growth-normal.webp" alt="" />
-          <div className="lp-glow" aria-hidden />
-          <div className="lp-glow lp-side" aria-hidden />
-          <div className="lp-glow lp-side lp-r" aria-hidden />
-          <div aria-hidden>
-            {motes.map((m, i) => (
-              <i
-                key={i}
-                className="lp-mote"
-                style={{
-                  left: m.left,
-                  top: m.top,
-                  width: m.size,
-                  height: m.size,
-                  animationDuration: `${m.duration}s`,
-                  animationDelay: `${m.delay}s`,
-                }}
-              />
-            ))}
-          </div>
-          <img className="lp-plant" src="/sprites/H0_harvest_ready.png" alt={s.plant_alt} />
-          <div className="lp-speech" aria-live="polite" onClick={skipTyping}>
-            {typing ? (
-              <>
-                <span>{chars.slice(0, typing.shown).join('')}</span>
-                {typing.caret ? <span className="lp-caret" aria-hidden>▌</span> : null}
-              </>
-            ) : null}
-          </div>
+    <>
+      <div className="lp" lang={locale}>
+        <div ref={stageRef} className="lp-stage" style={{ height: fit ? ART_H * fit.scale : undefined }}>
+          <div
+            aria-label={s.scene_label}
+            className={cn('lp-art', !fit && 'lp-measuring')}
+            style={fit ? { transform: `scale(${fit.scale})`, left: fit.left } : undefined}
+          >
+            <img className="lp-world" src="/bg/landing-growth-normal.webp" alt="" />
+            <div className="lp-glow" aria-hidden />
+            <div className="lp-glow lp-side" aria-hidden />
+            <div className="lp-glow lp-side lp-r" aria-hidden />
+            <div aria-hidden>
+              {motes.map((m, i) => (
+                <i
+                  key={i}
+                  className="lp-mote"
+                  style={{
+                    left: m.left,
+                    top: m.top,
+                    width: m.size,
+                    height: m.size,
+                    animationDuration: `${m.duration}s`,
+                    animationDelay: `${m.delay}s`,
+                  }}
+                />
+              ))}
+            </div>
+            <img className="lp-plant" src="/sprites/H0_harvest_ready.png" alt={s.plant_alt} />
+            <div className="lp-speech" aria-live="polite" onClick={skipTyping}>
+              {typing ? (
+                <>
+                  <span>{chars.slice(0, typing.shown).join('')}</span>
+                  {typing.caret ? <span className="lp-caret" aria-hidden>▌</span> : null}
+                </>
+              ) : null}
+            </div>
 
-          {narrow ? null : mainMonitor}
-          {narrow ? null : stripMonitor}
+            {narrow ? null : mainMonitor}
+            {narrow ? null : stripMonitor}
 
-          <span className="lp-help">
-            <img src="/icons/info.png" alt="" />
-            <span>{s.notices[0]}</span>
-          </span>
-          <span className="lp-aimark">{s.ai_mark}</span>
+            <span className="lp-help">
+              <img src="/icons/info.png" alt="" />
+              <span>{s.notices[0]}</span>
+            </span>
+            <span className="lp-aimark">{s.ai_mark}</span>
+          </div>
         </div>
+
+        {brief !== 'closed' ? (
+          <SceneModal
+            labelledBy="lp-brief-title"
+            state={brief}
+            onClose={closeBrief}
+          >
+            <h2 id="lp-brief-title">
+              <img src="/icons/sprout.png" alt="" />
+              <span>{s.brief_title}</span>
+            </h2>
+            <p className="lp-lead">{s.brief_lead}</p>
+            <h3>{s.steps_title}</h3>
+            <SceneSteps steps={steps} />
+            <h3>{s.notices_title}</h3>
+            <ul className="lp-bullets">
+              {s.notices.map((notice) => (
+                <li key={notice}>{notice}</li>
+              ))}
+            </ul>
+            <p className="lp-ev">
+              <Link href={ROUTES.sources}>{s.sources_link}</Link>
+              <span>{s.sources_note}</span>
+            </p>
+            <div className="lp-modal-foot">
+              <label>
+                <input type="checkbox" checked={hideToday} onChange={(e) => setHideToday(e.target.checked)} />
+                <span>{s.hide_today}</span>
+              </label>
+              <div className="lp-end">
+                <AutoFocusButton className="lp-btn lp-primary" onClick={closeBrief}>
+                  {s.got_it}
+                </AutoFocusButton>
+              </div>
+            </div>
+          </SceneModal>
+        ) : null}
+
+        {confirming && mission ? (
+          <SceneModal labelledBy="lp-confirm-title" state="open" onClose={() => setConfirming(null)}>
+            <h2 id="lp-confirm-title">{s.confirm_title}</h2>
+            <p className="lp-lead">{format(s.confirm_body, { mode: s.confirm_mode[confirming] })}</p>
+            <p className="lp-lead">
+              {FINISHED.has(mission.phase)
+                ? format(s.saved_finished, { mode: s.mode[mission.mode] })
+                : format(s.saved_summary, {
+                    day: mission.game_day,
+                    days: GAME_DAYS,
+                    cultivation_day: cultivationDayOf(mission.game_day),
+                    mode: s.mode[mission.mode],
+                  })}
+            </p>
+            <div className="lp-modal-foot">
+              <div className="lp-end">
+                <button type="button" className="lp-btn lp-primary" onClick={() => begin(confirming)}>
+                  {s.confirm_yes}
+                </button>
+                <AutoFocusButton className="lp-btn" onClick={() => setConfirming(null)}>
+                  {s.confirm_no}
+                </AutoFocusButton>
+              </div>
+            </div>
+          </SceneModal>
+        ) : null}
       </div>
 
+      {/* Below the scene the text is page UI: design-system parts, outside the .lp scope. */}
       {narrow ? (
-        <div className="lp-below">
-          {mainMonitor}
-          {stripMonitor}
+        <div className="mt-3 flex flex-col gap-2">
+          <LandingBriefingPanel tab={tab} onTab={setTab} steps={steps} />
+          <LandingSavedPanel ready={ready} mission={mission} onRequest={request} />
         </div>
       ) : null}
-
-      {brief !== 'closed' ? (
-        <SceneModal
-          labelledBy="lp-brief-title"
-          state={brief}
-          onClose={closeBrief}
-        >
-          <h2 id="lp-brief-title">
-            <img src="/icons/sprout.png" alt="" />
-            <span>{s.brief_title}</span>
-          </h2>
-          <p className="lp-lead">{s.brief_lead}</p>
-          <h3>{s.steps_title}</h3>
-          <SceneSteps steps={steps} />
-          <h3>{s.notices_title}</h3>
-          <ul className="lp-bullets">
-            {s.notices.map((notice) => (
-              <li key={notice}>{notice}</li>
-            ))}
-          </ul>
-          <p className="lp-ev">
-            <Link href={ROUTES.sources}>{s.sources_link}</Link>
-            <span>{s.sources_note}</span>
-          </p>
-          <div className="lp-modal-foot">
-            <label>
-              <input type="checkbox" checked={hideToday} onChange={(e) => setHideToday(e.target.checked)} />
-              <span>{s.hide_today}</span>
-            </label>
-            <div className="lp-end">
-              <AutoFocusButton className="lp-btn lp-primary" onClick={closeBrief}>
-                {s.got_it}
-              </AutoFocusButton>
-            </div>
-          </div>
-        </SceneModal>
-      ) : null}
-
-      {confirming && mission ? (
-        <SceneModal labelledBy="lp-confirm-title" state="open" onClose={() => setConfirming(null)}>
-          <h2 id="lp-confirm-title">{s.confirm_title}</h2>
-          <p className="lp-lead">{format(s.confirm_body, { mode: s.confirm_mode[confirming] })}</p>
-          <p className="lp-lead">
-            {FINISHED.has(mission.phase)
-              ? format(s.saved_finished, { mode: s.mode[mission.mode] })
-              : format(s.saved_summary, {
-                  day: mission.game_day,
-                  days: GAME_DAYS,
-                  cultivation_day: cultivationDayOf(mission.game_day),
-                  mode: s.mode[mission.mode],
-                })}
-          </p>
-          <div className="lp-modal-foot">
-            <div className="lp-end">
-              <button type="button" className="lp-btn lp-primary" onClick={() => begin(confirming)}>
-                {s.confirm_yes}
-              </button>
-              <AutoFocusButton className="lp-btn" onClick={() => setConfirming(null)}>
-                {s.confirm_no}
-              </AutoFocusButton>
-            </div>
-          </div>
-        </SceneModal>
-      ) : null}
-    </div>
+    </>
   );
 }

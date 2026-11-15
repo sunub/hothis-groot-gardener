@@ -133,15 +133,6 @@ html:lang(ko) .lp-pane p { font-size: 20px; line-height: 1.5; }
   padding: 4px 8px; letter-spacing: 1px; z-index: 6;
 }
 
-/* Narrow windows: the monitor content moves under the scene so it stays readable */
-.lp-below { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; font-size: 17px; line-height: 1.4; }
-.lp-below .lp-screen {
-  position: static; width: auto; height: auto; padding: 14px 16px;
-  background: var(--color-scene-monitor); border: 6px solid var(--color-scene-bezel);
-}
-.lp-below .lp-row { flex-wrap: wrap; }
-.lp-below .lp-info { white-space: normal; }
-
 /* Motion (all off under prefers-reduced-motion) */
 @keyframes lp-breathe { 0%, 100% { transform: scaleY(1); } 50% { transform: scaleY(1.014); } }
 @keyframes lp-blink { 50% { opacity: 0; } }
