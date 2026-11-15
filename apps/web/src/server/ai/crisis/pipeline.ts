@@ -1,4 +1,5 @@
 import type {
+  AiCrisisOutput,
   CrisisRequest,
   CrisisResponse,
   EvidenceCrisis,
@@ -20,9 +21,9 @@ import { effectiveExclusions, getFallbackCrisis, pickFallbackCandidate } from '.
 import {
   buildGenerationInput,
   type CrisisGenerator,
-  type GenerationInput,
   type StagedCandidate,
 } from './generator';
+import { applyTranslation, buildGlossary, type CrisisTranslator } from './translate';
 import { validateAiOutput, type ValidationContext } from './validate';
 
 /**
@@ -64,8 +65,11 @@ export class GenerationTimeoutError extends Error {
   }
 }
 
-/** The only language the text generator writes. */
+/** The only language the text generator writes. Other languages are translated from it. */
 const GENERATION_LOCALE: Locale = 'en';
+
+/** Translation attempts per crisis. One: a failed translation falls back to the pre-made text. */
+export const TRANSLATION_ATTEMPTS = 1;
 
 /** Replaceable parts of `createCrisis`, for wiring a generator and for tests. */
 export interface CreateCrisisDeps {
@@ -73,6 +77,11 @@ export interface CreateCrisisDeps {
   generator?: CrisisGenerator;
   /** Defaults to the shipped evidence list. */
   evidence?: EvidenceList;
+  /**
+   * Translates the generated English text for other languages. Without one,
+   * a request in another language gets the pre-made text.
+   */
+  translator?: CrisisTranslator;
   /** Per attempt. Defaults to DEFAULT_GENERATION_TIMEOUT_MS. */
   timeoutMs?: number;
 }
@@ -109,29 +118,53 @@ export async function createCrisis(
     : [];
   const context: ValidationContext = { candidates, excludedActionIds };
 
-  // The generator writes English only. Other languages get the pre-made text.
-  if (deps.generator && request.locale === GENERATION_LOCALE) {
-    const input = buildGenerationInput(request, candidates, excludedActionIds);
+  // The generator writes English only. For another language the validated
+  // English text is translated and validated again; any failure on the way
+  // ends in the pre-made text of the request language.
+  const canTranslate = request.locale === GENERATION_LOCALE || deps.translator !== undefined;
+  if (deps.generator && canTranslate) {
+    const english = localizeEvidence(list, GENERATION_LOCALE);
+    const englishCandidates: StagedCandidate[] = candidates.map(({ crisis, stage }) => ({
+      crisis: findCrisis(english, crisis.crisis_id) ?? crisis,
+      stage,
+    }));
+    const englishContext: ValidationContext = { candidates: englishCandidates, excludedActionIds };
+    const input = buildGenerationInput(
+      { ...request, locale: GENERATION_LOCALE },
+      englishCandidates,
+      excludedActionIds,
+    );
     const timeoutMs = deps.timeoutMs ?? DEFAULT_GENERATION_TIMEOUT_MS;
     for (let i = 0; i < GENERATION_ATTEMPTS; i++) {
       let raw: unknown;
       try {
-        raw = await generateWithTimeout(deps.generator, input, timeoutMs);
+        raw = await withTimeout((signal) => deps.generator!(input, signal), timeoutMs);
       } catch {
         continue;
       }
-      const result = validateAiOutput(raw, context);
+      const result = validateAiOutput(raw, englishContext);
       // Validation guarantees the crisis is a candidate; the lookup only narrows the type.
       const chosen = result.ok
         ? candidates.find((c) => c.crisis.crisis_id === result.value.crisis_id)
         : undefined;
-      if (result.ok && chosen) {
+      if (!result.ok || !chosen) continue;
+
+      if (request.locale === GENERATION_LOCALE) {
         return attachEvidence(result.value, chosen.crisis, {
           stage: chosen.stage,
           attempt,
           origin: 'generated',
         });
       }
+      const translated = await translateValidated(result.value, chosen, context, deps, timeoutMs);
+      if (translated) {
+        return attachEvidence(translated, chosen.crisis, {
+          stage: chosen.stage,
+          attempt,
+          origin: 'generated',
+        });
+      }
+      break; // Generating again would cost the same time for a text that is already valid English.
     }
   }
 
@@ -219,14 +252,10 @@ function candidateCrises(request: CrisisRequest, list: EvidenceList): EvidenceCr
 }
 
 /**
- * Run the generator with a deadline. The race does not rely on the generator
- * honouring the abort signal, so a stuck generator cannot hold the request.
+ * Run a model call with a deadline. The race does not rely on the call
+ * honouring the abort signal, so a stuck call cannot hold the request.
  */
-async function generateWithTimeout(
-  generator: CrisisGenerator,
-  input: GenerationInput,
-  timeoutMs: number,
-): Promise<unknown> {
+async function withTimeout<T>(run: (signal: AbortSignal) => Promise<T>, timeoutMs: number): Promise<T> {
   const controller = new AbortController();
   let timer: ReturnType<typeof setTimeout> | undefined;
   const deadline = new Promise<never>((_, reject) => {
@@ -236,12 +265,42 @@ async function generateWithTimeout(
     }, timeoutMs);
   });
   // Wrapping also turns a synchronous throw into a rejection.
-  const generation = Promise.resolve().then(() => generator(input, controller.signal));
+  const call = Promise.resolve().then(() => run(controller.signal));
   // A late rejection after the deadline must not become an unhandled rejection.
-  generation.catch(() => undefined);
+  call.catch(() => undefined);
   try {
-    return await Promise.race([generation, deadline]);
+    return await Promise.race([call, deadline]);
   } finally {
     clearTimeout(timer);
   }
+}
+
+/**
+ * Translate a validated English output and validate the result against the
+ * request-language evidence (Korean reveal phrases, banned claims). Returns
+ * undefined when every attempt fails.
+ */
+async function translateValidated(
+  source: AiCrisisOutput,
+  chosen: StagedCandidate,
+  context: ValidationContext,
+  deps: CreateCrisisDeps,
+  timeoutMs: number,
+): Promise<AiCrisisOutput | undefined> {
+  const translator = deps.translator;
+  if (!translator) return undefined;
+  const input = { source, glossary: buildGlossary(source, chosen.crisis) };
+  for (let i = 0; i < TRANSLATION_ATTEMPTS; i++) {
+    let raw: unknown;
+    try {
+      raw = await withTimeout((signal) => translator(input, signal), timeoutMs);
+    } catch {
+      continue;
+    }
+    const merged = applyTranslation(source, raw);
+    if (!merged.ok) continue;
+    const result = validateAiOutput(merged.value, context);
+    if (result.ok) return result.value;
+  }
+  return undefined;
 }

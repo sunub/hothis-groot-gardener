@@ -5,6 +5,7 @@ import { INITIAL_PLANT_STATE } from '@/lib/game/rules';
 import { getFallbackCrisis } from './fallback';
 import type { CrisisGenerator, GenerationInput } from './generator';
 import { createCrisis, InvalidRequestError, NoCandidateError } from './pipeline';
+import { textsOf, type CrisisTranslator, type TranslationInput } from './translate';
 
 function request(
   state: Partial<PlantState>,
@@ -92,12 +93,94 @@ describe('createCrisis with a generator', () => {
     expect(calls.every((c) => c.signal.aborted)).toBe(true);
   });
 
-  it('skips the English-only generator for Korean and shows the pre-made Korean text', async () => {
+  it('skips the English-only generator for Korean without a translator and shows the pre-made Korean text', async () => {
     const { generator, calls } = scripted(valid);
     const response = await createCrisis({ ...dry, locale: 'ko' }, { generator });
     expect(calls).toHaveLength(0);
     expect(response.origin).toBe('fallback');
     expect(response.scene).toMatch(/[가-힣]/);
+  });
+
+  describe('Korean with a translator', () => {
+    const koreanTexts = () => textsOf(getFallbackCrisis('water_shortage', 1, 'ko', [])!);
+    const koreanRequest = { ...dry, locale: 'ko' as const };
+
+    function translating(...results: (() => Promise<unknown>)[]) {
+      const calls: TranslationInput[] = [];
+      const translator: CrisisTranslator = (input) => {
+        calls.push(input);
+        return results[Math.min(calls.length - 1, results.length - 1)]();
+      };
+      return { translator, calls };
+    }
+
+    it('generates in English, translates, and returns Korean text as generated', async () => {
+      const { generator, calls } = scripted(valid);
+      const { translator, calls: translations } = translating(() => Promise.resolve(koreanTexts()));
+      const response = await createCrisis(koreanRequest, { generator, translator });
+      expect(calls[0].input.locale).toBe('en');
+      expect(calls[0].input.candidates[0].name).toBe('Water shortage');
+      expect(translations).toHaveLength(1);
+      expect(translations[0].source.scene).toBe('Generated scene. The leaves droop.');
+      expect(response.origin).toBe('generated');
+      expect(response.scene).toMatch(/[가-힣]/);
+      expect(response.name).toMatch(/[가-힣]/);
+    });
+
+    it('keeps ids and verdicts from the English output and the evidence list', async () => {
+      const { generator } = scripted(valid);
+      const { translator } = translating(() => Promise.resolve(koreanTexts()));
+      const response = await createCrisis(koreanRequest, { generator, translator });
+      const english = generatedWaterOutput();
+      expect(response.options.map((o) => o.action_id)).toEqual(english.options.map((o) => o.action_id));
+      const premade = await createCrisis(koreanRequest);
+      for (const option of response.options) {
+        const same = premade.options.find((o) => o.action_id === option.action_id);
+        if (same) expect(option.verdict).toBe(same.verdict);
+      }
+    });
+
+    it('falls back to the pre-made Korean text when the translation is not Korean', async () => {
+      const { generator } = scripted(valid);
+      const { translator } = translating(() => Promise.resolve(textsOf(generatedWaterOutput())));
+      const response = await createCrisis(koreanRequest, { generator, translator });
+      expect(response.origin).toBe('fallback');
+      expect(response.scene).toMatch(/[가-힣]/);
+    });
+
+    it('falls back when the translation gives the verdict away', async () => {
+      const { generator } = scripted(valid);
+      const texts = koreanTexts();
+      texts.options[0].label = '정답: 저수조를 채운다';
+      const { translator } = translating(() => Promise.resolve(texts));
+      const response = await createCrisis(koreanRequest, { generator, translator });
+      expect(response.origin).toBe('fallback');
+    });
+
+    it('falls back when the translator throws or runs out of time, without generating again', async () => {
+      const { generator, calls } = scripted(valid);
+      const thrown = translating(() => Promise.reject(new Error('down')));
+      expect((await createCrisis(koreanRequest, { generator, translator: thrown.translator })).origin).toBe(
+        'fallback',
+      );
+      expect(calls).toHaveLength(1);
+
+      const stuck = translating(() => new Promise<unknown>(() => undefined));
+      const response = await createCrisis(koreanRequest, {
+        generator,
+        translator: stuck.translator,
+        timeoutMs: 20,
+      });
+      expect(response.origin).toBe('fallback');
+    });
+
+    it('does not translate English requests', async () => {
+      const { generator } = scripted(valid);
+      const { translator, calls } = translating(() => Promise.resolve(koreanTexts()));
+      const response = await createCrisis(dry, { generator, translator });
+      expect(response.origin).toBe('generated');
+      expect(calls).toHaveLength(0);
+    });
   });
 
   it('shows Korean names and reasons in Korean, with the same verdicts and deltas', async () => {
