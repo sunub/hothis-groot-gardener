@@ -7,12 +7,13 @@ import { fallbackCrises, getFallbackCrisis } from '../fallback';
 import { buildGenerationInput, type GenerationInput, type StagedCandidate } from '../generator';
 import { createCrisis } from '../pipeline';
 import { validateAiOutput } from '../validate';
-import { chatJson, parseJsonText } from './client';
+import { chatJson, parseJsonText, warmUp } from './client';
 import { readLlmConfig, type LlmConfig } from './config';
 import { createLlmGenerator, GenerationRejectedError, shuffle, styleExample } from './generator';
 import { checkCopying, checkStructure, checkWording } from './guard';
 import { buildOutputSchema, buildUserPrompt } from './prompt';
 import { buildRetrievalQuery } from './retrieval';
+import { warmUpModel } from './warmup';
 
 // --- helpers -------------------------------------------------------------------
 
@@ -142,7 +143,9 @@ describe('readLlmConfig', () => {
     });
     expect(config.ragUrl).toBeUndefined();
     expect(readLlmConfig({ LLM_MODEL: 'm', LLM_KEEP_ALIVE: 'omit' })!.keepAlive).toBeUndefined();
-    expect(readLlmConfig({ LLM_MODEL: 'm', LLM_KEEP_ALIVE: '-1' })!.keepAlive).toBe('-1');
+    // Digits only become a number: Ollama reads a string as a duration with a unit.
+    expect(readLlmConfig({ LLM_MODEL: 'm', LLM_KEEP_ALIVE: '-1' })!.keepAlive).toBe(-1);
+    expect(readLlmConfig({ LLM_MODEL: 'm', LLM_KEEP_ALIVE: '-1m' })!.keepAlive).toBe('-1m');
   });
 
   it('reads every setting and trims trailing slashes', () => {
@@ -388,6 +391,17 @@ describe('checkWording', () => {
     expect(prompt).toMatch(/- fan_high: Set the fan to high \| verdict: inappropriate \|[^\n]*\| the label keeps the word "fan"/);
     expect(prompt).toMatch(/- refill_reservoir:[^\n]*the label keeps the word "water" or "reservoir"/);
   });
+  it('catches "lack ... moisture" as naming the cause of a water shortage (fourth and fifth logs)', () => {
+    const { input } = inputFor(dry);
+    const text = {
+      ...goodWaterText(),
+      scene: 'The plants look stressed. The unit seems to lack proper moisture circulation.',
+      plant_line: 'I feel that the substrate below me is lacking moisture.',
+    };
+    const issues = checkWording(text, input.candidates[0]).join(' ');
+    expect(issues).toMatch(/scene: "lack proper moisture" names the cause/);
+    expect(issues).toMatch(/plant_line: "lacking moisture" names the cause/);
+  });
 });
 
 // --- model client --------------------------------------------------------------
@@ -428,6 +442,29 @@ describe('chatJson', () => {
 });
 
 // --- generator -----------------------------------------------------------------
+
+describe('warmUp', () => {
+  it('loads the model with an empty chat call and keeps it loaded', async () => {
+    const { impl, calls } = fakeFetch({ modelReplies: [{}] });
+    const ms = await warmUp({ ...baseConfig, keepAlive: '30m' }, new AbortController().signal, impl);
+    expect(ms).toBeGreaterThanOrEqual(0);
+    expect(calls).toHaveLength(1);
+    expect(calls[0].url).toBe('http://ollama.test/api/chat');
+    expect(calls[0].body).toEqual({ model: 'gemma4:e4b', messages: [], keep_alive: '30m' });
+  });
+
+  it('does nothing for an OpenAI-compatible server or without a model, and never throws', async () => {
+    const { impl, calls } = fakeFetch({ modelReplies: [{}] });
+    expect(await warmUp({ ...baseConfig, provider: 'openai' }, new AbortController().signal, impl)).toBeNull();
+    await warmUpModel({}, impl);
+    await warmUpModel({ LLM_MODEL: 'm', LLM_PROVIDER: 'openai', LLM_BASE_URL: 'http://x.test/v1' }, impl);
+    expect(calls).toHaveLength(0);
+    const down = (async () => {
+      throw new TypeError('fetch failed');
+    }) as typeof fetch;
+    await expect(warmUpModel({ LLM_MODEL: 'm' }, down)).resolves.toBeUndefined();
+  });
+});
 
 describe('createLlmGenerator', () => {
   it('returns text that passes validation, with excerpts from the search in the prompt', async () => {

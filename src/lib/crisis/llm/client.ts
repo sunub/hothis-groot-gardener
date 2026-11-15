@@ -58,6 +58,36 @@ export async function chatJson(
   return parseJsonText(content);
 }
 
+/**
+ * Load the model into memory before the first crisis (Ollama only: a chat
+ * call with no messages loads the model and returns). Loading took about 27 s
+ * on the test laptop, so a first crisis on a cold model ran past the 30 s
+ * attempt timeout (fifth log: the first request was aborted). Returns the
+ * time it took in milliseconds, or null when there is nothing to load.
+ */
+export async function warmUp(
+  config: LlmConfig,
+  signal: AbortSignal,
+  fetchImpl: typeof fetch = fetch,
+): Promise<number | null> {
+  if (config.provider !== 'ollama') return null;
+  const started = Date.now();
+  const body: Record<string, unknown> = { model: config.model, messages: [] };
+  if (config.keepAlive !== undefined) body.keep_alive = config.keepAlive;
+  const res = await fetchImpl(`${config.baseUrl}/api/chat`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+    signal,
+  });
+  if (!res.ok) {
+    const detail = (await res.text().catch(() => '')).slice(0, 300);
+    throw new Error(`Model server answered ${res.status}: ${detail}`);
+  }
+  await res.text();
+  return Date.now() - started;
+}
+
 function ollamaContent(json: Record<string, unknown>): unknown {
   const message = json.message as { content?: unknown } | undefined;
   return message?.content;
