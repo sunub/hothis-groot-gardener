@@ -81,9 +81,9 @@ export function Section({
     <section
       id={id}
       aria-labelledby={`${id}-title`}
-      className={`scroll-mt-6 m-1 pixel-frame pixel-tone-line bg-surface p-4 break-inside-avoid-page sm:p-6 ${className}`}
+      className={`scroll-mt-6 m-1 pixel-frame pixel-tone-line bg-surface p-5 break-inside-avoid-page sm:p-8 ${className}`}
     >
-      <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
+      <div className="mb-6 flex flex-wrap items-center justify-between gap-2">
         <h2 id={`${id}-title`} className="text-heading font-semibold tracking-tight sm:text-heading">
           {title}
         </h2>

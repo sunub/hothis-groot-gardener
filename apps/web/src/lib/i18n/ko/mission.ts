@@ -160,6 +160,8 @@ export const mission: Dictionary['mission'] = {
   },
   diary: {
     title: '재배 일지',
+    open: '재배 일지 열기',
+    close: '닫기',
     empty: '아직 적힌 것이 없습니다. 날이 지나면 줄이 생깁니다.',
     day: '재배 {day}일',
     event_pending: '결정을 기다리는 사건이 있습니다.',

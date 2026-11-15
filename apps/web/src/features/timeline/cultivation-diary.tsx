@@ -19,21 +19,35 @@ const TONE_CLASS = {
  * against the original source; observation lines written from the plant's
  * state are marked as game values.
  */
-export function CultivationDiary({ lines }: { lines: readonly DiaryLine[] }) {
+export function CultivationDiary({
+  lines,
+  inDrawer = false,
+}: {
+  lines: readonly DiaryLine[];
+  /** The drawer (diary-drawer.tsx) shows the title and scrolls, so the list drops both. */
+  inDrawer?: boolean;
+}) {
   const t = useDictionary();
   const d = t.mission.diary;
 
   return (
-    <section aria-labelledby="diary-title" className="space-y-3">
-      <h3 id="diary-title" className="text-heading font-bold">
-        {d.title}
-      </h3>
+    <section aria-label={inDrawer ? d.title : undefined} aria-labelledby={inDrawer ? undefined : 'diary-title'} className="space-y-3">
+      {inDrawer ? null : (
+        <h3 id="diary-title" className="text-heading font-bold">
+          {d.title}
+        </h3>
+      )}
       {lines.length === 0 ? (
         <p className="text-body text-ink-muted">{d.empty}</p>
       ) : (
-        <ol tabIndex={0} aria-labelledby="diary-title" className="max-h-[32rem] divide-y-4 divide-surface overflow-y-auto bg-surface-2">
+        <ol
+          tabIndex={0}
+          aria-label={inDrawer ? d.title : undefined}
+          aria-labelledby={inDrawer ? undefined : 'diary-title'}
+          className={cn('divide-y-4 divide-surface bg-surface-2', !inDrawer && 'max-h-[32rem] overflow-y-auto')}
+        >
           {lines.map((line, i) => (
-            <li key={line.key} className={cn('flex gap-3 px-3 py-2', i === 0 && 'sprite-pop')}>
+            <li key={line.key} className={cn('flex gap-3 px-3 py-2', inDrawer && 'gap-4 px-4 py-4', i === 0 && 'sprite-pop')}>
               <span className="w-14 shrink-0 font-data text-data-sm text-ink-muted tabular-nums">
                 {format(d.day, { day: line.day })}
               </span>

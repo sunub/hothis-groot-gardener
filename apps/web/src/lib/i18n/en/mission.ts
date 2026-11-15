@@ -160,6 +160,8 @@ export const mission = {
   },
   diary: {
     title: 'Cultivation diary',
+    open: 'Open the cultivation diary',
+    close: 'Close',
     empty: 'Nothing written yet. Lines appear as the days go by.',
     day: 'Day {day}',
     event_pending: 'An event is waiting for your decision.',

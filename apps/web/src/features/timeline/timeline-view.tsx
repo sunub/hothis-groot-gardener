@@ -10,6 +10,7 @@ import { useDictionary, useLocale } from '@/lib/i18n';
 import { METRICS } from '@/lib/game/rules';
 import { CultivationDiary } from './cultivation-diary';
 import { diaryLines } from './diary';
+import { DiaryDrawer } from './diary-drawer';
 import { frameOn, growthStageOnDay, zoneChanges, type TimelineFrame } from './frames';
 import type { PlaybackAction, PlaybackState, Stop } from './playback';
 import { PlaybackMap } from './playback-map';
@@ -65,32 +66,31 @@ export function TimelineView({
 
       {state.stopped && renderStop ? <Card>{renderStop(state.stopped)}</Card> : null}
 
-      <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)]">
-        <Card className="space-y-4">
-          <LettuceScene
-            sprite={STAGE_SPRITE[stage]}
-            label={t.common.growth_stage[stage]}
-            artNote={t.mission.character.art_note}
-          />
-          {frame ? (
-            <div className="space-y-4">
-              <HealthBar value={frame.plant.plant_health} />
-              {METRICS.map((metric) => (
-                <div
-                  // Re-mounting on the day of a change restarts the flash.
-                  key={changed.has(metric) ? `${metric}-${state.day}` : metric}
-                  className={changed.has(metric) ? 'animate-zone-flash' : undefined}
-                >
-                  <ZoneGauge metric={metric} value={frame.plant[metric]} />
-                </div>
-              ))}
-            </div>
-          ) : null}
-        </Card>
-        <Card>
-          <CultivationDiary lines={diaryLines(log, frames, state.day, localizeEventList(list, locale))} />
-        </Card>
-      </div>
+      <Card className="space-y-4">
+        <LettuceScene
+          sprite={STAGE_SPRITE[stage]}
+          label={t.common.growth_stage[stage]}
+          artNote={t.mission.character.art_note}
+        />
+        {frame ? (
+          <div className="space-y-4">
+            <HealthBar value={frame.plant.plant_health} />
+            {METRICS.map((metric) => (
+              <div
+                // Re-mounting on the day of a change restarts the flash.
+                key={changed.has(metric) ? `${metric}-${state.day}` : metric}
+                className={changed.has(metric) ? 'animate-zone-flash' : undefined}
+              >
+                <ZoneGauge metric={metric} value={frame.plant[metric]} />
+              </div>
+            ))}
+          </div>
+        ) : null}
+      </Card>
+
+      <DiaryDrawer>
+        <CultivationDiary inDrawer lines={diaryLines(log, frames, state.day, localizeEventList(list, locale))} />
+      </DiaryDrawer>
     </div>
   );
 }
