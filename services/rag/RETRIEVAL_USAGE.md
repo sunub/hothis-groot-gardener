@@ -4,7 +4,7 @@
 
 ## 준비
 
-프로젝트 루트의 `.env`에 OpenAI API 키를 입력합니다. Dense 검색은 질문을 `text-embedding-3-small`로 임베딩하므로 검색과 평가에도 키가 필요합니다.
+`services/rag/.env_example`을 `services/rag/.env`로 복사하고 OpenAI API 키(`API_KEY`)를 입력합니다. `load_dotenv()`는 호출한 파일의 폴더부터 위로 `.env`를 찾으므로 저장소 루트의 `.env`도 읽지만, 두 파일이 모두 있으면 먼저 찾은 `services/rag/.env`를 씁니다. Dense 검색은 질문을 `text-embedding-3-small`로 임베딩하므로 검색과 평가에도 키가 필요합니다.
 
 ```dotenv
 API_KEY=발급받은_API_키

@@ -8,6 +8,7 @@ import type {
   ParallelTrackEntry,
   PlannedEvent,
   PlantState,
+  RecordTimelineEvent,
   ScheduledTimelineEvent,
   TimelineEvent,
 } from '@/lib/contract/types';
@@ -19,7 +20,7 @@ import { CULTIVATION_DAYS, METRICS, zoneOf } from '@/lib/game/rules';
  * Pure functions. Nothing here changes a mission; the engine will call these
  * when it starts to move through cultivation days (plan stage A3).
  *
- * Decisions behind the rules are in docs/TIMELINE-ENGINE-NOTES.md (T1-T7).
+ * Decisions behind the rules are in docs/TIMELINE-ENGINE-NOTES.md (T1-T12).
  */
 
 /** An event that shows a card and waits for a response. */
@@ -81,6 +82,10 @@ export function conditionHolds(condition: EventCondition, plant: PlantState): bo
   for (const { metric, in: zones } of condition.zones ?? []) {
     if (!zones.includes(zoneOf(metric, plant[metric]))) return false;
   }
+  if (condition.any_zones) {
+    const any = condition.any_zones.some(({ metric, in: zones }) => zones.includes(zoneOf(metric, plant[metric])));
+    if (!any) return false;
+  }
   return true;
 }
 
@@ -93,6 +98,11 @@ export interface DayContext {
   /** From `planEvents`, made when the mission started. */
   plan: readonly PlannedEvent[];
   occurred_event_ids: readonly string[];
+}
+
+/** True for the kinds that show a card: scheduled and conditional events. */
+export function isCardKind(event: TimelineEvent): event is CardEvent {
+  return event.kind === 'scheduled' || event.kind === 'conditional';
 }
 
 function isConditional(event: TimelineEvent): event is ConditionalTimelineEvent {
@@ -119,7 +129,7 @@ function inWindow(event: TimelineEvent, day: number): boolean {
 export function eventsDueOn(list: EventList, context: DayContext): CardEvent[] {
   const due: CardEvent[] = [];
   for (const event of list.events) {
-    if (event.kind === 'crisis') continue;
+    if (event.kind === 'crisis' || event.kind === 'record') continue;
     if (context.occurred_event_ids.includes(event.event_id)) continue;
     if (!inWindow(event, context.cultivation_day)) continue;
     if (event.kind === 'scheduled') {
@@ -141,6 +151,78 @@ export function eventsDueOn(list: EventList, context: DayContext): CardEvent[] {
  */
 export function nextEventOn(list: EventList, context: DayContext): CardEvent | null {
   return eventsDueOn(list, context)[0] ?? null;
+}
+
+// --- Record events (notes, entry T12) ----------------------------------------
+
+/** What the judgement of record events on one day reads. */
+export interface RecordDayContext {
+  cultivation_day: number;
+  /**
+   * The state the plant is heading to: the morning of the next game day,
+   * after the night's change. Known once the previous game day has ended.
+   */
+  heading: PlantState;
+  /** Mission seed, for records with a `probability`. */
+  seed: number;
+}
+
+/** True when a record with a `probability` is drawn for this mission. Always true without one. */
+export function recordDrawn(event: RecordTimelineEvent, seed: number): boolean {
+  if (event.probability === undefined) return true;
+  return nextRandom(eventRngState(seed, event.event_id)).value < event.probability;
+}
+
+/**
+ * Record events written on the day, in list order. A record occurs on its
+ * day when it is drawn for the mission and its condition holds for the
+ * heading state. Of the records that share a `group`, only the first is written.
+ */
+export function recordsOn(list: EventList, context: RecordDayContext): RecordTimelineEvent[] {
+  const found: RecordTimelineEvent[] = [];
+  const usedGroups = new Set<string>();
+  for (const event of list.events) {
+    if (event.kind !== 'record') continue;
+    if (event.window.from !== context.cultivation_day) continue;
+    if (event.group !== undefined && usedGroups.has(event.group)) continue;
+    if (!recordDrawn(event, context.seed)) continue;
+    if (event.condition && !conditionHolds(event.condition, context.heading)) continue;
+    if (event.group !== undefined) usedGroups.add(event.group);
+    found.push(event);
+  }
+  return found;
+}
+
+// --- Offered actions (notes, entry T11) ---------------------------------------
+
+/** Least number of actions a card shows. */
+export const CARD_OPTIONS_MIN = 2;
+
+/**
+ * True when the action would set the fan to the setting it already has, so
+ * choosing it changes nothing. Such an option still carries a verdict, which
+ * would confuse the player ("partial" for doing nothing).
+ */
+function isNoOpForState(action: EventAction, plant: PlantState): boolean {
+  if (action.op === 'fan_high') return plant.fan === 'high';
+  if (action.op === 'fan_low') return plant.fan === 'low';
+  return false;
+}
+
+/**
+ * Actions to offer on the event card, in list order: every action of the
+ * event except those that change nothing in the current state. The result is
+ * what the engine sends as `offered_action_ids` to POST /api/event.
+ *
+ * Nothing is removed when removing would leave fewer than CARD_OPTIONS_MIN
+ * actions or no appropriate one, so a card can always be shown.
+ */
+export function offeredActionIds(event: CardEvent, plant: PlantState): string[] {
+  const all = event.actions.map((action) => action.action_id);
+  const kept = event.actions.filter((action) => !isNoOpForState(action, plant));
+  const hasAppropriate = kept.some((action) => action.verdict === 'appropriate');
+  if (kept.length < CARD_OPTIONS_MIN || !hasAppropriate) return all;
+  return kept.map((action) => action.action_id);
 }
 
 // --- Flags (notes, entry T5) --------------------------------------------------

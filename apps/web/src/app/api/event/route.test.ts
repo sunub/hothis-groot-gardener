@@ -93,6 +93,92 @@ describe('POST /api/event', () => {
     expect(res.status).toBe(200);
   });
 
+  describe('text generator wiring', () => {
+    /** The route reads its settings at load time, so each case loads a fresh copy. */
+    async function loadRoute(env: Record<string, string>, fetchImpl?: typeof fetch) {
+      vi.resetModules();
+      for (const [key, value] of Object.entries(env)) vi.stubEnv(key, value);
+      if (fetchImpl) vi.stubGlobal('fetch', fetchImpl);
+      return (await import('./route')).POST;
+    }
+
+    function cleanUp() {
+      vi.unstubAllEnvs();
+      vi.unstubAllGlobals();
+      vi.resetModules();
+    }
+
+    const MODEL_ENV = { LLM_MODEL: 'test-model', LLM_PROVIDER: 'ollama', LLM_BASE_URL: 'http://ollama.test' };
+
+    async function expectPremadeWithoutFetch(env: Record<string, string>) {
+      const fetchSpy = vi.fn();
+      try {
+        const routePost = await loadRoute(env, fetchSpy as unknown as typeof fetch);
+        const res = await routePost(post(JSON.stringify(body())));
+        expect(res.status).toBe(200);
+        expect(eventCardResponseSchema.parse(await res.json()).origin).toBe('fallback');
+        expect(fetchSpy).not.toHaveBeenCalled();
+      } finally {
+        cleanUp();
+      }
+    }
+
+    it.each([
+      ['unset', { LLM_EVENT_CARDS: '' }],
+      ['off', { LLM_EVENT_CARDS: 'off' }],
+    ])('uses the pre-made text with a model configured but LLM_EVENT_CARDS %s', async (_, env) => {
+      await expectPremadeWithoutFetch({ ...MODEL_ENV, ...env });
+    });
+
+    it('uses the pre-made text without LLM_MODEL even when LLM_EVENT_CARDS is on', async () => {
+      await expectPremadeWithoutFetch({ LLM_MODEL: '', LLM_EVENT_CARDS: 'on' });
+    });
+
+    it('uses the pre-made text without LLM_MODEL', async () => {
+      const fetchSpy = vi.fn();
+      try {
+        const routePost = await loadRoute({ LLM_MODEL: '' }, fetchSpy as unknown as typeof fetch);
+        const res = await routePost(post(JSON.stringify(body())));
+        expect(res.status).toBe(200);
+        expect(eventCardResponseSchema.parse(await res.json()).origin).toBe('fallback');
+        expect(fetchSpy).not.toHaveBeenCalled();
+      } finally {
+        cleanUp();
+      }
+    });
+
+    it('serves generated text when LLM_MODEL is set and LLM_EVENT_CARDS is on', async () => {
+      const reply = {
+        scene: 'Tiny shoots push up under the wicks. No leaves show above them yet.',
+        plant_line: "I'm pressing up, but something is in my way.",
+        options: [
+          { action_id: 'open_wicks', label: 'Spread the wicks apart', result_line: 'I can reach the light now.' },
+          { action_id: 'water_heavy_instead', label: 'Water the pillows heavily', result_line: 'My roots are soaked, and I am still stuck.' },
+          { action_id: 'do_nothing', label: 'Leave the pillows alone', result_line: 'I am still stuck under the wick.' },
+        ],
+      };
+      const urls: string[] = [];
+      const fakeFetch = (async (input: RequestInfo | URL) => {
+        urls.push(String(input));
+        return Response.json({ message: { role: 'assistant', content: JSON.stringify(reply) } });
+      }) as typeof fetch;
+      try {
+        const routePost = await loadRoute(
+          { ...MODEL_ENV, LLM_EVENT_CARDS: ' On ' },
+          fakeFetch,
+        );
+        const res = await routePost(post(JSON.stringify(body())));
+        expect(res.status).toBe(200);
+        const card = eventCardResponseSchema.parse(await res.json());
+        expect(card.origin).toBe('generated');
+        expect(card.scene).toBe(reply.scene);
+        expect(urls).toEqual(['http://ollama.test/api/chat']);
+      } finally {
+        cleanUp();
+      }
+    });
+  });
+
   it('returns 500 internal without leaking the error', async () => {
     vi.resetModules();
     vi.doMock('@/server/ai/event-cards', async (importOriginal) => ({
