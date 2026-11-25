@@ -42,7 +42,7 @@
 | 새 토큰 | `surface-3`, `line-hi`, `ink-faint`, `accent-hi`, `accent-lo`, `danger-fill`, `health`, `water`, `humidity`, `lamp`, `micro`, `--font-data` |
 | 유틸리티 | `pixel-frame`, `pixel-frame-flat`, `pixel-frame-{accent,normal,caution,danger,measured}`, `pixel-raised`, `pixel-dashed`, `pixel-segments`, `pixel-hatch` |
 | 서체 | `layout.tsx`에 VT323 추가 (`font-data`). Pixelify Sans와 DotGothic16은 그대로 |
-| 에셋 | `public/bg/bay-teal.jpg`, `public/bg/wall-teal.jpg`(분홍 조명을 청록으로 보정), `public/icons/*.png`(아이콘 12개) 추가. 기존 `bay.png`, `wall.png`는 그대로 |
+| 에셋 | `public/bg/bay-teal.jpg`, `public/bg/wall-teal.jpg`(분홍 조명을 청록으로 보정), `public/icons/*.png`(아이콘 12개) 추가. 미사용 `bay.png`, `wall.png`는 정리 완료 |
 | 컴포넌트와 화면 | 위 "코드 구조"의 부품으로 옮겼습니다. 아래 "다음 단계"의 1~3번은 끝났고, 4번(화면 배치)과 5번(시간축 확장)이 남았습니다 |
 
 ## 색상 토큰
@@ -56,7 +56,7 @@
 | `line` / `line-hi` | `#34495a` / `#5a7a8e` | 프레임 / 점선과 강한 선 |
 | `ink` / `ink-muted` / `ink-faint` | `#eaf1f3` / `#a9b9c0` / `#7f919a` | 본문 / 보조 / 희미 (모두 패널 위에서 4.5:1 이상) |
 | `accent` (+`-ink`, `-hi`, `-lo`) | `#6fc3b2` | 주 버튼, 선택, 포커스 |
-| `normal` / `caution` / `danger` | `#7bc68f` / `#e3b95b` / `#e5806a` | 구간, 판정 |
+| `normal` / `caution` / `danger` | `#7bc68f` / `#e3b95b` / `#ec8c78` | 구간, 판정 (`surface-2` 위 soft 배지에서도 WCAG AA 4.5:1 이상) |
 | `danger-fill` | `#c8654f` | 게이지의 위험 구간 채움 (빗금과 함께) |
 | `measured` / `game` | `#6baed6` / `#a9b9c0` | 실측 배지 / 게임 값 배지 |
 | `health` `water` `humidity` `lamp` `micro` | `#7bc68f` `#6baed6` `#9c8fd6` `#e3b95b` `#d49a6a` | 상태 항목별 색 (차트 선, 아이콘 점) |
@@ -227,7 +227,7 @@
 
 - `apps/web/src/features/grow-room/mission-screen.tsx`의 단계 패널 테두리는 아직 1px 선입니다. 시간축 작업이 커밋되지 않은 파일이라 이번에 손대지 않았습니다. `Card`로 바꾸면 됩니다.
 
-1. ~~배경 교체~~ 끝남: 재배실 장면이 `/bg/bay-teal.jpg`를 쓰고, 작물 위 조명색도 청록으로 바꿨습니다. `bay.png`, `wall.png`는 이제 코드에서 쓰지 않습니다(지워도 됨, 각 약 1.8MB).
+1. ~~배경 교체~~ 끝남: 재배실 장면이 `/bg/bay-teal.jpg`를 쓰고, 작물 위 조명색도 청록으로 바꿨습니다. 미사용 `bay.png`, `wall.png`(각 약 1.8MB)는 저장소에서 제거했습니다.
 2. ~~작은 컴포넌트~~ 끝남: "코드 구조" 표의 부품으로 옮겼습니다.
 3. ~~게이지와 위기 화면~~ 끝남: `zone-gauge`, `crisis-panel`(고른 뒤 확정하는 단계 포함), `crisis-result-panel`(`VerdictBanner`, 출처 접기)을 옮겼습니다.
 4. **화면 레이아웃**: 재배실, 위기, 보고서 화면을 시안 4b·5b·6번 구성으로 맞춥니다(위 "화면 구성" 표). 병렬 작업 중인 브랜치와 충돌하기 쉬우니 마지막에 합니다.

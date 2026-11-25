@@ -20,7 +20,7 @@ export function LanguageSwitch() {
           aria-pressed={locale === code}
           onClick={() => setLocale(code)}
           className={cn(
-            'px-2 py-0.5 text-caption',
+            'min-h-7 px-2 py-1 text-caption',
             locale === code ? 'bg-accent text-accent-ink' : 'text-ink-muted hover:text-ink',
           )}
         >
