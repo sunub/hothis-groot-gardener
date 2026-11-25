@@ -118,9 +118,49 @@ The plant and chamber art in the screenshots is AI-generated.
 
 ## Data and checks
 
-Commands and settings are in [Quick start](#quick-start). At commit `b5662b8`, in a clean clone with Node.js v25.9.0, `npm run check` passed: 797 tests in 47 files.
+Commands and settings are in [Quick start](#quick-start). `npm run check` runs TypeScript (`tsc --noEmit`), ESLint, Vitest (**812 tests in 48 files**), and `next build`.
 
 The evidence list, pre-made crisis text and timeline events are JSON files in `data/content/`. Model, search and code structure: [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md).
+
+## Frontend engineering and quality highlights
+
+| Area | Artifact | Summary |
+|---|---|---|
+| Architecture & tradeoffs | [docs/adr/0001-frontend-architecture.md](docs/adr/0001-frontend-architecture.md) | `useSyncExternalStore` + frozen `SERVER_SNAPSHOT`, `import 'server-only'` + 64 KiB streaming body cap + Zod `strictObject`, Tailwind v4 `@theme`/`@container` + CVA, deterministic engine vs optional LLM boundary |
+| Accessibility, overflow & CWV audit | [docs/QUALITY-AUDIT.md](docs/QUALITY-AUDIT.md) | Local production build (`next start`) + Headless Chromium lab audit (not RUM): 375px KO overflow `+11 px → 0 px`, `axe-core` WCAG 2.2 AA `3 serious rules → 0 violations`, unused `public/bg` `-74%` (4.7 → 1.2 MB) |
+| OWASP security headers | [apps/web/next.config.ts](apps/web/next.config.ts) | CSP (no `unsafe-eval` in prod), `X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff`, `Referrer-Policy`, `Permissions-Policy`, HSTS, `poweredByHeader: false` |
+| CI guardrails | [.github/workflows/ci.yml](.github/workflows/ci.yml) | Runs `npm run check`, route + security-header smoke checks, `npm audit --omit=dev --audit-level=high`, and Lighthouse CI accessibility/CWV checks |
+| AI collaboration rules | [AGENTS.md](AGENTS.md) | Repository boundaries, human vs AI delegation split, and mandatory verification checklist |
+
+## Team contributors and ownership
+
+Commit counts reflect `git shortlog -sn` history so individual and collaborative boundaries stay transparent:
+
+| Contributor | Primary Ownership | Repository Evidence |
+|---|---|---|
+| **sunub** | Frontend architecture, SG-DS v2 pixel design system (`tokens.css`, `utilities.css`, `components/ui`), grow-room & report UI, WCAG 2.2 AA accessibility, Korean i18n, security headers, CI & quality audit | `apps/web/src`: 73/95 commits prior to this audit (`features`/`components`/`styles`: 58/66 commits) |
+| **HwangSoon96** | Game engine rules & minimum-crisis invariant, planning-spec reconciliation (`docs/IMPLEMENTATION-NOTES.*`), documentation fact-checking, independent reviews & seed tests | 63 total commits across engine, tests, evidence & docs |
+| **김우진 (W.J.Kim)** | Evidence search server (`services/rag`), retrieval evaluation (`data/eval/`), local LLM integration & one-step launch scripts (`scripts/start-with-ai.*`) | 18 combined commits (`김우진` 14, `W.J.Kim` 4) |
+| **Spice7** | Cultivation timeline engine integration (`NEXT_PUBLIC_TIMELINE`, `events` schema/judge, `docs/TIMELINE-ENGINE-NOTES.md`) | 6 commits across timeline schema, judge & storage v2 |
+| **KIMMINJUNG02** | NASA RAG source chunk curation & Chroma vector database build (`data/sources/`, `data/vector_db/`) | 6 commits across RAG corpus & vector index |
+| **변은아** | Landing grow-room scene implementation (landing concept v0.6.3) | Landing scene commit (`73b61d5`) |
+
+## Not built and known limits
+
+Items 2 to 9 were originally found on a default build at commit `b5662b8` and updated after the verification pass in [docs/QUALITY-AUDIT.md](docs/QUALITY-AUDIT.md).
+
+1. The third crisis (ethylene build-up) is not built.
+2. After 2 inappropriate choices, ground control ends the crisis. The notice does not say that the watched items return to 55.
+3. The hint says you will be asked again, also on the second ask, after which the crisis ends.
+4. "Why" and "Basis for the verdict" can be the same sentence.
+5. In Korean, crisis names on the result screen and report, source quotes and notes stay English.
+6. Switching language during a crisis leaves that crisis's text in the earlier language.
+7. The microbial value counts only humidity, the mold crisis, cleaning and sanitizing.
+8. ~~In Korean, pages overflow by 11px at 375px width~~ — **Fixed** (wrapped `<header>` nav in `app-shell.tsx`; verified `0 px` overflow across `/`, `/mission`, `/sources`, and `/design-system` at `375×812` in Headless Chromium; see [docs/QUALITY-AUDIT.md](docs/QUALITY-AUDIT.md)).
+9. Tags are per card or section, and some numbers have no tag.
+10. With the local model at commit `e485a17` on the development laptop (`LLM_TIMEOUT_MS=60000`), English crises took 39.6 to 120.3 s to appear.
+11. Tested in Headless Chromium only (local production build, not RUM). Not tested on physical phones, Safari or Firefox.
+12. On returning Korean visits (`localStorage` locale `ko`), static prerendered HTML hydrates in English before switching to Korean + lazy `Hahmlet` font chunks, producing a lab CLS of `0.272` on `/sources` at `375×812` (see [ADR-0001](docs/adr/0001-frontend-architecture.md)).
 
 ## Use of AI tools
 
