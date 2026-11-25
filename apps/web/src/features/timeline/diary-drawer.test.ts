@@ -36,4 +36,12 @@ describe('DiaryDrawer', () => {
       expect(dict.mission.diary.close.length).toBeGreaterThan(0);
     }
   });
+
+  it('includes the visible title in the tab accessible name when open and closed (WCAG 2.5.3)', () => {
+    for (const dict of [en, ko]) {
+      const title = dict.mission.diary.title.toLowerCase();
+      expect(dict.mission.diary.open.toLowerCase()).toContain(title);
+      expect(`${dict.mission.diary.title} (${dict.mission.diary.close})`.toLowerCase()).toContain(title);
+    }
+  });
 });

@@ -16,16 +16,16 @@ export function AppShell({ children, wide = false }: { children: ReactNode; wide
   return (
     <>
       <header className="border-b-4 border-surface-2 bg-surface/80 backdrop-blur">
-        <div className="mx-auto flex w-full max-w-[87rem] items-center justify-between gap-4 px-4 py-3 sm:px-8 lg:px-14">
-          <Link href={ROUTES.home} className="flex items-center gap-2 font-title text-heading font-bold">
+        <div className="mx-auto flex w-full max-w-[87rem] flex-wrap items-center justify-between gap-x-4 gap-y-2 px-4 py-3 sm:px-8 lg:px-14">
+          <Link href={ROUTES.home} className="flex shrink-0 items-center gap-2 font-title text-heading font-bold">
             <PixelIcon name="sprout" />
             {t.common.app_name}
           </Link>
-          <nav aria-label={t.common.nav.label} className="flex items-center gap-4 text-body text-ink-muted">
-            <Link href={ROUTES.home} className="hover:text-ink">
+          <nav aria-label={t.common.nav.label} className="flex flex-wrap items-center gap-x-3 gap-y-1 text-body text-ink-muted sm:gap-x-4">
+            <Link href={ROUTES.home} className="inline-flex min-h-7 items-center hover:text-ink">
               {t.common.nav.home}
             </Link>
-            <Link href={ROUTES.sources} className="hover:text-ink">
+            <Link href={ROUTES.sources} className="inline-flex min-h-7 items-center hover:text-ink">
               {t.common.nav.sources}
             </Link>
             <LanguageSwitch />

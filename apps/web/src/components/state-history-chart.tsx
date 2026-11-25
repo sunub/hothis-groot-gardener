@@ -108,6 +108,7 @@ export function StateHistoryChart({ days, current }: { days: readonly DayRecord[
       <div aria-hidden>
         <LineChart
           responsive
+          accessibilityLayer={false}
           data={points}
           margin={{ top: 8, right: 12, bottom: 4, left: -8 }}
           style={{ width: '100%', height: 220 }}

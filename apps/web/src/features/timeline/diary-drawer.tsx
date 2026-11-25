@@ -86,7 +86,7 @@ export function DiaryDrawer({ children }: { children: ReactNode }) {
           type="button"
           aria-expanded={open}
           aria-controls={id}
-          aria-label={open ? d.close : d.open}
+          aria-label={open ? `${d.title} (${d.close})` : d.open}
           onClick={() => setOpen((v) => !v)}
           style={{ width: TAB_WIDTH, left: -TAB_WIDTH }}
           className="absolute top-48 flex h-56 flex-col items-center justify-center gap-3 rounded-l-[4px] bg-accent px-2 py-4 font-bold text-accent-ink"
